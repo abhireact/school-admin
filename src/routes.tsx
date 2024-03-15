@@ -29,19 +29,19 @@ import SignUpCover from "layouts/authentication/sign-up";
 import ResetCover from "layouts/authentication/reset-password";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import SchoolIcon from "@mui/icons-material/School";
-
-// Material Dashboard 2 PRO React TS components
 import MDAvatar from "components/MDAvatar";
-
-// @mui icons
 import Icon from "@mui/material/Icon";
-
-// Images
 import profilePicture from "assets/images/team-3.jpg";
 import School from "layouts/pages/school/create";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
+import User from "layouts/pages/user";
+import Student from "layouts/pages/student";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import mainroutes from "mainroutes";
+
+let route2 = mainroutes;
+console.log(route2, "my mainroutes");
 
 const routes = [
   {
@@ -117,6 +117,18 @@ const routes = [
         route: "pages/school/schoolinfo",
         component: <SchoolInfo />,
       },
+      {
+        name: "User",
+        key: "user",
+        route: "pages/school/user",
+        component: <User />,
+      },
+      {
+        name: "Student",
+        key: "student",
+        route: "pages/school/student",
+        component: <Student />,
+      },
     ],
   },
   {
@@ -140,3 +152,4 @@ const routes = [
 ];
 
 export default routes;
+export { route2 };

@@ -17,30 +17,25 @@ import Cookies from "js-cookie";
 // import Autocomplete from "@mui/material/Autocomplete";
 
 const Editrole = (props: any) => {
-  const { setOpen } = props;
-  const handleClose = () => {
-    setOpen(false);
-  };
   const { setOpenupdate, editData } = props;
   const token = Cookies.get("token");
-  console.log(editData, "edit date ");
+  console.log(editData, "edit data ");
   const handleCloseupdate = () => {
     setOpenupdate(false);
   };
   // editData to give intial values
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      role_name: editData.role_display_name,
-      // role_short_code: editData.role_short_code,
-      // role_access: editData.seeded,
-      // status: editData.status,
-      // description: editData.description,
+      username: editData.username,
+      email: editData.email,
+      hashed_password: editData.hashed_password,
+      user_role_name: editData.user_role_name,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       const sendData = {
-        old_role_display_name: editData.role_display_name,
-        role_display_name: values.role_name,
+        old_username: editData.username,
+        username: values.username,
         location_name: editData.location_name,
       };
 
@@ -65,24 +60,81 @@ const Editrole = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
         <Grid container>
-          <Grid item sm={5}>
-            <MDTypography mb={2} variant="body1">
-              Role Display Name
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              User Name
             </MDTypography>
           </Grid>
-          <Grid item sm={7}>
+          <Grid item xs={12} sm={7}>
             <MDInput
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="role_name"
-              value={values.role_name}
+              name="username"
+              value={values.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Email ID
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="email"
+              value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
 
-          <Grid item container sm={12} sx={{ display: "flex", justifyContent: "center" }}>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Password
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="hashed_password"
+              value={values.hashed_password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Role Name
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="user_role_name"
+              value={values.user_role_name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+
+          <Grid
+            item
+            container
+            xs={12}
+            sm={12}
+            sx={{ display: "flex", justifyContent: "flex-start" }}
+          >
             <Grid item mt={4}>
               <MDButton
                 color="info"
@@ -92,7 +144,7 @@ const Editrole = (props: any) => {
                   handleCloseupdate();
                 }}
               >
-                Update
+                Save
               </MDButton>
             </Grid>
             <Grid item ml={2} mt={4}>

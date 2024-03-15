@@ -1,7 +1,3 @@
-import FormControl from "@mui/material/FormControl";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
@@ -13,10 +9,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
-const Addrole = (props: any) => {
-  // autcomplete location  start
-
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
   const { setOpen } = props;
@@ -27,16 +22,15 @@ const Addrole = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      role_name: "",
-      role_short_code: "",
-      seeded: "",
-      status: "",
-      description: "",
+      username: "",
+      email: "",
+      hashed_password: "",
+      user_role_name: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_role", values, {
+        .post("http://10.0.20.128:8000/mg_users", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -58,7 +52,7 @@ const Addrole = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Role Name
+              User Name
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -66,15 +60,15 @@ const Addrole = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="role_name"
-              value={values.role_name}
+              name="username"
+              value={values.username}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Role Short Code
+              Email ID
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -82,87 +76,16 @@ const Addrole = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="role_short_code"
-              value={values.role_short_code}
+              name="email"
+              value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
-          <Grid item container>
-            <Grid item xs={12} sm={5}>
-              <MDTypography mb={2} variant="body2">
-                Role Access
-              </MDTypography>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl>
-                <RadioGroup>
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        checked={values.seeded.includes("y")}
-                        onChange={handleChange}
-                        name="seeded"
-                        value="y"
-                      />
-                    }
-                    label={<MDTypography variant="body2">Yes</MDTypography>}
-                  />
 
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        checked={values.seeded.includes("n")}
-                        onChange={handleChange}
-                        name="seeded"
-                        value="n"
-                      />
-                    }
-                    label={<MDTypography variant="body2">No</MDTypography>}
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid item container>
-            <Grid item xs={12} sm={5}>
-              <MDTypography mb={2} variant="body2">
-                Status
-              </MDTypography>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl>
-                <RadioGroup>
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        checked={values.status === "active"}
-                        onChange={handleChange}
-                        name="status"
-                        value="active"
-                      />
-                    }
-                    label={<MDTypography variant="body2">Active </MDTypography>}
-                  />
-
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        checked={values.status === "inactive"}
-                        onChange={handleChange}
-                        name="status"
-                        value="inactive"
-                      />
-                    }
-                    label={<MDTypography variant="body2">Inactive </MDTypography>}
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-          </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Description
+              Password
             </MDTypography>
           </Grid>
 
@@ -171,8 +94,25 @@ const Addrole = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="description"
-              value={values.description}
+              name="hashed_password"
+              value={values.hashed_password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Role Name
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="user_role_name"
+              value={values.user_role_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
@@ -215,4 +155,4 @@ const Addrole = (props: any) => {
   );
 };
 
-export default Addrole;
+export default Create;

@@ -39,9 +39,14 @@ import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { storeRBAC } from "layouts/pages/redux/dataSlice";
+import React, { createContext } from "react";
+const MyContext = createContext([]);
 export default function App() {
+  const dispatched = useDispatch();
   const [controller, dispatch] = useMaterialUIController();
-  const [rbacData, setRbacData] = useState([]);
+  const [rbacInfo, setrbacInfo] = useState([]);
   const token = Cookies.get("token");
   const {
     miniSidenav,
@@ -56,6 +61,7 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  // store rbac data
   const fetchRbac = async () => {
     try {
       const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
@@ -66,16 +72,21 @@ export default function App() {
       });
       if (response.status === 200) {
         console.log("rbac data storing in app.tsx 2", response.data);
-        setRbacData(response.data);
+        setrbacInfo(response.data);
       }
     } catch (error) {
       console.error(error);
     }
   };
-  // useEffect(() => {
-  //   fetchRbac(); // Fetch data from API on component mount
-  // }, [token]);
-  console.log("rbac data storing in app.tsx ", rbacData);
+  useEffect(() => {
+    fetchRbac(); // Fetch data from API on component mount
+  }, [token]);
+  console.log("rbac data storing in app.tsx ", rbacInfo);
+
+  useEffect(() => {
+    dispatched(storeRBAC(rbacInfo));
+  }, [dispatched, rbacInfo]);
+
   // Cache for the rtl
   useMemo(() => {
     const pluginRtl: any = rtlPlugin;

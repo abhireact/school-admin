@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tree, message } from "antd";
 import type { DataNode, Key } from "rc-tree-select/es/interface";
-import MainRoutes from "../../../mainroutes";
+import { route2 } from "routes";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
@@ -60,7 +60,254 @@ const Rbac = (props: any) => {
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [rbacData, setRbacData] = useState([]);
-  return <div>{initialValues.role_name}</div>;
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
+    useFormik({
+      initialValues,
+      enableReinitialize: true,
+      onSubmit: async (values, action) => {
+        console.log("valuess", values);
+        action.resetForm();
+        for (const key of checkedKeys) {
+          console.log(key, checkedKeys, "checkedkey");
+          // setCheckedKeystring(key.toString());
+          initialValues.sub_module_menu.push(key.toString());
+        }
+        if (editorcreate === "create") {
+          try {
+            const response = await axios.post(
+              "http://10.0.20.128:8000/mg_rbac",
+              { ...values, sub_module_menu: allchecked },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            if (response.status === 200) {
+              console.log("Created Earning Successfully");
+              // window.location.reload();
+              setOpenupdate2(false);
+            }
+          } catch (error) {
+            console.error("Error saving data:", error);
+          }
+        }
+        if (editorcreate === "edit") {
+          try {
+            const response = await axios.put(
+              "http://10.0.20.128:8000/mg_rbac",
+              { ...values, sub_module_menu: allchecked },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            if (response.status === 200) {
+              console.log("Update Successfully");
+              // window.location.reload();
+              setOpenupdate2(false);
+            }
+          } catch (error) {
+            console.error("Error saving data:", error);
+          }
+        }
+      },
+    });
+  const treeData: DataNode[] = [];
+  let count = 0;
+  if (count === 0) {
+    for (const item of route2) {
+      if (item.collapse) {
+        const module: any = {};
+        module.title = item.name;
+        module.key = item.key;
+        const modulechildren = [];
+        for (const subitem of item.collapse) {
+          const submodule: any = {};
+          submodule.title = subitem.name;
+          submodule.key = subitem.key;
+          submodule.children = [
+            { title: "read", key: `${submodule.key}read` },
+            { title: "update", key: `${submodule.key}update` },
+            { title: "delete", key: `${submodule.key}delete` },
+            { title: "create", key: `${submodule.key}create` },
+          ];
+          const submodulechildren = [];
+
+          modulechildren.push(submodule);
+        }
+        module.children = modulechildren;
+        treeData.push(module);
+      }
+    }
+    count += 1;
+  }
+  const getParentKeys = (key: React.Key, nodes: DataNode[] | undefined): React.Key[] => {
+    const parentKeys: React.Key[] = [];
+    const findParent = (currentKey: React.Key, nodesArray: DataNode[] | undefined): void => {
+      nodesArray?.forEach((node) => {
+        const nodeKey = node.key as React.Key;
+        if (node.children && node.children.some((child) => child.key === currentKey)) {
+          parentKeys.push(nodeKey);
+        } else if (node.children) {
+          findParent(currentKey, node.children);
+        }
+      });
+    };
+
+    findParent(key, nodes);
+    return parentKeys;
+  };
+  const onExpand = (expandedKeysValue: Key[]) => {
+    console.log("onExpand", expandedKeysValue);
+    setExpandedKeys(expandedKeysValue);
+    setAutoExpandParent(false);
+  };
+
+  const onCheck = (checked: Key[] | { checked: Key[]; halfChecked: Key[] }) => {
+    console.log("onCheck", checked);
+
+    // Check if checked is an array
+    if (Array.isArray(checked)) {
+      const halfCheckedKeysSet = checked.reduce((acc: Set<React.Key>, key: React.Key) => {
+        const parentKeys = getParentKeys(key, treeData);
+        parentKeys.forEach((parentKey) => acc.add(parentKey));
+        return acc;
+      }, new Set());
+
+      const halfCheckedKeys = Array.from(halfCheckedKeysSet);
+
+      console.log("Half-checked keys", halfCheckedKeys, checked);
+      const combinedArray = Array.from(new Set([...checked, ...halfCheckedKeys]));
+      console.log(combinedArray, "combinedArray");
+      // setCheckedKeys(combinedArray);
+      setAllchecked(combinedArray);
+      setHalfchecked(halfCheckedKeys);
+      setCheckedKeys(checked);
+    } else {
+      // If checked is an object, extract the checked property
+      const { checked: checkedArray } = checked;
+
+      const halfCheckedKeysSet = checkedArray.reduce((acc: Set<React.Key>, key: React.Key) => {
+        const parentKeys = getParentKeys(key, treeData);
+        parentKeys.forEach((parentKey) => acc.add(parentKey));
+        return acc;
+      }, new Set());
+
+      const halfCheckedKeys = Array.from(halfCheckedKeysSet);
+
+      console.log("Half-checked keys", halfCheckedKeys, checkedArray);
+      const combinedArray = Array.from(new Set([...checkedArray, ...halfCheckedKeys]));
+      console.log(combinedArray, "combinedArray");
+      // setCheckedKeys(combinedArray);
+      setAllchecked(combinedArray);
+      setHalfchecked(halfCheckedKeys);
+      setCheckedKeys(checkedArray);
+    }
+  };
+
+  const onSelect = (selectedKeysValue: Key[]) => {
+    console.log("onSelect", selectedKeysValue);
+    setSelectedKeys(selectedKeysValue);
+  };
+  console.log(treeData, "treedata");
+
+  // Cookies.set(["checboxvalue"], values?.access);
+
+  const renderTreeNodes = (data: DataNode[]): React.ReactNode => {
+    console.log(data, "data");
+
+    return data.map((item) => {
+      const { key, title, children } = item;
+      console.log(item, "renderingTree");
+      return (
+        <Tree.TreeNode key={key} title={<span>{title}</span>}>
+          {children && renderTreeNodes(children)}
+        </Tree.TreeNode>
+      );
+    });
+  };
+  const fetchRbac = async (roles_name: string) => {
+    try {
+      const response = await axios.get(
+        `http://10.0.20.128:8000/mg_rbac?school_name=mindcom&role_name=${roles_name}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setCheckedKeys(response.data[0].sub_module_menu);
+        setEditorcreate("edit");
+        setRbacData(response.data[0].sub_module_menu);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchRbac(editData2?.role_name);
+    // Fetch data from API on component mount
+  }, []);
+  return (
+    <form onSubmit={handleSubmit}>
+      <Card sx={{ width: "80%", margin: "auto", mt: "2%" }}>
+        <MDBox p={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={9} mb={2}>
+              <MDTypography variant="h5">Give Permission To Roles</MDTypography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} display="flex" justifyContent="center">
+              <FormField
+                type="name"
+                label="Role name"
+                name="role_name"
+                required
+                value={values.role_name}
+                placeholder="Enter Your Role name"
+                variant="standard"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.role_name && touched.role_name}
+                success={values.role_name.length && !errors.role_name}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3} display="flex" justifyContent="flex-end">
+              <MDButton variant="gradient" color="info" type="submit">
+                {"Save"}
+              </MDButton>
+            </Grid>
+          </Grid>
+        </MDBox>
+      </Card>
+      {values.role_name != "" ? (
+        <Card sx={{ width: "80%", margin: "auto", mt: "2%" }}>
+          <MDBox p={3}>
+            <Tree
+              checkable
+              onExpand={onExpand}
+              expandedKeys={expandedKeys}
+              autoExpandParent={autoExpandParent}
+              onCheck={onCheck}
+              checkedKeys={checkedKeys}
+              // halfcheckedKeys={halfcheckedKeys}
+              onSelect={onSelect}
+              selectedKeys={selectedKeys}
+            >
+              {renderTreeNodes(treeData)}
+            </Tree>
+          </MDBox>
+        </Card>
+      ) : null}
+    </form>
+  );
 };
 
 export default Rbac;
