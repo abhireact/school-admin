@@ -39,6 +39,7 @@ import User from "layouts/pages/user";
 import Student from "layouts/pages/student";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import mainroutes from "mainroutes";
+import Academic from "layouts/pages/academic";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -128,6 +129,12 @@ const routes = [
         key: "student",
         route: "pages/school/student",
         component: <Student />,
+      },
+      {
+        name: "Academic Year",
+        key: "academic",
+        route: "pages/school/academic",
+        component: <Academic />,
       },
     ],
   },
