@@ -178,6 +178,20 @@ const Create = () => {
                   mb={10}
                 />
               </Grid>
+              <Grid item sm={3} xs={12} mt={2}>
+                <MDTypography variant="body2"> School Logo .:</MDTypography>
+              </Grid>
+              <Grid item sm={6} xs={12} mt={2}>
+                <MDInput
+                  type="file"
+                  accept="image/*"
+                  name="logo"
+                  onChange={handleImage}
+                  sx={{ width: "84%" }}
+                  variant="standard"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
 
               <Grid item sm={3} xs={12}>
                 <MDInput
@@ -443,18 +457,7 @@ const Create = () => {
                   sx={{ width: "70%" }}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
-                <MDInput
-                  type="file"
-                  accept="image/*"
-                  label="School Logo"
-                  name="logo"
-                  onChange={handleImage}
-                  sx={{ width: "70%" }}
-                  variant="standard"
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
+
               <Grid
                 sm={3}
                 xs={12}

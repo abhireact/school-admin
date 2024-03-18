@@ -11,30 +11,27 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 
-const Update = (props: any) => {
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData } = props;
+  const { setOpen } = props;
   const handleClose = () => {
-    setOpenupdate(false);
+    setOpen(false);
   };
   //end
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      first_name: editData.first_name,
-      last_name: editData.last_name,
-      acd_name: editData.acd_name,
-      cls_name: editData.cls_name,
-      sec_name: editData.sec_name,
-      dob: editData.dob,
-      mob_no: editData.mob_no,
-      address: editData.address,
+      acd_name: "",
+      sec_name: "",
+      code: "",
+
+      cls_name: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.128:8000/update_student", values, {
+        .post("http://10.0.20.128:8000/mg_class", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -56,58 +53,7 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              First Name
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="first_name"
-              value={values.first_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Last Name
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="last_name"
-              value={values.last_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Data Of Birth
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              type="date"
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="dob"
-              value={values.dob}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Class
+              Class Name
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -121,12 +67,14 @@ const Update = (props: any) => {
               onBlur={handleBlur}
             />
           </Grid>
+
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Section
+              Section Name
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
+
+          <Grid item xs={12} sm={7} mb={2}>
             <MDInput
               mb={2}
               sx={{ width: "65%" }}
@@ -139,34 +87,17 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Mobile Number
+              Code
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
+
+          <Grid item xs={12} sm={7} mb={2}>
             <MDInput
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="mob_no"
-              value={values.mob_no}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Address
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              multiline
-              rows={3}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="address"
-              value={values.address}
+              name="code"
+              value={values.code}
               onChange={handleChange}
               onBlur={handleBlur}
             />
@@ -226,4 +157,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

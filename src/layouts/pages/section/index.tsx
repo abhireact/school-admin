@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const Academic = () => {
+const Section = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -82,7 +82,7 @@ const Academic = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.128:8000/mg_show_section", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -122,8 +122,7 @@ const Academic = () => {
     columns: [
       { Header: "Academic Year", accessor: "acd_name" },
 
-      { Header: "Start Date", accessor: "start_date" },
-      { Header: "End Date", accessor: "end_date" },
+      { Header: "Section Name", accessor: "sec_name" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -148,17 +147,16 @@ const Academic = () => {
         </MDTypography>
       ),
 
-      start_date: <MDTypography variant="p">{row.start_date}</MDTypography>,
-      end_date: <MDTypography variant="p">{row.end_date}</MDTypography>,
+      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
     })),
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Academic Year</MDTypography>
+      <MDTypography variant="h5">Section</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
         <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Academic Year
+          + New Section
         </MDButton>
 
         <Dialog open={open} onClose={handleClose}>
@@ -174,4 +172,4 @@ const Academic = () => {
   );
 };
 
-export default Academic;
+export default Section;

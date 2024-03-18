@@ -1,3 +1,8 @@
+// import FormControl from "@mui/material/FormControl";
+// import RadioGroup from "@mui/material/RadioGroup";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+// import Radio from "@mui/material/Radio";
+
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
@@ -5,41 +10,42 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
-import { useState, useEffect } from "react";
+
 import axios from "axios";
-import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
-import { useSelector } from "react-redux";
+// import { useEffect, useState } from "react";
+// import Autocomplete from "@mui/material/Autocomplete";
 
-const Create = (props: any) => {
+const Update = (props: any) => {
+  const { setOpenupdate, editData } = props;
   const token = Cookies.get("token");
-
-  const { setOpen } = props;
-  const handleClose = () => {
-    setOpen(false);
+  console.log(editData, "edit data ");
+  const handleCloseupdate = () => {
+    setOpenupdate(false);
   };
-  //end
-
+  // editData to give intial values
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      acd_name: "",
-      start_date: "",
-      end_date: "",
+      wing_name: editData.wing_name,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
+      let sendData = {
+        old_wing_name: editData.wing_name,
+        new_wing_name: values.wing_name,
+      };
       axios
-        .post("http://10.0.20.128:8000/mg_accademic_year", values, {
+        .put("http://10.0.20.128:8000/mg_wing_up", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success(" Created successfully!");
+          message.success("Updated  successfully!");
         })
         .catch(() => {
-          message.error("Error on creating  !");
+          message.error("Error on updating !");
         });
 
       action.resetForm();
@@ -51,55 +57,18 @@ const Create = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Academic Year
+              Wing Name
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
               mb={2}
-              placeholder="eg. 2023-24"
               sx={{ width: "65%" }}
               variant="standard"
-              name="acd_name"
-              value={values.acd_name}
-              onChange={handleChange}
+              name="wing_name"
+              value={values.wing_name}
               onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Start Date
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              type="date"
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="start_date"
-              value={values.start_date}
               onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              End Date
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
-              type="date"
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="end_date"
-              value={values.end_date}
-              onChange={handleChange}
-              onBlur={handleBlur}
             />
           </Grid>
 
@@ -116,7 +85,7 @@ const Create = (props: any) => {
                 variant="contained"
                 type="submit"
                 onClick={() => {
-                  handleClose();
+                  handleCloseupdate();
                 }}
               >
                 Save
@@ -127,7 +96,7 @@ const Create = (props: any) => {
                 color="primary"
                 variant="outlined"
                 onClick={() => {
-                  handleClose();
+                  handleCloseupdate();
                 }}
               >
                 Cancel
@@ -140,4 +109,4 @@ const Create = (props: any) => {
   );
 };
 
-export default Create;
+export default Update;

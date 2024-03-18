@@ -27,8 +27,52 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgImage from "assets/images/bg-reset-cover.jpeg";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { message } from "antd";
+import { useState } from "react";
 
+import { useNavigate } from "react-router-dom";
 function Cover(): JSX.Element {
+  const [old_password, setOldPassword] = useState("");
+  const [new_password, setNewPassword] = useState("");
+  const navigate = useNavigate();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        "http://10.0.20.128:8000/mg_reset_password",
+        {
+          old_password: old_password,
+          //   email: sanitizedEmail,
+          new_password: new_password,
+          //   ph_num: phone,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log(res, "response");
+
+      if (res.data.access_token) {
+        // setTokendata(res.data.access_token);
+        // Cookies.set("token", res.data.access_token, { httpOnly: true });
+        const token = res.data.access_token;
+        Cookies.set("token", token, { expires: 7 });
+        navigate("/dashboards/analytics");
+        message.success("Reset Successful");
+      } else {
+        message.error("Invalid  Password");
+      }
+    } catch (error) {
+      console.log(error);
+      message.error("Something went wrong");
+    }
+  };
   return (
     <CoverLayout coverHeight="50vh" image={bgImage}>
       <Card>
@@ -46,21 +90,40 @@ function Cover(): JSX.Element {
           <MDTypography variant="h3" fontWeight="medium" color="white" mt={1}>
             Reset Password
           </MDTypography>
-          <MDTypography display="block" variant="button" color="white" my={1}>
-            You will receive an e-mail in maximum 60 seconds
-          </MDTypography>
+          <MDTypography display="block" variant="button" color="white" my={1}></MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
-            <MDBox mb={4}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
+          <form onSubmit={handleSubmit}>
+            <MDBox component="form" role="form">
+              <MDBox mb={4}>
+                <MDInput
+                  label="Password"
+                  variant="standard"
+                  value={old_password}
+                  onChange={(e: { target: { value: React.SetStateAction<string> } }) =>
+                    setOldPassword(e.target.value)
+                  }
+                  fullWidth
+                />
+              </MDBox>
+              <MDBox mb={4}>
+                <MDInput
+                  label="New Password"
+                  variant="standard"
+                  value={new_password}
+                  onChange={(e: { target: { value: React.SetStateAction<string> } }) =>
+                    setNewPassword(e.target.value)
+                  }
+                  fullWidth
+                />
+              </MDBox>
+              <MDBox mt={6} mb={1}>
+                <MDButton variant="gradient" color="info" fullWidth>
+                  reset
+                </MDButton>
+              </MDBox>
             </MDBox>
-            <MDBox mt={6} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                reset
-              </MDButton>
-            </MDBox>
-          </MDBox>
+          </form>
         </MDBox>
       </Card>
     </CoverLayout>

@@ -82,7 +82,7 @@ const Academic = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.128:8000/mg_show_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,10 +120,10 @@ const Academic = () => {
   };
   const dataTableData = {
     columns: [
+      { Header: "Class", accessor: "cls_name" },
+      { Header: "Section", accessor: "sec_name" },
+      { Header: "Code", accessor: "code" },
       { Header: "Academic Year", accessor: "acd_name" },
-
-      { Header: "Start Date", accessor: "start_date" },
-      { Header: "End Date", accessor: "end_date" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -148,17 +148,18 @@ const Academic = () => {
         </MDTypography>
       ),
 
-      start_date: <MDTypography variant="p">{row.start_date}</MDTypography>,
-      end_date: <MDTypography variant="p">{row.end_date}</MDTypography>,
+      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
+      code: <MDTypography variant="p">{row.code}</MDTypography>,
+      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
     })),
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Academic Year</MDTypography>
+      <MDTypography variant="h5">Class</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
         <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Academic Year
+          + New Class
         </MDButton>
 
         <Dialog open={open} onClose={handleClose}>

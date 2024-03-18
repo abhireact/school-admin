@@ -22,77 +22,29 @@ import EditProduct from "layouts/ecommerce/products/edit-product";
 import ProductPage from "layouts/ecommerce/products/product-page";
 import OrderList from "layouts/ecommerce/orders/order-list";
 import OrderDetails from "layouts/ecommerce/orders/order-details";
+
 import SignInCover from "layouts/authentication/sign-in";
+
 import SignUpCover from "layouts/authentication/sign-up";
 import ResetCover from "layouts/authentication/reset-password";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import SchoolIcon from "@mui/icons-material/School";
-
-// Material Dashboard 2 PRO React TS components
 import MDAvatar from "components/MDAvatar";
-
-// @mui icons
 import Icon from "@mui/material/Icon";
-
-// Images
 import profilePicture from "assets/images/team-3.jpg";
 import School from "layouts/pages/school/create";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
+import User from "layouts/pages/user";
+import Student from "layouts/pages/student";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-const mainroute = [
-  {
-    type: "collapse",
-    name: "Dashboards",
-    key: "dashboards",
-    icon: <Icon fontSize="medium">dashboard</Icon>,
-    collapse: [
-      {
-        name: "Analytics",
-        key: "analytics",
-        route: "/dashboards/analytics",
-        component: <Analytics />,
-      },
-      {
-        name: "Sales",
-        key: "sales",
-        route: "/dashboards/sales",
-        component: <Sales />,
-      },
-    ],
-  },
+import Academic from "layouts/pages/academic";
+import Section from "layouts/pages/section";
+import Class from "layouts/pages/class";
+import Wings from "layouts/pages/wings";
 
-  {
-    type: "collapse",
-    name: "Authentication",
-    key: "authentication",
-    icon: (
-      <Icon fontSize="medium">
-        <VpnKeyIcon />
-      </Icon>
-    ),
-    collapse: [
-      {
-        name: "Sign In",
-        key: "sign-in",
-        route: "/authentication/sign-in/cover",
-        component: <SignInCover />,
-      },
-      {
-        name: "Sign Up",
-        key: "sign-up",
-        route: "/authentication/sign-up/cover",
-        component: <SignUpCover />,
-      },
-      {
-        name: "Reset Password",
-        key: "reset-password",
-        route: "/authentication/reset-password/cover",
-        component: <ResetCover />,
-      },
-    ],
-  },
+const routes = [
   {
     type: "collapse",
     name: "School",
@@ -115,12 +67,48 @@ const mainroute = [
         route: "pages/school/schoolinfo",
         component: <SchoolInfo />,
       },
+      {
+        name: "User",
+        key: "user",
+        route: "pages/school/user",
+        component: <User />,
+      },
+      {
+        name: "Student",
+        key: "student",
+        route: "pages/school/student",
+        component: <Student />,
+      },
+      {
+        name: "Academic Year",
+        key: "academic",
+        route: "pages/school/academic",
+        component: <Academic />,
+      },
+      {
+        name: "Section",
+        key: "section",
+        route: "pages/school/section",
+        component: <Section />,
+      },
+      {
+        name: "Wings",
+        key: "wings",
+        route: "pages/school/wings",
+        component: <Wings />,
+      },
+      {
+        name: "Class",
+        key: "class",
+        route: "pages/school/class",
+        component: <Class />,
+      },
     ],
   },
   {
     type: "collapse",
     name: "RBAC",
-    key: "RBAC",
+    key: "rbac",
     icon: (
       <Icon fontSize="medium">
         <ManageAccountsIcon />
@@ -137,4 +125,4 @@ const mainroute = [
   },
 ];
 
-export default mainroute;
+export default routes;

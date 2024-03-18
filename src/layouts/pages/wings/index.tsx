@@ -82,7 +82,7 @@ const Academic = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.128:8000/mg_wing_name/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -99,8 +99,8 @@ const Academic = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.1283:8000/designation/", {
-        data: { accademic_name: name },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_wing_del", {
+        data: { wing_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -109,7 +109,7 @@ const Academic = () => {
       if (response.status === 200) {
         message.error("Deleted successFully");
         // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
+        const updatedData = data.filter((row) => row.wing_name !== name);
         setData(updatedData); // Update the state with the new data
       }
     } catch (error: unknown) {
@@ -120,16 +120,13 @@ const Academic = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Academic Year", accessor: "acd_name" },
-
-      { Header: "Start Date", accessor: "start_date" },
-      { Header: "End Date", accessor: "end_date" },
+      { Header: "Wing Name", accessor: "wing_name" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p">{row.acd_name}</MDTypography>,
+      wing_name: <MDTypography variant="p">{row.wing_name}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
@@ -147,18 +144,15 @@ const Academic = () => {
           </IconButton>
         </MDTypography>
       ),
-
-      start_date: <MDTypography variant="p">{row.start_date}</MDTypography>,
-      end_date: <MDTypography variant="p">{row.end_date}</MDTypography>,
     })),
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Academic Year</MDTypography>
+      <MDTypography variant="h5">Wings</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
         <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Academic Year
+          + New Wing
         </MDButton>
 
         <Dialog open={open} onClose={handleClose}>

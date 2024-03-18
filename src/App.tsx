@@ -35,13 +35,14 @@ import routes from "routes";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
 
 // Images
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
+import brandWhite from "assets/images/orglogo.png";
+import brandDark from "assets/images/orglogo.png";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { storeRBAC } from "layouts/pages/redux/dataSlice";
 import React, { createContext } from "react";
+import MDTypography from "components/MDTypography";
 const MyContext = createContext([]);
 export default function App() {
   const dispatched = useDispatch();
@@ -181,7 +182,7 @@ export default function App() {
             <Sidenav
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="MINDCOM"
+              brandName=""
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -209,7 +210,7 @@ export default function App() {
           <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="MINDCOM"
+            brandName=""
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}

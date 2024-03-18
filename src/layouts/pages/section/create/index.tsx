@@ -23,13 +23,12 @@ const Create = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       acd_name: "",
-      start_date: "",
-      end_date: "",
+      sec_name: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_accademic_year", values, {
+        .post("http://10.0.20.128:8000/mg_create_section", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -68,36 +67,16 @@ const Create = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Start Date
+              Section Name
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
               mb={2}
-              type="date"
               sx={{ width: "65%" }}
               variant="standard"
-              name="start_date"
-              value={values.start_date}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              End Date
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
-              type="date"
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="end_date"
-              value={values.end_date}
+              name="sec_name"
+              value={values.sec_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />

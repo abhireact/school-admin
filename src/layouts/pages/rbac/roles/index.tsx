@@ -18,6 +18,8 @@ import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const Showrole = () => {
   const [data, setData] = useState([]);
@@ -114,7 +116,15 @@ const Showrole = () => {
       ),
 
       status: <MDTypography variant="p">{row.status}</MDTypography>,
-      seeded: <MDTypography variant="p">{row.seeded}</MDTypography>,
+      seeded: (
+        <MDTypography variant="p">
+          {row.seeded === "y" ? (
+            <CheckCircleIcon fontSize="medium" />
+          ) : (
+            <CancelIcon fontSize="medium" />
+          )}
+        </MDTypography>
+      ),
     })),
   };
   return (

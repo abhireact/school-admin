@@ -157,7 +157,7 @@ const User = () => {
       <DashboardNavbar />
       <MDTypography variant="h5">User</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="gradient" color="info" type="submit" onClick={handleClickOpen}>
+        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
           + New User
         </MDButton>
 

@@ -1,7 +1,3 @@
-import FormControl from "@mui/material/FormControl";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
@@ -14,9 +10,8 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-const Student = (props: any) => {
-  // autcomplete location  start
 
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
   const { setOpen } = props;
@@ -27,25 +22,29 @@ const Student = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      username: "",
-      email: "",
-      hashed_password: "",
-      user_role_name: "",
+      first_name: "",
+      last_name: "",
+      acd_name: "",
+      cls_name: "",
+      sec_name: "",
+      dob: "",
+      mob_no: "",
+      address: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_role", values, {
+        .post("http://10.0.20.128:8000/create_student", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success("Role created successfully!");
+          message.success(" Created successfully!");
         })
         .catch(() => {
-          message.error("Error on creating role !");
+          message.error("Error on creating  !");
         });
 
       action.resetForm();
@@ -57,7 +56,7 @@ const Student = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              User Name
+              First Name
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -65,15 +64,15 @@ const Student = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="username"
-              value={values.username}
+              name="first_name"
+              value={values.first_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Email ID
+              Last Name
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -81,8 +80,8 @@ const Student = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="email"
-              value={values.email}
+              name="last_name"
+              value={values.last_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
@@ -90,34 +89,101 @@ const Student = (props: any) => {
 
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Password
+              Data Of Birth
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
               mb={2}
+              type="date"
               sx={{ width: "65%" }}
               variant="standard"
-              name="hashed_password"
-              value={values.hashed_password}
+              name="dob"
+              value={values.dob}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Role Name
+              Class
             </MDTypography>
           </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="user_role_name"
-              value={values.user_role_name}
+              name="cls_name"
+              value={values.cls_name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Section
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="sec_name"
+              value={values.sec_name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Mobile Number
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="mob_no"
+              value={values.mob_no}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Address
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <MDInput
+              mb={2}
+              multiline
+              rows={3}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="address"
+              value={values.address}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Academic Year
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <MDInput
+              mb={2}
+              placeholder="eg. 2023-24"
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="acd_name"
+              value={values.acd_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
@@ -160,4 +226,4 @@ const Student = (props: any) => {
   );
 };
 
-export default Student;
+export default Create;

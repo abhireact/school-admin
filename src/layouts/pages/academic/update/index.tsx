@@ -26,24 +26,32 @@ const Update = (props: any) => {
   // editData to give intial values
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      username: editData.username,
+      acd_name: editData.acd_name,
 
-      user_role_name: editData.user_role_name,
+      start_date: editData.start_date,
+      end_date: editData.end_date,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
+      let sendData = {
+        old_acd_name: editData.acd_name,
+        new_acd_name: values.acd_name,
+
+        start_date: values.start_date,
+        end_date: values.end_date,
+      };
       axios
-        .put("http://10.0.20.128:8000/mg_accademic_update", values, {
+        .put("http://10.0.20.128:8000/mg_accademic_update", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success("Role created successfully!");
+          message.success("Updated  successfully!");
         })
         .catch(() => {
-          message.error("Error on creating role !");
+          message.error("Error on updating !");
         });
 
       action.resetForm();
@@ -55,7 +63,7 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              User Name
+              Academic Year
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -63,15 +71,15 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="username"
-              value={values.username}
+              name="acd_name"
+              value={values.acd_name}
               onBlur={handleBlur}
             />
           </Grid>
 
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Role Name
+              Start Date
             </MDTypography>
           </Grid>
 
@@ -80,13 +88,29 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="user_role_name"
-              value={values.user_role_name}
+              name="start_date"
+              value={values.start_date}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              End Date
+            </MDTypography>
+          </Grid>
 
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="end_date"
+              value={values.end_date}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
           <Grid
             item
             container

@@ -30,7 +30,7 @@ const Editrole = (props: any) => {
   // editData to give intial values
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      role_name: editData.role_display_name,
+      role_name: editData.role_name,
       // role_short_code: editData.role_short_code,
       // role_access: editData.seeded,
       // status: editData.status,
@@ -39,13 +39,16 @@ const Editrole = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       const sendData = {
-        old_role_display_name: editData.role_display_name,
-        role_display_name: values.role_name,
-        location_name: editData.location_name,
+        old_role_name: editData.role_name,
+        role_name: values.role_name,
+        role_short_code: editData.role_short_code,
+        description: editData.description,
+        status: editData.status,
+        seeded: editData.seeded,
       };
 
       axios
-        .put("http://10.0.20.133:8000/mg_roles", sendData, {
+        .put("http://10.0.20.128:8000/mg_role", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -66,7 +69,7 @@ const Editrole = (props: any) => {
       <MDBox p={4}>
         <Grid container>
           <Grid item sm={5}>
-            <MDTypography mb={2} variant="body1">
+            <MDTypography mb={2} variant="body2">
               Role Display Name
             </MDTypography>
           </Grid>

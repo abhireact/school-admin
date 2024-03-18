@@ -8,22 +8,50 @@ import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
+import { useSelector } from "react-redux";
+const token = Cookies.get("token");
+const Student = () => {
+  // To fetch rbac from redux:  Start
+  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
+  // console.log("rbac user", rbacData);
+  //End
 
-const User = () => {
+  // Fetch rbac  Date from useEffect: Start
+
+  const [rbacData, setRbacData] = useState([]);
+  const fetchRbac = async () => {
+    try {
+      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log("rbac user", response.data);
+        setRbacData(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchRbac();
+  }, [token]);
+  //End
   const [data, setData] = useState([]);
+
   //Start
-  const token = Cookies.get("token");
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
@@ -54,7 +82,7 @@ const User = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_role", {
+      .get("http://10.0.20.128:8000/show_student", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -69,18 +97,20 @@ const User = () => {
         console.error("Error fetching data:", error);
       });
   }, []);
-  const handleDelete = async (user_name: any) => {
+  const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete("http://10.0.20.1283:8000/designation/", {
-        data: { user_name: user_name },
+        data: { accademic_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
         message.error("Deleted successFully");
-        window.location.reload();
+        // Filter out the deleted user from the data
+        const updatedData = data.filter((row) => row.username !== name);
+        setData(updatedData); // Update the state with the new data
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -90,16 +120,17 @@ const User = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Username", accessor: "username" },
-
-      { Header: "Role Name", accessor: "user_role_name" },
-      { Header: "Email", accessor: "email" },
+      { Header: "Student Name", accessor: "full_name" },
+      { Header: "Class", accessor: "cls_name" },
+      { Header: "Section", accessor: "sec_name" },
+      { Header: "Academic Year", accessor: "acd_name" },
+      { Header: "Mobile Number", accessor: "mob_no" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      username: <MDTypography variant="p">{row.username}</MDTypography>,
+      acd_name: <MDTypography variant="p">{row.acd_name}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
@@ -111,14 +142,22 @@ const User = () => {
           >
             <CreateRoundedIcon />
           </IconButton>
-          <IconButton onClick={() => handleDelete(row.username)}>
+
+          <IconButton onClick={() => handleDelete(row.acd_name)}>
             <DeleteIcon />
           </IconButton>
         </MDTypography>
       ),
 
-      user_role_name: <MDTypography variant="p">{row.user_role_name}</MDTypography>,
-      email: <MDTypography variant="p">{row.email}</MDTypography>,
+      full_name: (
+        <MDTypography variant="p">
+          {row.first_name}
+          {row.last_name}
+        </MDTypography>
+      ),
+      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
+      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
+      mob_no: <MDTypography variant="p">{row.mob_no}</MDTypography>,
     })),
   };
   return (
@@ -126,12 +165,14 @@ const User = () => {
       <DashboardNavbar />
       <MDTypography variant="h5">Student</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" onClick={() => handleClickOpen()}>
-          + Add Student
+        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+          + New Student
         </MDButton>
+
         <Dialog open={open} onClose={handleClose}>
           <Create setOpen={setOpen} />
         </Dialog>
+
         <Dialog open={openupdate} onClose={handleCloseupdate}>
           <Update setOpenupdate={setOpenupdate} editData={editData} />
         </Dialog>
@@ -141,4 +182,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Student;
