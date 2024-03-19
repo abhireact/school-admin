@@ -72,7 +72,7 @@ export default function App() {
         },
       });
       if (response.status === 200) {
-        console.log("rbac data storing in app.tsx 2", response.data);
+        //rbac data storing
         setrbacInfo(response.data);
       }
     } catch (error) {

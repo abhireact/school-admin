@@ -155,10 +155,17 @@ const Section = () => {
       <DashboardNavbar />
       <MDTypography variant="h5">Section</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Section
-        </MDButton>
-
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "sectioncreate") ? (
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+              + New Section
+            </MDButton>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
         <Dialog open={open} onClose={handleClose}>
           <Create setOpen={setOpen} />
         </Dialog>

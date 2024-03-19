@@ -157,9 +157,17 @@ const Academic = () => {
       <DashboardNavbar />
       <MDTypography variant="h5">Academic Year</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Academic Year
-        </MDButton>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "academiccreate") ? (
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+              + New Academic Year
+            </MDButton>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
 
         <Dialog open={open} onClose={handleClose}>
           <Create setOpen={setOpen} />

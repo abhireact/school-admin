@@ -74,12 +74,6 @@ const routes = [
         component: <User />,
       },
       {
-        name: "Student",
-        key: "student",
-        route: "pages/school/student",
-        component: <Student />,
-      },
-      {
         name: "Academic Year",
         key: "academic",
         route: "pages/school/academic",
@@ -92,16 +86,23 @@ const routes = [
         component: <Section />,
       },
       {
-        name: "Wings",
-        key: "wings",
-        route: "pages/school/wings",
-        component: <Wings />,
-      },
-      {
         name: "Class",
         key: "class",
         route: "pages/school/class",
         component: <Class />,
+      },
+      {
+        name: "Student",
+        key: "student",
+        route: "pages/school/student",
+        component: <Student />,
+      },
+
+      {
+        name: "Wings",
+        key: "wings",
+        route: "pages/school/wings",
+        component: <Wings />,
       },
     ],
   },

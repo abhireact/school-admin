@@ -27,7 +27,7 @@ const Create = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_create_wing", values, {
+        .post("http://10.0.20.128:8000/mg_wing", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

@@ -107,12 +107,12 @@ const routes = [
         route: "/authentication/sign-in/cover",
         component: <SignInCover />,
       },
-      {
-        name: "Sign Up",
-        key: "sign-up",
-        route: "/authentication/sign-up/cover",
-        component: <SignUpCover />,
-      },
+      // {
+      //   name: "Sign Up",
+      //   key: "sign-up",
+      //   route: "/authentication/sign-up/cover",
+      //   component: <SignUpCover />,
+      // },
       {
         name: "Reset Password",
         key: "reset-password",

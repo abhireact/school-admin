@@ -23,22 +23,22 @@ const salesTableData = [
   {
     country: [US, "united state"],
     sales: 2500,
-    value: "$230,900",
+    value: "₹230,9000",
     bounce: "29.9%",
   },
   {
     country: [DE, "germany"],
     sales: "3.900",
-    value: "$440,000",
+    value: "₹440,0000",
     bounce: "40.22%",
   },
   {
     country: [GB, "great britain"],
     sales: "1.400",
-    value: "$190,700",
+    value: "₹190,7000",
     bounce: "23.44%",
   },
-  { country: [BR, "brasil"], sales: 562, value: "$143,960", bounce: "32.14%" },
+  { country: [BR, "brasil"], sales: 562, value: "₹143,960", bounce: "32.14%" },
 ];
 
 export default salesTableData;

@@ -158,9 +158,17 @@ const Academic = () => {
       <DashboardNavbar />
       <MDTypography variant="h5">Class</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Class
-        </MDButton>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "classcreate") ? (
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+              + New Class
+            </MDButton>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
 
         <Dialog open={open} onClose={handleClose}>
           <Create setOpen={setOpen} />
