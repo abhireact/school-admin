@@ -99,7 +99,7 @@ const Academic = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_wing_del", {
+      const response = await axios.delete("http://10.0.20.128:8000/mg_wing", {
         data: { wing_name: name },
         headers: {
           "Content-Type": "application/json",
@@ -130,18 +130,36 @@ const Academic = () => {
 
       action: (
         <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-              console.log(index, "update index");
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
-
-          <IconButton onClick={() => handleDelete(row.acd_name)}>
-            <DeleteIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "wingsupdate") ? (
+              <IconButton
+                onClick={() => {
+                  handleOpenupdate(index);
+                }}
+              >
+                <CreateRoundedIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "wingsdelete") ? (
+              <IconButton
+                onClick={() => {
+                  handleDelete(row.first_name + row.last_name);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
         </MDTypography>
       ),
     })),
@@ -151,10 +169,17 @@ const Academic = () => {
       <DashboardNavbar />
       <MDTypography variant="h5">Wings</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Wing
-        </MDButton>
-
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "wingscreate") ? (
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+              + New Wing
+            </MDButton>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
         <Dialog open={open} onClose={handleClose}>
           <Create setOpen={setOpen} />
         </Dialog>

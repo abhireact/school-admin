@@ -99,8 +99,8 @@ const Student = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.1283:8000/designation/", {
-        data: { accademic_name: name },
+      const response = await axios.delete("http://10.0.20.128:8000/delete_student", {
+        data: { student_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -134,18 +134,37 @@ const Student = () => {
 
       action: (
         <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-              console.log(index, "update index");
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "studentupdate") ? (
+              <IconButton
+                onClick={() => {
+                  handleOpenupdate(index);
+                }}
+              >
+                <CreateRoundedIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
 
-          <IconButton onClick={() => handleDelete(row.acd_name)}>
-            <DeleteIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "studentdelete") ? (
+              <IconButton
+                onClick={() => {
+                  handleDelete(row.first_name + row.last_name);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
         </MDTypography>
       ),
 

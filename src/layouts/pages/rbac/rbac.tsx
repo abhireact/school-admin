@@ -52,7 +52,39 @@ const Rbac = (props: any) => {
   const [mroles, setMRoles] = useState([]);
   const [worklocation, setWorklocation] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>([]);
-  const [checkedKeys, setCheckedKeys] = useState<Key[]>(["pay-sheadule"]);
+  const [checkedKeys, setCheckedKeys] = useState<Key[]>([
+    "schoolinfo",
+    "schoolinforead",
+    "schoolinfoupdate",
+    "schoolinfodelete",
+    "schoolinfocreate",
+    "academic",
+    "academicread",
+    "academicupdate",
+    "academicdelete",
+    "academiccreate",
+    "section",
+    "sectionread",
+    "sectionupdate",
+    "sectiondelete",
+    "sectioncreate",
+    "class",
+    "classread",
+    "classupdate",
+    "classdelete",
+    "classcreate",
+    "student",
+    "studentread",
+    "studentupdate",
+    "studentdelete",
+    "studentcreate",
+    "wings",
+    "wingsread",
+    "wingsupdate",
+    "wingsdelete",
+    "wingscreate",
+    "school",
+  ]);
   const [checkedKeystring, setCheckedKeystring] = useState();
   const [halfchecked, setHalfchecked] = useState([]);
   const [allchecked, setAllchecked] = useState([]);
@@ -85,7 +117,8 @@ const Rbac = (props: any) => {
               }
             );
             if (response.status === 200) {
-              console.log("Created Earning Successfully");
+              console.log("Created  Successfully");
+              message.success("Created Successfully");
               // window.location.reload();
               setOpenupdate2(false);
             }
@@ -107,7 +140,7 @@ const Rbac = (props: any) => {
             );
             if (response.status === 200) {
               console.log("Update Successfully");
-              // window.location.reload();
+              message.success("Updated Successfully");
               setOpenupdate2(false);
             }
           } catch (error) {
@@ -145,6 +178,7 @@ const Rbac = (props: any) => {
     }
     count += 1;
   }
+
   const getParentKeys = (key: React.Key, nodes: DataNode[] | undefined): React.Key[] => {
     const parentKeys: React.Key[] = [];
     const findParent = (currentKey: React.Key, nodesArray: DataNode[] | undefined): void => {
@@ -182,7 +216,7 @@ const Rbac = (props: any) => {
 
       console.log("Half-checked keys", halfCheckedKeys, checked);
       const combinedArray = Array.from(new Set([...checked, ...halfCheckedKeys]));
-      console.log(combinedArray, "combinedArray");
+      console.log("combinedArray", combinedArray);
       // setCheckedKeys(combinedArray);
       setAllchecked(combinedArray);
       setHalfchecked(halfCheckedKeys);
@@ -213,7 +247,49 @@ const Rbac = (props: any) => {
     console.log("onSelect", selectedKeysValue);
     setSelectedKeys(selectedKeysValue);
   };
-  console.log(treeData, "treedata");
+  const fetchRbac = async (roles_name: string) => {
+    try {
+      const response = await axios.get(
+        `http://10.0.20.128:8000/mg_rbac?school_name=mindcom&role_name=${roles_name}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log(
+          "filtered data",
+          response.data[0].sub_module_menu.filter(
+            (item: string) =>
+              item.endsWith("read") ||
+              item.endsWith("update") ||
+              item.endsWith("delete") ||
+              item.endsWith("create")
+          )
+        );
+        setCheckedKeys(
+          response.data[0].sub_module_menu.filter(
+            (item: string) =>
+              item.endsWith("read") ||
+              item.endsWith("update") ||
+              item.endsWith("delete") ||
+              item.endsWith("create")
+          )
+        );
+        setEditorcreate("edit");
+        setRbacData(response.data[0].sub_module_menu);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchRbac(editData2?.role_name);
+    // Fetch data from API on component mount
+  }, []);
+  console.log("Tree Data", treeData);
 
   // Cookies.set(["checboxvalue"], values?.access);
 
@@ -230,30 +306,7 @@ const Rbac = (props: any) => {
       );
     });
   };
-  const fetchRbac = async (roles_name: string) => {
-    try {
-      const response = await axios.get(
-        `http://10.0.20.128:8000/mg_rbac?school_name=mindcom&role_name=${roles_name}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        setCheckedKeys(response.data[0].sub_module_menu);
-        setEditorcreate("edit");
-        setRbacData(response.data[0].sub_module_menu);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchRbac(editData2?.role_name);
-    // Fetch data from API on component mount
-  }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       <Card sx={{ width: "80%", margin: "auto", mt: "2%" }}>
@@ -297,7 +350,6 @@ const Rbac = (props: any) => {
               autoExpandParent={autoExpandParent}
               onCheck={onCheck}
               checkedKeys={checkedKeys}
-              // halfcheckedKeys={halfcheckedKeys}
               onSelect={onSelect}
               selectedKeys={selectedKeys}
             >

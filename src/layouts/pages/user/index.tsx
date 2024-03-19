@@ -1,5 +1,6 @@
 import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
+import MDBox from "components/MDBox";
 import DialogContent from "@mui/material/DialogContent";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -82,7 +83,7 @@ const User = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_user_name/", {
+      .get("http://10.0.20.128:8000/mg_users_name/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -97,27 +98,7 @@ const User = () => {
         console.error("Error fetching data:", error);
       });
   }, []);
-  const handleDelete = async (user_name: any) => {
-    try {
-      const response = await axios.delete("http://10.0.20.1283:8000/designation/", {
-        data: { user_name: user_name },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        message.error("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== user_name);
-        setData(updatedData); // Update the state with the new data
-      }
-    } catch (error: unknown) {
-      console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error("An unexpected error occurred");
-    }
-  };
+
   const dataTableData = {
     columns: [
       { Header: "Username", accessor: "username" },
@@ -141,10 +122,6 @@ const User = () => {
           >
             <CreateRoundedIcon />
           </IconButton>
-
-          <IconButton onClick={() => handleDelete(row.username)}>
-            <DeleteIcon />
-          </IconButton>
         </MDTypography>
       ),
 
@@ -157,17 +134,34 @@ const User = () => {
       <DashboardNavbar />
       <MDTypography variant="h5">User</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New User
-        </MDButton>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "usercreate") ? (
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+              + New User
+            </MDButton>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
 
         <Dialog open={open} onClose={handleClose}>
           <Create setOpen={setOpen} />
         </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "userupdate") ? (
+            <Dialog open={openupdate} onClose={handleCloseupdate}>
+              <Update setOpenupdate={setOpenupdate} editData={editData} />
+            </Dialog>
+          ) : (
+            <Dialog open={openupdate} onClose={handleCloseupdate}>
+              <MDBox p={1}>You can&apos;t Update</MDBox>
+            </Dialog>
+          )
+        ) : (
+          ""
+        )}
       </Grid>
       <DataTable table={dataTableData} />
     </DashboardLayout>

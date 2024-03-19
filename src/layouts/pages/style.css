@@ -1,0 +1,29 @@
+.newhighlight {
+  line-height: 2;
+
+  width: 100%;
+  background-color: #add8e6;
+  display: flex;
+}
+
+.highlight-left {
+  flex-grow: 1; /* Changed to 1 to occupy 1/5 of the width */
+  padding-left: 10px;
+  padding-top: 5px; /* No padding on the top */
+  padding-bottom: 0;
+  font-weight: bold;
+  font-size: 20px;
+  color: #ff204e;
+}
+
+.highlight-right {
+  flex-grow: 4; /* Changed to 4 to occupy 4/5 of the width */
+  padding: 10px;
+  overflow: hidden;
+}
+.highlight-right a {
+  font-weight: bold;
+  color: #5356ff;
+  font-style: italic;
+  text-decoration: none; /* Remove underline from the anchor tag */
+}
