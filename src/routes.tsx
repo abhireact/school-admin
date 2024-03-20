@@ -45,6 +45,7 @@ import Class from "layouts/pages/class";
 import Wings from "layouts/pages/wings";
 import Cookies from "js-cookie";
 import axios from "axios";
+import MYProfile from "layouts/pages/myprofile";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -118,6 +119,12 @@ const routes = [
         key: "reset-password",
         route: "/authentication/reset-password/cover",
         component: <ResetCover />,
+      },
+      {
+        name: "My Profile",
+        key: "myprofile",
+        route: "/pages/authentication/myprofile",
+        component: <MYProfile />,
       },
     ],
   },

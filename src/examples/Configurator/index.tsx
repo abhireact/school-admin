@@ -148,7 +148,7 @@ function Configurator(): JSX.Element {
         px={3}
       >
         <MDBox>
-          <MDTypography variant="h5">Material UI Configurator</MDTypography>
+          <MDTypography variant="h5">Mindcom Group</MDTypography>
           <MDTypography variant="body2" color="text">
             See our dashboard options.
           </MDTypography>
@@ -301,45 +301,7 @@ function Configurator(): JSX.Element {
           <Switch checked={darkMode} onChange={handleDarkMode} />
         </MDBox>
         <Divider />
-        <MDBox mt={3} mb={2}>
-          <MDBox mb={2}>
-            <MDButton
-              component={Link}
-              href="https://www.creative-tim.com/product/material-dashboard-2-pro-react-ts"
-              target="_blank"
-              rel="noreferrer"
-              color="info"
-              variant="gradient"
-              fullWidth
-            >
-              buy now
-            </MDButton>
-          </MDBox>
-          <MDBox mb={2}>
-            <MDButton
-              component={Link}
-              href="https://www.creative-tim.com/product/material-dashboard-pro-react"
-              target="_blank"
-              rel="noreferrer"
-              color="dark"
-              variant="gradient"
-              fullWidth
-            >
-              buy javascript version
-            </MDButton>
-          </MDBox>
-          <MDButton
-            component={Link}
-            href="https://www.creative-tim.com/learning-lab/react/quick-start/material-dashboard/"
-            target="_blank"
-            rel="noreferrer"
-            color={darkMode ? "light" : "dark"}
-            variant="outlined"
-            fullWidth
-          >
-            view documentation
-          </MDButton>
-        </MDBox>
+
         <MDBox display="flex" justifyContent="center">
           <a
             className="github-button"
@@ -349,7 +311,7 @@ function Configurator(): JSX.Element {
             data-show-count="true"
             aria-label="Star creativetimofficial/ct-material-dashboard-pro-react on GitHub"
           >
-            Star
+            Mindcom Group
           </a>
         </MDBox>
         <MDBox mt={2} textAlign="center">

@@ -24,7 +24,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
-
+import MyAccount from "./MyAccount";
 // Material Dashboard 2 PRO React TS components
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
@@ -155,11 +155,10 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/cover">
-                <IconButton sx={navbarIconButton} size="large" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
+              <IconButton sx={navbarIconButton} size="large" disableRipple>
+                <MyAccount />
+              </IconButton>
+
               <IconButton
                 size="small"
                 disableRipple

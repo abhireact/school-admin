@@ -13,12 +13,14 @@
   padding-bottom: 0;
   font-weight: bold;
   font-size: 20px;
+  text-align: center;
   color: #ff204e;
 }
 
 .highlight-right {
   flex-grow: 4; /* Changed to 4 to occupy 4/5 of the width */
   padding: 10px;
+
   overflow: hidden;
 }
 .highlight-right a {
