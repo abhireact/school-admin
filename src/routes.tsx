@@ -45,7 +45,10 @@ import Class from "layouts/pages/class";
 import Wings from "layouts/pages/wings";
 import Cookies from "js-cookie";
 import axios from "axios";
+import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/myprofile";
+
+import StudentDetails from "layouts/pages/student";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -125,6 +128,24 @@ const routes = [
         key: "myprofile",
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Student",
+    key: "student",
+    icon: (
+      <Icon fontSize="medium">
+        <BadgeIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Student Details",
+        key: "studentdetails",
+        route: "pages/school/studentdetails",
+        component: <StudentDetails />,
       },
     ],
   },

@@ -36,14 +36,16 @@ import School from "layouts/pages/school/create";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
 import User from "layouts/pages/user";
-import Student from "layouts/pages/student";
+import StudentDetails from "layouts/pages/student";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import Academic from "layouts/pages/academic";
 import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
 import Wings from "layouts/pages/wings";
-
+import Department from "layouts/pages/department";
+import AttributionIcon from "@mui/icons-material/Attribution";
+import BadgeIcon from "@mui/icons-material/Badge";
 const routes = [
   {
     type: "collapse",
@@ -91,12 +93,6 @@ const routes = [
         route: "pages/school/class",
         component: <Class />,
       },
-      {
-        name: "Student",
-        key: "student",
-        route: "pages/school/student",
-        component: <Student />,
-      },
 
       {
         name: "Wings",
@@ -121,6 +117,42 @@ const routes = [
         key: "roles",
         route: "pages/rbac/roles",
         component: <Roles />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Student",
+    key: "student",
+    icon: (
+      <Icon fontSize="medium">
+        <BadgeIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Student Details",
+        key: "studentdetails",
+        route: "pages/school/studentdetails",
+        component: <StudentDetails />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Employee",
+    key: "employee",
+    icon: (
+      <Icon fontSize="medium">
+        <AttributionIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Department",
+        key: "department",
+        route: "pages/employee/department",
+        component: <Department />,
       },
     ],
   },

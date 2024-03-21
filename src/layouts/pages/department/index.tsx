@@ -20,11 +20,18 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const Student = () => {
+const Employee = () => {
+  // To fetch rbac from redux:  Start
+  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
+  // console.log("rbac user", rbacData);
+  //End
+
+  // Fetch rbac  Date from useEffect: Start
+
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.128:8000/mg_dept`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -75,7 +82,7 @@ const Student = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/show_student", {
+      .get("http://10.0.20.128:8000/mg_dept", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -92,8 +99,8 @@ const Student = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/delete_student", {
-        data: { student_name: name },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_dept", {
+        data: { class_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -113,59 +120,72 @@ const Student = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Student Name", accessor: "full_name" },
-      { Header: "Class", accessor: "cls_name" },
-      { Header: "Section", accessor: "sec_name" },
-      { Header: "Academic Year", accessor: "acd_name" },
-      { Header: "Mobile Number", accessor: "mob_no" },
+      { Header: "Department Name ", accessor: "dept_name" },
+      { Header: "Department Code", accessor: "dept_code" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p">{row.acd_name}</MDTypography>,
-
       action: (
         <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "departmentupdate") ? (
+              <IconButton
+                onClick={() => {
+                  handleOpenupdate(index);
+                }}
+              >
+                <CreateRoundedIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
 
-          <IconButton
-            onClick={() => {
-              handleDelete(row.first_name + row.last_name);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "departmentdelete") ? (
+              <IconButton
+                onClick={() => {
+                  handleDelete(row.dept_name);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
         </MDTypography>
       ),
 
-      full_name: (
-        <MDTypography variant="p">
-          {row.first_name}
-          {row.last_name}
-        </MDTypography>
-      ),
-      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
-      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
-      mob_no: <MDTypography variant="p">{row.mob_no}</MDTypography>,
+      dept_name: <MDTypography variant="p">{row.dept_name}</MDTypography>,
+
+      dept_code: <MDTypography variant="p">{row.dept_code}</MDTypography>,
     })),
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Student</MDTypography>
+      <MDTypography variant="h5">Department</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-          + New Student
-        </MDButton>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "departmentcreate") ? (
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+              + New Department
+            </MDButton>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
 
-        <Dialog open={open} onClose={handleClose} maxWidth="md">
+        <Dialog open={open} onClose={handleClose}>
           <Create setOpen={setOpen} />
         </Dialog>
 
@@ -178,4 +198,4 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default Employee;
