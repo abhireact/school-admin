@@ -165,7 +165,7 @@ const Student = () => {
           + New Student
         </MDButton>
 
-        <Dialog open={open} onClose={handleClose} maxWidth="md">
+        <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <Create setOpen={setOpen} />
         </Dialog>
 

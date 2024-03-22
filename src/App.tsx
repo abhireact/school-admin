@@ -192,6 +192,7 @@ export default function App() {
           </>
         )}
         {layout === "vr" && <Configurator />}
+
         <Routes>
           {getRoutes(routes)}
           {token ? (
