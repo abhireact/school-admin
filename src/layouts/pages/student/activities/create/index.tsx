@@ -41,7 +41,7 @@ const Activity = (props: any) => {
       student_name: student_guardian,
       activity_name: "",
 
-      certificate: "",
+      certificate: null,
     },
 
     // validationSchema: validationSchema,
@@ -49,7 +49,7 @@ const Activity = (props: any) => {
     onSubmit: (values, action) => {
       if (editActivities) {
         axios
-          .put("http://10.0.20.128:8000/mg_guardian", values, {
+          .put("http://10.0.20.128:8000/mg_activity", values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -58,8 +58,9 @@ const Activity = (props: any) => {
           .then(() => {
             message.success("Guardian added successfully!");
             setEditActivities(false);
+            setFieldValue("certificate", null);
 
-            fetchStudentGuardian();
+            fetchStudentActivities();
           })
           .catch(() => {
             message.error("Error on adding Guardian!");
@@ -67,7 +68,7 @@ const Activity = (props: any) => {
       } else {
         axios
           .post(
-            "http://10.0.20.128:8000/mg_guardian",
+            "http://10.0.20.128:8000/mg_activity",
             { ...values, student_name: student_guardian },
             {
               headers: {
@@ -79,8 +80,9 @@ const Activity = (props: any) => {
           .then(() => {
             message.success("Guardian added successfully!");
             setEditActivities(false);
+            setFieldValue("certificate", "");
 
-            fetchStudentGuardian();
+            fetchStudentActivities();
           })
           .catch(() => {
             message.error("Error on adding Guardian!");
@@ -90,17 +92,17 @@ const Activity = (props: any) => {
     },
   });
   const handleUpdate = (index: number) => {
-    const guardiandata = activityinfo[index];
+    const activitydata = activityinfo[index];
     setEditActivities(true);
-    console.log(guardiandata, "guardian data");
-    setFieldValue("activity_name", guardiandata.activity_name);
+    console.log(activitydata, "Activity Data");
+    setFieldValue("activity_name", activitydata.activity_name);
 
     setFieldValue("certificate", null);
   };
-  const handleDelete = async (guardian_name: string) => {
+  const handleDelete = async (activity_name: string) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_guardian", {
-        data: { stud_name: student_guardian, guardian_name: guardian_name },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_activity", {
+        data: { student_name: student_guardian, activity_name: activity_name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -109,7 +111,8 @@ const Activity = (props: any) => {
       if (response.status === 200) {
         message.success("Deleted successFully");
         // Filter out the deleted user from the data
-        const updatedData = activityinfo.filter((row) => row.username !== guardian_name);
+        setEditActivities(false);
+        const updatedData = activityinfo.filter((row) => row.activity_name !== activity_name);
         setActivityInfo(updatedData); // Update the state with the new data
       }
     } catch (error: unknown) {
@@ -119,9 +122,9 @@ const Activity = (props: any) => {
     }
   };
 
-  const fetchStudentGuardian = () => {
+  const fetchStudentActivities = () => {
     axios
-      .get(`http://10.0.20.128:8000/mg_guardian?stud_name=${student_guardian}`, {
+      .get(`http://10.0.20.128:8000/mg_activity?student_name=${student_guardian}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -190,7 +193,7 @@ const Activity = (props: any) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
+      <MDBox px={4} pb={2}>
         <Grid container>
           {activityinfo.length !== 0 ? (
             <>
@@ -220,7 +223,7 @@ const Activity = (props: any) => {
               mb={2}
               sx={{ width: "80%" }}
               variant="standard"
-              label={<MDTypography variant="body2">Activity Name</MDTypography>}
+              label={<MDTypography variant="body2">Name of Activity</MDTypography>}
               name="activity_name"
               value={values.activity_name}
               onChange={editActivities ? undefined : handleChange}
@@ -240,16 +243,7 @@ const Activity = (props: any) => {
               onBlur={handleBlur}
             />
           </Grid>
-        </Grid>
-        <Grid container>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            py={2}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-            mr={5}
-          >
+          <Grid item xs={6} sm={4} mt={2}>
             <MDButton color="info" variant="text" type="submit" style={{ fontSize: "16px" }}>
               ADD &nbsp;+
             </MDButton>

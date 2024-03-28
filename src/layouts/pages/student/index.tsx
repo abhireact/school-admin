@@ -158,7 +158,9 @@ const Student = () => {
     <DashboardLayout>
       <DashboardNavbar />
       {showpage ? (
-        <Create />
+        <>
+          <Create setShowpage={setShowpage} />
+        </>
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>

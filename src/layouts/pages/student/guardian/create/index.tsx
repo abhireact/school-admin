@@ -170,7 +170,9 @@ const Guardian = (props: any) => {
     rows: guardianInfo.map((row, index) => ({
       fullname: (
         <MDTypography variant="p">
-          {row.first_name + " " + row.middle_name + " " + row.last_name}
+          {row.middle_name === null
+            ? row.first_name + " " + row.middle_name + " " + row.last_name
+            : row.first_name + " " + row.last_name}
         </MDTypography>
       ),
       relation: <MDTypography variant="p">{row.relation}</MDTypography>,
@@ -220,7 +222,7 @@ const Guardian = (props: any) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
+      <MDBox px={4}>
         <Grid container>
           {guardianInfo.length !== 0 ? (
             <>
@@ -387,6 +389,7 @@ const Guardian = (props: any) => {
               sx={{ width: "80%" }}
               variant="standard"
               onBlur={handleBlur}
+              value={values.img}
             />
           </Grid>
         </Grid>

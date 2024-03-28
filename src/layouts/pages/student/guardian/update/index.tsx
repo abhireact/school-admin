@@ -222,7 +222,7 @@ const Guardian = (props: any) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
+      <MDBox px={4}>
         <Grid container>
           {guardianInfo.length !== 0 ? (
             <>
