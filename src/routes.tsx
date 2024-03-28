@@ -49,6 +49,7 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/myprofile";
 
 import StudentDetails from "layouts/pages/student";
+import NewStudent from "layouts/pages/student/create";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -128,24 +129,6 @@ const routes = [
         key: "myprofile",
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
-      },
-    ],
-  },
-  {
-    type: "collapse",
-    name: "Student",
-    key: "student",
-    icon: (
-      <Icon fontSize="medium">
-        <BadgeIcon />
-      </Icon>
-    ),
-    collapse: [
-      {
-        name: "Student Details",
-        key: "studentdetails",
-        route: "pages/school/studentdetails",
-        component: <StudentDetails />,
       },
     ],
   },

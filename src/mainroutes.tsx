@@ -139,6 +139,24 @@ const routes = [
       },
     ],
   },
+  {
+    type: "collapse",
+    name: "Student",
+    key: "student",
+    icon: (
+      <Icon fontSize="medium">
+        <BadgeIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Student Details",
+        key: "studentdetails",
+        route: "/pages/school/studentdetails",
+        component: <StudentDetails />,
+      },
+    ],
+  },
 ];
 
 export default routes;
