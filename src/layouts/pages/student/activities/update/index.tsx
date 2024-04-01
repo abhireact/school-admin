@@ -41,7 +41,7 @@ const Activity = (props: any) => {
       student_name: student_guardian,
       activity_name: "",
 
-      certificate: null,
+      certificate: "",
     },
 
     // validationSchema: validationSchema,
@@ -56,31 +56,27 @@ const Activity = (props: any) => {
             },
           })
           .then(() => {
-            message.success("Guardian added successfully!");
+            message.success("Activity added successfully!");
             setEditActivities(false);
             setFieldValue("certificate", null);
 
             fetchStudentActivities();
           })
           .catch(() => {
-            message.error("Error on adding Guardian!");
+            message.error("Error on adding Activity!");
           });
       } else {
         axios
-          .post(
-            "http://10.0.20.128:8000/mg_activity",
-            { ...values, student_name: student_guardian },
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
+          .post("http://10.0.20.128:8000/mg_activity", values, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then(() => {
             message.success("Guardian added successfully!");
             setEditActivities(false);
-            setFieldValue("certificate", "");
+            setFieldValue("certificate", null);
 
             fetchStudentActivities();
           })
@@ -243,6 +239,7 @@ const Activity = (props: any) => {
               sx={{ width: "80%" }}
               variant="standard"
               onBlur={handleBlur}
+              //value={values.certificate}
             />
           </Grid>
           <Grid item xs={6} sm={4} mt={2}>

@@ -49,6 +49,24 @@ import BadgeIcon from "@mui/icons-material/Badge";
 const routes = [
   {
     type: "collapse",
+    name: "RBAC",
+    key: "rbac",
+    icon: (
+      <Icon fontSize="medium">
+        <ManageAccountsIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Roles",
+        key: "roles",
+        route: "pages/rbac/roles",
+        component: <Roles />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
     name: "School",
     key: "school",
     icon: (
@@ -82,10 +100,10 @@ const routes = [
         component: <Academic />,
       },
       {
-        name: "Section",
-        key: "section",
-        route: "pages/school/section",
-        component: <Section />,
+        name: "Wings",
+        key: "wings",
+        route: "pages/school/wings",
+        component: <Wings />,
       },
       {
         name: "Class",
@@ -93,52 +111,15 @@ const routes = [
         route: "pages/school/class",
         component: <Class />,
       },
-
       {
-        name: "Wings",
-        key: "wings",
-        route: "pages/school/wings",
-        component: <Wings />,
-      },
-    ],
-  },
-  {
-    type: "collapse",
-    name: "RBAC",
-    key: "rbac",
-    icon: (
-      <Icon fontSize="medium">
-        <ManageAccountsIcon />
-      </Icon>
-    ),
-    collapse: [
-      {
-        name: "Roles",
-        key: "roles",
-        route: "pages/rbac/roles",
-        component: <Roles />,
+        name: "Section",
+        key: "section",
+        route: "pages/school/section",
+        component: <Section />,
       },
     ],
   },
 
-  {
-    type: "collapse",
-    name: "Employee",
-    key: "employee",
-    icon: (
-      <Icon fontSize="medium">
-        <AttributionIcon />
-      </Icon>
-    ),
-    collapse: [
-      {
-        name: "Department",
-        key: "department",
-        route: "pages/employee/department",
-        component: <Department />,
-      },
-    ],
-  },
   {
     type: "collapse",
     name: "Student",
@@ -154,6 +135,24 @@ const routes = [
         key: "studentdetails",
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Employee",
+    key: "employee",
+    icon: (
+      <Icon fontSize="medium">
+        <AttributionIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Department",
+        key: "department",
+        route: "pages/employee/department",
+        component: <Department />,
       },
     ],
   },

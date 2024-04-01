@@ -41,7 +41,7 @@ const Activity = (props: any) => {
       student_name: student_guardian,
       activity_name: "",
 
-      certificate: null,
+      certificate: "",
     },
 
     // validationSchema: validationSchema,
@@ -56,36 +56,32 @@ const Activity = (props: any) => {
             },
           })
           .then(() => {
-            message.success("Guardian added successfully!");
+            message.success("Activity added successfully!");
             setEditActivities(false);
             setFieldValue("certificate", null);
 
             fetchStudentActivities();
           })
           .catch(() => {
-            message.error("Error on adding Guardian!");
+            message.error("Error on adding activity!");
           });
       } else {
         axios
-          .post(
-            "http://10.0.20.128:8000/mg_activity",
-            { ...values, student_name: student_guardian },
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
+          .post("http://10.0.20.128:8000/mg_activity", values, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then(() => {
-            message.success("Guardian added successfully!");
+            message.success("Activity added successfully!");
             setEditActivities(false);
-            setFieldValue("certificate", "");
+            setFieldValue("certificate", null);
 
             fetchStudentActivities();
           })
           .catch(() => {
-            message.error("Error on adding Guardian!");
+            message.error("Error on adding Activity!");
           });
       }
       action.resetForm();
@@ -136,7 +132,7 @@ const Activity = (props: any) => {
         console.log(response.data, "student Guardian data");
       })
       .catch(() => {
-        console.error("Error on getting guardian details !");
+        console.error("Error on getting activity details !");
       });
   };
 
@@ -190,7 +186,6 @@ const Activity = (props: any) => {
       }
     }
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <MDBox px={4} pb={2}>

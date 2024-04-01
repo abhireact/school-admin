@@ -82,7 +82,7 @@ const Class = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_show_class", {
+      .get("http://10.0.20.128:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ const Class = () => {
         },
       });
       if (response.status === 200) {
-        message.error("Deleted successFully");
+        message.success("Deleted successFully");
         // Filter out the deleted user from the data
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
@@ -121,7 +121,7 @@ const Class = () => {
   const dataTableData = {
     columns: [
       { Header: "Class", accessor: "cls_name" },
-      { Header: "Section", accessor: "sec_name" },
+      { Header: "Wings", accessor: "wing_name" },
       { Header: "Code", accessor: "code" },
       { Header: "Academic Year", accessor: "acd_name" },
 
@@ -169,7 +169,7 @@ const Class = () => {
 
       cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
       code: <MDTypography variant="p">{row.code}</MDTypography>,
-      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
+      wing_name: <MDTypography variant="p">{row.wing_name}</MDTypography>,
     })),
   };
   return (

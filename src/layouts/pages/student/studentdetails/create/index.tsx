@@ -489,7 +489,7 @@ const Create = (props: any) => {
               accept="image/*"
               name="stud_img"
               onChange={handleImage}
-              sx={{ width: "84%" }}
+              sx={{ width: "90%" }}
               variant="standard"
               InputLabelProps={{ shrink: true }}
             />
@@ -751,9 +751,9 @@ const Create = (props: any) => {
                 <MDInput
                   mb={2}
                   sx={{ width: "80%" }}
-                  type="numbers"
+                  type="number"
                   variant="standard"
-                  label={<MDTypography variant="body2">Grade / Percentage</MDTypography>}
+                  label={<MDTypography variant="body2">Percentage</MDTypography>}
                   name="grade_percentage"
                   value={values.grade_percentage}
                   onChange={handleChange}

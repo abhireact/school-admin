@@ -726,9 +726,9 @@ const Update = (props: any) => {
                 <MDInput
                   mb={2}
                   sx={{ width: "80%" }}
-                  type="numbers"
+                  type="number"
                   variant="standard"
-                  label={<MDTypography variant="body2">Grade / Percentage</MDTypography>}
+                  label={<MDTypography variant="body2">Percentage</MDTypography>}
                   name="grade_percentage"
                   value={values.grade_percentage}
                   onChange={handleChange}

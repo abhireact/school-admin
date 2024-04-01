@@ -24,11 +24,12 @@ const Create = (props: any) => {
     initialValues: {
       acd_name: "",
       sec_name: "",
+      cls_name: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_create_section", values, {
+        .post("http://10.0.20.128:8000/mg_section", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -50,6 +51,38 @@ const Create = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
+              Section Name
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="sec_name"
+              value={values.sec_name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Class Name
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="cls_name"
+              value={values.cls_name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
               Academic Year
             </MDTypography>
           </Grid>
@@ -61,22 +94,6 @@ const Create = (props: any) => {
               variant="standard"
               name="acd_name"
               value={values.acd_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Section Name
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="sec_name"
-              value={values.sec_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />

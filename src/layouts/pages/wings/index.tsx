@@ -99,15 +99,14 @@ const Academic = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_wing", {
-        data: { wing_name: name },
+      const response = await axios.delete(`http://10.0.20.128:8000/mg_wing?wing_name=${name}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
       if (response.status === 200) {
-        message.error("Deleted successFully");
+        message.success("Deleted successFully");
         // Filter out the deleted user from the data
         const updatedData = data.filter((row) => row.wing_name !== name);
         setData(updatedData); // Update the state with the new data
@@ -149,7 +148,7 @@ const Academic = () => {
             rbacData?.find((element: string) => element === "wingsdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.first_name + row.last_name);
+                  handleDelete(row.wing_name);
                 }}
               >
                 <DeleteIcon />

@@ -389,7 +389,6 @@ const Guardian = (props: any) => {
               sx={{ width: "80%" }}
               variant="standard"
               onBlur={handleBlur}
-              value={values.img}
             />
           </Grid>
         </Grid>

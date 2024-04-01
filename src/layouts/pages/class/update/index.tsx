@@ -23,15 +23,16 @@ const Update = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       acd_name: editData.acd_name,
-      sec_name: editData.sec_name,
+      wing_name: editData.wing_name,
       code: editData.code,
 
       cls_name: editData.cls_name,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
+      const sendValues = { ...values, old_cls_name: editData.cls_name };
       axios
-        .put("http://10.0.20.128:8000/mg_class", values, {
+        .put("http://10.0.20.128:8000/mg_class", sendValues, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -69,7 +70,7 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Section Name
+              Wing Name
             </MDTypography>
           </Grid>
 
@@ -78,8 +79,8 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="sec_name"
-              value={values.sec_name}
+              name="wing_name"
+              value={values.wing_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />

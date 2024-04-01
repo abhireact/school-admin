@@ -165,9 +165,17 @@ const Student = () => {
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
             <MDTypography variant="h5">Student</MDTypography>
-            <MDButton color="info" variant="outlined" onClick={handleShowPage}>
-              New Student +
-            </MDButton>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "studentdetailscreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + Student
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
           </Grid>
           <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
             <Update setOpenupdate={setOpenupdate} editData={editData} />

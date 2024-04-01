@@ -23,7 +23,7 @@ const Create = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       acd_name: "",
-      sec_name: "",
+      wing_name: "",
       code: "",
 
       cls_name: "",
@@ -70,7 +70,7 @@ const Create = (props: any) => {
 
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Section Name
+              Wing Name
             </MDTypography>
           </Grid>
 
@@ -79,8 +79,8 @@ const Create = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="sec_name"
-              value={values.sec_name}
+              name="wing_name"
+              value={values.wing_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />

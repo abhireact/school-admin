@@ -82,16 +82,16 @@ const Section = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_show_section", {
+      .get("http://10.0.20.128:8000/mg_section", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setData(response.data);
+        setData(response.data.flat());
 
-        console.log(response.data);
+        console.log(response.data.flat());
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -99,15 +99,15 @@ const Section = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_delete_section", {
-        data: { section_name: name },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_section", {
+        data: { sec_name: name.sec_name, cls_name: name.cls_name, acd_name: name.acd_name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
       if (response.status === 200) {
-        message.error("Deleted successFully");
+        message.success("Deleted successFully");
         // Filter out the deleted user from the data
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
@@ -120,9 +120,9 @@ const Section = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Academic Year", accessor: "acd_name" },
-
       { Header: "Section Name", accessor: "sec_name" },
+      { Header: "Class Name", accessor: "cls_name" },
+      { Header: "Academic Year", accessor: "acd_name" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -151,7 +151,7 @@ const Section = () => {
             rbacData?.find((element: string) => element === "sectiondelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.sec_name);
+                  handleDelete(row);
                 }}
               >
                 <DeleteIcon />
@@ -166,6 +166,7 @@ const Section = () => {
       ),
 
       sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
+      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
     })),
   };
   return (
