@@ -1,29 +1,4 @@
 // Material Dashboard 2 PRO React layouts
-import Analytics from "layouts/dashboards/analytics";
-import Sales from "layouts/dashboards/sales";
-import ProfileOverview from "layouts/pages/profile/profile-overview";
-import AllProjects from "layouts/pages/profile/all-projects";
-import NewUser from "layouts/pages/users/new-user";
-import Settings from "layouts/pages/account/settings";
-import Billing from "layouts/pages/account/billing";
-import Invoice from "layouts/pages/account/invoice";
-import Timeline from "layouts/pages/projects/timeline";
-import PricingPage from "layouts/pages/pricing-page";
-import Widgets from "layouts/pages/widgets";
-import RTL from "layouts/pages/rtl";
-import Charts from "layouts/pages/charts";
-import Notifications from "layouts/pages/notifications";
-import Kanban from "layouts/applications/kanban";
-import Wizard from "layouts/applications/wizard";
-import DataTables from "layouts/applications/data-tables";
-import Calendar from "layouts/applications/calendar";
-import NewProduct from "layouts/ecommerce/products/new-product";
-import EditProduct from "layouts/ecommerce/products/edit-product";
-import ProductPage from "layouts/ecommerce/products/product-page";
-import OrderList from "layouts/ecommerce/orders/order-list";
-import OrderDetails from "layouts/ecommerce/orders/order-details";
-
-import SignInCover from "layouts/authentication/sign-in";
 
 import SignUpCover from "layouts/authentication/sign-up";
 import ResetCover from "layouts/authentication/reset-password";
@@ -37,8 +12,10 @@ import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
 import User from "layouts/pages/user";
 import StudentDetails from "layouts/pages/student";
+import EmployeeProfile from "layouts/pages/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-
+import EmployeeType from "layouts/pages/employee_type";
+import EmployeeLeave from "layouts/pages/employee_leave";
 import Academic from "layouts/pages/academic";
 import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
@@ -153,6 +130,24 @@ const routes = [
         key: "department",
         route: "pages/employee/department",
         component: <Department />,
+      },
+      {
+        name: "Employee Profile",
+        key: "employee_profile",
+        route: "pages/employee/employee_profile",
+        component: <EmployeeProfile />,
+      },
+      {
+        name: "Employee Type",
+        key: "employee_type",
+        route: "pages/employee/employee_type",
+        component: <EmployeeType />,
+      },
+      {
+        name: "Employee Leave",
+        key: "employee_leave",
+        route: "pages/employee/employee_leave",
+        component: <EmployeeLeave />,
       },
     ],
   },

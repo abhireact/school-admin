@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const Employee = () => {
+const Class = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -48,38 +49,8 @@ const Employee = () => {
   useEffect(() => {
     fetchRbac();
   }, [token]);
-
   //End
   const [data, setData] = useState([]);
-  useEffect(() => {
-    axios
-      .get("http://10.0.20.128:8000/mg_dept", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
 
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
@@ -98,16 +69,34 @@ const Employee = () => {
     setOpenupdate(false);
   }; //End
 
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.128:8000/mg_emptype", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(`http://10.0.20.128:8000/mg_dept?Dept_name=${name}`, {
+      const response = await axios.delete("http://10.0.20.128:8000/mg_emptype", {
+        data: { emp_type: name.emp_type },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
       if (response.status === 200) {
-        message.error("Deleted successFully");
+        message.success("Deleted successFully");
         // Filter out the deleted user from the data
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
@@ -120,8 +109,7 @@ const Employee = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Department Name ", accessor: "dept_name" },
-      { Header: "Department Code", accessor: "dept_code" },
+      { Header: "Employment Type", accessor: "emp_type" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -130,7 +118,7 @@ const Employee = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "departmentupdate") ? (
+            rbacData?.find((element: string) => element === "classupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -144,11 +132,12 @@ const Employee = () => {
           ) : (
             ""
           )}
+
           {rbacData ? (
-            rbacData?.find((element: string) => element === "departmentdelete") ? (
+            rbacData?.find((element: string) => element === "classdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.dept_name);
+                  handleDelete(row);
                 }}
               >
                 <DeleteIcon />
@@ -162,39 +151,45 @@ const Employee = () => {
         </MDTypography>
       ),
 
-      dept_name: <MDTypography variant="p">{row.dept_name}</MDTypography>,
-
-      dept_code: <MDTypography variant="p">{row.dept_code}</MDTypography>,
+      emp_type: <MDTypography variant="p">{row.emp_type}</MDTypography>,
     })),
+  };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Department</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "departmentcreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Department
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
+      {showpage ? (
+        <>
+          <Create handleShowPage={handleShowPage} />
+        </>
+      ) : (
+        <>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Leave Type</MDTypography>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "employee_profilecreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Leave Type
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
 
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+            <Dialog open={openupdate} onClose={handleCloseupdate}>
+              <Update setOpenupdate={setOpenupdate} editData={editData} />
+            </Dialog>
+          </Grid>
+          <DataTable table={dataTableData} />
+        </>
+      )}
     </DashboardLayout>
   );
 };
 
-export default Employee;
+export default Class;
