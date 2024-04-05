@@ -22,9 +22,7 @@ import EditProduct from "layouts/ecommerce/products/edit-product";
 import ProductPage from "layouts/ecommerce/products/product-page";
 import OrderList from "layouts/ecommerce/orders/order-list";
 import OrderDetails from "layouts/ecommerce/orders/order-details";
-
 import SignInCover from "layouts/authentication/sign-in";
-
 import SignUpCover from "layouts/authentication/sign-up";
 import ResetCover from "layouts/authentication/reset-password";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
@@ -47,7 +45,6 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/myprofile";
-
 import StudentDetails from "layouts/pages/student";
 import NewStudent from "layouts/pages/student/create";
 
@@ -75,6 +72,7 @@ try {
     });
     if (response.status == 200) {
       submm = response.data;
+      console.log(" my api routes", submm);
     }
   }
 } catch (error) {
@@ -112,12 +110,7 @@ const routes = [
         route: "/authentication/sign-in/cover",
         component: <SignInCover />,
       },
-      // {
-      //   name: "Sign Up",
-      //   key: "sign-up",
-      //   route: "/authentication/sign-up/cover",
-      //   component: <SignUpCover />,
-      // },
+
       {
         name: "Reset Password",
         key: "reset-password",
@@ -157,6 +150,7 @@ for (const i of route2 as RouteItem[]) {
   if (module.collapse.length > 0) {
     routes.push(module);
   }
+  console.log(" my complete routes", routes);
 }
 export default routes;
 

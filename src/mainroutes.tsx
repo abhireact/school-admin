@@ -1,28 +1,25 @@
 // Material Dashboard 2 PRO React layouts
-
-import SignUpCover from "layouts/authentication/sign-up";
-import ResetCover from "layouts/authentication/reset-password";
-import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import SchoolIcon from "@mui/icons-material/School";
-import MDAvatar from "components/MDAvatar";
 import Icon from "@mui/material/Icon";
-import profilePicture from "assets/images/team-3.jpg";
 import School from "layouts/pages/school/create";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
 import User from "layouts/pages/user";
 import StudentDetails from "layouts/pages/student";
-import EmployeeProfile from "layouts/pages/employee_profile";
+import EmployeeProfile from "layouts/pages/profession";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import EmployeeType from "layouts/pages/employee_type";
-import EmployeeLeave from "layouts/pages/employee_leave";
+import EmployeeType from "layouts/pages/employement_type";
+import EmployeeLeave from "layouts/pages/leaves_types";
+import EmployeeInfo from "layouts/pages/employee_details";
+import Subject from "layouts/pages/subject";
 import Academic from "layouts/pages/academic";
 import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
 import Wings from "layouts/pages/wings";
 import Department from "layouts/pages/department";
-import AttributionIcon from "@mui/icons-material/Attribution";
+import PortraitIcon from "@mui/icons-material/Portrait";
 import BadgeIcon from "@mui/icons-material/Badge";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 const routes = [
   {
     type: "collapse",
@@ -94,6 +91,12 @@ const routes = [
         route: "pages/school/section",
         component: <Section />,
       },
+      {
+        name: "Subject",
+        key: "subject",
+        route: "pages/school/subject",
+        component: <Subject />,
+      },
     ],
   },
 
@@ -117,37 +120,68 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Employee",
-    key: "employee",
+    name: "Subject",
+    key: "subject",
     icon: (
       <Icon fontSize="medium">
-        <AttributionIcon />
+        <LocalLibraryIcon />
       </Icon>
     ),
     collapse: [
       {
-        name: "Department",
-        key: "department",
-        route: "pages/employee/department",
-        component: <Department />,
+        name: "Subject",
+        key: "subjectinfo",
+        route: "pages/subject/subjectinfo",
+        component: <Subject />,
       },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Employee",
+    key: "employee",
+    icon: (
+      <Icon fontSize="medium">
+        <PortraitIcon />
+      </Icon>
+    ),
+    collapse: [
       {
-        name: "Employee Profile",
+        name: "Employee Info",
+        key: "employee_info",
+        route: "pages/employee/employee_info",
+        component: <EmployeeInfo />,
+      },
+      // {
+      //   name: "Class Teacher",
+      //   key: "class_teacher",
+      //   route: "pages/employee/class_teacher",
+      //   component: <ClassTeacher />,
+      // },
+
+      {
+        name: "Profession",
         key: "employee_profile",
         route: "pages/employee/employee_profile",
         component: <EmployeeProfile />,
       },
       {
-        name: "Employee Type",
+        name: "Employment Type",
         key: "employee_type",
         route: "pages/employee/employee_type",
         component: <EmployeeType />,
       },
       {
-        name: "Employee Leave",
+        name: "Leave Types",
         key: "employee_leave",
         route: "pages/employee/employee_leave",
         component: <EmployeeLeave />,
+      },
+      {
+        name: "Department",
+        key: "department",
+        route: "pages/employee/department",
+        component: <Department />,
       },
     ],
   },

@@ -131,10 +131,11 @@ const Create = (props: any) => {
             <MDInput
               mb={2}
               type="date"
+              required
               InputLabelProps={{ shrink: true }}
               sx={{ width: "80%" }}
               variant="standard"
-              label={<MDTypography variant="body2">Admission Date</MDTypography>}
+              label={<MDTypography variant="body2">Admission Date *</MDTypography>}
               name="admission_date"
               value={values.admission_date}
               onChange={handleChange}
@@ -147,7 +148,7 @@ const Create = (props: any) => {
               type="number"
               sx={{ width: "80%" }}
               variant="standard"
-              label={<MDTypography variant="body2">Admission Number</MDTypography>}
+              label={<MDTypography variant="body2">Admission Number *</MDTypography>}
               name="admission_number"
               value={values.admission_number}
               onChange={handleChange}
@@ -480,7 +481,7 @@ const Create = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-              Upload Image
+              Upload Image *
             </MDTypography>
           </Grid>
           <Grid item xs={6} sm={8} mt={2}>
@@ -505,7 +506,7 @@ const Create = (props: any) => {
               type="number"
               sx={{ width: "80%" }}
               variant="standard"
-              label={<MDTypography variant="body2">Mobile Number</MDTypography>}
+              label={<MDTypography variant="body2">Mobile Number *</MDTypography>}
               name="mobile_number"
               value={values.mobile_number}
               onChange={handleChange}
@@ -530,7 +531,7 @@ const Create = (props: any) => {
               mb={2}
               sx={{ width: "80%" }}
               variant="standard"
-              label={<MDTypography variant="body2">Email ID</MDTypography>}
+              label={<MDTypography variant="body2">Email ID *</MDTypography>}
               name="email"
               value={values.email}
               onChange={handleChange}

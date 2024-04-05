@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const Class = () => {
+const ClassTeacher = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -51,18 +52,6 @@ const Class = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -79,10 +68,9 @@ const Class = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchClassTeachers = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_emptype", {
+      .get("http://10.0.20.128:8000/mg_subject", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,11 +84,19 @@ const Class = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchClassTeachers();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_emptype", {
-        data: { emp_type: name.emp_type },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_subject", {
+        data: {
+          class_code: name.class_code,
+          subject_code: name.subject_code,
+          subject_name: name.subject_name,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -108,9 +104,7 @@ const Class = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        fetchClassTeachers();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -120,8 +114,11 @@ const Class = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Employment Type", accessor: "emp_type" },
-
+      { Header: "Subject", accessor: "subject_name" },
+      { Header: "Subject Code", accessor: "subject_code" },
+      { Header: "Class Code", accessor: "class_code" },
+      { Header: "Max Weekly Class", accessor: "max_weekly_class" },
+      { Header: "No. of Class", accessor: "no_of_classes" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -129,7 +126,7 @@ const Class = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classupdate") ? (
+            rbacData?.find((element: string) => element === "subjectupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -145,7 +142,7 @@ const Class = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classdelete") ? (
+            rbacData?.find((element: string) => element === "subjectdelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -161,38 +158,54 @@ const Class = () => {
           )}
         </MDTypography>
       ),
+      subject_code: <MDTypography variant="p">{row.subject_code}</MDTypography>,
+      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
 
-      emp_type: <MDTypography variant="p">{row.emp_type}</MDTypography>,
+      class_code: <MDTypography variant="p">{row.class_code}</MDTypography>,
+      max_weekly_class: <MDTypography variant="p">{row.max_weekly_class}</MDTypography>,
+      no_of_classes: <MDTypography variant="p">{row.no_of_classes}</MDTypography>,
     })),
+  };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Employee Type</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "employee_profilecreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employee Type
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
+      {showpage ? (
+        <>
+          <Create handleShowPage={handleShowPage} fetchingData={fetchClassTeachers} />
+        </>
+      ) : (
+        <>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Class Teacher</MDTypography>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "subjectcreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Class Teacher
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
 
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+              <Update
+                setOpenupdate={setOpenupdate}
+                editData={editData}
+                fetchingData={fetchClassTeachers}
+              />
+            </Dialog>
+          </Grid>
+          <DataTable table={dataTableData} />
+        </>
+      )}
     </DashboardLayout>
   );
 };
 
-export default Class;
+export default ClassTeacher;

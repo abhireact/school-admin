@@ -22,12 +22,12 @@ const Create = (props: any) => {
       <MDBox py={4}>
         <Grid container sx={{ display: "flex", justifyContent: "space-between" }} pr={8} pb={2}>
           <MDButton
-            color="primary"
+            color="error"
             variant="text"
             onClick={() => setShowpage(false)}
             style={{ fontSize: "16px" }}
           >
-            back
+            &lt;- back
           </MDButton>
           <MDButton
             color="info"

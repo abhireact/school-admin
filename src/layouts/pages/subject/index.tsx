@@ -1,6 +1,6 @@
 import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
-import MDAvatar from "components/MDAvatar";
+import DialogContent from "@mui/material/DialogContent";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -8,18 +8,27 @@ import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Update from "./update";
 import Create from "./create";
+import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTheme } from "@emotion/react";
+import { useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
 const token = Cookies.get("token");
-const Student = () => {
+const Subject = () => {
+  // To fetch rbac from redux:  Start
+  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
+  // console.log("rbac user", rbacData);
+  //End
+
+  // Fetch rbac  Date from useEffect: Start
+
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
@@ -43,11 +52,6 @@ const Student = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-  const navigate = useNavigate();
-
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -64,10 +68,9 @@ const Student = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchSubjects = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_student", {
+      .get("http://10.0.20.128:8000/mg_subject", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -81,11 +84,19 @@ const Student = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchSubjects();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_student", {
-        data: { stud_name: name },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_subject", {
+        data: {
+          class_code: name.class_code,
+          subject_code: name.subject_code,
+          subject_name: name.subject_name,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -93,9 +104,7 @@ const Student = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        fetchSubjects();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -105,50 +114,56 @@ const Student = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Student Name", accessor: "full_name" },
-
-      { Header: "Class", accessor: "cls_name" },
-      { Header: "Section", accessor: "sec_name" },
-      { Header: "Gender", accessor: "gender" },
-      { Header: "Academic Year", accessor: "acd_name" },
-      { Header: "Mobile Number", accessor: "mobile_number" },
-
+      { Header: "Subject", accessor: "subject_name" },
+      { Header: "Subject Code", accessor: "subject_code" },
+      { Header: "Class Code", accessor: "class_code" },
+      { Header: "Max Weekly Class", accessor: "max_weekly_class" },
+      { Header: "No. of Class", accessor: "no_of_classes" },
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p"> {row.acd_name}</MDTypography>,
-
       action: (
         <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "subjectupdate") ? (
+              <IconButton
+                onClick={() => {
+                  handleOpenupdate(index);
+                }}
+              >
+                <CreateRoundedIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
 
-          <IconButton
-            onClick={() => {
-              handleDelete(row.first_name + " " + row.middle_name + " " + row.last_name);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "subjectdelete") ? (
+              <IconButton
+                onClick={() => {
+                  handleDelete(row);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
         </MDTypography>
       ),
+      subject_code: <MDTypography variant="p">{row.subject_code}</MDTypography>,
+      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
 
-      full_name: (
-        <MDTypography variant="p">
-          <MDAvatar size="lg" bgColor="dark" alt={row.acd_name} src={row.stud_img} />
-          {row.first_name + " " + row.middle_name + " " + row.last_name}
-        </MDTypography>
-      ),
-      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
-      gender: <MDTypography variant="p">{row.gender}</MDTypography>,
-      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
-      mobile_number: <MDTypography variant="p">{row.mobile_number}</MDTypography>,
+      class_code: <MDTypography variant="p">{row.class_code}</MDTypography>,
+      max_weekly_class: <MDTypography variant="p">{row.max_weekly_class}</MDTypography>,
+      no_of_classes: <MDTypography variant="p">{row.no_of_classes}</MDTypography>,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -160,16 +175,16 @@ const Student = () => {
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create setShowpage={setShowpage} />
+          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
         </>
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Student</MDTypography>
+            <MDTypography variant="h5">Subject</MDTypography>
             {rbacData ? (
-              rbacData?.find((element: string) => element === "studentdetailscreate") ? (
+              rbacData?.find((element: string) => element === "subjectcreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + Student
+                  + New Subject
                 </MDButton>
               ) : (
                 ""
@@ -177,11 +192,15 @@ const Student = () => {
             ) : (
               ""
             )}
-          </Grid>
-          <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-            <Update setOpenupdate={setOpenupdate} editData={editData} />
-          </Dialog>
 
+            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+              <Update
+                setOpenupdate={setOpenupdate}
+                editData={editData}
+                fetchingData={fetchSubjects}
+              />
+            </Dialog>
+          </Grid>
           <DataTable table={dataTableData} />
         </>
       )}
@@ -189,4 +208,4 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default Subject;

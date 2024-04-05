@@ -170,8 +170,9 @@ const Employee = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Department</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
+
+      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+        <MDTypography variant="h5">Department</MDTypography>
         {rbacData ? (
           rbacData?.find((element: string) => element === "departmentcreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>

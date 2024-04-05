@@ -19,7 +19,6 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
-
 const token = Cookies.get("token");
 const Class = () => {
   // To fetch rbac from redux:  Start
@@ -51,6 +50,18 @@ const Class = () => {
   }, [token]);
   //End
   const [data, setData] = useState([]);
+
+  //Start
+
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  //End
 
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
@@ -118,7 +129,7 @@ const Class = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classupdate") ? (
+            rbacData?.find((element: string) => element === "employee_typeupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -134,7 +145,7 @@ const Class = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classdelete") ? (
+            rbacData?.find((element: string) => element === "employee_typedelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -154,40 +165,33 @@ const Class = () => {
       emp_type: <MDTypography variant="p">{row.emp_type}</MDTypography>,
     })),
   };
-  const [showpage, setShowpage] = useState(false);
-  const handleShowPage = () => {
-    setShowpage(!showpage);
-  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showpage ? (
-        <>
-          <Create handleShowPage={handleShowPage} />
-        </>
-      ) : (
-        <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Leave Type</MDTypography>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "employee_profilecreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + New Leave Type
-                </MDButton>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
 
-            <Dialog open={openupdate} onClose={handleCloseupdate}>
-              <Update setOpenupdate={setOpenupdate} editData={editData} />
-            </Dialog>
-          </Grid>
-          <DataTable table={dataTableData} />
-        </>
-      )}
+      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+        <MDTypography variant="h5">Employement Type</MDTypography>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "employee_typecreate") ? (
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+              + New Employment Type
+            </MDButton>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
+
+        <Dialog open={open} onClose={handleClose}>
+          <Create setOpen={setOpen} />
+        </Dialog>
+
+        <Dialog open={openupdate} onClose={handleCloseupdate}>
+          <Update setOpenupdate={setOpenupdate} editData={editData} />
+        </Dialog>
+      </Grid>
+      <DataTable table={dataTableData} />
     </DashboardLayout>
   );
 };

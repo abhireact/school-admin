@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const Class = () => {
+const LeaveType = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -51,18 +52,6 @@ const Class = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -82,7 +71,7 @@ const Class = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_prof", {
+      .get("http://10.0.20.128:8000/mg_leaves", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -99,8 +88,8 @@ const Class = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_prof", {
-        data: { category: name.category, prof_name: name.prof_name },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_leaves", {
+        data: { leave_type: name.leave_type, leave_code: name.leave_code },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,8 +109,10 @@ const Class = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Category", accessor: "category" },
-      { Header: "Profession", accessor: "prof_name" },
+      { Header: "Leave Type", accessor: "leave_type" },
+      { Header: "Leave Code", accessor: "leave_code" },
+      { Header: "Leave Deducted", accessor: "leave_not_deducted" },
+      { Header: "Employment Type", accessor: "employee_type" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -130,7 +121,7 @@ const Class = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classupdate") ? (
+            rbacData?.find((element: string) => element === "employee_leaveupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -146,7 +137,7 @@ const Class = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classdelete") ? (
+            rbacData?.find((element: string) => element === "employee_leavedelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -162,40 +153,50 @@ const Class = () => {
           )}
         </MDTypography>
       ),
-
-      category: <MDTypography variant="p">{row.category}</MDTypography>,
-
-      prof_name: <MDTypography variant="p">{row.prof_name}</MDTypography>,
+      leave_code: <MDTypography variant="p">{row.leave_code}</MDTypography>,
+      leave_type: <MDTypography variant="p">{row.leave_type}</MDTypography>,
+      leave_not_deducted: (
+        <MDTypography variant="p">{row.leave_not_deducted ? "No" : "Yes"}</MDTypography>
+      ),
+      employee_type: <MDTypography variant="p">{row.employee_type}</MDTypography>,
     })),
+  };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Employee Profile</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "employee_profilecreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Profile
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
+      {showpage ? (
+        <>
+          <Create handleShowPage={handleShowPage} />
+        </>
+      ) : (
+        <>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Leave Type</MDTypography>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "employee_leavecreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Leave Type
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
 
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+              <Update setOpenupdate={setOpenupdate} editData={editData} />
+            </Dialog>
+          </Grid>
+          <DataTable table={dataTableData} />
+        </>
+      )}
     </DashboardLayout>
   );
 };
 
-export default Class;
+export default LeaveType;

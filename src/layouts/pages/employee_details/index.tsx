@@ -1,6 +1,6 @@
 import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
-import MDAvatar from "components/MDAvatar";
+import DialogContent from "@mui/material/DialogContent";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -8,18 +8,27 @@ import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Update from "./update";
 import Create from "./create";
+import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTheme } from "@emotion/react";
+import { useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
 const token = Cookies.get("token");
-const Student = () => {
+const EmpInfo = () => {
+  // To fetch rbac from redux:  Start
+  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
+  // console.log("rbac user", rbacData);
+  //End
+
+  // Fetch rbac  Date from useEffect: Start
+
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
@@ -43,11 +52,6 @@ const Student = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-  const navigate = useNavigate();
-
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -67,7 +71,7 @@ const Student = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_student", {
+      .get("http://10.0.20.128:8000/mg_emp", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -84,8 +88,8 @@ const Student = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_student", {
-        data: { stud_name: name },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_leaves", {
+        data: { leave_type: name.leave_type, leave_code: name.leave_code },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -105,50 +109,63 @@ const Student = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Student Name", accessor: "full_name" },
+      { Header: "Name", accessor: "name" },
+      { Header: "Profession", accessor: "employee_profile" },
+      { Header: "Category", accessor: "employee_category" },
+      { Header: "Max Class Per Day", accessor: "max_class_per_day" },
 
-      { Header: "Class", accessor: "cls_name" },
-      { Header: "Section", accessor: "sec_name" },
-      { Header: "Gender", accessor: "gender" },
-      { Header: "Academic Year", accessor: "acd_name" },
-      { Header: "Mobile Number", accessor: "mobile_number" },
+      { Header: "Department", accessor: "employee_department" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p"> {row.acd_name}</MDTypography>,
-
       action: (
         <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "employee_infoupdate") ? (
+              <IconButton
+                onClick={() => {
+                  handleOpenupdate(index);
+                }}
+              >
+                <CreateRoundedIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
 
-          <IconButton
-            onClick={() => {
-              handleDelete(row.first_name + " " + row.middle_name + " " + row.last_name);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "employee_infodelete") ? (
+              <IconButton
+                onClick={() => {
+                  handleDelete(row);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
         </MDTypography>
       ),
 
-      full_name: (
+      name: (
         <MDTypography variant="p">
-          <MDAvatar size="lg" bgColor="dark" alt={row.acd_name} src={row.stud_img} />
-          {row.first_name + " " + row.middle_name + " " + row.last_name}
+          {row.first_name} {row.middle_name} {row.last_name}
         </MDTypography>
       ),
-      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
-      gender: <MDTypography variant="p">{row.gender}</MDTypography>,
-      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
-      mobile_number: <MDTypography variant="p">{row.mobile_number}</MDTypography>,
+      employee_department: <MDTypography variant="p">{row.employee_department}</MDTypography>,
+      employee_category: <MDTypography variant="p">{row.employee_category}</MDTypography>,
+
+      max_class_per_day: <MDTypography variant="p">{row.max_class_per_day}</MDTypography>,
+      employee_profile: <MDTypography variant="p">{row.employee_profile}</MDTypography>,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -160,28 +177,32 @@ const Student = () => {
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create setShowpage={setShowpage} />
+          <Create handleShowPage={handleShowPage} />
         </>
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Student</MDTypography>
+            <Grid item>
+              <MDTypography variant="h5">Employee Information</MDTypography>
+            </Grid>
             {rbacData ? (
-              rbacData?.find((element: string) => element === "studentdetailscreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + Student
-                </MDButton>
+              rbacData?.find((element: string) => element === "employee_infocreate") ? (
+                <Grid item>
+                  <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                    + New Employee
+                  </MDButton>
+                </Grid>
               ) : (
                 ""
               )
             ) : (
               ""
             )}
-          </Grid>
-          <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-            <Update setOpenupdate={setOpenupdate} editData={editData} />
-          </Dialog>
 
+            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+              <Update setOpenupdate={setOpenupdate} editData={editData} />
+            </Dialog>
+          </Grid>
           <DataTable table={dataTableData} />
         </>
       )}
@@ -189,4 +210,4 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default EmpInfo;
