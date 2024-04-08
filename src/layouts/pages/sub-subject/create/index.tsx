@@ -15,21 +15,36 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
-  const score_categories = ["Marks", "Grade"];
 
   const { handleShowPage, fetchingData } = props;
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
+  const [subjectdata, setSubjectdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
 
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
+      .filter((item: any) => item.acd_name === acdName)
       .map((item: any) => item.cls_name);
     setFilteredClass(filtereddata);
   }
 
   useEffect(() => {
+    axios
+      .get("http://10.0.20.128:8000/mg_subject", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setSubjectdata(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     axios
       .get("http://10.0.20.128:8000/mg_accademic_year", {
         headers: {
@@ -65,21 +80,16 @@ const Create = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       subject_name: "",
+      sub_subject: "",
       academic_year: "",
-      subject_code: "",
       class_name: "",
-      max_weekly_class: 0,
-      is_core_subject: false,
-      is_lab: false,
-      is_extra_curricular: false,
-      no_of_classes: 0,
-      scoring_type: "Marks",
+      sec_name: "",
       index: 0,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.128:8000/sub_subjects", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -102,44 +112,22 @@ const Create = (props: any) => {
         <MDBox p={4}>
           <Grid container>
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_name"
-                label={<MDTypography variant="body2">Subject Name</MDTypography>}
-                value={values.subject_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_code"
-                label={<MDTypography variant="body2">Subject Code</MDTypography>}
-                value={values.subject_code}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
-                value={values.scoring_type}
+                value={values.subject_name}
                 onChange={(event, value) => {
                   handleChange({
-                    target: { name: "scoring_type", value },
+                    target: { name: "subject_name", value },
                   });
                 }}
-                options={score_categories}
+                options={subjectdata.map((acd) => acd.subject_name)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
-                    name="scoring_type"
-                    label={<MDTypography variant="body2">Scoring Type</MDTypography>}
+                    name="subject_name"
+                    label={<MDTypography variant="body2">Subject Name</MDTypography>}
                     onChange={handleChange}
-                    value={values.scoring_type}
+                    value={values.subject_name}
                     {...params}
                     variant="standard"
                   />
@@ -149,27 +137,15 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
-                type="number"
                 variant="standard"
-                name="max_weekly_class"
-                label={<MDTypography variant="body2">Max Weekly Class </MDTypography>}
-                value={values.max_weekly_class}
+                name="sub_subject"
+                label={<MDTypography variant="body2">Sub-Subject Name</MDTypography>}
+                value={values.sub_subject}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="no_of_classes"
-                label={<MDTypography variant="body2">No. of Classes </MDTypography>}
-                value={values.no_of_classes}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
+
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
@@ -182,32 +158,7 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Core Subject</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
-                checked={values.is_core_subject}
-                onChange={handleChange}
-                name="is_core_subject"
-              />
-            </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Lab Subject</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox checked={values.is_lab} onChange={handleChange} name="is_lab" />
-            </Grid>{" "}
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Extra-curricular Subject</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
-                checked={values.is_extra_curricular}
-                onChange={handleChange}
-                name="is_extra_curricular"
-              />
-            </Grid>{" "}
+
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
@@ -218,7 +169,7 @@ const Create = (props: any) => {
                   });
                   filterDataByAcdName(classdata, value);
                 }}
-                options={academicdata.map((acd) => acd.academic_year)}
+                options={academicdata.map((acd) => acd.acd_name)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
@@ -258,6 +209,17 @@ const Create = (props: any) => {
                     variant="standard"
                   />
                 )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="sec_name"
+                label={<MDTypography variant="body2">Section Name</MDTypography>}
+                value={values.sec_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </Grid>
             <Grid

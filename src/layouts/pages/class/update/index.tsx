@@ -22,15 +22,15 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      acd_name: editData.acd_name,
+      academic_year: editData.academic_year,
       wing_name: editData.wing_name,
       code: editData.code,
 
-      cls_name: editData.cls_name,
+      class_name: editData.class_name,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
-      const sendValues = { ...values, old_cls_name: editData.cls_name };
+      const sendValues = { ...values, old_class_name: editData.class_name };
       axios
         .put("http://10.0.20.128:8000/mg_class", sendValues, {
           headers: {
@@ -61,8 +61,8 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="cls_name"
-              value={values.cls_name}
+              name="class_name"
+              value={values.class_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
@@ -113,8 +113,8 @@ const Update = (props: any) => {
               placeholder="eg. 2023-24"
               sx={{ width: "65%" }}
               variant="standard"
-              name="acd_name"
-              value={values.acd_name}
+              name="academic_year"
+              value={values.academic_year}
               onChange={handleChange}
               onBlur={handleBlur}
             />

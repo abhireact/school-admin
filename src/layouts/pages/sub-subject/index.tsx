@@ -11,7 +11,7 @@ import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
-import Update from "./update";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@mui/material";
@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const EmployementType = () => {
+const SubSubject = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -51,38 +52,11 @@ const EmployementType = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
-  const [editData, setEditData] = useState(null);
-  const [openupdate, setOpenupdate] = useState(false);
 
-  const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
-    const main_data = data[index];
-    console.log(main_data, "maindata");
-
-    setOpenupdate(true);
-    setEditData(main_data);
-  };
-
-  const handleCloseupdate = () => {
-    setOpenupdate(false);
-  }; //End
-
-  useEffect(() => {
+  const fetchSubjects = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_emptype", {
+      .get("http://10.0.20.128:8000/sub_subjects", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,11 +70,19 @@ const EmployementType = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchSubjects();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_emptype", {
-        data: { emp_type: name.emp_type },
+      const response = await axios.delete("http://10.0.20.128:8000/mg_subject", {
+        data: {
+          class_code: name.class_code,
+          subject_code: name.subject_code,
+          subject_name: name.subject_name,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -108,9 +90,7 @@ const EmployementType = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        fetchSubjects();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -120,32 +100,18 @@ const EmployementType = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Employment Type", accessor: "emp_type" },
-
-      { Header: "Action", accessor: "action" },
+      { Header: "Index ", accessor: "index", width: "10%" },
+      { Header: "Sub-Subject ", accessor: "sub_subject" },
+      { Header: "Subject", accessor: "subject_name" },
+      { Header: "Class Name", accessor: "class_name" },
+      { Header: "Section Name", accessor: "sec_name" },
     ],
 
     rows: data.map((row, index) => ({
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "employee_typeupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "employee_typedelete") ? (
+            rbacData?.find((element: string) => element === "subjectdelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -161,39 +127,46 @@ const EmployementType = () => {
           )}
         </MDTypography>
       ),
+      sub_subject: <MDTypography variant="p">{row.sub_subject}</MDTypography>,
+      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
 
-      emp_type: <MDTypography variant="p">{row.emp_type}</MDTypography>,
+      index: <MDTypography variant="p">{row.index}</MDTypography>,
+      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
+      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
     })),
+  };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employement Type</MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "employee_typecreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employment Type
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+      {showpage ? (
+        <>
+          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
+        </>
+      ) : (
+        <>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Sub-Subject</MDTypography>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "subjectcreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Sub-Subject
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+          <DataTable table={dataTableData} />
+        </>
+      )}
     </DashboardLayout>
   );
 };
 
-export default EmployementType;
+export default SubSubject;

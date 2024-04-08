@@ -47,6 +47,7 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/myprofile";
 import StudentDetails from "layouts/pages/student";
 import NewStudent from "layouts/pages/student/create";
+import Scholastic from "layouts/pages/scholastic_particular";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -122,6 +123,12 @@ const routes = [
         key: "myprofile",
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
+      },
+      {
+        name: "Scholastic Particular",
+        key: "scholastic_particular",
+        route: "/pages/authentication/scholastic_particular",
+        component: <Scholastic />,
       },
     ],
   },

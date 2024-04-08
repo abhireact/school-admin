@@ -120,16 +120,16 @@ const Class = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Class", accessor: "cls_name" },
+      { Header: "Class", accessor: "class_name" },
       { Header: "Wings", accessor: "wing_name" },
       { Header: "Code", accessor: "code" },
-      { Header: "Academic Year", accessor: "acd_name" },
+      { Header: "Academic Year", accessor: "academic_year" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p">{row.acd_name}</MDTypography>,
+      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
@@ -153,7 +153,7 @@ const Class = () => {
             rbacData?.find((element: string) => element === "classdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.cls_name);
+                  handleDelete(row.class_name);
                 }}
               >
                 <DeleteIcon />
@@ -167,7 +167,7 @@ const Class = () => {
         </MDTypography>
       ),
 
-      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
+      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
       code: <MDTypography variant="p">{row.code}</MDTypography>,
       wing_name: <MDTypography variant="p">{row.wing_name}</MDTypography>,
     })),

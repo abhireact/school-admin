@@ -26,7 +26,7 @@ const Update = (props: any) => {
   // editData to give intial values
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      acd_name: editData.acd_name,
+      academic_year: editData.academic_year,
 
       start_date: editData.start_date,
       end_date: editData.end_date,
@@ -34,8 +34,8 @@ const Update = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
-        old_acd_name: editData.acd_name,
-        new_acd_name: values.acd_name,
+        old_academic_year: editData.academic_year,
+        new_academic_year: values.academic_year,
 
         start_date: values.start_date,
         end_date: values.end_date,
@@ -71,8 +71,8 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="acd_name"
-              value={values.acd_name}
+              name="academic_year"
+              value={values.academic_year}
               onBlur={handleBlur}
             />
           </Grid>

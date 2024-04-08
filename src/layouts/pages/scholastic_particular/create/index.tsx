@@ -64,16 +64,11 @@ const Create = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      subject_name: "",
+      name: "",
+      best_of_count: "",
+      calculation: "",
       academic_year: "",
-      subject_code: "",
-      class_name: "",
-      max_weekly_class: 0,
-      is_core_subject: false,
-      is_lab: false,
-      is_extra_curricular: false,
-      no_of_classes: 0,
-      scoring_type: "Marks",
+      weightage: 0,
       index: 0,
     },
     // validationSchema: validationSchema,
@@ -105,9 +100,9 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="subject_name"
-                label={<MDTypography variant="body2">Subject Name</MDTypography>}
-                value={values.subject_name}
+                name="name"
+                label={<MDTypography variant="body2">Particular Name</MDTypography>}
+                value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -116,44 +111,9 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="subject_code"
-                label={<MDTypography variant="body2">Subject Code</MDTypography>}
-                value={values.subject_code}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <Autocomplete
-                sx={{ width: "70%" }}
-                value={values.scoring_type}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "scoring_type", value },
-                  });
-                }}
-                options={score_categories}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="scoring_type"
-                    label={<MDTypography variant="body2">Scoring Type</MDTypography>}
-                    onChange={handleChange}
-                    value={values.scoring_type}
-                    {...params}
-                    variant="standard"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="max_weekly_class"
-                label={<MDTypography variant="body2">Max Weekly Class </MDTypography>}
-                value={values.max_weekly_class}
+                name="calculation "
+                label={<MDTypography variant="body2">Calculation </MDTypography>}
+                value={values.calculation}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -161,11 +121,10 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
-                type="number"
                 variant="standard"
-                name="no_of_classes"
-                label={<MDTypography variant="body2">No. of Classes </MDTypography>}
-                value={values.no_of_classes}
+                name="best_of_count "
+                label={<MDTypography variant="body2">Best of count </MDTypography>}
+                value={values.best_of_count}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -182,32 +141,19 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Core Subject</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
-                checked={values.is_core_subject}
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                type="number"
+                variant="standard"
+                name="weightage"
+                label={<MDTypography variant="body2">Weightage</MDTypography>}
+                value={values.weightage}
                 onChange={handleChange}
-                name="is_core_subject"
+                onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Lab Subject</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox checked={values.is_lab} onChange={handleChange} name="is_lab" />
-            </Grid>{" "}
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Extra-curricular Subject</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
-                checked={values.is_extra_curricular}
-                onChange={handleChange}
-                name="is_extra_curricular"
-              />
-            </Grid>{" "}
+
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
@@ -233,33 +179,7 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <Autocomplete
-                sx={{ width: "70%" }}
-                value={values.class_name}
-                onChange={
-                  filteredClass.length > 1
-                    ? (event, value) => {
-                        handleChange({
-                          target: { name: "class_name", value },
-                        });
-                      }
-                    : undefined
-                }
-                options={filteredClass}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
-                    onChange={handleChange}
-                    value={values.class_name}
-                    {...params}
-                    variant="standard"
-                  />
-                )}
-              />
-            </Grid>
+
             <Grid
               item
               container

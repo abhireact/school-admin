@@ -17,9 +17,12 @@ import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
 import Wings from "layouts/pages/wings";
 import Department from "layouts/pages/department";
+import SubSubject from "layouts/pages/sub-subject";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import BadgeIcon from "@mui/icons-material/Badge";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import EmpGrade from "layouts/pages/emp_grade";
+import StudentGrade from "layouts/pages/student_grade";
 const routes = [
   {
     type: "collapse",
@@ -116,6 +119,12 @@ const routes = [
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,
       },
+      {
+        name: "Student Grade",
+        key: "studentgrade",
+        route: "/pages/school/studentgrade",
+        component: <StudentGrade />,
+      },
     ],
   },
   {
@@ -129,10 +138,16 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Subject",
+        name: "Subject Info",
         key: "subjectinfo",
         route: "pages/subject/subjectinfo",
         component: <Subject />,
+      },
+      {
+        name: "Sub-Subject",
+        key: "subsubject",
+        route: "pages/subject/subsubject",
+        component: <SubSubject />,
       },
     ],
   },
@@ -158,6 +173,12 @@ const routes = [
       //   route: "pages/employee/class_teacher",
       //   component: <ClassTeacher />,
       // },
+      {
+        name: "Employee Grade",
+        key: "employee_grade",
+        route: "pages/employee/employee_grade",
+        component: <EmpGrade />,
+      },
 
       {
         name: "Profession",

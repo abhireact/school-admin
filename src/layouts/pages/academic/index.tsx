@@ -100,7 +100,7 @@ const Academic = () => {
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete("http://10.0.20.128:8000/mg_accademic", {
-        data: { accademic_name: name },
+        data: { academic_year: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,7 +120,7 @@ const Academic = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Academic Year", accessor: "acd_name" },
+      { Header: "Academic Year", accessor: "academic_year" },
 
       { Header: "Start Date", accessor: "start_date" },
       { Header: "End Date", accessor: "end_date" },
@@ -129,7 +129,7 @@ const Academic = () => {
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p">{row.acd_name}</MDTypography>,
+      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
@@ -152,7 +152,7 @@ const Academic = () => {
             rbacData?.find((element: string) => element === "academicdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.acd_name);
+                  handleDelete(row.academic_year);
                 }}
               >
                 <DeleteIcon />

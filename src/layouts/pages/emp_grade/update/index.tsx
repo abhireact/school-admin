@@ -10,26 +10,29 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import Checkbox from "@mui/material/Checkbox";
 
-const Create = (props: any) => {
+const Update = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpen } = props;
+  const { setOpenupdate, editData } = props;
   const handleClose = () => {
-    setOpen(false);
+    setOpenupdate(false);
   };
   //end
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      academic_year: "",
-      start_date: "",
-      end_date: "",
+      new_grade_name: editData.grade_name,
+      components: editData.components,
+      applicable: editData.applicable,
+      amount: editData.amount,
+      old_grade_name: editData.grade_name,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_accademic_year", values, {
+        .put("http://10.0.20.128:8000/mg_Egrade", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -49,60 +52,57 @@ const Create = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
         <Grid container>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Academic Year
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              placeholder="eg. 2023-24"
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="academic_year"
-              value={values.academic_year}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Start Date
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              type="date"
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="start_date"
-              value={values.start_date}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              End Date
-            </MDTypography>
+          <Grid item xs={12} sm={4} mt={1}>
+            <MDTypography variant="body2">Grade Name</MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
               mb={2}
-              type="date"
               sx={{ width: "65%" }}
               variant="standard"
-              name="end_date"
-              value={values.end_date}
+              name="new_grade_name"
+              value={values.new_grade_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
+          <Grid item xs={12} sm={4} mt={1}>
+            <MDTypography variant="body2">Components</MDTypography>
+          </Grid>
 
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="components"
+              value={values.components}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={12} sm={4} mt={1}>
+            <MDTypography variant="body2">Amount</MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="amount"
+              value={values.amount}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Grid>
+          <Grid item xs={6} sm={4} mt={1}>
+            <MDTypography variant="body2">Applicable </MDTypography>
+          </Grid>
+          <Grid item xs={6} sm={1.5}>
+            <Checkbox checked={values.applicable} onChange={handleChange} name="applicable" />
+          </Grid>
           <Grid
             item
             container
@@ -111,6 +111,17 @@ const Create = (props: any) => {
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
             <Grid item mt={4}>
+              <MDButton
+                color="primary"
+                variant="outlined"
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Back
+              </MDButton>
+            </Grid>
+            <Grid item ml={2} mt={4}>
               <MDButton
                 color="info"
                 variant="contained"
@@ -122,17 +133,6 @@ const Create = (props: any) => {
                 Save
               </MDButton>
             </Grid>
-            <Grid item ml={2} mt={4}>
-              <MDButton
-                color="primary"
-                variant="outlined"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Cancel
-              </MDButton>
-            </Grid>
           </Grid>
         </Grid>
       </MDBox>
@@ -140,4 +140,4 @@ const Create = (props: any) => {
   );
 };
 
-export default Create;
+export default Update;

@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const EmployementType = () => {
+const EmpGrade = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -79,10 +79,9 @@ const EmployementType = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchEmployeeGrade = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_emptype", {
+      .get("http://10.0.20.128:8000/mg_empgrd", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,6 +95,9 @@ const EmployementType = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchEmployeeGrade();
   }, []);
   const handleDelete = async (name: any) => {
     try {
@@ -120,7 +122,7 @@ const EmployementType = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Employment Type", accessor: "emp_type" },
+      { Header: "Employee Grade", accessor: "grade_name" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -162,7 +164,7 @@ const EmployementType = () => {
         </MDTypography>
       ),
 
-      emp_type: <MDTypography variant="p">{row.emp_type}</MDTypography>,
+      grade_name: <MDTypography variant="p">{row.grade_name}</MDTypography>,
     })),
   };
   return (
@@ -170,11 +172,11 @@ const EmployementType = () => {
       <DashboardNavbar />
 
       <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employement Type</MDTypography>
+        <MDTypography variant="h5">Employee Grade</MDTypography>
         {rbacData ? (
           rbacData?.find((element: string) => element === "employee_typecreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employment Type
+              + New Employee Grade
             </MDButton>
           ) : (
             ""
@@ -196,4 +198,4 @@ const EmployementType = () => {
   );
 };
 
-export default EmployementType;
+export default EmpGrade;
