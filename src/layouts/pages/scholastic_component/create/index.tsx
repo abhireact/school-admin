@@ -13,13 +13,11 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 
-const Update = (props: any) => {
+const Create = (props: any) => {
   const token = Cookies.get("token");
+  const score_categories = ["Marks", "Grade"];
 
-  const { setOpenupdate, editData, fetchingData } = props;
-  const handleClose = () => {
-    setOpenupdate(false);
-  };
+  const { handleShowPage, fetchingData } = props;
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
@@ -66,17 +64,16 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      name: editData.name,
-      best_of_count: editData.best_of_count,
-      calculation: editData.calculation,
-      academic_year: editData.academic_year,
-      weightage: editData.weightage,
-      index: editData.index,
+      component_name: "",
+      particular_name: "",
+      academic_year: "",
+      weightage: 0,
+      maximum_marks: 0,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.128:8000/mg_subject", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -98,64 +95,6 @@ const Update = (props: any) => {
         {" "}
         <MDBox p={4}>
           <Grid container>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="name"
-                label={<MDTypography variant="body2">Particular Name</MDTypography>}
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="calculation "
-                label={<MDTypography variant="body2">Calculation </MDTypography>}
-                value={values.calculation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="best_of_count "
-                label={<MDTypography variant="body2">Best of count </MDTypography>}
-                value={values.best_of_count}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="index"
-                label={<MDTypography variant="body2">Index No.</MDTypography>}
-                value={values.index}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="weightage"
-                label={<MDTypography variant="body2">Weightage</MDTypography>}
-                value={values.weightage}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
@@ -181,6 +120,53 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="particular_name"
+                label={<MDTypography variant="body2">Particular Name</MDTypography>}
+                value={values.particular_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="component_name"
+                label={<MDTypography variant="body2">Component Name</MDTypography>}
+                value={values.component_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                type="number"
+                variant="standard"
+                name="maximum_marks"
+                label={<MDTypography variant="body2">Maximum Marks</MDTypography>}
+                value={values.maximum_marks}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                type="number"
+                variant="standard"
+                name="weightage"
+                label={<MDTypography variant="body2">Weightage</MDTypography>}
+                value={values.weightage}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
 
             <Grid
               item
@@ -194,7 +180,7 @@ const Update = (props: any) => {
                   color="primary"
                   variant="outlined"
                   onClick={() => {
-                    handleClose();
+                    handleShowPage();
                   }}
                 >
                   Back
@@ -213,4 +199,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

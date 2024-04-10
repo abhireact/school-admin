@@ -16,10 +16,7 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 const Update = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData, fetchingData } = props;
-  const handleClose = () => {
-    setOpenupdate(false);
-  };
+  const { handleClose,editData, fetchingData } = props;
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
@@ -66,12 +63,10 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      name: editData.name,
-      best_of_count: editData.best_of_count,
-      calculation: editData.calculation,
       academic_year: editData.academic_year,
-      weightage: editData.weightage,
-      index: editData.index,
+      particular_name: editData.particular_name,
+      component_name: editData.component_name,
+      description: editData.description,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -99,64 +94,6 @@ const Update = (props: any) => {
         <MDBox p={4}>
           <Grid container>
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="name"
-                label={<MDTypography variant="body2">Particular Name</MDTypography>}
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="calculation "
-                label={<MDTypography variant="body2">Calculation </MDTypography>}
-                value={values.calculation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="best_of_count "
-                label={<MDTypography variant="body2">Best of count </MDTypography>}
-                value={values.best_of_count}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="index"
-                label={<MDTypography variant="body2">Index No.</MDTypography>}
-                value={values.index}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="weightage"
-                label={<MDTypography variant="body2">Weightage</MDTypography>}
-                value={values.weightage}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.academic_year}
@@ -179,6 +116,42 @@ const Update = (props: any) => {
                     variant="standard"
                   />
                 )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="particular_name"
+                label={<MDTypography variant="body2">Particular Name</MDTypography>}
+                value={values.particular_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="component_name"
+                label={<MDTypography variant="body2">Particular Name</MDTypography>}
+                value={values.component_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+
+        
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                type="number"
+                variant="standard"
+                name="description"
+                label={<MDTypography variant="body2">Description</MDTypography>}
+                value={values.description}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </Grid>
 

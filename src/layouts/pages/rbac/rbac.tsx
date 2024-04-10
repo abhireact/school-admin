@@ -250,7 +250,7 @@ const Rbac = (props: any) => {
   const fetchRbac = async (roles_name: string) => {
     try {
       const response = await axios.get(
-        `http://10.0.20.128:8000/mg_rbac?school_name=mindcom&role_name=${roles_name}`,
+        `http://10.0.20.128:8000/mg_rbac?school_name=Vidya Sagar&role_name=${roles_name}`,
         {
           headers: {
             "Content-Type": "application/json",

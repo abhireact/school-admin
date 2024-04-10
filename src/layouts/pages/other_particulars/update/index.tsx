@@ -66,12 +66,10 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      name: editData.name,
-      best_of_count: editData.best_of_count,
-      calculation: editData.calculation,
+      particular_name: editData.particular_name,
+
+      description: editData.description,
       academic_year: editData.academic_year,
-      weightage: editData.weightage,
-      index: editData.index,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -102,9 +100,9 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="name"
+                name="particular_name"
                 label={<MDTypography variant="body2">Particular Name</MDTypography>}
-                value={values.name}
+                value={values.particular_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -113,44 +111,9 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="calculation "
-                label={<MDTypography variant="body2">Calculation </MDTypography>}
-                value={values.calculation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="best_of_count "
-                label={<MDTypography variant="body2">Best of count </MDTypography>}
-                value={values.best_of_count}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="index"
-                label={<MDTypography variant="body2">Index No.</MDTypography>}
-                value={values.index}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="weightage"
-                label={<MDTypography variant="body2">Weightage</MDTypography>}
-                value={values.weightage}
+                name="description "
+                label={<MDTypography variant="body2">Description </MDTypography>}
+                value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />

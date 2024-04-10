@@ -13,20 +13,17 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 
-const Update = (props: any) => {
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData, fetchingData } = props;
-  const handleClose = () => {
-    setOpenupdate(false);
-  };
+  const { handleShowPage, fetchingData } = props;
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
 
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
+      .filter((item: any) => item.acd_name === acdName)
       .map((item: any) => item.cls_name);
     setFilteredClass(filtereddata);
   }
@@ -66,17 +63,17 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      name: editData.name,
-      best_of_count: editData.best_of_count,
-      calculation: editData.calculation,
-      academic_year: editData.academic_year,
-      weightage: editData.weightage,
-      index: editData.index,
+      cls_name: "",
+      sec_name: "",
+      grade_name: "",
+      acd_name: "",
+
+      description: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.128:8000/mg_subject", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -102,9 +99,9 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="name"
-                label={<MDTypography variant="body2">Particular Name</MDTypography>}
-                value={values.name}
+                name="grade_name"
+                label={<MDTypography variant="body2">Grade Name</MDTypography>}
+                value={values.grade_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -113,75 +110,77 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="calculation "
-                label={<MDTypography variant="body2">Calculation </MDTypography>}
-                value={values.calculation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="best_of_count "
-                label={<MDTypography variant="body2">Best of count </MDTypography>}
-                value={values.best_of_count}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="index"
-                label={<MDTypography variant="body2">Index No.</MDTypography>}
-                value={values.index}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="weightage"
-                label={<MDTypography variant="body2">Weightage</MDTypography>}
-                value={values.weightage}
+                name="sec_name"
+                label={<MDTypography variant="body2">Section Name</MDTypography>}
+                value={values.sec_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
 
             <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="description"
+                label={<MDTypography variant="body2">Description</MDTypography>}
+                value={values.description}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
-                value={values.academic_year}
+                value={values.acd_name}
                 onChange={(event, value) => {
                   handleChange({
-                    target: { name: "academic_year", value },
+                    target: { name: "acd_name", value },
                   });
                   filterDataByAcdName(classdata, value);
                 }}
-                options={academicdata.map((acd) => acd.academic_year)}
+                options={academicdata.map((acd) => acd.acd_name)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
-                    name="academic_year"
+                    name="acd_name"
                     placeholder="2022-23"
                     label={<MDTypography variant="body2">Academic Year</MDTypography>}
                     onChange={handleChange}
-                    value={values.academic_year}
+                    value={values.acd_name}
                     {...params}
                     variant="standard"
                   />
                 )}
               />
             </Grid>
-
+            <Grid item xs={12} sm={4} py={1}>
+              <Autocomplete
+                sx={{ width: "70%" }}
+                value={values.cls_name}
+                onChange={
+                  filteredClass.length > 1
+                    ? (event, value) => {
+                        handleChange({
+                          target: { name: "cls_name", value },
+                        });
+                      }
+                    : undefined
+                }
+                options={filteredClass}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="cls_name"
+                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    onChange={handleChange}
+                    value={values.cls_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
             <Grid
               item
               container
@@ -194,7 +193,7 @@ const Update = (props: any) => {
                   color="primary"
                   variant="outlined"
                   onClick={() => {
-                    handleClose();
+                    handleShowPage();
                   }}
                 >
                   Back
@@ -213,4 +212,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

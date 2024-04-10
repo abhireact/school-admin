@@ -35,7 +35,7 @@ const Update = (props: any) => {
     onSubmit: (values, action) => {
       let sendData = {
         old_academic_year: editData.academic_year,
-        new_academic_year: values.academic_year,
+        academic_year: values.academic_year,
 
         start_date: values.start_date,
         end_date: values.end_date,

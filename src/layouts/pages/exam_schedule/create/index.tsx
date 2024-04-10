@@ -13,13 +13,10 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 
-const Update = (props: any) => {
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData, fetchingData } = props;
-  const handleClose = () => {
-    setOpenupdate(false);
-  };
+  const { handleShowPage, fetchingData } = props;
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
@@ -66,17 +63,24 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      name: editData.name,
-      best_of_count: editData.best_of_count,
-      calculation: editData.calculation,
-      academic_year: editData.academic_year,
-      weightage: editData.weightage,
-      index: editData.index,
+      cls_name: "",
+      sec_name: "",
+      exam_type: "",
+      scholastic_particular_name: "",
+      scholastic_component_name: "",
+      date: "",
+      start_time: "",
+      end_time: "",
+      subject_name: "",
+      sub_subject_name: "",
+      subject_weightage: 0,
+      subject_maxmarks: 0,
+      academic_year: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.128:8000/mg_subject", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -102,9 +106,9 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="name"
-                label={<MDTypography variant="body2">Particular Name</MDTypography>}
-                value={values.name}
+                name="exam_type"
+                label={<MDTypography variant="body2">Exam Type</MDTypography>}
+                value={values.exam_type}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -113,9 +117,9 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="calculation "
-                label={<MDTypography variant="body2">Calculation </MDTypography>}
-                value={values.calculation}
+                name="scholastic_particular_name"
+                label={<MDTypography variant="body2">Scholastic Particular Name</MDTypography>}
+                value={values.scholastic_particular_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -124,9 +128,9 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="best_of_count "
-                label={<MDTypography variant="body2">Best of count </MDTypography>}
-                value={values.best_of_count}
+                name="scholastic_component_name"
+                label={<MDTypography variant="body2">Scholastic Component Name</MDTypography>}
+                value={values.scholastic_component_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -134,11 +138,11 @@ const Update = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
-                type="number"
                 variant="standard"
-                name="index"
-                label={<MDTypography variant="body2">Index No.</MDTypography>}
-                value={values.index}
+                type="date"
+                name="date"
+                label={<MDTypography variant="body2">Date</MDTypography>}
+                value={values.date}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -146,16 +150,71 @@ const Update = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
-                type="number"
                 variant="standard"
-                name="weightage"
-                label={<MDTypography variant="body2">Weightage</MDTypography>}
-                value={values.weightage}
+                type="time"
+                name="start_time"
+                label={<MDTypography variant="body2">Start Time</MDTypography>}
+                value={values.start_time}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                type="time"
+                name="end_time"
+                label={<MDTypography variant="body2">End Time</MDTypography>}
+                value={values.end_time}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="subject_name"
+                label={<MDTypography variant="body2">Subject Name</MDTypography>}
+                value={values.subject_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="sub_subject_name"
+                label={<MDTypography variant="body2">Sub-Subject Name</MDTypography>}
+                value={values.sub_subject_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="subject_weightage"
+                label={<MDTypography variant="body2">Subject Weightage</MDTypography>}
+                value={values.subject_weightage}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="subject_maxmarks"
+                label={<MDTypography variant="body2">Subject Max Marks</MDTypography>}
+                value={values.subject_maxmarks}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
@@ -181,7 +240,45 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <Autocomplete
+                sx={{ width: "70%" }}
+                value={values.cls_name}
+                onChange={
+                  filteredClass.length > 1
+                    ? (event, value) => {
+                        handleChange({
+                          target: { name: "cls_name", value },
+                        });
+                      }
+                    : undefined
+                }
+                options={filteredClass}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="cls_name"
+                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    onChange={handleChange}
+                    value={values.cls_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
 
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="sec_name"
+                label={<MDTypography variant="body2">Section Name</MDTypography>}
+                value={values.sec_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
             <Grid
               item
               container
@@ -194,7 +291,7 @@ const Update = (props: any) => {
                   color="primary"
                   variant="outlined"
                   onClick={() => {
-                    handleClose();
+                    handleShowPage();
                   }}
                 >
                   Back
@@ -213,4 +310,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

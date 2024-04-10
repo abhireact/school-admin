@@ -12,7 +12,7 @@ import EmployeeType from "layouts/pages/employement_type";
 import EmployeeLeave from "layouts/pages/leaves_types";
 import EmployeeInfo from "layouts/pages/employee_details";
 import Subject from "layouts/pages/subject";
-import Academic from "layouts/pages/academic";
+import Academic from "layouts/pages/academic_year";
 import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
 import Wings from "layouts/pages/wings";
@@ -22,7 +22,7 @@ import PortraitIcon from "@mui/icons-material/Portrait";
 import BadgeIcon from "@mui/icons-material/Badge";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmpGrade from "layouts/pages/emp_grade";
-import StudentGrade from "layouts/pages/student_grade";
+import StudentGrade from "layouts/pages/academic_grade";
 const routes = [
   {
     type: "collapse",
@@ -52,12 +52,12 @@ const routes = [
       </Icon>
     ),
     collapse: [
-      {
-        name: "New School",
-        key: "new-school",
-        route: "pages/school/new-school",
-        component: <School />,
-      },
+      // {
+      //   name: "New School",
+      //   key: "new-school",
+      //   route: "pages/school/new-school",
+      //   component: <School />,
+      // },
       {
         name: "School Information",
         key: "schoolinfo",
@@ -93,12 +93,6 @@ const routes = [
         key: "section",
         route: "pages/school/section",
         component: <Section />,
-      },
-      {
-        name: "Subject",
-        key: "subject",
-        route: "pages/school/subject",
-        component: <Subject />,
       },
     ],
   },

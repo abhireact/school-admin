@@ -114,11 +114,10 @@ const ScholasticComponent = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Subject", accessor: "subject_name" },
-      { Header: "Subject Code", accessor: "subject_code" },
-      { Header: "Class Name", accessor: "class_name" },
-      { Header: "Max Weekly Class", accessor: "max_weekly_class" },
-      { Header: "No. of Class", accessor: "no_of_classes" },
+      { Header: "Component", accessor: "component_name" },
+      { Header: "Weightage", accessor: "weightage" },
+      { Header: "Maximum marks", accessor: "maximum_marks" },
+
       { Header: "Action", accessor: "action" },
     ],
 
@@ -158,12 +157,10 @@ const ScholasticComponent = () => {
           )}
         </MDTypography>
       ),
-      subject_code: <MDTypography variant="p">{row.subject_code}</MDTypography>,
-      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
+      component_name: <MDTypography variant="p">{row.component_name}</MDTypography>,
+      weightage: <MDTypography variant="p">{row.weightage}</MDTypography>,
 
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      max_weekly_class: <MDTypography variant="p">{row.max_weekly_class}</MDTypography>,
-      no_of_classes: <MDTypography variant="p">{row.no_of_classes}</MDTypography>,
+      maximum_marks: <MDTypography variant="p">{row.maximum_marks}</MDTypography>,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -180,10 +177,10 @@ const ScholasticComponent = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Scholastic Particulars</MDTypography>
+            <MDTypography variant="h5">Scholastic Component</MDTypography>
 
             <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-              + New Particulars
+              + New Component
             </MDButton>
 
             <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">

@@ -21,7 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const ScholasticComponent = () => {
+const ExamSchedule = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -180,11 +180,18 @@ const ScholasticComponent = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Scholastic Particulars</MDTypography>
-
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-              + New Particulars
-            </MDButton>
+            <MDTypography variant="h5">Subject</MDTypography>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "subjectcreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Subject
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
 
             <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
               <Update
@@ -201,4 +208,4 @@ const ScholasticComponent = () => {
   );
 };
 
-export default ScholasticComponent;
+export default ExamSchedule;

@@ -21,7 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const Subject = () => {
+const NonAcademicGrade = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -208,4 +208,4 @@ const Subject = () => {
   );
 };
 
-export default Subject;
+export default NonAcademicGrade;

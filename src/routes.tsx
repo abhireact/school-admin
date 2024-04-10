@@ -37,7 +37,7 @@ import User from "layouts/pages/user";
 import Student from "layouts/pages/student";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import mainroutes from "mainroutes";
-import Academic from "layouts/pages/academic";
+import Academic from "layouts/pages/academic_year";
 import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
 import Wings from "layouts/pages/wings";
@@ -48,6 +48,7 @@ import MYProfile from "layouts/pages/myprofile";
 import StudentDetails from "layouts/pages/student";
 import NewStudent from "layouts/pages/student/create";
 import Scholastic from "layouts/pages/scholastic_particular";
+import ScholasticComponent from "layouts/pages/scholastic_component";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -129,6 +130,12 @@ const routes = [
         key: "scholastic_particular",
         route: "/pages/authentication/scholastic_particular",
         component: <Scholastic />,
+      },
+      {
+        name: "Scholastic Component",
+        key: "scholastic_component",
+        route: "/pages/authentication/scholastic_component",
+        component: <ScholasticComponent />,
       },
     ],
   },
