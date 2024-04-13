@@ -79,8 +79,7 @@ const Academic = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchWings = () => {
     axios
       .get("http://10.0.20.128:8000/mg_wing/", {
         headers: {
@@ -96,6 +95,9 @@ const Academic = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchWings();
   }, []);
   const handleDelete = async (name: any) => {
     try {
@@ -180,11 +182,11 @@ const Academic = () => {
           ""
         )}
         <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
+          <Create setOpen={setOpen} fetchData={fetchWings} />
         </Dialog>
 
         <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
+          <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchWings} />
         </Dialog>
       </Grid>
       <DataTable table={dataTableData} />

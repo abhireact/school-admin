@@ -21,15 +21,6 @@ const Update = (props: any) => {
     setOpenupdate(false);
   };
   const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
-
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
-    setFilteredClass(filtereddata);
-  }
 
   useEffect(() => {
     axios
@@ -47,36 +38,23 @@ const Update = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    axios
-      .get("http://10.0.20.128:8000/mg_class", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
   }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
+      old_name: editData.name,
       name: editData.name,
       best_of_count: editData.best_of_count,
       calculation: editData.calculation,
       academic_year: editData.academic_year,
       weightage: editData.weightage,
       index: editData.index,
+      description: editData.description,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.128:8000/mg_subject", values, {
+        .put("http://10.0.20.128:8000/schol_particular", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -86,6 +64,7 @@ const Update = (props: any) => {
           message.success(" Created successfully!");
           fetchingData();
           action.resetForm();
+          handleClose();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -113,7 +92,7 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="calculation "
+                name="calculation"
                 label={<MDTypography variant="body2">Calculation </MDTypography>}
                 value={values.calculation}
                 onChange={handleChange}
@@ -121,10 +100,35 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
+              <Autocomplete
+                sx={{ width: "70%" }}
+                value={values.academic_year}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "academic_year", value },
+                  });
+                }}
+                options={academicdata.map((acd) => acd.academic_year)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="academic_year"
+                    placeholder="2022-23"
+                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    onChange={handleChange}
+                    value={values.academic_year}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="best_of_count "
+                type="number"
+                name="best_of_count"
                 label={<MDTypography variant="body2">Best of count </MDTypography>}
                 value={values.best_of_count}
                 onChange={handleChange}
@@ -155,30 +159,15 @@ const Update = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-
             <Grid item xs={12} sm={4} py={1}>
-              <Autocomplete
+              <MDInput
                 sx={{ width: "70%" }}
-                value={values.academic_year}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "academic_year", value },
-                  });
-                  filterDataByAcdName(classdata, value);
-                }}
-                options={academicdata.map((acd) => acd.academic_year)}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="academic_year"
-                    placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
-                    onChange={handleChange}
-                    value={values.academic_year}
-                    {...params}
-                    variant="standard"
-                  />
-                )}
+                variant="standard"
+                name="description"
+                label={<MDTypography variant="body2">Description</MDTypography>}
+                value={values.description}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </Grid>
 

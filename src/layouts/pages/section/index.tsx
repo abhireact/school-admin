@@ -79,8 +79,7 @@ const Section = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchSection = () => {
     axios
       .get("http://10.0.20.128:8000/mg_section", {
         headers: {
@@ -96,11 +95,18 @@ const Section = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchSection();
   }, []);
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete("http://10.0.20.128:8000/mg_section", {
-        data: { sec_name: name.sec_name, cls_name: name.cls_name, acd_name: name.acd_name },
+        data: {
+          sec_name: name.sec_name,
+          class_name: name.class_name,
+          academic_year: name.academic_year,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,15 +126,15 @@ const Section = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Section Name", accessor: "sec_name" },
-      { Header: "Class Name", accessor: "cls_name" },
-      { Header: "Academic Year", accessor: "acd_name" },
+      { Header: "Section Name", accessor: "section_name" },
+      { Header: "Class Name", accessor: "class_name" },
+      { Header: "Academic Year", accessor: "academic_year" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p">{row.acd_name}</MDTypography>,
+      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
@@ -165,8 +171,8 @@ const Section = () => {
         </MDTypography>
       ),
 
-      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
-      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
+      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
+      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
     })),
   };
   return (
@@ -186,11 +192,11 @@ const Section = () => {
           ""
         )}
         <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
+          <Create setOpen={setOpen} fetchData={fetchSection} />
         </Dialog>
 
         <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
+          <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchSection} />
         </Dialog>
       </Grid>
       <DataTable table={dataTableData} />

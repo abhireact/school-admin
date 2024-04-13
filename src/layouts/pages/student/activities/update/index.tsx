@@ -129,10 +129,10 @@ const Activity = (props: any) => {
       .then((response) => {
         // message.success(" Guardiand successfully!");
         setActivityInfo(response.data);
-        console.log(response.data, "student Guardian data");
+        console.log(response.data, "student Activity data");
       })
       .catch(() => {
-        console.error("Error on getting guardian details !");
+        console.error("Error on getting activity details !");
       });
   };
   useEffect(() => {

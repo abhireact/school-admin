@@ -68,9 +68,9 @@ const ScholasticComponent = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const fetchSubjects = () => {
+  const fetchComponents = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_subject", {
+      .get("http://10.0.20.128:8000/schol_components", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -87,11 +87,11 @@ const ScholasticComponent = () => {
   };
 
   useEffect(() => {
-    fetchSubjects();
+    fetchComponents();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_subject", {
+      const response = await axios.delete("http://10.0.20.128:8000/schol_components", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,
@@ -104,7 +104,7 @@ const ScholasticComponent = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        fetchSubjects();
+        fetchComponents();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -125,29 +125,13 @@ const ScholasticComponent = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectupdate") ? (
+            rbacData?.find((element: string) => element === "scholastic_componentupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
                 }}
               >
                 <CreateRoundedIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
               </IconButton>
             ) : (
               ""
@@ -172,22 +156,28 @@ const ScholasticComponent = () => {
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
+          <Create handleShowPage={handleShowPage} fetchingData={fetchComponents} />
         </>
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
             <MDTypography variant="h5">Scholastic Component</MDTypography>
-
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-              + New Component
-            </MDButton>
-
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "scholastic_componentcreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Component
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
             <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
               <Update
                 setOpenupdate={setOpenupdate}
                 editData={editData}
-                fetchingData={fetchSubjects}
+                fetchingData={fetchComponents}
               />
             </Dialog>
           </Grid>

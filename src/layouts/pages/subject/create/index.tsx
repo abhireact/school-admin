@@ -25,7 +25,7 @@ const Create = (props: any) => {
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
       .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
+      .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
 
@@ -73,7 +73,7 @@ const Create = (props: any) => {
       is_lab: false,
       is_extra_curricular: false,
       no_of_classes: 0,
-      scoring_type: "Marks",
+      scoring_type: "",
       index: 0,
     },
     // validationSchema: validationSchema,
@@ -238,7 +238,7 @@ const Create = (props: any) => {
                 sx={{ width: "70%" }}
                 value={values.class_name}
                 onChange={
-                  filteredClass.length > 1
+                  filteredClass.length >= 1
                     ? (event, value) => {
                         handleChange({
                           target: { name: "class_name", value },

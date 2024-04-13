@@ -19,7 +19,24 @@ const Create = (props: any) => {
     setOpen(false);
   };
   //end
+  const [roleinfo, setRoleinfo] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.128:8000/mg_role", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setRoleinfo(response.data);
 
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       username: "",
@@ -107,14 +124,25 @@ const Create = (props: any) => {
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
+            <Autocomplete
               sx={{ width: "65%" }}
-              variant="standard"
-              name="user_role_name"
               value={values.user_role_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={(event, value) => {
+                handleChange({
+                  target: { name: "user_role_name", value },
+                });
+              }}
+              options={roleinfo.map((acd) => acd.role_name)}
+              renderInput={(params: any) => (
+                <MDInput
+                  name="user_role_name"
+                  placeholder="eg. 2022-23"
+                  onChange={handleChange}
+                  value={values.user_role_name}
+                  {...params}
+                  variant="standard"
+                />
+              )}
             />
           </Grid>
 

@@ -104,14 +104,14 @@ const SubSubject = () => {
       { Header: "Sub-Subject ", accessor: "sub_subject" },
       { Header: "Subject", accessor: "subject_name" },
       { Header: "Class Name", accessor: "class_name" },
-      { Header: "Section Name", accessor: "sec_name" },
+      { Header: "Section Name", accessor: "section_name" },
     ],
 
     rows: data.map((row, index) => ({
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectdelete") ? (
+            rbacData?.find((element: string) => element === "subsubjectdelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -131,7 +131,7 @@ const SubSubject = () => {
       subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
 
       index: <MDTypography variant="p">{row.index}</MDTypography>,
-      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
+      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
       class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
     })),
   };
@@ -151,7 +151,7 @@ const SubSubject = () => {
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
             <MDTypography variant="h5">Sub-Subject</MDTypography>
             {rbacData ? (
-              rbacData?.find((element: string) => element === "subjectcreate") ? (
+              rbacData?.find((element: string) => element === "subsubjectcreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
                   + New Sub-Subject
                 </MDButton>

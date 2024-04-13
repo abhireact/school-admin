@@ -33,6 +33,7 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 const Rbac = (props: any) => {
   const { setOpenupdate2, editData2 } = props;
+
   const initialValues = {
     sub_module_menu: [] as string[],
     role_name: editData2?.role_name,
@@ -48,6 +49,7 @@ const Rbac = (props: any) => {
     access_delete: [] as string[],
   };
   const [editorcreate, setEditorcreate] = useState("create");
+
   const [roles, setRoles] = useState([]);
   const [mroles, setMRoles] = useState([]);
   const [worklocation, setWorklocation] = useState([]);
@@ -247,10 +249,10 @@ const Rbac = (props: any) => {
     console.log("onSelect", selectedKeysValue);
     setSelectedKeys(selectedKeysValue);
   };
-  const fetchRbac = async (roles_name: string) => {
+  const fetchRbac = async (school_name: string, roles_name: string) => {
     try {
       const response = await axios.get(
-        `http://10.0.20.128:8000/mg_rbac?school_name=Vidya Sagar&role_name=${roles_name}`,
+        `http://10.0.20.128:8000/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -285,8 +287,20 @@ const Rbac = (props: any) => {
       console.error(error);
     }
   };
+
   useEffect(() => {
-    fetchRbac(editData2?.role_name);
+    axios
+      .get(`http://10.0.20.128:8000/mg_school`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        fetchRbac(response.data[0].school_name, editData2?.role_name);
+      })
+      .catch((error) => console.log(error));
+
     // Fetch data from API on component mount
   }, []);
   console.log("Tree Data", treeData);

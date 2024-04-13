@@ -14,17 +14,59 @@ import { useSelector } from "react-redux";
 const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpen } = props;
+  const { setOpen, fetchData } = props;
   const handleClose = () => {
     setOpen(false);
   };
-  //end
+
+  const [academicdata, setAcademicdata] = useState([]);
+  const [classdata, setClassdata] = useState([]);
+  const [filteredClass, setFilteredClass] = useState([]);
+
+  function filterClassData(data: any, acdName: any) {
+    let filtereddata = data
+      .filter((item: any) => item.academic_year === acdName)
+      .map((item: any) => item.class_name);
+    setFilteredClass(filtereddata);
+  }
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.128:8000/mg_accademic_year", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setAcademicdata(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching academic data:", error);
+      });
+    axios
+      .get("http://10.0.20.128:8000/mg_class", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setClassdata(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching class data:", error);
+      });
+  }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      acd_name: "",
-      sec_name: "",
-      cls_name: "",
+      academic_year: "",
+      section_name: "",
+      class_name: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -36,7 +78,8 @@ const Create = (props: any) => {
           },
         })
         .then(() => {
-          message.success(" Created successfully!");
+          message.success("Created successfully!");
+          fetchData();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -49,53 +92,77 @@ const Create = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
         <Grid container>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Section Name
-            </MDTypography>
+          <Grid item xs={12} sm={5} mt={2}>
+            <MDTypography variant="body2">Section Name</MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={7} mt={2}>
             <MDInput
-              mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="sec_name"
-              value={values.sec_name}
+              name="section_name"
+              value={values.section_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Class Name
-            </MDTypography>
+
+          <Grid item xs={12} sm={5} mt={2}>
+            <MDTypography variant="body2">Academic Year</MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
+            <Autocomplete
               sx={{ width: "65%" }}
-              variant="standard"
-              name="cls_name"
-              value={values.cls_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              value={values.academic_year}
+              onChange={(event, value) => {
+                handleChange({
+                  target: { name: "academic_year", value },
+                });
+                filterClassData(classdata, value);
+              }}
+              options={academicdata.map((acd) => acd.academic_year)}
+              renderInput={(params: any) => (
+                <MDInput
+                  InputLabelProps={{ shrink: true }}
+                  name="academic_year"
+                  placeholder="2022-23"
+                  label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                  onChange={handleChange}
+                  value={values.academic_year}
+                  {...params}
+                  variant="standard"
+                />
+              )}
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Academic Year
-            </MDTypography>
+          <Grid item xs={12} sm={5} mt={2}>
+            <MDTypography variant="body2">Class Name</MDTypography>
           </Grid>
+
           <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              placeholder="eg. 2023-24"
+            <Autocomplete
               sx={{ width: "65%" }}
-              variant="standard"
-              name="acd_name"
-              value={values.acd_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              value={values.class_name}
+              onChange={
+                filteredClass.length > 1
+                  ? (event, value) => {
+                      handleChange({
+                        target: { name: "class_name", value },
+                      });
+                    }
+                  : undefined
+              }
+              options={filteredClass}
+              renderInput={(params: any) => (
+                <MDInput
+                  InputLabelProps={{ shrink: true }}
+                  name="class_name"
+                  label={<MDTypography variant="body2">Class Name</MDTypography>}
+                  onChange={handleChange}
+                  value={values.class_name}
+                  {...params}
+                  variant="standard"
+                />
+              )}
             />
           </Grid>
 

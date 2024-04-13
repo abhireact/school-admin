@@ -86,6 +86,7 @@ const Update = (props: any) => {
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
               mb={2}
+              type="date"
               sx={{ width: "65%" }}
               variant="standard"
               name="start_date"
@@ -103,6 +104,7 @@ const Update = (props: any) => {
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
               mb={2}
+              type="date"
               sx={{ width: "65%" }}
               variant="standard"
               name="end_date"

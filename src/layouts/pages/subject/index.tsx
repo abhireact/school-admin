@@ -126,7 +126,7 @@ const Subject = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectupdate") ? (
+            rbacData?.find((element: string) => element === "subjectinfoupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -142,7 +142,7 @@ const Subject = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectdelete") ? (
+            rbacData?.find((element: string) => element === "subjectinfodelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -182,7 +182,7 @@ const Subject = () => {
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
             <MDTypography variant="h5">Subject</MDTypography>
             {rbacData ? (
-              rbacData?.find((element: string) => element === "subjectcreate") ? (
+              rbacData?.find((element: string) => element === "subjectinfocreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
                   + New Subject
                 </MDButton>

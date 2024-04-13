@@ -21,14 +21,56 @@ const Create = (props: any) => {
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
 
-  function filterDataByAcdName(data: any, acdName: any) {
+  function filterClassData(data: any, acdName: any) {
     let filtereddata = data
       .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
+      .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
+  const [sectiondata, setsectiondata] = useState([]);
+  const [filteredSection, setFilteredSection] = useState([]);
+  function filterSectionData(data: any, class_name: any) {
+    let filtereddata = data
+      .filter((item: any) => item.class_name === class_name)
+      .map((item: any) => item.section_name);
+    setFilteredSection(filtereddata);
+  }
+  const [examtypeData, setExamtypeData] = useState([]);
 
+  const [particularData, setParticularData] = useState([]);
+  const [componentData, setComponentData] = useState([]);
+  const [filteredComponent, setFilteredComponent] = useState([]);
+  function filterComponentData(data: any, acdName: any) {
+    let filtereddata = data
+      .filter((item: any) => item.particular_name === acdName)
+      .map((item: any) => item.component_name);
+    setFilteredComponent(filtereddata);
+  }
+  const [subjectData, setSubjectData] = useState([]);
+  const [subsubjectData, setSubsubjectData] = useState([]);
+  const [filteredSubject, setFilteredSubject] = useState([]);
+  function filterSubjectData(data: any, acdName: any) {
+    let filtereddata = data
+      .filter((item: any) => item.subject_name === acdName)
+      .map((item: any) => item.sub_subject);
+    setFilteredSubject(filtereddata);
+  }
   useEffect(() => {
+    axios
+      .get("http://10.0.20.128:8000/mg_section", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setsectiondata(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     axios
       .get("http://10.0.20.128:8000/mg_accademic_year", {
         headers: {
@@ -42,7 +84,7 @@ const Create = (props: any) => {
         console.log(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching academic year data:", error);
       });
     axios
       .get("http://10.0.20.128:8000/mg_class", {
@@ -57,15 +99,92 @@ const Create = (props: any) => {
         console.log(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching class data:", error);
+      });
+    axios
+      .get("http://10.0.20.128:8000/exam_type", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setExamtypeData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching exam type data:", error);
+      });
+    axios
+      .get("http://10.0.20.128:8000/schol_particular", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setParticularData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching scholastic particular data:", error);
+      });
+    axios
+      .get("http://10.0.20.128:8000/schol_components", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setComponentData(response.data);
+        3;
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching scholatic component data:", error);
+      });
+    axios
+      .get("http://10.0.20.128:8000/mg_subject", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setSubjectData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching subject data:", error);
+      });
+    axios
+      .get("http://10.0.20.128:8000/mg_sub_subjects", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setSubsubjectData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching subject data:", error);
       });
   }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      cls_name: "",
-      sec_name: "",
+      class_name: "",
+      section_name: "",
       exam_type: "",
+      academic_year: "",
       scholastic_particular_name: "",
       scholastic_component_name: "",
       date: "",
@@ -75,12 +194,11 @@ const Create = (props: any) => {
       sub_subject_name: "",
       subject_weightage: 0,
       subject_maxmarks: 0,
-      academic_year: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.128:8000/exam_schedule", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -89,6 +207,7 @@ const Create = (props: any) => {
         .then(() => {
           message.success(" Created successfully!");
           fetchingData();
+          handleShowPage();
           action.resetForm();
         })
         .catch(() => {
@@ -103,116 +222,78 @@ const Create = (props: any) => {
         <MDBox p={4}>
           <Grid container>
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
+              <Autocomplete
                 sx={{ width: "70%" }}
-                variant="standard"
-                name="exam_type"
-                label={<MDTypography variant="body2">Exam Type</MDTypography>}
                 value={values.exam_type}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "exam_type", value },
+                  });
+                  filterClassData(classdata, value);
+                }}
+                options={examtypeData.map((acd) => acd.exam_type)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="exam_type"
+                    label={<MDTypography variant="body2">Exam Type</MDTypography>}
+                    onChange={handleChange}
+                    value={values.exam_type}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
+              <Autocomplete
                 sx={{ width: "70%" }}
-                variant="standard"
-                name="scholastic_particular_name"
-                label={<MDTypography variant="body2">Scholastic Particular Name</MDTypography>}
                 value={values.scholastic_particular_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "scholastic_particular_name", value },
+                  });
+                  filterComponentData(componentData, value);
+                }}
+                options={particularData.map((acd) => acd.name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="scholastic_particular_name"
+                    label={<MDTypography variant="body2">Scholastic Particular</MDTypography>}
+                    onChange={handleChange}
+                    value={values.scholastic_particular_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
+              <Autocomplete
                 sx={{ width: "70%" }}
-                variant="standard"
-                name="scholastic_component_name"
-                label={<MDTypography variant="body2">Scholastic Component Name</MDTypography>}
                 value={values.scholastic_component_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                type="date"
-                name="date"
-                label={<MDTypography variant="body2">Date</MDTypography>}
-                value={values.date}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                type="time"
-                name="start_time"
-                label={<MDTypography variant="body2">Start Time</MDTypography>}
-                value={values.start_time}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                type="time"
-                name="end_time"
-                label={<MDTypography variant="body2">End Time</MDTypography>}
-                value={values.end_time}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_name"
-                label={<MDTypography variant="body2">Subject Name</MDTypography>}
-                value={values.subject_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="sub_subject_name"
-                label={<MDTypography variant="body2">Sub-Subject Name</MDTypography>}
-                value={values.sub_subject_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_weightage"
-                label={<MDTypography variant="body2">Subject Weightage</MDTypography>}
-                value={values.subject_weightage}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_maxmarks"
-                label={<MDTypography variant="body2">Subject Max Marks</MDTypography>}
-                value={values.subject_maxmarks}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                onChange={
+                  filteredComponent.length >= 1
+                    ? (event, value) => {
+                        handleChange({
+                          target: { name: "scholastic_component_name", value },
+                        });
+                      }
+                    : undefined
+                }
+                options={filteredComponent}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="scholastic_component_name"
+                    label={<MDTypography variant="body2">Scholastic Component</MDTypography>}
+                    onChange={handleChange}
+                    value={values.scholastic_component_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -223,7 +304,7 @@ const Create = (props: any) => {
                   handleChange({
                     target: { name: "academic_year", value },
                   });
-                  filterDataByAcdName(classdata, value);
+                  filterClassData(classdata, value);
                 }}
                 options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
@@ -243,13 +324,14 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
-                value={values.cls_name}
+                value={values.class_name}
                 onChange={
-                  filteredClass.length > 1
+                  filteredClass.length >= 1
                     ? (event, value) => {
                         handleChange({
-                          target: { name: "cls_name", value },
+                          target: { name: "class_name", value },
                         });
+                        filterSectionData(sectiondata, value);
                       }
                     : undefined
                 }
@@ -257,10 +339,37 @@ const Create = (props: any) => {
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
-                    name="cls_name"
+                    name="class_name"
                     label={<MDTypography variant="body2">Class Name</MDTypography>}
                     onChange={handleChange}
-                    value={values.cls_name}
+                    value={values.class_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <Autocomplete
+                sx={{ width: "70%" }}
+                value={values.section_name}
+                onChange={
+                  filteredSection.length >= 1
+                    ? (event, value) => {
+                        handleChange({
+                          target: { name: "section_name", value },
+                        });
+                      }
+                    : undefined
+                }
+                options={filteredSection}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="section_name"
+                    label={<MDTypography variant="body2">Section Name</MDTypography>}
+                    onChange={handleChange}
+                    value={values.section_name}
                     {...params}
                     variant="standard"
                   />
@@ -269,16 +378,57 @@ const Create = (props: any) => {
             </Grid>
 
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
+              <Autocomplete
                 sx={{ width: "70%" }}
-                variant="standard"
-                name="sec_name"
-                label={<MDTypography variant="body2">Section Name</MDTypography>}
-                value={values.sec_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                value={values.subject_name}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "subject_name", value },
+                  });
+                  filterSubjectData(subsubjectData, value);
+                }}
+                options={subjectData.map((acd) => acd.subject_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="subject_name"
+                    label={<MDTypography variant="body2">Subject</MDTypography>}
+                    onChange={handleChange}
+                    value={values.subject_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
               />
             </Grid>
+            <Grid item xs={12} sm={4} py={1}>
+              <Autocomplete
+                sx={{ width: "70%" }}
+                value={values.sub_subject_name}
+                onChange={
+                  filteredSubject.length >= 1
+                    ? (event, value) => {
+                        handleChange({
+                          target: { name: "sub_subject_name", value },
+                        });
+                      }
+                    : undefined
+                }
+                options={filteredSubject}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="sub_subject_name"
+                    label={<MDTypography variant="body2">Subject Name</MDTypography>}
+                    onChange={handleChange}
+                    value={values.sub_subject_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
+
             <Grid
               item
               container

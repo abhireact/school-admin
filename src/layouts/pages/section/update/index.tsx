@@ -17,7 +17,7 @@ import Cookies from "js-cookie";
 // import Autocomplete from "@mui/material/Autocomplete";
 
 const Update = (props: any) => {
-  const { setOpenupdate, editData } = props;
+  const { setOpenupdate, fetchData, editData } = props;
   const token = Cookies.get("token");
   console.log(editData, "edit data ");
   const handleCloseupdate = () => {
@@ -26,13 +26,13 @@ const Update = (props: any) => {
   // editData to give intial values
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      acd_name: editData.acd_name,
-      cls_name: editData.cls_name,
-      sec_name: editData.sec_name,
+      academic_year: editData.academic_year,
+      class_name: editData.class_name,
+      section_name: editData.section_name,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
-      const sendValues = { ...values, old_sec_name: editData.sec_name };
+      const sendValues = { ...values, old_section_name: editData.section_name };
       axios
         .put("http://10.0.20.128:8000/mg_update_section", sendValues, {
           headers: {
@@ -42,6 +42,7 @@ const Update = (props: any) => {
         })
         .then(() => {
           message.success("Updated  successfully!");
+          fetchData();
         })
         .catch(() => {
           message.error("Error on updating !");
@@ -65,8 +66,8 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="sec_name"
-              value={values.sec_name}
+              name="section_name"
+              value={values.section_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />

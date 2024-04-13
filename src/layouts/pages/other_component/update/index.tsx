@@ -16,17 +16,11 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 const Update = (props: any) => {
   const token = Cookies.get("token");
 
-  const { handleClose,editData, fetchingData } = props;
+  const { editData, setOpenupdate, fetchingData } = props;
+  const handleClose = () => {
+    setOpenupdate(false);
+  };
   const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
-
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
-    setFilteredClass(filtereddata);
-  }
 
   useEffect(() => {
     axios
@@ -44,21 +38,6 @@ const Update = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    axios
-      .get("http://10.0.20.128:8000/mg_class", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
   }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
@@ -66,24 +45,27 @@ const Update = (props: any) => {
       academic_year: editData.academic_year,
       particular_name: editData.particular_name,
       component_name: editData.component_name,
+
+      old_component_name: editData.component_name,
       description: editData.description,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.128:8000/mg_subject", values, {
+        .put("http://10.0.20.128:8000/other_components", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success(" Created successfully!");
+          message.success(" Updated successfully!");
           fetchingData();
+          handleClose();
           action.resetForm();
         })
         .catch(() => {
-          message.error("Error on creating  !");
+          message.error("Error on updating  !");
         });
     },
   });
@@ -101,7 +83,6 @@ const Update = (props: any) => {
                   handleChange({
                     target: { name: "academic_year", value },
                   });
-                  filterDataByAcdName(classdata, value);
                 }}
                 options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
@@ -141,11 +122,9 @@ const Update = (props: any) => {
               />
             </Grid>
 
-        
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
-                type="number"
                 variant="standard"
                 name="description"
                 label={<MDTypography variant="body2">Description</MDTypography>}

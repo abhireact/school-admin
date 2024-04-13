@@ -17,7 +17,7 @@ import Cookies from "js-cookie";
 // import Autocomplete from "@mui/material/Autocomplete";
 
 const Update = (props: any) => {
-  const { setOpenupdate, editData } = props;
+  const { setOpenupdate, fetchData, editData } = props;
   const token = Cookies.get("token");
   console.log(editData, "edit data ");
   const handleCloseupdate = () => {
@@ -32,7 +32,7 @@ const Update = (props: any) => {
     onSubmit: (values, action) => {
       let sendData = {
         old_wing_name: editData.wing_name,
-        new_wing_name: values.wing_name,
+        wing_name: values.wing_name,
       };
       axios
         .put("http://10.0.20.128:8000/mg_wing/", sendData, {
@@ -43,6 +43,7 @@ const Update = (props: any) => {
         })
         .then(() => {
           message.success("Updated  successfully!");
+          fetchData();
         })
         .catch(() => {
           message.error("Error on updating !");

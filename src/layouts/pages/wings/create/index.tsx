@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpen } = props;
+  const { setOpen, fetchData } = props;
   const handleClose = () => {
     setOpen(false);
   };
@@ -35,6 +35,7 @@ const Create = (props: any) => {
         })
         .then(() => {
           message.success(" Created successfully!");
+          fetchData();
         })
         .catch(() => {
           message.error("Error on creating  !");

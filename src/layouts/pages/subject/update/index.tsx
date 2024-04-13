@@ -27,8 +27,8 @@ const Update = (props: any) => {
 
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
-      .filter((item: any) => item.acd_name === acdName)
-      .map((item: any) => item.cls_name);
+      .filter((item: any) => item.academic_year === acdName)
+      .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
 
@@ -68,7 +68,7 @@ const Update = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       subject_name: editData.subject_name,
-      acd_name: editData.acd_name,
+      academic_year: editData.academic_year,
       subject_code: editData.subject_code,
       class_name: editData.class_name,
       max_weekly_class: editData.max_weekly_class,
@@ -96,6 +96,7 @@ const Update = (props: any) => {
         .then(() => {
           message.success(" Updated successfully!");
           fetchingData();
+          handleClose();
           action.resetForm();
         })
         .catch(() => {
@@ -219,22 +220,22 @@ const Update = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
-                value={values.acd_name}
+                value={values.academic_year}
                 onChange={(event, value) => {
                   handleChange({
-                    target: { name: "acd_name", value },
+                    target: { name: "academic_year", value },
                   });
                   filterDataByAcdName(classdata, value);
                 }}
-                options={academicdata.map((acd) => acd.acd_name)}
+                options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
-                    name="acd_name"
+                    name="academic_year"
                     placeholder="2022-23"
                     label={<MDTypography variant="body2">Academic Year</MDTypography>}
                     onChange={handleChange}
-                    value={values.acd_name}
+                    value={values.academic_year}
                     {...params}
                     variant="standard"
                   />
@@ -246,7 +247,7 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 value={values.class_name}
                 onChange={
-                  filteredClass.length > 1
+                  filteredClass.length >= 1
                     ? (event, value) => {
                         handleChange({
                           target: { name: "class_name", value },

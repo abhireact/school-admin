@@ -80,8 +80,7 @@ const User = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchUsers = () => {
     axios
       .get("http://10.0.20.128:8000/mg_users_name/", {
         headers: {
@@ -97,6 +96,9 @@ const User = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
   const dataTableData = {
@@ -152,7 +154,7 @@ const User = () => {
         {rbacData ? (
           rbacData?.find((element: string) => element === "userupdate") ? (
             <Dialog open={openupdate} onClose={handleCloseupdate}>
-              <Update setOpenupdate={setOpenupdate} editData={editData} />
+              <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchUsers} />
             </Dialog>
           ) : (
             <Dialog open={openupdate} onClose={handleCloseupdate}>

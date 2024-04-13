@@ -28,7 +28,7 @@ const Update = (props: any) => {
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
       .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
+      .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
 
@@ -67,24 +67,24 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      cls_name: "",
-      sec_name: "",
-      exam_type: "",
-      scholastic_particular_name: "",
-      scholastic_component_name: "",
-      date: "",
-      start_time: "",
-      end_time: "",
-      subject_name: "",
-      sub_subject_name: "",
-      subject_weightage: 0,
-      subject_maxmarks: 0,
-      academic_year: "",
+      class_name: editData.class_name,
+      section_name: editData.section_name,
+      exam_type: editData.exam_type,
+      academic_year: editData.academic_year,
+      scholastic_particular_name: editData.scholastic_particular_name,
+      scholastic_component_name: editData.scholastic_component_name,
+      date: editData.date,
+      start_time: editData.start_time,
+      end_time: editData.end_time,
+      subject_name: editData.subject_name,
+      sub_subject_name: editData.sub_subject_name,
+      subject_weightage: editData.subject_weightage,
+      subject_maxmarks: editData.subject_maxmarks,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_subject", values, {
+        .put("http://10.0.20.128:8000/exam_schedule", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -93,6 +93,7 @@ const Update = (props: any) => {
         .then(() => {
           message.success(" Created successfully!");
           fetchingData();
+          handleClose();
           action.resetForm();
         })
         .catch(() => {
@@ -108,39 +109,7 @@ const Update = (props: any) => {
           <Grid container>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="exam_type"
-                label={<MDTypography variant="body2">Exam Type</MDTypography>}
-                value={values.exam_type}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="scholastic_particular_name"
-                label={<MDTypography variant="body2">Scholastic Particular Name</MDTypography>}
-                value={values.scholastic_particular_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="scholastic_component_name"
-                label={<MDTypography variant="body2">Scholastic Component Name</MDTypography>}
-                value={values.scholastic_component_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
+                InputLabelProps={{ shrink: true }}
                 sx={{ width: "70%" }}
                 variant="standard"
                 type="date"
@@ -153,6 +122,7 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
+                InputLabelProps={{ shrink: true }}
                 sx={{ width: "70%" }}
                 variant="standard"
                 type="time"
@@ -165,6 +135,7 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
+                InputLabelProps={{ shrink: true }}
                 sx={{ width: "70%" }}
                 variant="standard"
                 type="time"
@@ -175,114 +146,7 @@ const Update = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_name"
-                label={<MDTypography variant="body2">Subject Name</MDTypography>}
-                value={values.subject_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="sub_subject_name"
-                label={<MDTypography variant="body2">Sub-Subject Name</MDTypography>}
-                value={values.sub_subject_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_weightage"
-                label={<MDTypography variant="body2">Subject Weightage</MDTypography>}
-                value={values.subject_weightage}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="subject_maxmarks"
-                label={<MDTypography variant="body2">Subject Max Marks</MDTypography>}
-                value={values.subject_maxmarks}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <Autocomplete
-                sx={{ width: "70%" }}
-                value={values.academic_year}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "academic_year", value },
-                  });
-                  filterDataByAcdName(classdata, value);
-                }}
-                options={academicdata.map((acd) => acd.academic_year)}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="academic_year"
-                    placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
-                    onChange={handleChange}
-                    value={values.academic_year}
-                    {...params}
-                    variant="standard"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <Autocomplete
-                sx={{ width: "70%" }}
-                value={values.cls_name}
-                onChange={
-                  filteredClass.length > 1
-                    ? (event, value) => {
-                        handleChange({
-                          target: { name: "cls_name", value },
-                        });
-                      }
-                    : undefined
-                }
-                options={filteredClass}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="cls_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
-                    onChange={handleChange}
-                    value={values.cls_name}
-                    {...params}
-                    variant="standard"
-                  />
-                )}
-              />
-            </Grid>
 
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="sec_name"
-                label={<MDTypography variant="body2">Section Name</MDTypography>}
-                value={values.sec_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
             <Grid
               item
               container

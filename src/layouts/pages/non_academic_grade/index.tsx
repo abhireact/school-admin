@@ -68,9 +68,9 @@ const NonAcademicGrade = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const fetchSubjects = () => {
+  const fetchGrades = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_subject", {
+      .get("http://10.0.20.128:8000/other_grades", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -87,11 +87,11 @@ const NonAcademicGrade = () => {
   };
 
   useEffect(() => {
-    fetchSubjects();
+    fetchGrades();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_subject", {
+      const response = await axios.delete("http://10.0.20.128:8000/grades", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,
@@ -104,7 +104,7 @@ const NonAcademicGrade = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        fetchSubjects();
+        fetchGrades();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -114,11 +114,10 @@ const NonAcademicGrade = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Subject", accessor: "subject_name" },
-      { Header: "Subject Code", accessor: "subject_code" },
+      { Header: "Grade Name", accessor: "grade_name" },
       { Header: "Class Name", accessor: "class_name" },
-      { Header: "Max Weekly Class", accessor: "max_weekly_class" },
-      { Header: "No. of Class", accessor: "no_of_classes" },
+      { Header: "Section Name", accessor: "section_name" },
+      { Header: "Academic Year", accessor: "academic_year" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -126,7 +125,7 @@ const NonAcademicGrade = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectupdate") ? (
+            rbacData?.find((element: string) => element === "nonacademicgradeupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -142,7 +141,7 @@ const NonAcademicGrade = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectdelete") ? (
+            rbacData?.find((element: string) => element === "nonacademicgradedelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -158,12 +157,10 @@ const NonAcademicGrade = () => {
           )}
         </MDTypography>
       ),
-      subject_code: <MDTypography variant="p">{row.subject_code}</MDTypography>,
-      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
-
+      grade_name: <MDTypography variant="p">{row.grade_name}</MDTypography>,
       class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      max_weekly_class: <MDTypography variant="p">{row.max_weekly_class}</MDTypography>,
-      no_of_classes: <MDTypography variant="p">{row.no_of_classes}</MDTypography>,
+      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
+      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -175,16 +172,16 @@ const NonAcademicGrade = () => {
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
+          <Create handleShowPage={handleShowPage} fetchingData={fetchGrades} />
         </>
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Subject</MDTypography>
+            <MDTypography variant="h5">Non-Academic Grades</MDTypography>
             {rbacData ? (
-              rbacData?.find((element: string) => element === "subjectcreate") ? (
+              rbacData?.find((element: string) => element === "nonacademicgradecreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + New Subject
+                  + New Grade
                 </MDButton>
               ) : (
                 ""
@@ -197,7 +194,7 @@ const NonAcademicGrade = () => {
               <Update
                 setOpenupdate={setOpenupdate}
                 editData={editData}
-                fetchingData={fetchSubjects}
+                fetchingData={fetchGrades}
               />
             </Dialog>
           </Grid>

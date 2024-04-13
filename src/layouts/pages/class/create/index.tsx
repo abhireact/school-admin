@@ -14,11 +14,44 @@ import { useSelector } from "react-redux";
 const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpen } = props;
+  const { setOpen, fetchData } = props;
   const handleClose = () => {
     setOpen(false);
   };
-  //end
+  const [academicData, setAcademicData] = useState([]);
+  const [winginfo, setWinginfo] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.128:8000/mg_accademic_year", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setAcademicData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    axios
+      .get("http://10.0.20.128:8000/mg_wing/", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setWinginfo(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
@@ -39,6 +72,7 @@ const Create = (props: any) => {
         })
         .then(() => {
           message.success(" Created successfully!");
+          fetchData();
           handleClose();
         })
         .catch(() => {
@@ -76,19 +110,29 @@ const Create = (props: any) => {
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
+            <Autocomplete
               sx={{ width: "65%" }}
-              variant="standard"
-              name="wing_name"
               value={values.wing_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={(event, value) => {
+                handleChange({
+                  target: { name: "wing_name", value },
+                });
+              }}
+              options={winginfo.map((acd) => acd.wing_name)}
+              renderInput={(params: any) => (
+                <MDInput
+                  name="wing_name"
+                  onChange={handleChange}
+                  value={values.wing_name}
+                  {...params}
+                  variant="standard"
+                />
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
-              Code
+              Class Code
             </MDTypography>
           </Grid>
 
@@ -108,16 +152,26 @@ const Create = (props: any) => {
               Academic Year
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              placeholder="eg. 2023-24"
+          <Grid item xs={12} sm={7} mb={2}>
+            <Autocomplete
               sx={{ width: "65%" }}
-              variant="standard"
-              name="academic_year"
               value={values.academic_year}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={(event, value) => {
+                handleChange({
+                  target: { name: "academic_year", value },
+                });
+              }}
+              options={academicData.map((acd) => acd.academic_year)}
+              renderInput={(params: any) => (
+                <MDInput
+                  name="academic_year"
+                  placeholder="eg. 2022-23"
+                  onChange={handleChange}
+                  value={values.academic_year}
+                  {...params}
+                  variant="standard"
+                />
+              )}
             />
           </Grid>
 

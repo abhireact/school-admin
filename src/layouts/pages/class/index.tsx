@@ -79,8 +79,7 @@ const Class = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchClasses = () => {
     axios
       .get("http://10.0.20.128:8000/mg_class", {
         headers: {
@@ -96,6 +95,9 @@ const Class = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchClasses();
   }, []);
   const handleDelete = async (name: any) => {
     try {
@@ -190,11 +192,11 @@ const Class = () => {
         )}
 
         <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
+          <Create setOpen={setOpen} fetchData={fetchClasses} />
         </Dialog>
 
         <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
+          <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchClasses} />
         </Dialog>
       </Grid>
       <DataTable table={dataTableData} />

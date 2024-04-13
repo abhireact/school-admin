@@ -15,19 +15,10 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
-  const score_categories = ["Marks", "Grade"];
 
   const { handleShowPage, fetchingData } = props;
   const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
-
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
-    setFilteredClass(filtereddata);
-  }
+  const [particularData, setParticularData] = useState([]);
 
   useEffect(() => {
     axios
@@ -46,14 +37,14 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.128:8000/other_particulars", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setClassdata(response.data);
+        setParticularData(response.data);
 
         console.log(response.data);
       })
@@ -72,7 +63,7 @@ const Create = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.128:8000/other_components", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -81,10 +72,11 @@ const Create = (props: any) => {
         .then(() => {
           message.success(" Created successfully!");
           fetchingData();
+          handleShowPage();
           action.resetForm();
         })
         .catch(() => {
-          message.error("Error on creating  !");
+          message.error("Error on creating!");
         });
     },
   });
@@ -95,6 +87,17 @@ const Create = (props: any) => {
         <MDBox p={4}>
           <Grid container>
             <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="component_name"
+                label={<MDTypography variant="body2">Component Name</MDTypography>}
+                value={values.component_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.academic_year}
@@ -102,14 +105,13 @@ const Create = (props: any) => {
                   handleChange({
                     target: { name: "academic_year", value },
                   });
-                  filterDataByAcdName(classdata, value);
                 }}
                 options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
-                    placeholder="2022-23"
+                    placeholder="eg. 2022-23"
                     label={<MDTypography variant="body2">Academic Year</MDTypography>}
                     onChange={handleChange}
                     value={values.academic_year}
@@ -120,25 +122,26 @@ const Create = (props: any) => {
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
+              <Autocomplete
                 sx={{ width: "70%" }}
-                variant="standard"
-                name="particular_name"
-                label={<MDTypography variant="body2">Particular Name</MDTypography>}
                 value={values.particular_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="component_name"
-                label={<MDTypography variant="body2">Component Name</MDTypography>}
-                value={values.component_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "particular_name", value },
+                  });
+                }}
+                options={particularData.map((acd) => acd.particular_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="particular_name"
+                    label={<MDTypography variant="body2">Particular Name</MDTypography>}
+                    onChange={handleChange}
+                    value={values.particular_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
               />
             </Grid>
 

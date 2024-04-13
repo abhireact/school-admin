@@ -15,19 +15,9 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
-  const score_categories = ["Marks", "Grade"];
 
   const { handleShowPage, fetchingData } = props;
   const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
-
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
-    setFilteredClass(filtereddata);
-  }
 
   useEffect(() => {
     axios
@@ -45,36 +35,22 @@ const Create = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    axios
-      .get("http://10.0.20.128:8000/mg_class", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
   }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       name: "",
-      best_of_count: "",
+      best_of_count: 0,
       calculation: "",
       academic_year: "",
+      description: "",
       weightage: 0,
       index: 0,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.128:8000/schol_particular", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -84,6 +60,7 @@ const Create = (props: any) => {
           message.success(" Created successfully!");
           fetchingData();
           action.resetForm();
+          handleShowPage();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -111,7 +88,7 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="calculation "
+                name="calculation"
                 label={<MDTypography variant="body2">Calculation </MDTypography>}
                 value={values.calculation}
                 onChange={handleChange}
@@ -119,12 +96,50 @@ const Create = (props: any) => {
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
+              <Autocomplete
+                sx={{ width: "70%" }}
+                value={values.academic_year}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "academic_year", value },
+                  });
+                }}
+                options={academicdata.map((acd) => acd.academic_year)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="academic_year"
+                    placeholder="2022-23"
+                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    onChange={handleChange}
+                    value={values.academic_year}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
+                type="number"
                 variant="standard"
-                name="best_of_count "
+                name="best_of_count"
                 label={<MDTypography variant="body2">Best of count </MDTypography>}
                 value={values.best_of_count}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                type="number"
+                variant="standard"
+                name="weightage"
+                label={<MDTypography variant="body2">Weightage</MDTypography>}
+                value={values.weightage}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -144,39 +159,12 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
-                type="number"
                 variant="standard"
-                name="weightage"
-                label={<MDTypography variant="body2">Weightage</MDTypography>}
-                value={values.weightage}
+                name="description"
+                label={<MDTypography variant="body2">Description</MDTypography>}
+                value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={4} py={1}>
-              <Autocomplete
-                sx={{ width: "70%" }}
-                value={values.academic_year}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "academic_year", value },
-                  });
-                  filterDataByAcdName(classdata, value);
-                }}
-                options={academicdata.map((acd) => acd.academic_year)}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="academic_year"
-                    placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
-                    onChange={handleChange}
-                    value={values.academic_year}
-                    {...params}
-                    variant="standard"
-                  />
-                )}
               />
             </Grid>
 

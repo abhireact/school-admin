@@ -13,12 +13,32 @@ import { message } from "antd";
 
 import axios from "axios";
 import Cookies from "js-cookie";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useEffect, useState } from "react";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 
 const Update = (props: any) => {
-  const { setOpenupdate, editData } = props;
+  const { setOpenupdate, fetchData, editData } = props;
   const token = Cookies.get("token");
+  const [roleinfo, setRoleinfo] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.128:8000/mg_role", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setRoleinfo(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   console.log(editData, "edit data ");
   const handleCloseupdate = () => {
     setOpenupdate(false);
@@ -40,6 +60,7 @@ const Update = (props: any) => {
           },
         })
         .then(() => {
+          fetchData();
           message.success("Role created successfully!");
         })
         .catch(() => {
@@ -76,14 +97,25 @@ const Update = (props: any) => {
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
+            <Autocomplete
               sx={{ width: "65%" }}
-              variant="standard"
-              name="user_role_name"
               value={values.user_role_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={(event, value) => {
+                handleChange({
+                  target: { name: "user_role_name", value },
+                });
+              }}
+              options={roleinfo.map((acd) => acd.role_name)}
+              renderInput={(params: any) => (
+                <MDInput
+                  name="user_role_name"
+                  placeholder="eg. 2022-23"
+                  onChange={handleChange}
+                  value={values.user_role_name}
+                  {...params}
+                  variant="standard"
+                />
+              )}
             />
           </Grid>
 

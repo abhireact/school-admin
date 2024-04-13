@@ -21,15 +21,6 @@ const Update = (props: any) => {
     setOpenupdate(false);
   };
   const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
-
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.cls_name);
-    setFilteredClass(filtereddata);
-  }
 
   useEffect(() => {
     axios
@@ -47,34 +38,21 @@ const Update = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    axios
-      .get("http://10.0.20.128:8000/mg_class", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
   }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
+      old_particular_name: editData.particular_name,
       particular_name: editData.particular_name,
 
-      description: editData.description,
       academic_year: editData.academic_year,
+
+      description: editData.description,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.128:8000/mg_subject", values, {
+        .put("http://10.0.20.128:8000/other_particulars", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -84,6 +62,7 @@ const Update = (props: any) => {
           message.success(" Created successfully!");
           fetchingData();
           action.resetForm();
+          handleClose();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -107,17 +86,6 @@ const Update = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="description "
-                label={<MDTypography variant="body2">Description </MDTypography>}
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
 
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
@@ -127,7 +95,6 @@ const Update = (props: any) => {
                   handleChange({
                     target: { name: "academic_year", value },
                   });
-                  filterDataByAcdName(classdata, value);
                 }}
                 options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
@@ -142,6 +109,18 @@ const Update = (props: any) => {
                     variant="standard"
                   />
                 )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "70%" }}
+                variant="standard"
+                name="description"
+                label={<MDTypography variant="body2">Description</MDTypography>}
+                value={values.description}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </Grid>
 

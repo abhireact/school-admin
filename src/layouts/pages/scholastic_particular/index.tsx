@@ -21,7 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const ScholasticComponent = () => {
+const ScholasticParticular = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -68,9 +68,9 @@ const ScholasticComponent = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const fetchSubjects = () => {
+  const fetchParticulars = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_subject", {
+      .get("http://10.0.20.128:8000/schol_particular", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -87,38 +87,16 @@ const ScholasticComponent = () => {
   };
 
   useEffect(() => {
-    fetchSubjects();
+    fetchParticulars();
   }, []);
-  const handleDelete = async (name: any) => {
-    try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_subject", {
-        data: {
-          class_code: name.class_code,
-          subject_code: name.subject_code,
-          subject_name: name.subject_name,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        message.success("Deleted successFully");
-        fetchSubjects();
-      }
-    } catch (error: unknown) {
-      console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error("An unexpected error occurred");
-    }
-  };
+
   const dataTableData = {
     columns: [
-      { Header: "Subject", accessor: "subject_name" },
-      { Header: "Subject Code", accessor: "subject_code" },
-      { Header: "Class Name", accessor: "class_name" },
-      { Header: "Max Weekly Class", accessor: "max_weekly_class" },
-      { Header: "No. of Class", accessor: "no_of_classes" },
+      { Header: "Name", accessor: "name" },
+      { Header: "Weightage", accessor: "weightage" },
+      { Header: "Academic Year", accessor: "academic_year" },
+      ,
+      { Header: "Best of Count", accessor: "best_of_count" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -126,7 +104,7 @@ const ScholasticComponent = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectupdate") ? (
+            rbacData?.find((element: string) => element === "scholastic_particularupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -140,30 +118,14 @@ const ScholasticComponent = () => {
           ) : (
             ""
           )}
-
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
         </MDTypography>
       ),
-      subject_code: <MDTypography variant="p">{row.subject_code}</MDTypography>,
-      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
+      weightage: <MDTypography variant="p">{row.weightage}</MDTypography>,
+      name: <MDTypography variant="p">{row.name}</MDTypography>,
 
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      max_weekly_class: <MDTypography variant="p">{row.max_weekly_class}</MDTypography>,
-      no_of_classes: <MDTypography variant="p">{row.no_of_classes}</MDTypography>,
+      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+
+      best_of_count: <MDTypography variant="p">{row.best_of_count}</MDTypography>,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -175,22 +137,29 @@ const ScholasticComponent = () => {
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
+          <Create handleShowPage={handleShowPage} fetchingData={fetchParticulars} />
         </>
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
             <MDTypography variant="h5">Scholastic Particulars</MDTypography>
-
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-              + New Particulars
-            </MDButton>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "scholastic_particularcreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Particular
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
 
             <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
               <Update
                 setOpenupdate={setOpenupdate}
                 editData={editData}
-                fetchingData={fetchSubjects}
+                fetchingData={fetchParticulars}
               />
             </Dialog>
           </Grid>
@@ -201,4 +170,4 @@ const ScholasticComponent = () => {
   );
 };
 
-export default ScholasticComponent;
+export default ScholasticParticular;

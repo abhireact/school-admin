@@ -187,7 +187,7 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 value={values.cls_name}
                 onChange={
-                  filteredClass.length > 1
+                  filteredClass.length >= 1
                     ? (event, value) => {
                         handleChange({
                           target: { name: "cls_name", value },

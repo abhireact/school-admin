@@ -27,8 +27,8 @@ const Update = (props: any) => {
 
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
-      .filter((item: any) => item.acd_name === acdName)
-      .map((item: any) => item.cls_name);
+      .filter((item: any) => item.academic_year === acdName)
+      .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
 
@@ -67,10 +67,10 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      cls_name: editData.cls_name,
-      sec_name: editData.sec_name,
+      class_name: editData.class_name,
+      section_name: editData.section_name,
       grade_name: editData.grade_name,
-      acd_name: editData.acd_name,
+      academic_year: editData.academic_year,
 
       description: editData.description,
     },
@@ -114,9 +114,9 @@ const Update = (props: any) => {
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
-                name="sec_name"
+                name="section_name"
                 label={<MDTypography variant="body2">Section Name</MDTypography>}
-                value={values.sec_name}
+                value={values.section_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -136,22 +136,22 @@ const Update = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
-                value={values.acd_name}
+                value={values.academic_year}
                 onChange={(event, value) => {
                   handleChange({
-                    target: { name: "acd_name", value },
+                    target: { name: "academic_year", value },
                   });
                   filterDataByAcdName(classdata, value);
                 }}
-                options={academicdata.map((acd) => acd.acd_name)}
+                options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
-                    name="acd_name"
+                    name="academic_year"
                     placeholder="2022-23"
                     label={<MDTypography variant="body2">Academic Year</MDTypography>}
                     onChange={handleChange}
-                    value={values.acd_name}
+                    value={values.academic_year}
                     {...params}
                     variant="standard"
                   />
@@ -161,12 +161,12 @@ const Update = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
-                value={values.cls_name}
+                value={values.class_name}
                 onChange={
-                  filteredClass.length > 1
+                  filteredClass.length >= 1
                     ? (event, value) => {
                         handleChange({
-                          target: { name: "cls_name", value },
+                          target: { name: "class_name", value },
                         });
                       }
                     : undefined
@@ -175,10 +175,10 @@ const Update = (props: any) => {
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
-                    name="cls_name"
+                    name="class_name"
                     label={<MDTypography variant="body2">Class Name</MDTypography>}
                     onChange={handleChange}
-                    value={values.cls_name}
+                    value={values.class_name}
                     {...params}
                     variant="standard"
                   />

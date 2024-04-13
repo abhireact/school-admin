@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const EmpGrade = () => {
+const NonAcademicGrade = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -51,18 +52,6 @@ const EmpGrade = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -79,9 +68,9 @@ const EmpGrade = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const fetchEmployeeGrade = () => {
+  const fetchExamtypes = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_empgrd", {
+      .get("http://10.0.20.128:8000/exam_type", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,13 +85,18 @@ const EmpGrade = () => {
         console.error("Error fetching data:", error);
       });
   };
+
   useEffect(() => {
-    fetchEmployeeGrade();
+    fetchExamtypes();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_emptype", {
-        data: { emp_type: name.emp_type },
+      const response = await axios.delete("http://10.0.20.128:8000/grades", {
+        data: {
+          class_code: name.class_code,
+          subject_code: name.subject_code,
+          subject_name: name.subject_name,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -110,9 +104,7 @@ const EmpGrade = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        fetchExamtypes();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -122,8 +114,10 @@ const EmpGrade = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Employee Grade", accessor: "grade_name" },
-
+      { Header: "Exam Type", accessor: "exam_type" },
+      { Header: "Class Name", accessor: "class_name" },
+      { Header: "Section Name", accessor: "section_name" },
+      { Header: "Academic Year", accessor: "academic_year" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -131,7 +125,7 @@ const EmpGrade = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "employee_typeupdate") ? (
+            rbacData?.find((element: string) => element === "nonacademicgradeupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -147,7 +141,7 @@ const EmpGrade = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "employee_typedelete") ? (
+            rbacData?.find((element: string) => element === "nonacademicgradedelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -163,43 +157,52 @@ const EmpGrade = () => {
           )}
         </MDTypography>
       ),
-
-      grade_name: <MDTypography variant="p">{row.grade_name}</MDTypography>,
+      exam_type: <MDTypography variant="p">{row.exam_type}</MDTypography>,
+      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
+      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
+      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
     })),
+  };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      {showpage ? (
+        <>
+          <Create handleShowPage={handleShowPage} fetchingData={fetchExamtypes} />
+        </>
+      ) : (
+        <>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Exam Type</MDTypography>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "nonacademicgradecreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Exam Type
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
 
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employee Grade</MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "employee_typecreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employee Grade
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} handleFetchdata={fetchEmployeeGrade} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update
-            setOpenupdate={setOpenupdate}
-            editData={editData}
-            handleFetchdata={fetchEmployeeGrade}
-          />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+              <Update
+                setOpenupdate={setOpenupdate}
+                editData={editData}
+                fetchingData={fetchExamtypes}
+              />
+            </Dialog>
+          </Grid>
+          <DataTable table={dataTableData} />
+        </>
+      )}
     </DashboardLayout>
   );
 };
 
-export default EmpGrade;
+export default NonAcademicGrade;

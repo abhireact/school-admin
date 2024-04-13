@@ -64,8 +64,7 @@ const Student = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchStudents = () => {
     axios
       .get("http://10.0.20.128:8000/mg_student", {
         headers: {
@@ -81,6 +80,9 @@ const Student = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchStudents();
   }, []);
   const handleDelete = async (name: any) => {
     try {
@@ -107,17 +109,17 @@ const Student = () => {
     columns: [
       { Header: "Student Name", accessor: "full_name" },
 
-      { Header: "Class", accessor: "cls_name" },
-      { Header: "Section", accessor: "sec_name" },
+      { Header: "Class", accessor: "class_name" },
+      { Header: "Section", accessor: "section_name" },
       { Header: "Gender", accessor: "gender" },
-      { Header: "Academic Year", accessor: "acd_name" },
+      { Header: "Academic Year", accessor: "academic_year" },
       { Header: "Mobile Number", accessor: "mobile_number" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      acd_name: <MDTypography variant="p"> {row.acd_name}</MDTypography>,
+      academic_year: <MDTypography variant="p"> {row.academic_year}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
@@ -141,13 +143,13 @@ const Student = () => {
 
       full_name: (
         <MDTypography variant="p">
-          <MDAvatar size="lg" bgColor="dark" alt={row.acd_name} src={row.stud_img} />
+          <MDAvatar size="lg" bgColor="dark" alt={row.academic_year} src={row.stud_img} />
           {row.first_name + " " + row.middle_name + " " + row.last_name}
         </MDTypography>
       ),
-      cls_name: <MDTypography variant="p">{row.cls_name}</MDTypography>,
+      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
       gender: <MDTypography variant="p">{row.gender}</MDTypography>,
-      sec_name: <MDTypography variant="p">{row.sec_name}</MDTypography>,
+      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
       mobile_number: <MDTypography variant="p">{row.mobile_number}</MDTypography>,
     })),
   };
