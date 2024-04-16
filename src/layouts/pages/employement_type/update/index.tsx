@@ -27,7 +27,7 @@ const Update = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_emptype", values, {
+        .post("http://10.0.20.121:8000/mg_emptype", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

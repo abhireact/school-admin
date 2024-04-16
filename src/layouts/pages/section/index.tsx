@@ -31,7 +31,7 @@ const Section = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -81,7 +81,7 @@ const Section = () => {
   }; //End
   const fetchSection = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_section", {
+      .get("http://10.0.20.121:8000/mg_section", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ const Section = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_section", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_section", {
         data: {
           sec_name: name.sec_name,
           class_name: name.class_name,
@@ -178,27 +178,29 @@ const Section = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Section</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "sectioncreate") ? (
+
+      {rbacData ? (
+        rbacData?.find((element: string) => element === "sectioncreate") ? (
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Section</MDTypography>
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
               + New Section
-            </MDButton>
-          ) : (
-            ""
-          )
+            </MDButton>{" "}
+          </Grid>
         ) : (
           ""
-        )}
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} fetchData={fetchSection} />
-        </Dialog>
+        )
+      ) : (
+        ""
+      )}
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchSection} />
+      </Dialog>
 
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchSection} />
-        </Dialog>
-      </Grid>
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchSection} />
+      </Dialog>
+
       <DataTable table={dataTableData} />
     </DashboardLayout>
   );

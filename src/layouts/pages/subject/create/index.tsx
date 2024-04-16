@@ -12,6 +12,19 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  class_name: Yup.string().required("Required *"),
+  subject_name: Yup.string().required("Required *"),
+  subject_code: Yup.string().required("Required *"),
+  scoring_type: Yup.string().required("Required *"),
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .required("Required *"),
+  max_weekly_class: Yup.number().required("Required *"),
+  index: Yup.number().required("Required *"),
+  no_of_classes: Yup.number().required("Required *"),
+});
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
@@ -31,7 +44,7 @@ const Create = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -46,7 +59,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -62,7 +75,7 @@ const Create = (props: any) => {
       });
   }, []);
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       subject_name: "",
       academic_year: "",
@@ -76,10 +89,10 @@ const Create = (props: any) => {
       scoring_type: "",
       index: 0,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_subject", values, {
+        .post("http://10.0.20.121:8000/mg_subject", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -89,6 +102,7 @@ const Create = (props: any) => {
           message.success(" Created successfully!");
           fetchingData();
           action.resetForm();
+          handleShowPage();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -110,6 +124,8 @@ const Create = (props: any) => {
                 value={values.subject_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.subject_name && Boolean(errors.subject_name)}
+                helperText={touched.subject_name && errors.subject_name}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -121,6 +137,8 @@ const Create = (props: any) => {
                 value={values.subject_code}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.subject_code && Boolean(errors.subject_code)}
+                helperText={touched.subject_code && errors.subject_code}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -142,6 +160,8 @@ const Create = (props: any) => {
                     value={values.scoring_type}
                     {...params}
                     variant="standard"
+                    error={touched.scoring_type && Boolean(errors.scoring_type)}
+                    helperText={touched.scoring_type && errors.scoring_type}
                   />
                 )}
               />
@@ -156,6 +176,8 @@ const Create = (props: any) => {
                 value={values.max_weekly_class}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.max_weekly_class && Boolean(errors.max_weekly_class)}
+                helperText={touched.max_weekly_class && errors.max_weekly_class}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -168,6 +190,8 @@ const Create = (props: any) => {
                 value={values.no_of_classes}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.no_of_classes && Boolean(errors.no_of_classes)}
+                helperText={touched.no_of_classes && errors.no_of_classes}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -180,6 +204,8 @@ const Create = (props: any) => {
                 value={values.index}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.index && Boolean(errors.index)}
+                helperText={touched.index && errors.index}
               />
             </Grid>
             <Grid item xs={6} sm={2.5} mt={4}>
@@ -229,6 +255,8 @@ const Create = (props: any) => {
                     value={values.academic_year}
                     {...params}
                     variant="standard"
+                    error={touched.academic_year && Boolean(errors.academic_year)}
+                    helperText={touched.academic_year && errors.academic_year}
                   />
                 )}
               />
@@ -256,6 +284,8 @@ const Create = (props: any) => {
                     value={values.class_name}
                     {...params}
                     variant="standard"
+                    error={touched.class_name && Boolean(errors.class_name)}
+                    helperText={touched.class_name && errors.class_name}
                   />
                 )}
               />

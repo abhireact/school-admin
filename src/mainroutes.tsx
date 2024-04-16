@@ -23,14 +23,15 @@ import PortraitIcon from "@mui/icons-material/Portrait";
 import BadgeIcon from "@mui/icons-material/Badge";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmpGrade from "layouts/pages/emp_grade";
-import AcademicGrade from "layouts/pages/academic_grade";
-import NonAcademicGrade from "layouts/pages/non_academic_grade";
+import AcademicGrade from "layouts/pages/scholastic_grade";
+import NonAcademicGrade from "layouts/pages/non_scholastic_grade";
 import ExamType from "layouts/pages/exam_type";
 import Scholastic from "layouts/pages/scholastic_particular";
 import ScholasticComponent from "layouts/pages/scholastic_component";
 import OtherParticular from "layouts/pages/other_particular";
 import OtherComponent from "layouts/pages/other_component";
 import ExamSchedule from "layouts/pages/exam_schedule";
+
 const routes = [
   {
     type: "collapse",
@@ -123,13 +124,13 @@ const routes = [
         component: <StudentDetails />,
       },
       {
-        name: "Academic Grade",
+        name: "Scholastic Grade",
         key: "academicgrade",
         route: "/pages/school/academicgrade",
         component: <AcademicGrade />,
       },
       {
-        name: "Non-Academic Grade",
+        name: "Non-Scholastic Grade",
         key: "nonacademicgrade",
         route: "/pages/school/nonacademicgrade",
         component: <NonAcademicGrade />,
@@ -163,7 +164,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Exam",
+    name: "Exam Setting",
     key: "exam",
     icon: (
       <Icon fontSize="medium">

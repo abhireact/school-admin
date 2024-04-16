@@ -12,7 +12,19 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
-
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  class_name: Yup.string().required("Required *"),
+  subject_name: Yup.string().required("Required *"),
+  subject_code: Yup.string().required("Required *"),
+  scoring_type: Yup.string().required("Required *"),
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .required("Required *"),
+  max_weekly_class: Yup.number().required("Required *"),
+  index: Yup.number().required("Required *"),
+  no_of_classes: Yup.number().required("Required *"),
+});
 const Update = (props: any) => {
   const token = Cookies.get("token");
   const score_categories = ["Marks", "Grade"];
@@ -34,7 +46,7 @@ const Update = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -49,7 +61,7 @@ const Update = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -65,7 +77,7 @@ const Update = (props: any) => {
       });
   }, []);
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       subject_name: editData.subject_name,
       academic_year: editData.academic_year,
@@ -79,7 +91,7 @@ const Update = (props: any) => {
       scoring_type: editData.scoring_type,
       index: editData.index,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       const sendValues = {
         ...values,
@@ -87,7 +99,7 @@ const Update = (props: any) => {
         old_subject_code: editData.subject_code,
       };
       axios
-        .put("http://10.0.20.128:8000/mg_subject", sendValues, {
+        .put("http://10.0.20.121:8000/mg_subject", sendValues, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -119,6 +131,8 @@ const Update = (props: any) => {
                 value={values.subject_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.subject_name && Boolean(errors.subject_name)}
+                helperText={touched.subject_name && errors.subject_name}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -128,19 +142,21 @@ const Update = (props: any) => {
                 name="subject_code"
                 label={<MDTypography variant="body2">Subject Code</MDTypography>}
                 value={values.subject_code}
-                onChange={handleChange}
+                // onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.subject_code && Boolean(errors.subject_code)}
+                helperText={touched.subject_code && errors.subject_code}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.scoring_type}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "scoring_type", value },
-                  });
-                }}
+                //  onChange={(event, value) => {
+                //     handleChange({
+                //       target: { name: "scoring_type", value },
+                //     });
+                //   }}
                 options={score_categories}
                 renderInput={(params: any) => (
                   <MDInput
@@ -151,6 +167,8 @@ const Update = (props: any) => {
                     value={values.scoring_type}
                     {...params}
                     variant="standard"
+                    error={touched.scoring_type && Boolean(errors.scoring_type)}
+                    helperText={touched.scoring_type && errors.scoring_type}
                   />
                 )}
               />
@@ -163,8 +181,10 @@ const Update = (props: any) => {
                 name="max_weekly_class"
                 label={<MDTypography variant="body2">Max Weekly Class </MDTypography>}
                 value={values.max_weekly_class}
-                onChange={handleChange}
+                //onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.max_weekly_class && Boolean(errors.max_weekly_class)}
+                helperText={touched.max_weekly_class && errors.max_weekly_class}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -175,8 +195,10 @@ const Update = (props: any) => {
                 name="no_of_classes"
                 label={<MDTypography variant="body2">No. of Classes </MDTypography>}
                 value={values.no_of_classes}
-                onChange={handleChange}
+                //onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.no_of_classes && Boolean(errors.no_of_classes)}
+                helperText={touched.no_of_classes && errors.no_of_classes}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
@@ -187,8 +209,10 @@ const Update = (props: any) => {
                 name="index"
                 label={<MDTypography variant="body2">Index No.</MDTypography>}
                 value={values.index}
-                onChange={handleChange}
+                // onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.index && Boolean(errors.index)}
+                helperText={touched.index && errors.index}
               />
             </Grid>
             <Grid item xs={6} sm={2.5} mt={4}>
@@ -197,7 +221,7 @@ const Update = (props: any) => {
             <Grid item xs={6} sm={1.5} mt={3}>
               <Checkbox
                 checked={values.is_core_subject}
-                onChange={handleChange}
+                //     onChange={handleChange}
                 name="is_core_subject"
               />
             </Grid>
@@ -205,7 +229,11 @@ const Update = (props: any) => {
               <MDTypography variant="body2">Lab Subject</MDTypography>
             </Grid>
             <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox checked={values.is_lab} onChange={handleChange} name="is_lab" />
+              <Checkbox
+                checked={values.is_lab}
+                // onChange={handleChange}
+                name="is_lab"
+              />
             </Grid>{" "}
             <Grid item xs={6} sm={2.5} mt={4}>
               <MDTypography variant="body2">Extra-curricular Subject</MDTypography>
@@ -213,7 +241,7 @@ const Update = (props: any) => {
             <Grid item xs={6} sm={1.5} mt={3}>
               <Checkbox
                 checked={values.is_extra_curricular}
-                onChange={handleChange}
+                //onChange={handleChange}
                 name="is_extra_curricular"
               />
             </Grid>{" "}
@@ -221,12 +249,12 @@ const Update = (props: any) => {
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.academic_year}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "academic_year", value },
-                  });
-                  filterDataByAcdName(classdata, value);
-                }}
+                // onChange={(event, value) => {
+                //   handleChange({
+                //     target: { name: "academic_year", value },
+                //   });
+                //   filterDataByAcdName(classdata, value);
+                // }}
                 options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
                   <MDInput
@@ -234,10 +262,12 @@ const Update = (props: any) => {
                     name="academic_year"
                     placeholder="2022-23"
                     label={<MDTypography variant="body2">Academic Year</MDTypography>}
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     value={values.academic_year}
                     {...params}
                     variant="standard"
+                    error={touched.academic_year && Boolean(errors.academic_year)}
+                    helperText={touched.academic_year && errors.academic_year}
                   />
                 )}
               />
@@ -246,25 +276,27 @@ const Update = (props: any) => {
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.class_name}
-                onChange={
-                  filteredClass.length >= 1
-                    ? (event, value) => {
-                        handleChange({
-                          target: { name: "class_name", value },
-                        });
-                      }
-                    : undefined
-                }
+                // onChange={
+                //   filteredClass.length >= 1
+                //     ? (event, value) => {
+                //         handleChange({
+                //           target: { name: "class_name", value },
+                //         });
+                //       }
+                //     : undefined
+                // }
                 options={filteredClass}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="class_name"
                     label={<MDTypography variant="body2">Class Name</MDTypography>}
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     value={values.class_name}
                     {...params}
                     variant="standard"
+                    error={touched.class_name && Boolean(errors.class_name)}
+                    helperText={touched.class_name && errors.class_name}
                   />
                 )}
               />

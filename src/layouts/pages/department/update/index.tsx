@@ -33,7 +33,7 @@ const Update = (props: any) => {
         dept_code: values.dept_code,
       };
       axios
-        .put("http://10.0.20.128:8000/mg_dept", sendData, {
+        .put("http://10.0.20.121:8000/mg_dept", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

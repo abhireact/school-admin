@@ -10,12 +10,15 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
+import * as Yup from "yup";
 
 import axios from "axios";
 import Cookies from "js-cookie";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
-
+const validationSchema = Yup.object().shape({
+  wing_name: Yup.string().required("Required *"),
+});
 const Update = (props: any) => {
   const { setOpenupdate, fetchData, editData } = props;
   const token = Cookies.get("token");
@@ -24,18 +27,18 @@ const Update = (props: any) => {
     setOpenupdate(false);
   };
   // editData to give intial values
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       wing_name: editData.wing_name,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
         old_wing_name: editData.wing_name,
         wing_name: values.wing_name,
       };
       axios
-        .put("http://10.0.20.128:8000/mg_wing/", sendData, {
+        .put("http://10.0.20.121:8000/mg_wing/", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -70,6 +73,8 @@ const Update = (props: any) => {
               value={values.wing_name}
               onBlur={handleBlur}
               onChange={handleChange}
+              error={touched.wing_name && Boolean(errors.wing_name)}
+              helperText={touched.wing_name && errors.wing_name}
             />
           </Grid>
 

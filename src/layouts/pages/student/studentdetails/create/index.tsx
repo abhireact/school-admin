@@ -18,9 +18,29 @@ import {
 } from "@mui/material";
 
 import SaveIcon from "@mui/icons-material/Save";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .required("Required *"),
+
+  admission_date: Yup.date().required("Required *"),
+  dob: Yup.date().required("Required *"),
+  admission_number: Yup.string().required("Required *"),
+  first_name: Yup.string().required("Required *"),
+  last_name: Yup.string().required("Required *"),
+  mobile_number: Yup.string()
+    .matches(/^[0-9]{10}$/, "Incorrect Format *")
+    .required("Required *"),
+  alt_mobile_number: Yup.string()
+    .matches(/^[0-9]{10}$/, "Incorrect Format *")
+    .required("Required *"),
+  aadhaar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format *"),
+  email: Yup.string().email("Incorrect Format *").required("Required *"),
+});
 
 const Create = (props: any) => {
-  const { setStudentname } = props;
+  const { setFirstName, setMiddleName, setLastName, setdob } = props;
   const token = Cookies.get("token");
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
@@ -32,10 +52,18 @@ const Create = (props: any) => {
       .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
+  const [sectiondata, setsectiondata] = useState([]);
+  const [filteredSection, setFilteredSection] = useState([]);
+  function filterSectionData(data: any, class_name: any) {
+    let filtereddata = data
+      .filter((item: any) => item.class_name === class_name)
+      .map((item: any) => item.section_name);
+    setFilteredSection(filtereddata);
+  }
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -50,7 +78,22 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_section", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setsectiondata(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    axios
+      .get("http://10.0.20.121:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -67,74 +110,79 @@ const Create = (props: any) => {
   }, []);
 
   //formik
-  const { values, handleChange, handleBlur, handleSubmit, setFieldValue } = useFormik({
-    initialValues: {
-      admission_date: "",
-      admission_number: "",
-      first_name: "",
-      middle_name: "",
-      last_name: "",
-      academic_year: "",
-      class_name: "",
-      section_name: "",
-      dob: "",
-      gender: "",
-      birth_place: "",
-      blood_group: "",
-      aadhaar_number: "",
-      religion: "",
-      mother_tongue: "",
-      caste_category: "",
-      pen_number: "",
-      address_line: "",
-      pin_code: "",
-      city: "",
-      state: "",
-      country: "",
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue } =
+    useFormik({
+      initialValues: {
+        admission_date: "",
+        admission_number: "",
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        academic_year: "",
+        class_name: "",
+        section_name: "",
+        dob: "",
+        gender: "",
+        birth_place: "",
+        blood_group: "",
+        aadhaar_number: "",
+        religion: "",
+        mother_tongue: "",
+        caste_category: "",
+        pen_number: "",
+        address_line: "",
+        pin_code: "",
+        city: "",
+        state: "",
+        country: "",
 
-      pr_address_line: "",
+        pr_address_line: "",
 
-      pr_pin_code: "",
-      pr_city: "",
-      pr_state: "",
-      pr_country: "",
-      quota: "",
-      mobile_number: "",
-      alt_mobile_number: "",
-      email: "",
-      hobby: "",
-      prev_school_name: "",
-      prev_class_name: "",
-      year: "",
-      marks_obtained: "",
-      total_marks: "",
-      grade_percentage: "",
+        pr_pin_code: "",
+        pr_city: "",
+        pr_state: "",
+        pr_country: "",
+        quota: "",
+        mobile_number: "",
+        alt_mobile_number: "",
+        email: "",
+        hobby: "",
+        prev_school_name: "",
+        prev_class_name: "",
+        year: "",
+        marks_obtained: "",
+        total_marks: "",
+        grade_percentage: "",
 
-      sibling: false,
+        sibling: false,
 
-      birth_certificate: false,
-      character_certificate: false,
-      transfer_certificate: false,
-      stud_img: null,
-    },
-    // validationSchema: validationSchema,
-    onSubmit: (values, action) => {
-      // action.resetForm();
-      axios
-        .post("http://10.0.20.128:8000/mg_student", values, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          message.success(" Student Created successfully!");
-        })
-        .catch(() => {
-          message.error("Error on creating Student !");
-        });
-    },
-  });
+        birth_certificate: false,
+        character_certificate: false,
+        transfer_certificate: false,
+        stud_img: null,
+      },
+      validationSchema: validationSchema,
+      onSubmit: (values, action) => {
+        // action.resetForm();
+        axios
+          .post("http://10.0.20.121:8000/mg_student", values, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(() => {
+            message.success(" Student Created successfully!");
+            setFirstName(values.first_name);
+            setMiddleName(values.middle_name);
+            setLastName(values.last_name);
+            setdob(values.dob);
+          })
+          .catch(() => {
+            message.error("Error on creating Student !");
+          });
+      },
+    });
   const handleImage = (e: { target: { files: any[] } }) => {
     const file = e.target.files[0];
 
@@ -181,28 +229,30 @@ const Create = (props: any) => {
             <MDInput
               mb={2}
               type="date"
-              required
               InputLabelProps={{ shrink: true }}
               sx={{ width: "80%" }}
               variant="standard"
-              label={<MDTypography variant="body2">Admission Date *</MDTypography>}
+              label={<MDTypography variant="body2">Admission Date </MDTypography>}
               name="admission_date"
               value={values.admission_date}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.admission_date && Boolean(errors.admission_date)}
+              helperText={touched.admission_date && errors.admission_date}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
             <MDInput
               mb={2}
-              type="number"
               sx={{ width: "80%" }}
               variant="standard"
-              label={<MDTypography variant="body2">Admission Number *</MDTypography>}
+              label={<MDTypography variant="body2">Admission Number </MDTypography>}
               name="admission_number"
               value={values.admission_number}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.admission_number && Boolean(errors.admission_number)}
+              helperText={touched.admission_number && errors.admission_number}
             />
           </Grid>
           <Grid item xs={12} sm={12} mt={2}>
@@ -219,14 +269,13 @@ const Create = (props: any) => {
               name="first_name"
               value={values.first_name}
               onChange={(event: { target: { value: any } }) => {
-                setStudentname(
-                  event.target.value + " " + values.middle_name + " " + values.last_name
-                );
                 handleChange({
                   target: { name: "first_name", value: event.target.value },
                 });
               }}
               onBlur={handleBlur}
+              error={touched.first_name && Boolean(errors.first_name)}
+              helperText={touched.first_name && errors.first_name}
             />
           </Grid>{" "}
           <Grid item xs={6} sm={4}>
@@ -238,9 +287,6 @@ const Create = (props: any) => {
               name="middle_name"
               value={values.middle_name}
               onChange={(event: { target: { value: any } }) => {
-                setStudentname(
-                  values.first_name + " " + event.target.value + " " + values.last_name
-                );
                 handleChange({
                   target: { name: "middle_name", value: event.target.value },
                 });
@@ -257,14 +303,13 @@ const Create = (props: any) => {
               name="last_name"
               value={values.last_name}
               onChange={(event: { target: { value: any } }) => {
-                setStudentname(
-                  values.first_name + " " + values.middle_name + " " + event.target.value
-                );
                 handleChange({
                   target: { name: "last_name", value: event.target.value },
                 });
               }}
               onBlur={handleBlur}
+              error={touched.last_name && Boolean(errors.last_name)}
+              helperText={touched.last_name && errors.last_name}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -288,6 +333,8 @@ const Create = (props: any) => {
                   value={values.academic_year}
                   {...params}
                   variant="standard"
+                  error={touched.academic_year && Boolean(errors.academic_year)}
+                  helperText={touched.academic_year && errors.academic_year}
                 />
               )}
             />
@@ -302,6 +349,7 @@ const Create = (props: any) => {
                       handleChange({
                         target: { name: "class_name", value },
                       });
+                      filterSectionData(sectiondata, value);
                     }
                   : undefined
               }
@@ -315,20 +363,39 @@ const Create = (props: any) => {
                   value={values.class_name}
                   {...params}
                   variant="standard"
+                  error={touched.class_name && Boolean(errors.class_name)}
+                  helperText={touched.class_name && errors.class_name}
                 />
               )}
             />
           </Grid>
-          <Grid item xs={6} sm={4}>
-            <MDInput
-              mb={2}
+          <Grid item xs={12} sm={4}>
+            <Autocomplete
               sx={{ width: "80%" }}
-              variant="standard"
-              label={<MDTypography variant="body2">Section</MDTypography>}
-              name="section_name"
               value={values.section_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={
+                filteredSection.length >= 1
+                  ? (event, value) => {
+                      handleChange({
+                        target: { name: "section_name", value },
+                      });
+                    }
+                  : undefined
+              }
+              options={filteredSection}
+              renderInput={(params: any) => (
+                <MDInput
+                  InputLabelProps={{ shrink: true }}
+                  name="section_name"
+                  label={<MDTypography variant="body2">Section Name</MDTypography>}
+                  onChange={handleChange}
+                  value={values.section_name}
+                  {...params}
+                  variant="standard"
+                  error={touched.section_name && Boolean(errors.section_name)}
+                  helperText={touched.section_name && errors.section_name}
+                />
+              )}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -343,6 +410,8 @@ const Create = (props: any) => {
               value={values.dob}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.dob && Boolean(errors.dob)}
+              helperText={touched.dob && errors.dob}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -355,6 +424,8 @@ const Create = (props: any) => {
               value={values.birth_place}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.birth_place && Boolean(errors.birth_place)}
+              helperText={touched.birth_place && errors.birth_place}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -367,6 +438,8 @@ const Create = (props: any) => {
               value={values.blood_group}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.blood_group && Boolean(errors.blood_group)}
+              helperText={touched.blood_group && errors.blood_group}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -379,6 +452,8 @@ const Create = (props: any) => {
               value={values.aadhaar_number}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.aadhaar_number && Boolean(errors.aadhaar_number)}
+              helperText={touched.aadhaar_number && errors.aadhaar_number}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -391,6 +466,8 @@ const Create = (props: any) => {
               value={values.mother_tongue}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.mother_tongue && Boolean(errors.mother_tongue)}
+              helperText={touched.mother_tongue && errors.mother_tongue}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -403,6 +480,8 @@ const Create = (props: any) => {
               value={values.hobby}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.hobby && Boolean(errors.hobby)}
+              helperText={touched.hobby && errors.hobby}
             />
           </Grid>{" "}
           <Grid item xs={6} sm={4}>
@@ -415,6 +494,8 @@ const Create = (props: any) => {
               value={values.religion}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.religion && Boolean(errors.religion)}
+              helperText={touched.religion && errors.religion}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -427,6 +508,8 @@ const Create = (props: any) => {
               value={values.quota}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.quota && Boolean(errors.quota)}
+              helperText={touched.quota && errors.quota}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -440,6 +523,8 @@ const Create = (props: any) => {
               value={values.pen_number}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.pen_number && Boolean(errors.pen_number)}
+              helperText={touched.pen_number && errors.pen_number}
             />
           </Grid>
           <Grid item xs={6} sm={2} mt={3}>
@@ -563,6 +648,7 @@ const Create = (props: any) => {
           </Grid>
           <Grid item xs={6} sm={8} mt={2}>
             <MDInput
+              required
               type="file"
               accept="image/*"
               name="stud_img"
@@ -580,7 +666,6 @@ const Create = (props: any) => {
           <Grid item xs={6} sm={4}>
             <MDInput
               mb={2}
-              type="number"
               sx={{ width: "80%" }}
               variant="standard"
               label={<MDTypography variant="body2">Mobile Number *</MDTypography>}
@@ -588,12 +673,13 @@ const Create = (props: any) => {
               value={values.mobile_number}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.mobile_number && Boolean(errors.mobile_number)}
+              helperText={touched.mobile_number && errors.mobile_number}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
             <MDInput
               mb={2}
-              type="number"
               sx={{ width: "80%" }}
               variant="standard"
               label={<MDTypography variant="body2">Alternate Number</MDTypography>}
@@ -601,6 +687,8 @@ const Create = (props: any) => {
               value={values.alt_mobile_number}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.alt_mobile_number && Boolean(errors.alt_mobile_number)}
+              helperText={touched.alt_mobile_number && errors.alt_mobile_number}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -613,6 +701,8 @@ const Create = (props: any) => {
               value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.email && Boolean(errors.email)}
+              helperText={touched.email && errors.email}
             />
           </Grid>
           <Grid item xs={12} sm={12} mt={2}>
@@ -630,6 +720,8 @@ const Create = (props: any) => {
               value={values.address_line}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.address_line && Boolean(errors.address_line)}
+              helperText={touched.address_line && errors.address_line}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -643,6 +735,8 @@ const Create = (props: any) => {
               value={values.pin_code}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.pin_code && Boolean(errors.pin_code)}
+              helperText={touched.pin_code && errors.pin_code}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -655,6 +749,8 @@ const Create = (props: any) => {
               value={values.city}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.city && Boolean(errors.city)}
+              helperText={touched.city && errors.city}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -667,6 +763,8 @@ const Create = (props: any) => {
               value={values.state}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.state && Boolean(errors.state)}
+              helperText={touched.state && errors.state}
             />
           </Grid>
           <Grid item xs={6} sm={4}>
@@ -679,6 +777,8 @@ const Create = (props: any) => {
               value={values.country}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.country && Boolean(errors.country)}
+              helperText={touched.country && errors.country}
             />
           </Grid>
           <Grid item xs={12} sm={12} mt={2}>

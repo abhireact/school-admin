@@ -32,7 +32,7 @@ const OtherComponent = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ const OtherComponent = () => {
   }; //End
   const fetchComponents = () => {
     axios
-      .get("http://10.0.20.128:8000/other_components", {
+      .get("http://10.0.20.121:8000/other_components", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const OtherComponent = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/schol_components", {
+      const response = await axios.delete("http://10.0.20.121:8000/schol_components", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,

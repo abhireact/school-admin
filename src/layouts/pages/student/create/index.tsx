@@ -13,12 +13,32 @@ import { useState } from "react";
 const Create = (props: any) => {
   const { setShowpage } = props;
   const [studentname, setStudentname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dob, setdob] = useState("");
 
   return (
     <Card>
-      <Student setStudentname={setStudentname} />
-      <Guardian student_guardian={studentname} />
-      <Activity student_guardian={studentname} />
+      <Student
+        setFirsName={setFirstName}
+        setMiddleName={setMiddleName}
+        setLastName={setLastName}
+        setdob={setdob}
+      />
+      <Guardian
+        student_first_name={firstName}
+        student_middle_name={middleName}
+        student_last_name={lastName}
+        student_dob={dob}
+      />
+      <Activity
+        student_guardian={studentname}
+        student_first_name={firstName}
+        student_middle_name={middleName}
+        student_last_name={lastName}
+        student_dob={dob}
+      />
       <MDBox py={4}>
         <Grid container sx={{ display: "flex", justifyContent: "space-between" }} pr={8} pb={2}>
           <MDButton

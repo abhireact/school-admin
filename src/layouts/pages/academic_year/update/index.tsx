@@ -13,25 +13,32 @@ import { message } from "antd";
 
 import axios from "axios";
 import Cookies from "js-cookie";
+import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
-
+const validationSchema = Yup.object().shape({
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .required("Academic year is required"),
+  start_date: Yup.date().required("Start date is required"),
+  end_date: Yup.date().required("End date is required"),
+});
 const Update = (props: any) => {
-  const { setOpenupdate, editData } = props;
+  const { setOpenupdate, fetchData, editData } = props;
   const token = Cookies.get("token");
   console.log(editData, "edit data ");
   const handleCloseupdate = () => {
     setOpenupdate(false);
   };
   // editData to give intial values
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       academic_year: editData.academic_year,
 
       start_date: editData.start_date,
       end_date: editData.end_date,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
         old_academic_year: editData.academic_year,
@@ -41,7 +48,7 @@ const Update = (props: any) => {
         end_date: values.end_date,
       };
       axios
-        .put("http://10.0.20.128:8000/mg_accademic_update", sendData, {
+        .put("http://10.0.20.121:8000/mg_accademic_update", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -49,6 +56,7 @@ const Update = (props: any) => {
         })
         .then(() => {
           message.success("Updated  successfully!");
+          fetchData();
         })
         .catch(() => {
           message.error("Error on updating !");
@@ -74,6 +82,8 @@ const Update = (props: any) => {
               name="academic_year"
               value={values.academic_year}
               onBlur={handleBlur}
+              error={touched.academic_year && Boolean(errors.academic_year)}
+              helperText={touched.academic_year && errors.academic_year}
             />
           </Grid>
 
@@ -93,6 +103,8 @@ const Update = (props: any) => {
               value={values.start_date}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.start_date && Boolean(errors.start_date)}
+              helperText={touched.start_date && errors.start_date}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
@@ -111,6 +123,8 @@ const Update = (props: any) => {
               value={values.end_date}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.end_date && Boolean(errors.end_date)}
+              helperText={touched.end_date && errors.end_date}
             />
           </Grid>
           <Grid

@@ -15,6 +15,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  class_name: Yup.string().required("Required *"),
+  section_name: Yup.string().required("Required *"),
+  academic_year: Yup.string().required("Required *"),
+});
 
 const Update = (props: any) => {
   const { setOpenupdate, fetchData, editData } = props;
@@ -24,17 +30,17 @@ const Update = (props: any) => {
     setOpenupdate(false);
   };
   // editData to give intial values
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       academic_year: editData.academic_year,
       class_name: editData.class_name,
       section_name: editData.section_name,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       const sendValues = { ...values, old_section_name: editData.section_name };
       axios
-        .put("http://10.0.20.128:8000/mg_update_section", sendValues, {
+        .put("http://10.0.20.121:8000/mg_update_section", sendValues, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -43,6 +49,7 @@ const Update = (props: any) => {
         .then(() => {
           message.success("Updated  successfully!");
           fetchData();
+          handleCloseupdate();
         })
         .catch(() => {
           message.error("Error on updating !");
@@ -70,6 +77,8 @@ const Update = (props: any) => {
               value={values.section_name}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.section_name && Boolean(errors.section_name)}
+              helperText={touched.section_name && errors.section_name}
             />
           </Grid>
 
@@ -81,14 +90,7 @@ const Update = (props: any) => {
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
             <Grid item mt={4}>
-              <MDButton
-                color="info"
-                variant="contained"
-                type="submit"
-                onClick={() => {
-                  handleCloseupdate();
-                }}
-              >
+              <MDButton color="info" variant="contained" type="submit">
                 Save
               </MDButton>
             </Grid>

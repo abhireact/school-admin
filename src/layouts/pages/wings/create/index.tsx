@@ -10,6 +10,7 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
@@ -18,16 +19,18 @@ const Create = (props: any) => {
   const handleClose = () => {
     setOpen(false);
   };
-  //end
+  const validationSchema = Yup.object().shape({
+    wing_name: Yup.string().required("Required *"),
+  });
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       wing_name: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_wing", values, {
+        .post("http://10.0.20.121:8000/mg_wing", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -36,6 +39,7 @@ const Create = (props: any) => {
         .then(() => {
           message.success(" Created successfully!");
           fetchData();
+          handleClose();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -62,6 +66,8 @@ const Create = (props: any) => {
               value={values.wing_name}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.wing_name && Boolean(errors.wing_name)}
+              helperText={touched.wing_name && errors.wing_name}
             />
           </Grid>
 
@@ -73,14 +79,7 @@ const Create = (props: any) => {
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
             <Grid item mt={4}>
-              <MDButton
-                color="info"
-                variant="contained"
-                type="submit"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
+              <MDButton color="info" variant="contained" type="submit">
                 Save
               </MDButton>
             </Grid>

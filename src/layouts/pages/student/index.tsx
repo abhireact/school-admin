@@ -23,7 +23,7 @@ const Student = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ const Student = () => {
   }; //End
   const fetchStudents = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_student", {
+      .get("http://10.0.20.121:8000/mg_student", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ const Student = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_student", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_student", {
         data: { stud_name: name },
         headers: {
           "Content-Type": "application/json",

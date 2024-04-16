@@ -10,6 +10,12 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  class_name: Yup.string().required("Required *"),
+  section_name: Yup.string().required("Required *"),
+  academic_year: Yup.string().required("Required *"),
+});
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
@@ -31,7 +37,7 @@ const Create = (props: any) => {
   }
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -46,7 +52,7 @@ const Create = (props: any) => {
         console.error("Error fetching academic data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -62,16 +68,16 @@ const Create = (props: any) => {
       });
   }, []);
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       academic_year: "",
       section_name: "",
       class_name: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_section", values, {
+        .post("http://10.0.20.121:8000/mg_section", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -80,9 +86,10 @@ const Create = (props: any) => {
         .then(() => {
           message.success("Created successfully!");
           fetchData();
+          handleClose();
         })
         .catch(() => {
-          message.error("Error on creating  !");
+          message.error("Error on creating!");
         });
 
       action.resetForm();
@@ -103,13 +110,15 @@ const Create = (props: any) => {
               value={values.section_name}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.section_name && Boolean(errors.section_name)}
+              helperText={touched.section_name && errors.section_name}
             />
           </Grid>
 
           <Grid item xs={12} sm={5} mt={2}>
             <MDTypography variant="body2">Academic Year</MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={7} mt={2}>
             <Autocomplete
               sx={{ width: "65%" }}
               value={values.academic_year}
@@ -124,12 +133,14 @@ const Create = (props: any) => {
                 <MDInput
                   InputLabelProps={{ shrink: true }}
                   name="academic_year"
-                  placeholder="2022-23"
-                  label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                  placeholder="Choose Options"
+                  //label={<MDTypography variant="body2">Academic Year</MDTypography>}
                   onChange={handleChange}
                   value={values.academic_year}
                   {...params}
                   variant="standard"
+                  error={touched.academic_year && Boolean(errors.academic_year)}
+                  helperText={touched.academic_year && errors.academic_year}
                 />
               )}
             />
@@ -138,7 +149,7 @@ const Create = (props: any) => {
             <MDTypography variant="body2">Class Name</MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={7} mt={2}>
             <Autocomplete
               sx={{ width: "65%" }}
               value={values.class_name}
@@ -156,11 +167,14 @@ const Create = (props: any) => {
                 <MDInput
                   InputLabelProps={{ shrink: true }}
                   name="class_name"
-                  label={<MDTypography variant="body2">Class Name</MDTypography>}
+                  // label={<MDTypography variant="body2">Class Name</MDTypography>}
+                  placeholder="Choose Options"
                   onChange={handleChange}
                   value={values.class_name}
                   {...params}
                   variant="standard"
+                  error={touched.class_name && Boolean(errors.class_name)}
+                  helperText={touched.class_name && errors.class_name}
                 />
               )}
             />
@@ -174,14 +188,7 @@ const Create = (props: any) => {
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
             <Grid item mt={4}>
-              <MDButton
-                color="info"
-                variant="contained"
-                type="submit"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
+              <MDButton color="info" variant="contained" type="submit">
                 Save
               </MDButton>
             </Grid>

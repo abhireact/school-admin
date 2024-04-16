@@ -108,5 +108,8 @@
   },
   "overrides": {
     "svgo": "3.0.2"
-  }
+  },
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }

@@ -65,7 +65,7 @@ const token = Cookies.get("token");
 
 try {
   if (token) {
-    const response = await axios.get("http://10.0.20.128:8000/mg_rbac_current_user", {
+    const response = await axios.get("http://10.0.20.121:8000/mg_rbac_current_user", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

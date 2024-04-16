@@ -22,7 +22,7 @@ const Create = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/schol_particular", {
+      .get("http://10.0.20.121:8000/schol_particular", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ const Create = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/schol_components", values, {
+        .post("http://10.0.20.121:8000/schol_components", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

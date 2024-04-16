@@ -32,7 +32,7 @@ const User = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -82,7 +82,7 @@ const User = () => {
   }; //End
   const fetchUsers = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_users_name/", {
+      .get("http://10.0.20.121:8000/mg_users_name/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

@@ -109,7 +109,7 @@ const Rbac = (props: any) => {
         if (editorcreate === "create") {
           try {
             const response = await axios.post(
-              "http://10.0.20.128:8000/mg_rbac",
+              "http://10.0.20.121:8000/mg_rbac",
               { ...values, sub_module_menu: allchecked },
               {
                 headers: {
@@ -131,7 +131,7 @@ const Rbac = (props: any) => {
         if (editorcreate === "edit") {
           try {
             const response = await axios.put(
-              "http://10.0.20.128:8000/mg_rbac",
+              "http://10.0.20.121:8000/mg_rbac",
               { ...values, sub_module_menu: allchecked },
               {
                 headers: {
@@ -252,7 +252,7 @@ const Rbac = (props: any) => {
   const fetchRbac = async (school_name: string, roles_name: string) => {
     try {
       const response = await axios.get(
-        `http://10.0.20.128:8000/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
+        `http://10.0.20.121:8000/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -290,7 +290,7 @@ const Rbac = (props: any) => {
 
   useEffect(() => {
     axios
-      .get(`http://10.0.20.128:8000/mg_school`, {
+      .get(`http://10.0.20.121:8000/mg_school`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

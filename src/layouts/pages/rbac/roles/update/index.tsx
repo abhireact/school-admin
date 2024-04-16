@@ -48,7 +48,7 @@ const Editrole = (props: any) => {
       };
 
       axios
-        .put("http://10.0.20.128:8000/mg_role", sendData, {
+        .put("http://10.0.20.121:8000/mg_role", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

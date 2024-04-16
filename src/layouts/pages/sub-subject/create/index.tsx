@@ -12,7 +12,19 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  class_name: Yup.string().required("Required *"),
+  subject_name: Yup.string().required("Required *"),
+  sub_subject: Yup.string().required("Required *"),
+  section_name: Yup.string().required("Required *"),
 
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .required("Required *"),
+
+  index: Yup.number().required("Required *"),
+});
 const Create = (props: any) => {
   const token = Cookies.get("token");
 
@@ -46,7 +58,7 @@ const Create = (props: any) => {
   }
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_section", {
+      .get("http://10.0.20.121:8000/mg_section", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -61,7 +73,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_subject", {
+      .get("http://10.0.20.121:8000/mg_subject", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -76,7 +88,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -91,7 +103,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -107,19 +119,20 @@ const Create = (props: any) => {
       });
   }, []);
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
+      class_name: "",
       subject_name: "",
       sub_subject: "",
       academic_year: "",
-      class_name: "",
+
       section_name: "",
       index: 0,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/sub_subjects", values, {
+        .post("http://10.0.20.121:8000/sub_subjects", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -129,6 +142,7 @@ const Create = (props: any) => {
           message.success(" Created successfully!");
           fetchingData();
           action.resetForm();
+          handleShowPage();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -162,6 +176,8 @@ const Create = (props: any) => {
                     value={values.academic_year}
                     {...params}
                     variant="standard"
+                    error={touched.academic_year && Boolean(errors.academic_year)}
+                    helperText={touched.academic_year && errors.academic_year}
                   />
                 )}
               />
@@ -191,6 +207,8 @@ const Create = (props: any) => {
                     value={values.class_name}
                     {...params}
                     variant="standard"
+                    error={touched.class_name && Boolean(errors.class_name)}
+                    helperText={touched.class_name && errors.class_name}
                   />
                 )}
               />
@@ -218,6 +236,8 @@ const Create = (props: any) => {
                     value={values.subject_name}
                     {...params}
                     variant="standard"
+                    error={touched.subject_name && Boolean(errors.subject_name)}
+                    helperText={touched.subject_name && errors.subject_name}
                   />
                 )}
               />
@@ -245,6 +265,8 @@ const Create = (props: any) => {
                     value={values.section_name}
                     {...params}
                     variant="standard"
+                    error={touched.section_name && Boolean(errors.section_name)}
+                    helperText={touched.section_name && errors.section_name}
                   />
                 )}
               />
@@ -259,6 +281,8 @@ const Create = (props: any) => {
                 value={values.sub_subject}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.sub_subject && Boolean(errors.sub_subject)}
+                helperText={touched.sub_subject && errors.sub_subject}
               />
             </Grid>
 
@@ -272,6 +296,8 @@ const Create = (props: any) => {
                 value={values.index}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.index && Boolean(errors.index)}
+                helperText={touched.index && errors.index}
               />
             </Grid>
 

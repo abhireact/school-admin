@@ -61,7 +61,7 @@ function CoverLogin() {
       const sanitizedPassword = password.replace(/[<>"]/g, "");
 
       const res = await axios.post(
-        "http://10.0.20.128:8000/token",
+        "http://10.0.20.121:8000/token",
         {
           username: sanitizedEmail,
           //   email: sanitizedEmail,

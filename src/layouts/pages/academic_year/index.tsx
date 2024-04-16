@@ -31,7 +31,7 @@ const Academic = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -79,10 +79,9 @@ const Academic = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const FetchAcademicYear = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,10 +95,14 @@ const Academic = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+
+  useEffect(() => {
+    FetchAcademicYear();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_accademic", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_accademic", {
         data: { academic_year: name },
         headers: {
           "Content-Type": "application/json",
@@ -173,28 +176,30 @@ const Academic = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Academic Year</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "academiccreate") ? (
+
+      {rbacData ? (
+        rbacData?.find((element: string) => element === "academiccreate") ? (
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Academic Year</MDTypography>
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
               + New Academic Year
             </MDButton>
-          ) : (
-            ""
-          )
+          </Grid>
         ) : (
           ""
-        )}
+        )
+      ) : (
+        ""
+      )}
 
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
-        </Dialog>
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={FetchAcademicYear} />
+      </Dialog>
 
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
-      </Grid>
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchAcademicYear} />
+      </Dialog>
+
       <DataTable table={dataTableData} />
     </DashboardLayout>
   );

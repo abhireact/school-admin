@@ -10,6 +10,7 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
@@ -18,11 +19,17 @@ const Create = (props: any) => {
   const handleClose = () => {
     setOpen(false);
   };
+  const validationSchema = Yup.object().shape({
+    class_name: Yup.string().required("Required *"),
+    code: Yup.string().required("Required *"),
+    wing_name: Yup.string().required("Required *"),
+    academic_year: Yup.string().required("Required *"),
+  });
   const [academicData, setAcademicData] = useState([]);
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -37,7 +44,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_wing/", {
+      .get("http://10.0.20.121:8000/mg_wing/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -53,18 +60,17 @@ const Create = (props: any) => {
       });
   }, []);
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       academic_year: "",
       wing_name: "",
       code: "",
-
       class_name: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_class", values, {
+        .post("http://10.0.20.121:8000/mg_class", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -100,6 +106,27 @@ const Create = (props: any) => {
               value={values.class_name}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.class_name && Boolean(errors.class_name)}
+              helperText={touched.class_name && errors.class_name}
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="body2">
+              Class Code
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              mb={2}
+              sx={{ width: "65%" }}
+              variant="standard"
+              name="code"
+              value={values.code}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.code && Boolean(errors.code)}
+              helperText={touched.code && errors.code}
             />
           </Grid>
 
@@ -122,31 +149,18 @@ const Create = (props: any) => {
               renderInput={(params: any) => (
                 <MDInput
                   name="wing_name"
+                  placeholder="Choose Options"
                   onChange={handleChange}
                   value={values.wing_name}
                   {...params}
                   variant="standard"
+                  error={touched.wing_name && Boolean(errors.wing_name)}
+                  helperText={touched.wing_name && errors.wing_name}
                 />
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
-              Class Code
-            </MDTypography>
-          </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="code"
-              value={values.code}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="body2">
               Academic Year
@@ -165,11 +179,13 @@ const Create = (props: any) => {
               renderInput={(params: any) => (
                 <MDInput
                   name="academic_year"
-                  placeholder="eg. 2022-23"
+                  placeholder="Choose Options"
                   onChange={handleChange}
                   value={values.academic_year}
                   {...params}
                   variant="standard"
+                  error={touched.academic_year && Boolean(errors.academic_year)}
+                  helperText={touched.academic_year && errors.academic_year}
                 />
               )}
             />

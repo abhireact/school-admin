@@ -10,26 +10,33 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .required("Required *"),
+  start_date: Yup.date().required("Required *"),
+  end_date: Yup.date().required("Required *"),
+});
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpen } = props;
+  const { setOpen, fetchData } = props;
   const handleClose = () => {
     setOpen(false);
   };
-  //end
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       academic_year: "",
       start_date: "",
       end_date: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/mg_accademic_year", values, {
+        .post("http://10.0.20.121:8000/mg_accademic_year", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -37,6 +44,7 @@ const Create = (props: any) => {
         })
         .then(() => {
           message.success(" Created successfully!");
+          fetchData();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -64,6 +72,8 @@ const Create = (props: any) => {
               value={values.academic_year}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.academic_year && Boolean(errors.academic_year)}
+              helperText={touched.academic_year && errors.academic_year}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
@@ -80,6 +90,8 @@ const Create = (props: any) => {
               name="start_date"
               value={values.start_date}
               onChange={handleChange}
+              error={touched.start_date && Boolean(errors.start_date)}
+              helperText={touched.start_date && errors.start_date}
               onBlur={handleBlur}
             />
           </Grid>
@@ -100,6 +112,8 @@ const Create = (props: any) => {
               value={values.end_date}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.end_date && Boolean(errors.end_date)}
+              helperText={touched.end_date && errors.end_date}
             />
           </Grid>
 

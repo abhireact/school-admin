@@ -18,11 +18,19 @@ const Update = (props: any) => {
         student_guardian={
           editData.first_name + " " + editData.middle_name + " " + editData.last_name
         }
+        student_first_name={editData.first_name}
+        student_middle_name={editData.middle_name}
+        student_last_name={editData.last_name}
+        student_dob={editData.dob}
       />
       <Activity
         student_guardian={
           editData.first_name + " " + editData.middle_name + " " + editData.last_name
         }
+        student_first_name={editData.first_name}
+        student_middle_name={editData.middle_name}
+        student_last_name={editData.last_name}
+        student_dob={editData.dob}
       />
     </Card>
   );

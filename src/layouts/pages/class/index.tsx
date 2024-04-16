@@ -31,7 +31,7 @@ const Class = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -81,7 +81,7 @@ const Class = () => {
   }; //End
   const fetchClasses = () => {
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ const Class = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_class", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_class", {
         data: { class_name: name },
         headers: {
           "Content-Type": "application/json",
@@ -177,28 +177,30 @@ const Class = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Class</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "classcreate") ? (
+
+      {rbacData ? (
+        rbacData?.find((element: string) => element === "classcreate") ? (
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5">Class</MDTypography>
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
               + New Class
-            </MDButton>
-          ) : (
-            ""
-          )
+            </MDButton>{" "}
+          </Grid>
         ) : (
           ""
-        )}
+        )
+      ) : (
+        ""
+      )}
 
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} fetchData={fetchClasses} />
-        </Dialog>
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchClasses} />
+      </Dialog>
 
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchClasses} />
-        </Dialog>
-      </Grid>
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchClasses} />
+      </Dialog>
+
       <DataTable table={dataTableData} />
     </DashboardLayout>
   );

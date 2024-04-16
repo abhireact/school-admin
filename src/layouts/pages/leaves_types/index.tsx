@@ -32,7 +32,7 @@ const LeaveType = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ const LeaveType = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_leaves", {
+      .get("http://10.0.20.121:8000/mg_leaves", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -88,7 +88,7 @@ const LeaveType = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_leaves", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_leaves", {
         data: { leave_type: name.leave_type, leave_code: name.leave_code },
         headers: {
           "Content-Type": "application/json",

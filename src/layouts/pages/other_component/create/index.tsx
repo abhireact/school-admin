@@ -22,7 +22,7 @@ const Create = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/other_particulars", {
+      .get("http://10.0.20.121:8000/other_particulars", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -53,7 +53,7 @@ const Create = (props: any) => {
       });
   }, []);
 
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       component_name: "",
       particular_name: "",
@@ -63,7 +63,7 @@ const Create = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/other_components", values, {
+        .post("http://10.0.20.121:8000/other_components", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -95,6 +95,7 @@ const Create = (props: any) => {
                 value={values.component_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                on
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>

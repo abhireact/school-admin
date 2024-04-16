@@ -57,7 +57,7 @@ const Create = (props: any) => {
   }
   useEffect(() => {
     axios
-      .get("http://10.0.20.128:8000/mg_section", {
+      .get("http://10.0.20.121:8000/mg_section", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_accademic_year", {
+      .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -87,7 +87,7 @@ const Create = (props: any) => {
         console.error("Error fetching academic year data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ const Create = (props: any) => {
         console.error("Error fetching class data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/exam_type", {
+      .get("http://10.0.20.121:8000/exam_type", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -117,7 +117,7 @@ const Create = (props: any) => {
         console.error("Error fetching exam type data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/schol_particular", {
+      .get("http://10.0.20.121:8000/schol_particular", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -132,7 +132,7 @@ const Create = (props: any) => {
         console.error("Error fetching scholastic particular data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/schol_components", {
+      .get("http://10.0.20.121:8000/schol_components", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -148,7 +148,7 @@ const Create = (props: any) => {
         console.error("Error fetching scholatic component data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_subject", {
+      .get("http://10.0.20.121:8000/mg_subject", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -163,7 +163,7 @@ const Create = (props: any) => {
         console.error("Error fetching subject data:", error);
       });
     axios
-      .get("http://10.0.20.128:8000/mg_sub_subjects", {
+      .get("http://10.0.20.121:8000/mg_sub_subjects", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -198,7 +198,7 @@ const Create = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.128:8000/exam_schedule", values, {
+        .post("http://10.0.20.121:8000/exam_schedule", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

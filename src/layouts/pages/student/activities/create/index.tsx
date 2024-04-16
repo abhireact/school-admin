@@ -49,7 +49,7 @@ const Activity = (props: any) => {
     onSubmit: (values, action) => {
       if (editActivities) {
         axios
-          .put("http://10.0.20.128:8000/mg_activity", values, {
+          .put("http://10.0.20.121:8000/mg_activity", values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ const Activity = (props: any) => {
           });
       } else {
         axios
-          .post("http://10.0.20.128:8000/mg_activity", values, {
+          .post("http://10.0.20.121:8000/mg_activity", values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -97,7 +97,7 @@ const Activity = (props: any) => {
   };
   const handleDelete = async (activity_name: string) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/mg_activity", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_activity", {
         data: { student_name: student_guardian, activity_name: activity_name },
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const Activity = (props: any) => {
 
   const fetchStudentActivities = () => {
     axios
-      .get(`http://10.0.20.128:8000/mg_activity?student_name=${student_guardian}`, {
+      .get(`http://10.0.20.121:8000/mg_activity?student_name=${student_guardian}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

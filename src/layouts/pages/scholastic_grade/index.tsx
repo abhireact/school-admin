@@ -21,7 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const NonAcademicGrade = () => {
+const AcademicGrade = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -32,7 +32,7 @@ const NonAcademicGrade = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.128:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ const NonAcademicGrade = () => {
   }; //End
   const fetchGrades = () => {
     axios
-      .get("http://10.0.20.128:8000/other_grades", {
+      .get("http://10.0.20.121:8000/grades", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const NonAcademicGrade = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.128:8000/grades", {
+      const response = await axios.delete("http://10.0.20.121:8000/grades", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,
@@ -117,7 +117,7 @@ const NonAcademicGrade = () => {
       { Header: "Grade Name", accessor: "grade_name" },
       { Header: "Class Name", accessor: "class_name" },
       { Header: "Section Name", accessor: "section_name" },
-      { Header: "Academic Year", accessor: "academic_year" },
+      { Header: "Minimum Score", accessor: "minimum_score" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -125,7 +125,7 @@ const NonAcademicGrade = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "nonacademicgradeupdate") ? (
+            rbacData?.find((element: string) => element === "academicupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -141,7 +141,7 @@ const NonAcademicGrade = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "nonacademicgradedelete") ? (
+            rbacData?.find((element: string) => element === "academicdelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -160,7 +160,7 @@ const NonAcademicGrade = () => {
       grade_name: <MDTypography variant="p">{row.grade_name}</MDTypography>,
       class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
       section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+      minimum_score: <MDTypography variant="p">{row.minimum_score}</MDTypography>,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -177,9 +177,9 @@ const NonAcademicGrade = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Non-Academic Grades</MDTypography>
+            <MDTypography variant="h5">Scholastic Grades</MDTypography>
             {rbacData ? (
-              rbacData?.find((element: string) => element === "nonacademicgradecreate") ? (
+              rbacData?.find((element: string) => element === "academiccreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
                   + New Grade
                 </MDButton>
@@ -205,4 +205,4 @@ const NonAcademicGrade = () => {
   );
 };
 
-export default NonAcademicGrade;
+export default AcademicGrade;
