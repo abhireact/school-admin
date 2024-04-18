@@ -92,11 +92,11 @@ const Update = (props: any) => {
       <MDBox p={4}>
         <Grid container>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               Class Name
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={7} mb={2}>
             <MDInput
               mb={2}
               sx={{ width: "65%" }}
@@ -110,7 +110,7 @@ const Update = (props: any) => {
             />
           </Grid>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               Class Code
             </MDTypography>
           </Grid>
@@ -130,7 +130,7 @@ const Update = (props: any) => {
           </Grid>
 
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               Wing Name
             </MDTypography>
           </Grid>
@@ -160,7 +160,7 @@ const Update = (props: any) => {
           </Grid>
 
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               Academic Year
             </MDTypography>
           </Grid>

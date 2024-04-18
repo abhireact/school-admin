@@ -1,8 +1,3 @@
-// import FormControl from "@mui/material/FormControl";
-// import RadioGroup from "@mui/material/RadioGroup";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Radio from "@mui/material/Radio";
-
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
@@ -10,46 +5,45 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
-import * as Yup from "yup";
-
+import { useState, useEffect } from "react";
 import axios from "axios";
+import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
-// import { useEffect, useState } from "react";
-// import Autocomplete from "@mui/material/Autocomplete";
+import { useSelector } from "react-redux";
+import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
-  wing_name: Yup.string().required("Required *"),
+  caste_category: Yup.string().required("Required *"),
 });
-const Update = (props: any) => {
-  const { setOpenupdate, fetchData, editData } = props;
+
+const Create = (props: any) => {
   const token = Cookies.get("token");
-  console.log(editData, "edit data ");
-  const handleCloseupdate = () => {
-    setOpenupdate(false);
+
+  const { setOpen, fetchData } = props;
+  const handleClose = () => {
+    setOpen(false);
   };
-  // editData to give intial values
+
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      wing_name: editData.wing_name,
+      caste_category: "",
+      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
-      let sendData = {
-        old_wing_name: editData.wing_name,
-        wing_name: values.wing_name,
-      };
       axios
-        .put("http://10.0.20.121:8000/mg_wing/", sendData, {
+        .post("http://10.0.20.121:8000/mg_caste_category", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success("Updated  successfully!");
+          message.success("Created successfully!");
           fetchData();
+          handleClose();
         })
         .catch(() => {
-          message.error("Error on updating !");
+          message.error("Error on creating  !");
         });
 
       action.resetForm();
@@ -61,7 +55,7 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Wing Name
+              CASTE CATEGORY
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -69,12 +63,35 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="wing_name"
-              value={values.wing_name}
-              onBlur={handleBlur}
+              name="caste_category"
+              value={values.caste_category}
               onChange={handleChange}
-              error={touched.wing_name && Boolean(errors.wing_name)}
-              helperText={touched.wing_name && errors.wing_name}
+              error={touched.caste_category && Boolean(errors.caste_category)}
+              helperText={touched.caste_category && errors.caste_category}
+              onBlur={handleBlur}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+              DESCRIPTION .:
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              multiline
+              mb={2}
+              sx={{ width: "65%" }}
+              rows={3}
+              variant="standard"
+              placeholder="write something here..."
+              name="description"
+              value={values.description}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.description && Boolean(errors.description)}
+              helperText={touched.description && errors.description}
             />
           </Grid>
 
@@ -84,7 +101,7 @@ const Update = (props: any) => {
                 color="dark"
                 variant="contained"
                 onClick={() => {
-                  handleCloseupdate();
+                  handleClose();
                 }}
               >
                 Back
@@ -102,4 +119,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

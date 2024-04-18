@@ -63,7 +63,7 @@ const Update = (props: any) => {
       <MDBox p={4}>
         <Grid container>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
               Section Name
             </MDTypography>
           </Grid>
@@ -81,28 +81,21 @@ const Update = (props: any) => {
               helperText={touched.section_name && errors.section_name}
             />
           </Grid>
-
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-start" }}
-          >
-            <Grid item mt={4}>
-              <MDButton color="info" variant="contained" type="submit">
-                Save
-              </MDButton>
-            </Grid>
-            <Grid item ml={2} mt={4}>
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item mt={2}>
               <MDButton
-                color="primary"
-                variant="outlined"
+                color="dark"
+                variant="contained"
                 onClick={() => {
                   handleCloseupdate();
                 }}
               >
-                Cancel
+                Back
+              </MDButton>
+            </Grid>
+            <Grid item mt={2} ml={2}>
+              <MDButton color="info" variant="contained" type="submit">
+                Save
               </MDButton>
             </Grid>
           </Grid>

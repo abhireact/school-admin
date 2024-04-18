@@ -100,7 +100,9 @@ const Create = (props: any) => {
       <MDBox p={4}>
         <Grid container>
           <Grid item xs={12} sm={5} mt={2}>
-            <MDTypography variant="body2">Section Name</MDTypography>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              Section Name
+            </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
             <MDInput
@@ -116,7 +118,9 @@ const Create = (props: any) => {
           </Grid>
 
           <Grid item xs={12} sm={5} mt={2}>
-            <MDTypography variant="body2">Academic Year</MDTypography>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              Academic Year
+            </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
             <Autocomplete
@@ -146,7 +150,9 @@ const Create = (props: any) => {
             />
           </Grid>
           <Grid item xs={12} sm={5} mt={2}>
-            <MDTypography variant="body2">Class Name</MDTypography>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              Class Name
+            </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mt={2}>
@@ -180,27 +186,21 @@ const Create = (props: any) => {
             />
           </Grid>
 
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-start" }}
-          >
-            <Grid item mt={4}>
-              <MDButton color="info" variant="contained" type="submit">
-                Save
-              </MDButton>
-            </Grid>
-            <Grid item ml={2} mt={4}>
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item mt={2}>
               <MDButton
-                color="primary"
-                variant="outlined"
+                color="dark"
+                variant="contained"
                 onClick={() => {
                   handleClose();
                 }}
               >
-                Cancel
+                Back
+              </MDButton>
+            </Grid>
+            <Grid item mt={2} ml={2}>
+              <MDButton color="info" variant="contained" type="submit">
+                Save
               </MDButton>
             </Grid>
           </Grid>

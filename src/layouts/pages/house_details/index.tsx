@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const Class = () => {
+const HouseDetails = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -79,9 +79,9 @@ const Class = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const fetchClasses = () => {
+  const FetchHouse = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_class", {
+      .get("http://10.0.20.121:8000/mg_house_detail", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,13 +96,14 @@ const Class = () => {
         console.error("Error fetching data:", error);
       });
   };
+
   useEffect(() => {
-    fetchClasses();
+    FetchHouse();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_class", {
-        data: { class_name: name },
+      const response = await axios.delete("http://10.0.20.121:8000/mg_house_detail/", {
+        data: { caste_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -111,8 +112,7 @@ const Class = () => {
       if (response.status === 200) {
         message.success("Deleted successFully");
         // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        FetchHouse();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -122,21 +122,20 @@ const Class = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Class", accessor: "class_name" },
-      { Header: "Wings", accessor: "wing_name" },
-      { Header: "Code", accessor: "code" },
-      { Header: "Academic Year", accessor: "academic_year" },
+      { Header: "House", accessor: "house_details" },
+
+      { Header: "Description", accessor: "description" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+      house_details: <MDTypography variant="p">{row.house_details}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classupdate") ? (
+            rbacData?.find((element: string) => element === "housedetailsupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -150,12 +149,11 @@ const Class = () => {
           ) : (
             ""
           )}
-
           {rbacData ? (
-            rbacData?.find((element: string) => element === "classdelete") ? (
+            rbacData?.find((element: string) => element === "housedetailsdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.class_name);
+                  handleDelete(row.caste);
                 }}
               >
                 <DeleteIcon />
@@ -169,9 +167,7 @@ const Class = () => {
         </MDTypography>
       ),
 
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      code: <MDTypography variant="p">{row.code}</MDTypography>,
-      wing_name: <MDTypography variant="p">{row.wing_name}</MDTypography>,
+      description: <MDTypography variant="p">{row.description}</MDTypography>,
     })),
   };
   return (
@@ -179,27 +175,27 @@ const Class = () => {
       <DashboardNavbar />
       <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
         <MDTypography variant="h4" fontWeight="bold" color="secondary">
-          Class
+          House Details
         </MDTypography>
         {rbacData ? (
-          rbacData?.find((element: string) => element === "classcreate") ? (
+          rbacData?.find((element: string) => element === "housedetailscreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Class
+              + Add House
             </MDButton>
           ) : (
             ""
           )
         ) : (
           ""
-        )}{" "}
+        )}
       </Grid>
 
       <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={fetchClasses} />
+        <Create setOpen={setOpen} fetchData={FetchHouse} />
       </Dialog>
 
       <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchClasses} />
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchHouse} />
       </Dialog>
 
       <DataTable table={dataTableData} />
@@ -207,4 +203,4 @@ const Class = () => {
   );
 };
 
-export default Class;
+export default HouseDetails;

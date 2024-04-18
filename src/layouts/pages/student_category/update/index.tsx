@@ -10,14 +10,14 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
-import * as Yup from "yup";
 
 import axios from "axios";
 import Cookies from "js-cookie";
+import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 const validationSchema = Yup.object().shape({
-  wing_name: Yup.string().required("Required *"),
+  category_name: Yup.string().required("Required *"),
 });
 const Update = (props: any) => {
   const { setOpenupdate, fetchData, editData } = props;
@@ -27,18 +27,22 @@ const Update = (props: any) => {
     setOpenupdate(false);
   };
   // editData to give intial values
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      wing_name: editData.wing_name,
+      category_name: editData.category_name,
+
+      description: editData.description,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
-        old_wing_name: editData.wing_name,
-        wing_name: values.wing_name,
+        old_category_name: editData.category_name,
+        category_name: values.category_name,
+
+        description: values.description,
       };
       axios
-        .put("http://10.0.20.121:8000/mg_wing/", sendData, {
+        .put("http://10.0.20.121:8000/mg_studcategory", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -47,6 +51,7 @@ const Update = (props: any) => {
         .then(() => {
           message.success("Updated  successfully!");
           fetchData();
+          handleCloseupdate();
         })
         .catch(() => {
           message.error("Error on updating !");
@@ -61,7 +66,7 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Wing Name
+              STUDENT CATEGORY
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -69,12 +74,35 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="wing_name"
-              value={values.wing_name}
-              onBlur={handleBlur}
+              name="category_name"
+              value={values.category_name}
               onChange={handleChange}
-              error={touched.wing_name && Boolean(errors.wing_name)}
-              helperText={touched.wing_name && errors.wing_name}
+              error={touched.category_name && Boolean(errors.category_name)}
+              helperText={touched.category_name && errors.category_name}
+              onBlur={handleBlur}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+              DESCRIPTION .:
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              multiline
+              mb={2}
+              sx={{ width: "65%" }}
+              rows={3}
+              variant="standard"
+              placeholder="write something here..."
+              name="description"
+              value={values.description}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.description && Boolean(errors.description)}
+              helperText={touched.description && errors.description}
             />
           </Grid>
 

@@ -57,6 +57,7 @@ const Update = (props: any) => {
         .then(() => {
           message.success("Updated  successfully!");
           fetchData();
+          handleCloseupdate();
         })
         .catch(() => {
           message.error("Error on updating !");
@@ -69,8 +70,8 @@ const Update = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
         <Grid container>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+          <Grid item xs={12} sm={5} mb={2}>
+            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
               Academic Year
             </MDTypography>
           </Grid>
@@ -88,7 +89,7 @@ const Update = (props: any) => {
           </Grid>
 
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
               Start Date
             </MDTypography>
           </Grid>
@@ -108,7 +109,7 @@ const Update = (props: any) => {
             />
           </Grid>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="body2">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               End Date
             </MDTypography>
           </Grid>
@@ -127,34 +128,21 @@ const Update = (props: any) => {
               helperText={touched.end_date && errors.end_date}
             />
           </Grid>
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-start" }}
-          >
-            <Grid item mt={4}>
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item mt={2}>
               <MDButton
-                color="info"
+                color="dark"
                 variant="contained"
-                type="submit"
                 onClick={() => {
                   handleCloseupdate();
                 }}
               >
-                Save
+                Back
               </MDButton>
             </Grid>
-            <Grid item ml={2} mt={4}>
-              <MDButton
-                color="primary"
-                variant="outlined"
-                onClick={() => {
-                  handleCloseupdate();
-                }}
-              >
-                Cancel
+            <Grid item mt={2} ml={2}>
+              <MDButton color="info" variant="contained" type="submit">
+                Save
               </MDButton>
             </Grid>
           </Grid>

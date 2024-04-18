@@ -31,6 +31,12 @@ import ScholasticComponent from "layouts/pages/scholastic_component";
 import OtherParticular from "layouts/pages/other_particular";
 import OtherComponent from "layouts/pages/other_component";
 import ExamSchedule from "layouts/pages/exam_schedule";
+import Caste from "layouts/pages/caste";
+import CasteCategory from "layouts/pages/caste_category";
+import StudentCategory from "layouts/pages/student_category";
+import HouseDetails from "layouts/pages/house_details";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import FeeCategory from "layouts/pages/fee_category";
 
 const routes = [
   {
@@ -135,6 +141,30 @@ const routes = [
         route: "/pages/school/nonacademicgrade",
         component: <NonAcademicGrade />,
       },
+      {
+        name: "Caste",
+        key: "caste",
+        route: "/pages/school/caste",
+        component: <Caste />,
+      },
+      {
+        name: "Caste Category",
+        key: "castecategory",
+        route: "/pages/school/castecategory",
+        component: <CasteCategory />,
+      },
+      {
+        name: "Student Category",
+        key: "studentcategory",
+        route: "/pages/school/studentcategory",
+        component: <StudentCategory />,
+      },
+      {
+        name: "House Details",
+        key: "housedetails",
+        route: "/pages/school/housedetails",
+        component: <HouseDetails />,
+      },
     ],
   },
 
@@ -226,12 +256,7 @@ const routes = [
         route: "pages/employee/employee_info",
         component: <EmployeeInfo />,
       },
-      // {
-      //   name: "Class Teacher",
-      //   key: "class_teacher",
-      //   route: "pages/employee/class_teacher",
-      //   component: <ClassTeacher />,
-      // },
+
       {
         name: "Employee Grade",
         key: "employee_grade",
@@ -262,6 +287,24 @@ const routes = [
         key: "department",
         route: "pages/employee/department",
         component: <Department />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Fee",
+    key: "fee",
+    icon: (
+      <Icon fontSize="medium">
+        <CurrencyRupeeIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Fee Category",
+        key: "fee_category",
+        route: "pages/fee/fee_category",
+        component: <FeeCategory />,
       },
     ],
   },

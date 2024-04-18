@@ -18,6 +18,7 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import BaseLayout from "layouts/pages/account/components/BaseLayout";
 const token = Cookies.get("token");
 const Student = () => {
   const [rbacData, setRbacData] = useState([]);
@@ -158,8 +159,7 @@ const Student = () => {
     setShowpage(!showpage);
   };
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
+    <BaseLayout>
       {showpage ? (
         <>
           <Create setShowpage={setShowpage} />
@@ -187,7 +187,7 @@ const Student = () => {
           <DataTable table={dataTableData} />
         </>
       )}
-    </DashboardLayout>
+    </BaseLayout>
   );
 };
 

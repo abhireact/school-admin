@@ -67,22 +67,7 @@ function BaseLayout({ stickyNavbar, children }: Props): JSX.Element {
   return (
     <DashboardLayout>
       <DashboardNavbar absolute={!stickyNavbar} isMini />
-      <MDBox mt={stickyNavbar ? 3 : 10}>
-        <Grid container>
-          <Grid item xs={12} sm={8} lg={4}>
-            <AppBar position="static">
-              <Tabs orientation={tabsOrientation} value={tabValue} onChange={handleSetTabValue}>
-                <Tab label="Messages" />
-                <Tab label="Social" />
-                <Tab label="Notifications" />
-                <Tab label="Backup" />
-              </Tabs>
-            </AppBar>
-          </Grid>
-        </Grid>
-        {children}
-      </MDBox>
-      <Footer />
+      <MDBox mt={stickyNavbar ? 3 : 10}>{children}</MDBox>
     </DashboardLayout>
   );
 }

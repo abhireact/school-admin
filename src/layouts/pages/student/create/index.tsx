@@ -8,6 +8,8 @@ import Student from "layouts/pages/student/studentdetails/create";
 import MDButton from "components/MDButton";
 import MDBox from "components/MDBox";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import Sidenav from "../sidenav";
+import { useFormik } from "formik";
 import { useState } from "react";
 
 const Create = (props: any) => {
@@ -19,27 +21,43 @@ const Create = (props: any) => {
   const [dob, setdob] = useState("");
 
   return (
-    <Card>
-      <Student
-        setFirsName={setFirstName}
-        setMiddleName={setMiddleName}
-        setLastName={setLastName}
-        setdob={setdob}
-      />
-      <Guardian
-        student_first_name={firstName}
-        student_middle_name={middleName}
-        student_last_name={lastName}
-        student_dob={dob}
-      />
-      <Activity
-        student_guardian={studentname}
-        student_first_name={firstName}
-        student_middle_name={middleName}
-        student_last_name={lastName}
-        student_dob={dob}
-      />
-      <MDBox py={4}>
+    <MDBox mt={4}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3}>
+          <Sidenav />
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>
+              <Student
+                setFirsName={setFirstName}
+                setMiddleName={setMiddleName}
+                setLastName={setLastName}
+                setdob={setdob}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Guardian
+                student_first_name={firstName}
+                student_middle_name={middleName}
+                student_last_name={lastName}
+                student_dob={dob}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Activity
+                student_guardian={studentname}
+                student_first_name={firstName}
+                student_middle_name={middleName}
+                student_last_name={lastName}
+                student_dob={dob}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <MDBox mt={4}>
         <Grid container sx={{ display: "flex", justifyContent: "space-between" }} pr={8} pb={2}>
           <MDButton
             color="error"
@@ -49,19 +67,12 @@ const Create = (props: any) => {
           >
             &lt;- back
           </MDButton>
-          <MDButton
-            color="info"
-            variant="contained"
-            onClick={() => {
-              setShowpage(false);
-              window.location.reload();
-            }}
-          >
+          <MDButton color="info" variant="contained">
             finish &nbsp; <AssignmentTurnedInIcon />
           </MDButton>
         </Grid>
       </MDBox>
-    </Card>
+    </MDBox>
   );
 };
 

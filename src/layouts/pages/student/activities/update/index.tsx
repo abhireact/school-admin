@@ -191,64 +191,66 @@ const Activity = (props: any) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox px={4} pb={2}>
-        <Grid container>
-          {activityinfo.length !== 0 ? (
-            <>
-              <Grid item xs={12} sm={12} mt={2}>
-                <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                  Activities
-                </MDTypography>
-              </Grid>
-              <DataTable table={dataTableData} entriesPerPage={false} showTotalEntries={false} />
-            </>
-          ) : (
-            ""
-          )}
-          <Grid item xs={12} sm={12} mt={2}>
-            {editActivities ? (
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Edit Activity
-              </MDTypography>
+      <Card id="activities">
+        <MDBox px={4} pb={2}>
+          <Grid container>
+            {activityinfo.length !== 0 ? (
+              <>
+                <Grid item xs={12} sm={12} mt={2}>
+                  <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
+                    Activities
+                  </MDTypography>
+                </Grid>
+                <DataTable table={dataTableData} entriesPerPage={false} showTotalEntries={false} />
+              </>
             ) : (
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Add Activity
-              </MDTypography>
+              ""
             )}
-          </Grid>
-          <Grid item xs={6} sm={4}>
-            <MDInput
-              mb={2}
-              sx={{ width: "80%" }}
-              variant="standard"
-              label={<MDTypography variant="body2">Name of Activity</MDTypography>}
-              name="activity_name"
-              value={values.activity_name}
-              onChange={editActivities ? undefined : handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
+            <Grid item xs={12} sm={12} mt={2}>
+              {editActivities ? (
+                <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
+                  Edit Activity
+                </MDTypography>
+              ) : (
+                <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
+                  Add Activity
+                </MDTypography>
+              )}
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                label={<MDTypography variant="body2">Name of Activity</MDTypography>}
+                name="activity_name"
+                value={values.activity_name}
+                onChange={editActivities ? undefined : handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
 
-          <Grid item xs={6} sm={4} mt={2}>
-            <MDInput
-              mb={2}
-              type="file"
-              accept="image/*"
-              name="certificate"
-              onChange={handleImage}
-              sx={{ width: "80%" }}
-              variant="standard"
-              onBlur={handleBlur}
-              //value={values.certificate}
-            />
+            <Grid item xs={6} sm={4} mt={2}>
+              <MDInput
+                mb={2}
+                type="file"
+                accept="image/*"
+                name="certificate"
+                onChange={handleImage}
+                sx={{ width: "80%" }}
+                variant="standard"
+                onBlur={handleBlur}
+                //value={values.certificate}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4} mt={2}>
+              <MDButton color="info" variant="text" type="submit" style={{ fontSize: "16px" }}>
+                ADD &nbsp;+
+              </MDButton>
+            </Grid>
           </Grid>
-          <Grid item xs={6} sm={4} mt={2}>
-            <MDButton color="info" variant="text" type="submit" style={{ fontSize: "16px" }}>
-              ADD &nbsp;+
-            </MDButton>
-          </Grid>
-        </Grid>
-      </MDBox>
+        </MDBox>
+      </Card>
     </form>
   );
 };

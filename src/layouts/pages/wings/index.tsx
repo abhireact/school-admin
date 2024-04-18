@@ -168,8 +168,10 @@ const Academic = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">Wings</MDTypography>
-      <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+        <MDTypography variant="h4" fontWeight="bold" color="secondary">
+          Wings
+        </MDTypography>
         {rbacData ? (
           rbacData?.find((element: string) => element === "wingscreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
@@ -180,15 +182,16 @@ const Academic = () => {
           )
         ) : (
           ""
-        )}
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} fetchData={fetchWings} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchWings} />
-        </Dialog>
+        )}{" "}
       </Grid>
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchWings} />
+      </Dialog>
+
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchWings} />
+      </Dialog>
+
       <DataTable table={dataTableData} />
     </DashboardLayout>
   );

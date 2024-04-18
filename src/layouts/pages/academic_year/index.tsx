@@ -110,7 +110,7 @@ const Academic = () => {
         },
       });
       if (response.status === 200) {
-        message.error("Deleted successFully");
+        message.success("Deleted successFully");
         // Filter out the deleted user from the data
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
@@ -176,22 +176,23 @@ const Academic = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+        <MDTypography variant="h4" fontWeight="bold" color="secondary">
+          Academic Year
+        </MDTypography>
 
-      {rbacData ? (
-        rbacData?.find((element: string) => element === "academiccreate") ? (
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Academic Year</MDTypography>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "academiccreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
               + New Academic Year
             </MDButton>
-          </Grid>
+          ) : (
+            ""
+          )
         ) : (
           ""
-        )
-      ) : (
-        ""
-      )}
-
+        )}
+      </Grid>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={FetchAcademicYear} />
       </Dialog>

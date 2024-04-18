@@ -178,21 +178,22 @@ const Section = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-
-      {rbacData ? (
-        rbacData?.find((element: string) => element === "sectioncreate") ? (
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Section</MDTypography>
+      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+        <MDTypography variant="h4" fontWeight="bold" color="secondary">
+          Section
+        </MDTypography>
+        {rbacData ? (
+          rbacData?.find((element: string) => element === "sectioncreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
               + New Section
-            </MDButton>{" "}
-          </Grid>
+            </MDButton>
+          ) : (
+            ""
+          )
         ) : (
           ""
-        )
-      ) : (
-        ""
-      )}
+        )}
+      </Grid>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={fetchSection} />
       </Dialog>
