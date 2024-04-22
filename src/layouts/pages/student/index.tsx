@@ -167,7 +167,9 @@ const Student = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Student</MDTypography>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Student
+            </MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "studentdetailscreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>

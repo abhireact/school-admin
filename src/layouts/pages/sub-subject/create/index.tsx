@@ -171,7 +171,11 @@ const Create = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
                     placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.academic_year}
                     {...params}
@@ -202,7 +206,11 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.class_name}
                     {...params}
@@ -231,7 +239,11 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="subject_name"
-                    label={<MDTypography variant="body2">Subject Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Subject Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.subject_name}
                     {...params}
@@ -260,7 +272,11 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="section_name"
-                    label={<MDTypography variant="body2">Section Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Section Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.section_name}
                     {...params}
@@ -277,7 +293,11 @@ const Create = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="sub_subject"
-                label={<MDTypography variant="body2">Sub-Subject Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Sub-Subject Name
+                  </MDTypography>
+                }
                 value={values.sub_subject}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -292,7 +312,11 @@ const Create = (props: any) => {
                 type="number"
                 variant="standard"
                 name="index"
-                label={<MDTypography variant="body2">Index No.</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Index No.
+                  </MDTypography>
+                }
                 value={values.index}
                 onChange={handleChange}
                 onBlur={handleBlur}

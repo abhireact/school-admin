@@ -170,7 +170,9 @@ function SchoolShowPage() {
               </MDTypography>
 
               <MDTypography
-                variant="body2"
+                variant="button"
+                fontWeight="bold"
+                color="secondary"
                 component="div"
                 display="flex"
                 alignItems="center"
@@ -181,7 +183,9 @@ function SchoolShowPage() {
               </MDTypography>
 
               <MDTypography
-                variant="body2"
+                variant="button"
+                fontWeight="bold"
+                color="secondary"
                 component="div"
                 display="flex"
                 alignItems="center"
@@ -191,7 +195,9 @@ function SchoolShowPage() {
                 {schoolData.email_id}
               </MDTypography>
               <MDTypography
-                variant="body2"
+                variant="button"
+                fontWeight="bold"
+                color="secondary"
                 component="div"
                 display="flex"
                 alignItems="center"
@@ -201,7 +207,9 @@ function SchoolShowPage() {
                 {schoolData.reg_num}
               </MDTypography>
               <MDTypography
-                variant="body2"
+                variant="button"
+                fontWeight="bold"
+                color="secondary"
                 component="div"
                 display="flex"
                 alignItems="center"
@@ -212,7 +220,9 @@ function SchoolShowPage() {
               </MDTypography>
 
               <MDTypography
-                variant="body2"
+                variant="button"
+                fontWeight="bold"
+                color="secondary"
                 component="div"
                 display="flex"
                 alignItems="center"
@@ -238,13 +248,16 @@ function SchoolShowPage() {
               <MDBox>
                 <Grid container p={4}>
                   <Grid item sm={12} sx={{ display: "flex", justifyContent: "flex-start" }}>
-                    <MDTypography variant="h5" pt={2}>
+                    <MDTypography variant="h5" fontWeight="bold" color="secondary" pt={2}>
                       Update School Info
                     </MDTypography>
                   </Grid>
 
                   <Grid item sm={6} xs={12} mt={2}>
-                    <MDTypography variant="body2"> School Logo .:</MDTypography>
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      {" "}
+                      School Logo .:
+                    </MDTypography>
                   </Grid>
                   <Grid item sm={6} xs={12} mt={2}>
                     <MDInput

@@ -135,7 +135,11 @@ const Create = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="grade_name"
-                label={<MDTypography variant="body2">Grade Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Grade Name
+                  </MDTypography>
+                }
                 value={values.grade_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -159,7 +163,11 @@ const Create = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
                     placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.academic_year}
                     {...params}
@@ -189,7 +197,11 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.class_name}
                     {...params}
@@ -218,7 +230,11 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="section_name"
-                    label={<MDTypography variant="body2">Section Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Section Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.section_name}
                     {...params}
@@ -235,7 +251,11 @@ const Create = (props: any) => {
                 type="number"
                 variant="standard"
                 name="minimum_score"
-                label={<MDTypography variant="body2">Minimum Score</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Minimum Score
+                  </MDTypography>
+                }
                 value={values.minimum_score}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -249,7 +269,11 @@ const Create = (props: any) => {
                 type="number"
                 variant="standard"
                 name="credit_point"
-                label={<MDTypography variant="body2">Credit Point No.</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Credit Point No.
+                  </MDTypography>
+                }
                 value={values.credit_point}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -260,7 +284,11 @@ const Create = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="description"
-                label={<MDTypography variant="body2">Description</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Description
+                  </MDTypography>
+                }
                 value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}

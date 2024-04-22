@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const Section = () => {
+const EmpAccount = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -51,18 +52,6 @@ const Section = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -79,33 +68,34 @@ const Section = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const fetchSection = () => {
+  const fetchAccountData = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_section", {
+      .get("http://10.0.20.121:8000/mg_accounts", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setData(response.data.flat());
+        setData(response.data);
 
-        console.log(response.data.flat());
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   };
+
   useEffect(() => {
-    fetchSection();
+    fetchAccountData();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_section", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_subject", {
         data: {
-          sec_name: name.sec_name,
-          class_name: name.class_name,
-          academic_year: name.academic_year,
+          class_code: name.class_code,
+          subject_code: name.subject_code,
+          subject_name: name.subject_name,
         },
         headers: {
           "Content-Type": "application/json",
@@ -114,9 +104,7 @@ const Section = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        fetchAccountData();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -126,20 +114,17 @@ const Section = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Section Name", accessor: "section_name" },
-      { Header: "Class Name", accessor: "class_name" },
-      { Header: "Academic Year", accessor: "academic_year" },
+      { Header: "Account", accessor: "account_name" },
+      { Header: "Description", accessor: "description" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
-
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "sectionupdate") ? (
+            rbacData?.find((element: string) => element === "subjectinfoupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -153,8 +138,9 @@ const Section = () => {
           ) : (
             ""
           )}
+
           {rbacData ? (
-            rbacData?.find((element: string) => element === "sectiondelete") ? (
+            rbacData?.find((element: string) => element === "subjectinfodelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -170,41 +156,52 @@ const Section = () => {
           )}
         </MDTypography>
       ),
-
-      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
+      description: <MDTypography variant="p">{row.description}</MDTypography>,
+      account_name: <MDTypography variant="p">{row.account_name}</MDTypography>,
     })),
+  };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5" fontWeight="bold" color="secondary">
-          Section
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "sectioncreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Section
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-      </Grid>
-      <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={fetchSection} />
-      </Dialog>
+      {showpage ? (
+        <>
+          <Create handleShowPage={handleShowPage} fetchingData={fetchAccountData} />
+        </>
+      ) : (
+        <>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5" fontWeight="bold" color="secondary">
+              Account
+            </MDTypography>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "subjectinfocreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                  + New Account
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
 
-      <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchSection} />
-      </Dialog>
-
-      <DataTable table={dataTableData} />
+            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+              <Update
+                setOpenupdate={setOpenupdate}
+                editData={editData}
+                fetchingData={fetchAccountData}
+              />
+            </Dialog>
+          </Grid>
+          <DataTable table={dataTableData} />
+        </>
+      )}
     </DashboardLayout>
   );
 };
 
-export default Section;
+export default EmpAccount;

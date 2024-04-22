@@ -127,7 +127,11 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="subject_name"
-                label={<MDTypography variant="body2">Subject Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Subject Name
+                  </MDTypography>
+                }
                 value={values.subject_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -140,7 +144,11 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="subject_code"
-                label={<MDTypography variant="body2">Subject Code</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Subject Code
+                  </MDTypography>
+                }
                 value={values.subject_code}
                 // onChange={handleChange}
                 onBlur={handleBlur}
@@ -162,7 +170,11 @@ const Update = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="scoring_type"
-                    label={<MDTypography variant="body2">Scoring Type</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Scoring Type
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.scoring_type}
                     {...params}
@@ -179,7 +191,11 @@ const Update = (props: any) => {
                 type="number"
                 variant="standard"
                 name="max_weekly_class"
-                label={<MDTypography variant="body2">Max Weekly Class </MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Max Weekly Class{" "}
+                  </MDTypography>
+                }
                 value={values.max_weekly_class}
                 //onChange={handleChange}
                 onBlur={handleBlur}
@@ -193,7 +209,11 @@ const Update = (props: any) => {
                 type="number"
                 variant="standard"
                 name="no_of_classes"
-                label={<MDTypography variant="body2">No. of Classes </MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    No. of Classes{" "}
+                  </MDTypography>
+                }
                 value={values.no_of_classes}
                 //onChange={handleChange}
                 onBlur={handleBlur}
@@ -207,7 +227,11 @@ const Update = (props: any) => {
                 type="number"
                 variant="standard"
                 name="index"
-                label={<MDTypography variant="body2">Index No.</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Index No.
+                  </MDTypography>
+                }
                 value={values.index}
                 // onChange={handleChange}
                 onBlur={handleBlur}
@@ -216,7 +240,9 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Core Subject</MDTypography>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Core Subject
+              </MDTypography>
             </Grid>
             <Grid item xs={6} sm={1.5} mt={3}>
               <Checkbox
@@ -226,7 +252,9 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Lab Subject</MDTypography>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Lab Subject
+              </MDTypography>
             </Grid>
             <Grid item xs={6} sm={1.5} mt={3}>
               <Checkbox
@@ -236,7 +264,9 @@ const Update = (props: any) => {
               />
             </Grid>{" "}
             <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="body2">Extra-curricular Subject</MDTypography>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Extra-curricular Subject
+              </MDTypography>
             </Grid>
             <Grid item xs={6} sm={1.5} mt={3}>
               <Checkbox
@@ -261,7 +291,11 @@ const Update = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
                     placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
                     // onChange={handleChange}
                     value={values.academic_year}
                     {...params}
@@ -290,7 +324,11 @@ const Update = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class Name
+                      </MDTypography>
+                    }
                     // onChange={handleChange}
                     value={values.class_name}
                     {...params}

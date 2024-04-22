@@ -21,7 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const SubSubject = () => {
+const FeeCollectionByAdmission = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -54,50 +54,6 @@ const SubSubject = () => {
 
   //Update Dialog Box Start
 
-  const fetchSubjects = () => {
-    axios
-      .get("http://10.0.20.121:8000/sub_subjects", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  useEffect(() => {
-    fetchSubjects();
-  }, []);
-  const handleDelete = async (name: any) => {
-    try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_subject", {
-        data: {
-          class_code: name.class_code,
-          subject_code: name.subject_code,
-          subject_name: name.subject_name,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        message.success("Deleted successFully");
-        fetchSubjects();
-      }
-    } catch (error: unknown) {
-      console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error("An unexpected error occurred");
-    }
-  };
   const dataTableData = {
     columns: [
       { Header: "Index ", accessor: "index", width: "10%" },
@@ -108,25 +64,6 @@ const SubSubject = () => {
     ],
 
     rows: data.map((row, index) => ({
-      action: (
-        <MDTypography variant="p">
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "subsubjectdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-        </MDTypography>
-      ),
       sub_subject: <MDTypography variant="p">{row.sub_subject}</MDTypography>,
       subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
 
@@ -142,33 +79,12 @@ const SubSubject = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showpage ? (
-        <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
-        </>
-      ) : (
-        <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5" fontWeight="bold" color="secondary">
-              Sub-Subject
-            </MDTypography>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "subsubjectcreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + New Sub-Subject
-                </MDButton>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-          </Grid>
-          <DataTable table={dataTableData} />
-        </>
-      )}
+
+      <Create handleShowPage={handleShowPage} setData={setData} />
+
+      {data.length > 1 ? <DataTable table={dataTableData} /> : ""}
     </DashboardLayout>
   );
 };
 
-export default SubSubject;
+export default FeeCollectionByAdmission;

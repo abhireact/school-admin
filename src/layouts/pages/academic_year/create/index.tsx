@@ -75,6 +75,7 @@ const Create = (props: any) => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.academic_year && Boolean(errors.academic_year)}
+              success={values.academic_year.length && !errors.academic_year}
               helperText={touched.academic_year && errors.academic_year}
             />
           </Grid>

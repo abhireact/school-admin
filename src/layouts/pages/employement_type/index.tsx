@@ -100,7 +100,7 @@ const EmployementType = () => {
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete("http://10.0.20.121:8000/mg_emptype", {
-        data: { emp_type: name.emp_type },
+        data: { employee_type: name.employee_type },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,7 +120,7 @@ const EmployementType = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Employment Type", accessor: "emp_type" },
+      { Header: "Employment Type", accessor: "employee_type" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -162,7 +162,7 @@ const EmployementType = () => {
         </MDTypography>
       ),
 
-      emp_type: <MDTypography variant="p">{row.emp_type}</MDTypography>,
+      employee_type: <MDTypography variant="p">{row.employee_type}</MDTypography>,
     })),
   };
   return (

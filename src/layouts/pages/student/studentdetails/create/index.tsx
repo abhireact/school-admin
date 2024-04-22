@@ -67,6 +67,66 @@ const Create = (props: any) => {
   const [houseData, setHouseData] = useState([]);
   useEffect(() => {
     axios
+      .get("http://10.0.20.121:8000/mg_house_detail", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setHouseData(response.data);
+
+        console.log(response.data, "House data");
+      })
+      .catch((error) => {
+        console.error("Error fetching House data:", error);
+      });
+    axios
+      .get("http://10.0.20.121:8000/mg_studcategory", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setStudentcategoryData(response.data);
+
+        console.log(response.data, "Student Category data");
+      })
+      .catch((error) => {
+        console.error("Error fetching Student Category data:", error);
+      });
+    axios
+      .get("http://10.0.20.121:8000/mg_castes", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setCasteData(response.data);
+
+        console.log(response.data, "caste category data");
+      })
+      .catch((error) => {
+        console.error("Error fetching Caste Category data:", error);
+      });
+    axios
+      .get("http://10.0.20.121:8000/mg_caste_category", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setCastecategoryData(response.data);
+
+        console.log(response.data, "caste data");
+      })
+      .catch((error) => {
+        console.error("Error fetching Caste data:", error);
+      });
+    axios
       .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
@@ -517,17 +577,107 @@ const Create = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={4}>
-              <MDInput
-                mb={2}
+              <Autocomplete
                 sx={{ width: "80%" }}
-                variant="standard"
-                label={<MDTypography variant="body2">Quota</MDTypography>}
-                name="quota"
-                value={values.quota}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.quota && Boolean(errors.quota)}
-                helperText={touched.quota && errors.quota}
+                value={values.caste}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "caste", value },
+                  });
+                }}
+                disableClearable
+                options={casteData.map((acd) => acd.caste)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="caste"
+                    label={<MDTypography variant="body2">Caste</MDTypography>}
+                    onChange={handleChange}
+                    value={values.caste}
+                    {...params}
+                    variant="standard"
+                    error={touched.caste && Boolean(errors.caste)}
+                    helperText={touched.caste && errors.caste}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                sx={{ width: "80%" }}
+                value={values.caste_category}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "caste_category", value },
+                  });
+                }}
+                disableClearable
+                options={castecategoryData.map((acd) => acd.caste_category)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="caste_category"
+                    label={<MDTypography variant="body2">Caste Category</MDTypography>}
+                    onChange={handleChange}
+                    value={values.caste_category}
+                    {...params}
+                    variant="standard"
+                    error={touched.caste_category && Boolean(errors.caste_category)}
+                    helperText={touched.caste_category && errors.caste_category}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                sx={{ width: "80%" }}
+                value={values.student_category}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "student_category", value },
+                  });
+                }}
+                disableClearable
+                options={studentcategoryData.map((acd) => acd.category_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="student_category"
+                    label={<MDTypography variant="body2">Student Category</MDTypography>}
+                    onChange={handleChange}
+                    value={values.student_category}
+                    {...params}
+                    variant="standard"
+                    error={touched.student_category && Boolean(errors.student_category)}
+                    helperText={touched.student_category && errors.student_category}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                sx={{ width: "80%" }}
+                value={values.house_details}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "house_details", value },
+                  });
+                }}
+                disableClearable
+                options={houseData.map((acd) => acd.house_details)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="house_details"
+                    label={<MDTypography variant="body2">House Details</MDTypography>}
+                    onChange={handleChange}
+                    value={values.house_details}
+                    {...params}
+                    variant="standard"
+                    error={touched.house_details && Boolean(errors.house_details)}
+                    helperText={touched.house_details && errors.house_details}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={6} sm={4}>
@@ -581,19 +731,19 @@ const Create = (props: any) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={6} sm={4} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Upload Image *
+            <Grid item xs={6} sm={2} mt={2}>
+              <MDTypography variant="body2" fontWeight="bold">
+                Upload Image
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={8} mt={2}>
+            <Grid item xs={6} sm={4} mt={2}>
               <MDInput
+                sx={{ width: "80%" }}
                 required
                 type="file"
                 accept="image/*"
                 name="stud_img"
                 onChange={handleImage}
-                sx={{ width: "90%" }}
                 variant="standard"
                 InputLabelProps={{ shrink: true }}
               />
@@ -1122,7 +1272,7 @@ const Create = (props: any) => {
               <Checkbox checked={values.is_archive} onChange={handleChange} name="is_archive" />
             </Grid>
           </Grid>
-          {/* <Grid container>
+          <Grid container>
             <Grid
               item
               xs={12}
@@ -1136,7 +1286,7 @@ const Create = (props: any) => {
                 <SaveIcon />
               </MDButton>
             </Grid>
-          </Grid> */}
+          </Grid>
         </MDBox>
       </form>
     </Card>

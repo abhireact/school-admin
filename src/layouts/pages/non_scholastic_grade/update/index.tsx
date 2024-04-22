@@ -104,7 +104,11 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="grade_name"
-                label={<MDTypography variant="body2">Grade Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Grade Name
+                  </MDTypography>
+                }
                 value={values.grade_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -115,7 +119,11 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="section_name"
-                label={<MDTypography variant="body2">Section Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Section Name
+                  </MDTypography>
+                }
                 value={values.section_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -127,7 +135,11 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="description"
-                label={<MDTypography variant="body2">Description</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Description
+                  </MDTypography>
+                }
                 value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -149,7 +161,11 @@ const Update = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
                     placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.academic_year}
                     {...params}
@@ -176,7 +192,11 @@ const Update = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.class_name}
                     {...params}

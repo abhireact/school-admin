@@ -180,7 +180,9 @@ const Subject = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Subject</MDTypography>
+            <MDTypography variant="h5" fontWeight="bold" color="secondary">
+              Subject
+            </MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "subjectinfocreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>

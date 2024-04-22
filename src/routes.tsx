@@ -11,7 +11,7 @@ import Timeline from "layouts/pages/projects/timeline";
 import PricingPage from "layouts/pages/pricing-page";
 import Widgets from "layouts/pages/widgets";
 import RTL from "layouts/pages/rtl";
-import Charts from "layouts/pages/charts";
+
 import Notifications from "layouts/pages/notifications";
 import Kanban from "layouts/applications/kanban";
 import Wizard from "layouts/applications/wizard";
@@ -47,6 +47,13 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/myprofile";
 import StudentDetails from "layouts/pages/student";
 import NewStudent from "layouts/pages/student/create";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import ExcessFee from "layouts/pages/excess_fee";
+import LateFee from "layouts/pages/late_fee";
+import FineParticular from "layouts/pages/fine";
+import FeeCollection from "layouts/pages/fee_collection";
+import FeeCollectionByAdmission from "layouts/pages/fee_collection _by_admission";
+import FeeReceipt from "layouts/pages/fee_receipt";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -122,6 +129,54 @@ const routes = [
         key: "myprofile",
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
+      },
+      {
+        type: "collapse",
+        name: "Fee",
+        key: "fee",
+        icon: (
+          <Icon fontSize="medium">
+            <CurrencyRupeeIcon />
+          </Icon>
+        ),
+        collapse: [
+          {
+            name: "Late Fee",
+            key: "latefee",
+            route: "pages/fee/latefee",
+            component: <LateFee />,
+          },
+          {
+            name: "Excess Fee ",
+            key: "excessfee",
+            route: "pages/fee/excessfee",
+            component: <ExcessFee />,
+          },
+          {
+            name: "Fine Particular",
+            key: "fineparticular",
+            route: "pages/fee/fineparticular",
+            component: <FineParticular />,
+          },
+          {
+            name: "Fee Collection",
+            key: "feecollection",
+            route: "pages/fee/feecollection",
+            component: <FeeCollection />,
+          },
+          {
+            name: "Fee By Admission Number",
+            key: "feecollectionbyadmission",
+            route: "pages/fee/feecollectionbyadmission",
+            component: <FeeCollectionByAdmission />,
+          },
+          {
+            name: "Fee Receipt",
+            key: "feereceipt",
+            route: "pages/fee/feereceipt",
+            component: <FeeReceipt />,
+          },
+        ],
       },
     ],
   },

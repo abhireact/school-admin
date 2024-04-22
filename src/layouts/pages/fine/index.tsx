@@ -11,7 +11,7 @@ import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
-import Update from "./update";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@mui/material";
@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const Section = () => {
+const FineParticular = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -51,61 +52,36 @@ const Section = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
-  const [editData, setEditData] = useState(null);
-  const [openupdate, setOpenupdate] = useState(false);
 
-  const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
-    const main_data = data[index];
-    console.log(main_data, "maindata");
-
-    setOpenupdate(true);
-    setEditData(main_data);
-  };
-
-  const handleCloseupdate = () => {
-    setOpenupdate(false);
-  }; //End
-  const fetchSection = () => {
+  const fetchSubjects = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_section", {
+      .get("http://10.0.20.121:8000/sub_subjects", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setData(response.data.flat());
+        setData(response.data);
 
-        console.log(response.data.flat());
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   };
+
   useEffect(() => {
-    fetchSection();
+    fetchSubjects();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_section", {
+      const response = await axios.delete("http://10.0.20.121:8000/mg_subject", {
         data: {
-          sec_name: name.sec_name,
-          class_name: name.class_name,
-          academic_year: name.academic_year,
+          class_code: name.class_code,
+          subject_code: name.subject_code,
+          subject_name: name.subject_name,
         },
         headers: {
           "Content-Type": "application/json",
@@ -114,9 +90,7 @@ const Section = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        fetchSubjects();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -126,35 +100,18 @@ const Section = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Section Name", accessor: "section_name" },
+      { Header: "Index ", accessor: "index", width: "10%" },
+      { Header: "Sub-Subject ", accessor: "sub_subject" },
+      { Header: "Subject", accessor: "subject_name" },
       { Header: "Class Name", accessor: "class_name" },
-      { Header: "Academic Year", accessor: "academic_year" },
-
-      { Header: "Action", accessor: "action" },
+      { Header: "Section Name", accessor: "section_name" },
     ],
 
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
-
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "sectionupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "sectiondelete") ? (
+            rbacData?.find((element: string) => element === "subsubjectdelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -170,41 +127,41 @@ const Section = () => {
           )}
         </MDTypography>
       ),
+      sub_subject: <MDTypography variant="p">{row.sub_subject}</MDTypography>,
+      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
 
+      index: <MDTypography variant="p">{row.index}</MDTypography>,
       section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
       class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
     })),
   };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5" fontWeight="bold" color="secondary">
-          Section
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "sectioncreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Section
+      {showpage ? (
+        <>
+          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
+        </>
+      ) : (
+        <>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <MDTypography variant="h5" fontWeight="bold" color="secondary">
+              Fine Particular List
+            </MDTypography>
+
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+              + New Fine Particular
             </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-      </Grid>
-      <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={fetchSection} />
-      </Dialog>
-
-      <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchSection} />
-      </Dialog>
-
-      <DataTable table={dataTableData} />
+          </Grid>
+          <DataTable table={dataTableData} />
+        </>
+      )}
     </DashboardLayout>
   );
 };
 
-export default Section;
+export default FineParticular;

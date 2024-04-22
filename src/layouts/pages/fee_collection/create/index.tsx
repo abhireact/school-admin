@@ -11,23 +11,29 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import * as Yup from "yup";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  class_name: Yup.string().required("Required *"),
+  subject_name: Yup.string().required("Required *"),
+  collection_date: Yup.date().required("Required"),
 
-const Update = (props: any) => {
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .required("Required *"),
+});
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData, fetchingData } = props;
-  const handleClose = () => {
-    setOpenupdate(false);
-  };
+  const { handleShowPage, setData } = props;
+
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
 
-  function filterClassData(data: any, acdName: any) {
+  function filterClassData(data: any, academic_year: any) {
     let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
+      .filter((item: any) => item.academic_year === academic_year)
       .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
@@ -39,15 +45,14 @@ const Update = (props: any) => {
       .map((item: any) => item.section_name);
     setFilteredSection(filtereddata);
   }
-  const validationSchema = Yup.object().shape({
-    grade_name: Yup.string().required("Required *"),
-    section_name: Yup.string().required("Required *"),
-    class_name: Yup.string().required("Required *"),
-    minimum_score: Yup.number().required("Required *"),
-    academic_year: Yup.string()
-      .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
-      .required("Academic year is required"),
-  });
+
+  const [filteredSubject, setFilteredSubject] = useState([]);
+  function filterSubjectData(data: any, class_name: any) {
+    let filtereddata = data
+      .filter((item: any) => item.class_name === class_name)
+      .map((item: any) => item.subject_name);
+    setFilteredSubject(filtereddata);
+  }
   useEffect(() => {
     axios
       .get("http://10.0.20.121:8000/mg_section", {
@@ -64,6 +69,7 @@ const Update = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+
     axios
       .get("http://10.0.20.121:8000/mg_accademic_year", {
         headers: {
@@ -98,31 +104,30 @@ const Update = (props: any) => {
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      class_name: editData.class_name,
-      section_name: editData.section_name,
-      grade_name: editData.grade_name,
-      academic_year: editData.academic_year,
-      credit_point: editData.credit_point,
-      minimum_score: editData.minimum_score,
-      description: editData.description,
+      class_name: "",
+
+      academic_year: "",
+
+      section_name: "",
+      collection_date: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.121:8000/grades", values, {
+        .post("http://10.0.20.121:8000/fee_collection", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
-        .then(() => {
-          message.success(" Created successfully!");
-          fetchingData();
-          handleClose();
+        .then((response) => {
+          message.success(" Fetched Data Successfully!");
+          setData(response.data);
           action.resetForm();
+          handleShowPage();
         })
         .catch(() => {
-          message.error("Error on creating  !");
+          message.error("Error on fetching data !");
         });
     },
   });
@@ -132,24 +137,7 @@ const Update = (props: any) => {
         {" "}
         <MDBox p={4}>
           <Grid container>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="grade_name"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Grade Name
-                  </MDTypography>
-                }
-                value={values.grade_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.grade_name && Boolean(errors.grade_name)}
-                helperText={touched.grade_name && errors.grade_name}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={6} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.academic_year}
@@ -180,16 +168,17 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={6} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.class_name}
                 onChange={
-                  filteredClass.length > 1
+                  filteredClass.length >= 1
                     ? (event, value) => {
                         handleChange({
                           target: { name: "class_name", value },
                         });
+
                         filterSectionData(sectiondata, value);
                       }
                     : undefined
@@ -214,7 +203,8 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+
+            <Grid item xs={12} sm={6} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.section_name}
@@ -247,55 +237,27 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={6} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
-                type="number"
                 variant="standard"
-                name="minimum_score"
+                name="collection_date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Minimum Score
+                    Collection Date
                   </MDTypography>
                 }
-                value={values.minimum_score}
+                value={values.collection_date}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                error={touched.minimum_score && Boolean(errors.minimum_score)}
-                helperText={touched.minimum_score && errors.minimum_score}
+                error={touched.collection_date && Boolean(errors.collection_date)}
+                success={values.collection_date.length && !errors.collection_date}
+                helperText={touched.collection_date && errors.collection_date}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                type="number"
-                variant="standard"
-                name="credit_point"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Credit Point No.
-                  </MDTypography>
-                }
-                value={values.credit_point}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>{" "}
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="description"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Description
-                  </MDTypography>
-                }
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
+
             <Grid
               item
               container
@@ -308,7 +270,7 @@ const Update = (props: any) => {
                   color="primary"
                   variant="outlined"
                   onClick={() => {
-                    handleClose();
+                    handleShowPage();
                   }}
                 >
                   Back
@@ -316,7 +278,7 @@ const Update = (props: any) => {
               </Grid>
               <Grid item ml={2} mt={4}>
                 <MDButton color="info" variant="contained" type="submit">
-                  Save
+                  Filter
                 </MDButton>
               </Grid>
             </Grid>
@@ -327,4 +289,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

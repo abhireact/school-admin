@@ -174,7 +174,7 @@ const CasteCategory = () => {
     <DashboardLayout>
       <DashboardNavbar />
       <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h4" fontWeight="bold" color="secondary">
+        <MDTypography variant="h5" fontWeight="bold" color="secondary">
           Caste Category
         </MDTypography>
         {rbacData ? (

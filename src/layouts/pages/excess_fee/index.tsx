@@ -10,8 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Create from "./category/create";
-import Update from "./category/update";
+
+import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@mui/material";
@@ -19,8 +19,9 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+
 const token = Cookies.get("token");
-const FeeCategory = () => {
+const ExcessFee = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -51,37 +52,24 @@ const FeeCategory = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
-  const [openupdate, setOpenupdate] = useState(false);
+  const [updatepage, setUpdatepage] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
     const main_data = data[index];
     console.log(main_data, "maindata");
 
-    setOpenupdate(true);
     setEditData(main_data);
+    setUpdatepage(true);
   };
 
   const handleCloseupdate = () => {
-    setOpenupdate(false);
+    setUpdatepage(false);
   }; //End
-  const FetchFeeCategory = () => {
+  const fetchLateFees = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_caste_category", {
+      .get("http://10.0.20.121:8000/fee_fine", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -98,12 +86,16 @@ const FeeCategory = () => {
   };
 
   useEffect(() => {
-    FetchFeeCategory();
+    fetchLateFees();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/fee_category", {
-        data: { caste_name: name },
+      const response = await axios.delete("http://10.0.20.121:8000/mg_subject", {
+        data: {
+          class_code: name.class_code,
+          subject_code: name.subject_code,
+          subject_name: name.subject_name,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -111,8 +103,7 @@ const FeeCategory = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        FetchFeeCategory();
+        fetchLateFees();
       }
     } catch (error: unknown) {
       console.error("Error deleting task:", error);
@@ -122,20 +113,19 @@ const FeeCategory = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Fee Category", accessor: "name" },
-
+      { Header: "Fine ", accessor: "fine_name" },
+      { Header: "Account ", accessor: "account_name" },
+      { Header: "Late Fee Calculation Type", accessor: "late_fee_calculation_type" },
       { Header: "Description", accessor: "description" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      name: <MDTypography variant="p">{row.name}</MDTypography>,
-
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "castecategoryupdate") ? (
+            rbacData?.find((element: string) => element === "subjectinfoupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -149,11 +139,12 @@ const FeeCategory = () => {
           ) : (
             ""
           )}
+
           {rbacData ? (
-            rbacData?.find((element: string) => element === "castecategorydelete") ? (
+            rbacData?.find((element: string) => element === "subjectinfodelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.caste);
+                  handleDelete(row);
                 }}
               >
                 <DeleteIcon />
@@ -166,41 +157,33 @@ const FeeCategory = () => {
           )}
         </MDTypography>
       ),
-
+      account_name: <MDTypography variant="p">{row.account_name}</MDTypography>,
+      fine_name: <MDTypography variant="p">{row.fine_name}</MDTypography>,
       description: <MDTypography variant="p">{row.description}</MDTypography>,
+      late_fee_calculation_type: (
+        <MDTypography variant="p">{row.late_fee_calculation_type}</MDTypography>
+      ),
     })),
   };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h4" fontWeight="bold" color="secondary">
-          Fee Category
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "castecategorycreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + Add Fee Category
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
+
+      {!updatepage && (
+        <>
+          {" "}
+          <DataTable table={dataTableData} />
+        </>
+      )}
+
+      <>
+        {updatepage && (
+          <Update setOpenupdate={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
         )}
-      </Grid>
-
-      <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={FetchFeeCategory} />
-      </Dialog>
-
-      <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchFeeCategory} />
-      </Dialog>
-
-      <DataTable table={dataTableData} />
+      </>
     </DashboardLayout>
   );
 };
 
-export default FeeCategory;
+export default ExcessFee;

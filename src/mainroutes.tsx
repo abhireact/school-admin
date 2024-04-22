@@ -36,7 +36,8 @@ import CasteCategory from "layouts/pages/caste_category";
 import StudentCategory from "layouts/pages/student_category";
 import HouseDetails from "layouts/pages/house_details";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import FeeCategory from "layouts/pages/fee_category";
+import LateFee from "layouts/pages/late_fee";
+import SchoolAccount from "layouts/pages/school_account";
 
 const routes = [
   {
@@ -288,6 +289,12 @@ const routes = [
         route: "pages/employee/department",
         component: <Department />,
       },
+      {
+        name: "Account",
+        key: "empaccount",
+        route: "pages/employee/empaccount",
+        component: <SchoolAccount />,
+      },
     ],
   },
   {
@@ -301,10 +308,10 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Fee Category",
-        key: "fee_category",
-        route: "pages/fee/fee_category",
-        component: <FeeCategory />,
+        name: "Late Fee",
+        key: "latefee",
+        route: "pages/fee/latefee",
+        component: <LateFee />,
       },
     ],
   },

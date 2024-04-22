@@ -22,7 +22,7 @@ const Update = (props: any) => {
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      emp_type: "",
+      employee_type: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -56,8 +56,8 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="emp_type"
-              value={values.emp_type}
+              name="employee_type"
+              value={values.employee_type}
               onChange={handleChange}
               onBlur={handleBlur}
             />
