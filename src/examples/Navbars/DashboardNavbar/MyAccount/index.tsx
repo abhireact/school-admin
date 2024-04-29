@@ -35,7 +35,7 @@ export default function MYAccount() {
   // store rbac
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_user_name/", {
+      .get("http://10.0.20.200:8000/mg_user_name/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

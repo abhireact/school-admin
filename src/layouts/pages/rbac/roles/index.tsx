@@ -66,7 +66,7 @@ const Showrole = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_role", {
+      .get("http://10.0.20.200:8000/mg_role", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

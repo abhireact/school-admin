@@ -36,8 +36,16 @@ import CasteCategory from "layouts/pages/caste_category";
 import StudentCategory from "layouts/pages/student_category";
 import HouseDetails from "layouts/pages/house_details";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import LateFee from "layouts/pages/late_fee";
+
 import SchoolAccount from "layouts/pages/school_account";
+
+import ExcessFee from "layouts/pages/excess_fee";
+import LateFee from "layouts/pages/late_fee";
+import FineParticular from "layouts/pages/fine";
+import FeeCollection from "layouts/pages/fee_collection";
+import FeeCollectionByAdmission from "layouts/pages/fee_collection _by_admission";
+import FeeReceipt from "layouts/pages/fee_receipt";
+import FeeSchedule from "layouts/pages/fee_schedule";
 
 const routes = [
   {
@@ -86,7 +94,12 @@ const routes = [
         route: "pages/school/schoolinfo",
         component: <SchoolInfo />,
       },
-
+      {
+        name: "Account",
+        key: "schoolaccount",
+        route: "pages/school/schoolaccount",
+        component: <SchoolAccount />,
+      },
       {
         name: "Academic Year",
         key: "academic",
@@ -105,12 +118,12 @@ const routes = [
         route: "pages/school/class",
         component: <Class />,
       },
-      {
-        name: "Section",
-        key: "section",
-        route: "pages/school/section",
-        component: <Section />,
-      },
+      // {
+      //   name: "Section",
+      //   key: "section",
+      //   route: "pages/school/section",
+      //   component: <Section />,
+      // },
     ],
   },
 
@@ -289,12 +302,6 @@ const routes = [
         route: "pages/employee/department",
         component: <Department />,
       },
-      {
-        name: "Account",
-        key: "empaccount",
-        route: "pages/employee/empaccount",
-        component: <SchoolAccount />,
-      },
     ],
   },
   {
@@ -312,6 +319,42 @@ const routes = [
         key: "latefee",
         route: "pages/fee/latefee",
         component: <LateFee />,
+      },
+      {
+        name: "Excess Fee ",
+        key: "excessfee",
+        route: "pages/fee/excessfee",
+        component: <ExcessFee />,
+      },
+      {
+        name: "Fine Particular",
+        key: "fineparticular",
+        route: "pages/fee/fineparticular",
+        component: <FineParticular />,
+      },
+      {
+        name: "Fee Collection",
+        key: "feecollection",
+        route: "pages/fee/feecollection",
+        component: <FeeCollection />,
+      },
+      {
+        name: "Fee By Admission Number",
+        key: "feecollectionbyadmission",
+        route: "pages/fee/feecollectionbyadmission",
+        component: <FeeCollectionByAdmission />,
+      },
+      {
+        name: "Fee Receipt",
+        key: "feereceipt",
+        route: "pages/fee/feereceipt",
+        component: <FeeReceipt />,
+      },
+      {
+        name: "Fee Schedule",
+        key: "feeschedule",
+        route: "pages/fee/feeschedule",
+        component: <FeeSchedule />,
       },
     ],
   },

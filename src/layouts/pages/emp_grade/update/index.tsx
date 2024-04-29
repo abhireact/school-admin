@@ -32,7 +32,7 @@ const Update = (props: any) => {
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.121:8000/mg_Egrade", values, {
+        .put("http://10.0.20.200:8000/mg_Egrade", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

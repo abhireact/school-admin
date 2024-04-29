@@ -42,7 +42,7 @@ function Cover(): JSX.Element {
 
     try {
       const res = await axios.post(
-        "http://10.0.20.121:8000/mg_reset_password",
+        "http://10.0.20.200:8000/mg_reset_password",
         {
           old_password: old_password,
           //   email: sanitizedEmail,

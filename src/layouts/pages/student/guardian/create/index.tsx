@@ -61,7 +61,7 @@ const Guardian = (props: any) => {
     onSubmit: (values, action) => {
       if (editGuardian) {
         axios
-          .put("http://10.0.20.121:8000/mg_guardian", values, {
+          .put("http://10.0.20.200:8000/mg_guardian", values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ const Guardian = (props: any) => {
       } else {
         axios
           .post(
-            "http://10.0.20.121:8000/mg_guardian",
+            "http://10.0.20.200:8000/mg_guardian",
             { ...values },
             {
               headers: {
@@ -120,7 +120,7 @@ const Guardian = (props: any) => {
   };
   const handleDelete = async (guardian_name: string) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_guardian", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_guardian", {
         data: {
           stud_name: student_first_name + student_middle_name + student_last_name,
           guardian_name: guardian_name,
@@ -146,7 +146,7 @@ const Guardian = (props: any) => {
   const fetchStudentGuardian = () => {
     axios
       .post(
-        `http://10.0.20.121:8000/mg_guardian/mg_student`,
+        `http://10.0.20.200:8000/mg_guardian/mg_student`,
         { student_first_name, student_middle_name, student_last_name, student_dob },
         {
           headers: {

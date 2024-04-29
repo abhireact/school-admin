@@ -28,7 +28,7 @@ const Create = (props: any) => {
   const [feeData, setFeeData] = useState(["Fee Code", "Admission Number"]);
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_wings", {
+      .get("http://10.0.20.200:8000/mg_wings", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.121:8000/fee_collection", values, {
+        .post("http://10.0.20.200:8000/fee_collection", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

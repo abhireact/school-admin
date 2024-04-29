@@ -120,7 +120,7 @@ const Create = () => {
           const sendData = {
             ...values,
           };
-          const response = await axios.post("http://10.0.20.121:8000/mg_school", sendData, {
+          const response = await axios.post("http://10.0.20.200:8000/mg_school", sendData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,

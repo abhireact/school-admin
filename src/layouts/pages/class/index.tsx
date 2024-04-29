@@ -12,6 +12,7 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
 import Update from "./update";
+import ManageSection from "./manage_section";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@mui/material";
@@ -19,6 +20,8 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import AddIcon from "@mui/icons-material/Add";
+import Tooltip from "@mui/material/Tooltip";
 const token = Cookies.get("token");
 const Class = () => {
   // To fetch rbac from redux:  Start
@@ -31,7 +34,7 @@ const Class = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -51,24 +54,11 @@ const Class = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Start
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //End
-
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
     const main_data = data[index];
     console.log(main_data, "maindata");
 
@@ -81,7 +71,7 @@ const Class = () => {
   }; //End
   const fetchClasses = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_class", {
+      .get("http://10.0.20.200:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -101,7 +91,7 @@ const Class = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_class", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_class", {
         data: { class_name: name },
         headers: {
           "Content-Type": "application/json",
@@ -124,7 +114,7 @@ const Class = () => {
     columns: [
       { Header: "Class", accessor: "class_name" },
       { Header: "Wings", accessor: "wing_name" },
-      { Header: "Code", accessor: "code" },
+      { Header: "Code", accessor: "class_code" },
       { Header: "Academic Year", accessor: "academic_year" },
 
       { Header: "Action", accessor: "action" },
@@ -137,13 +127,23 @@ const Class = () => {
         <MDTypography variant="p">
           {rbacData ? (
             rbacData?.find((element: string) => element === "classupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
+              <>
+                {" "}
+                <Tooltip title="Edit Class">
+                  <IconButton
+                    onClick={() => {
+                      handleOpenupdate(index);
+                    }}
+                  >
+                    <CreateRoundedIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Manage Section">
+                  <IconButton onClick={() => handleManagePage(index)}>
+                    <AddIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
             ) : (
               ""
             )
@@ -153,13 +153,15 @@ const Class = () => {
 
           {rbacData ? (
             rbacData?.find((element: string) => element === "classdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row.class_name);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
+              <Tooltip title="Delete Class">
+                <IconButton
+                  onClick={() => {
+                    handleDelete(row.class_name);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
             ) : (
               ""
             )
@@ -170,39 +172,74 @@ const Class = () => {
       ),
 
       class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      code: <MDTypography variant="p">{row.code}</MDTypography>,
+      class_code: <MDTypography variant="p">{row.class_code}</MDTypography>,
       wing_name: <MDTypography variant="p">{row.wing_name}</MDTypography>,
     })),
   };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
+  };
+  const [managepage, setManagepage] = useState(false);
+  const [manageSection, setManageSection] = useState([]);
+  const handleManagePage = (index: number) => {
+    const main_data = data[index];
+    console.log(main_data, "manage section data");
+
+    setManagepage(true);
+    setManageSection(main_data);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5" fontWeight="bold" color="secondary">
-          Class
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "classcreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Class
-            </MDButton>
+
+      {showpage ? (
+        <Create handleShowPage={handleShowPage} fetchData={fetchClasses} />
+      ) : (
+        <>
+          {managepage ? (
+            <ManageSection
+              handleManagePage={setManagepage}
+              fetchData={fetchClasses}
+              editData={manageSection}
+            />
           ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}{" "}
-      </Grid>
-
-      <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={fetchClasses} />
-      </Dialog>
-
-      <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchClasses} />
-      </Dialog>
-
-      <DataTable table={dataTableData} />
+            <>
+              {" "}
+              <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+                <MDTypography variant="h5" fontWeight="bold" color="secondary">
+                  Class
+                </MDTypography>
+                {rbacData ? (
+                  rbacData?.find((element: string) => element === "classcreate") ? (
+                    <MDButton
+                      variant="outlined"
+                      color="info"
+                      type="submit"
+                      onClick={() => handleShowPage()}
+                    >
+                      + New Class
+                    </MDButton>
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  ""
+                )}
+              </Grid>
+              <Dialog open={openupdate} onClose={handleCloseupdate}>
+                <Update
+                  setOpenupdate={setOpenupdate}
+                  editData={editData}
+                  fetchData={fetchClasses}
+                />
+              </Dialog>
+              <DataTable table={dataTableData} />
+            </>
+          )}
+        </>
+      )}
     </DashboardLayout>
   );
 };

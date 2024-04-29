@@ -1,5 +1,6 @@
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
 import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
@@ -11,32 +12,52 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import FormField from "layouts/pages/account/components/FormField";
 
 const Create = (props: any) => {
   const token = Cookies.get("token");
-
-  const { setOpen, fetchData } = props;
+  const [academicdata, setAcademicdata] = useState([]);
+  const { handleShowPage, fetchData } = props;
   const handleClose = () => {
-    setOpen(false);
+    handleShowPage();
   };
   const validationSchema = Yup.object().shape({
     class_name: Yup.string().required("Required *"),
-    code: Yup.string().required("Required *"),
+    section_name: Yup.string().required("Required *"),
+    class_code: Yup.string().required("Required *"),
     wing_name: Yup.string().required("Required *"),
     academic_year: Yup.string().required("Required *"),
+    start_date: Yup.date().required("Required *"),
+    end_date: Yup.date().required("Required *"),
   });
-  const [academicData, setAcademicData] = useState([]);
+
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
+    // axios
+    //   .get("http://10.0.20.200:8000/mg_accademic_year", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setAcademicData(response.data);
+
+    //     console.log(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching data:", error);
+    //   });
+
     axios
-      .get("http://10.0.20.121:8000/mg_accademic_year", {
+      .get("http://10.0.20.200:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setAcademicData(response.data);
+        setAcademicdata(response.data);
 
         console.log(response.data);
       })
@@ -44,7 +65,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_wing/", {
+      .get("http://10.0.20.200:8000/mg_wing", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -64,19 +85,41 @@ const Create = (props: any) => {
     initialValues: {
       academic_year: "",
       wing_name: "",
-      code: "",
       class_name: "",
+      class_code: "",
+      index: 0,
+      section_name: "",
+      start_date: "",
+      end_date: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.121:8000/mg_class", values, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        .post(
+          "http://10.0.20.200:8000/mg_class",
+          {
+            class_data: {
+              academic_year: values.academic_year,
+              wing_name: values.wing_name,
+              class_name: values.class_name,
+              class_code: values.class_code,
+              index: values.index,
+            },
+            section_data: {
+              section_name: values.section_name,
+              start_date: values.start_date,
+              end_date: values.end_date,
+            },
           },
-        })
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then(() => {
+          console.log("create successfully");
           message.success(" Created successfully!");
           fetchData();
           handleClose();
@@ -89,129 +132,200 @@ const Create = (props: any) => {
     },
   });
   return (
-    <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
-        <Grid container>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Class Name
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="class_name"
-              value={values.class_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.class_name && Boolean(errors.class_name)}
-              helperText={touched.class_name && errors.class_name}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Class Code
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="code"
-              value={values.code}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.code && Boolean(errors.code)}
-              helperText={touched.code && errors.code}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Wing Name
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <Autocomplete
-              sx={{ width: "65%" }}
-              value={values.wing_name}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "wing_name", value },
-                });
-              }}
-              options={winginfo.map((acd) => acd.wing_name)}
-              renderInput={(params: any) => (
-                <MDInput
-                  name="wing_name"
-                  placeholder="Choose Options"
-                  onChange={handleChange}
-                  value={values.wing_name}
-                  {...params}
-                  variant="standard"
-                  error={touched.wing_name && Boolean(errors.wing_name)}
-                  helperText={touched.wing_name && errors.wing_name}
-                />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Academic Year
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7} mb={2}>
-            <Autocomplete
-              sx={{ width: "65%" }}
-              value={values.academic_year}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "academic_year", value },
-                });
-              }}
-              options={academicData.map((acd) => acd.academic_year)}
-              renderInput={(params: any) => (
-                <MDInput
-                  name="academic_year"
-                  placeholder="Choose Options"
-                  onChange={handleChange}
+    <Card>
+      {" "}
+      <form onSubmit={handleSubmit}>
+        <MDBox p={4}>
+          <Grid container>
+            <Grid container spacing={3} pt={2} px={2}>
+              <Grid item xs={12} sm={12}>
+                <MDTypography variant="h6" fontWeight="bold" color="secondary">
+                  Create Class
+                </MDTypography>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3} p={2}>
+              <Grid item sm={4} xs={4}>
+                <Autocomplete
+                  sx={{ width: "80%" }}
                   value={values.academic_year}
-                  {...params}
-                  variant="standard"
-                  error={touched.academic_year && Boolean(errors.academic_year)}
-                  helperText={touched.academic_year && errors.academic_year}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "academic_year", value },
+                    });
+                  }}
+                  options={academicdata.map((acd) => acd.academic_year)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="academic_year"
+                      placeholder="2022-23"
+                      label={"Academic Year"}
+                      onChange={handleChange}
+                      value={values.academic_year}
+                      {...params}
+                      variant="standard"
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  sx={{ width: "80%" }}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "wing_name", value },
+                    });
+                  }}
+                  value={values.wing_name}
+                  options={winginfo.map((acd) => acd.wing_name)}
+                  renderInput={(params: any) => (
+                    <FormField
+                      label="Wing Name"
+                      autoComplete="off"
+                      InputLabelProps={{ shrink: true }}
+                      name="wing_name"
+                      onChange={handleChange}
+                      value={values.wing_name}
+                      {...params}
+                      variant="standard"
+                      onBlur={handleBlur}
+                      error={touched.wing_name && Boolean(errors.wing_name)}
+                      success={values.wing_name.length && !errors.wing_name}
+                      helperText={touched.wing_name && errors.wing_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  sx={{ width: "80%" }}
+                  mb={2}
+                  label="Class Name"
+                  variant="standard"
+                  name="class_name"
+                  value={values.class_name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.class_name && Boolean(errors.class_name)}
+                  success={values.class_name.length && !errors.class_name}
+                  helperText={touched.class_name && errors.class_name}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  sx={{ width: "80%" }}
+                  mb={2}
+                  label="Class Code"
+                  variant="standard"
+                  name="class_code"
+                  value={values.class_code}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.class_code && Boolean(errors.class_code)}
+                  success={values.class_code.length && !errors.class_code}
+                  helperText={touched.class_code && errors.class_code}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  sx={{ width: "80%" }}
+                  mb={2}
+                  label="Index"
+                  variant="standard"
+                  name="index"
+                  value={values.index}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.index && Boolean(errors.index)}
+                  success={values.index && !errors.index}
+                  helperText={touched.index && errors.index}
+                />
+              </Grid>
+            </Grid>
+            <Grid container xs={12} sm={12} px={2}>
+              <Grid item xs={12} sm={12}>
+                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                  Initial Section
+                </MDTypography>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  mb={2}
+                  sx={{ width: "80%" }}
+                  label="Section Name"
+                  variant="standard"
+                  name="section_name"
+                  value={values.section_name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.section_name && Boolean(errors.section_name)}
+                  success={values.section_name.length && !errors.section_name}
+                  helperText={touched.section_name && errors.section_name}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  InputLabelProps={{ shrink: true }}
+                  type="Date"
+                  sx={{ width: "80%" }}
+                  label="Start Date"
+                  variant="standard"
+                  name="start_date"
+                  value={values.start_date}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.start_date && Boolean(errors.start_date)}
+                  success={values.start_date.length && !errors.start_date}
+                  helperText={touched.start_date && errors.start_date}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  sx={{ width: "80%" }}
+                  InputLabelProps={{ shrink: true }}
+                  type="Date"
+                  label="End Date"
+                  variant="standard"
+                  name="end_date"
+                  value={values.end_date}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.end_date && Boolean(errors.end_date)}
+                  success={values.end_date.length && !errors.end_date}
+                  helperText={touched.end_date && errors.end_date}
+                />
+              </Grid>
+            </Grid>
 
-          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Grid item mt={2}>
-              <MDButton
-                color="dark"
-                variant="contained"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Back
-              </MDButton>
-            </Grid>
-            <Grid item mt={2} ml={2}>
-              <MDButton color="info" variant="contained" type="submit">
-                Save
-              </MDButton>
+            <Grid
+              item
+              container
+              xs={12}
+              sm={12}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <Grid item mt={2}>
+                <MDButton
+                  color="dark"
+                  variant="contained"
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
+                  Back
+                </MDButton>
+              </Grid>
+              <Grid item mt={2} ml={2}>
+                <MDButton color="info" variant="contained" type="submit">
+                  Save
+                </MDButton>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </MDBox>
-    </form>
+        </MDBox>
+      </form>
+    </Card>
   );
 };
 

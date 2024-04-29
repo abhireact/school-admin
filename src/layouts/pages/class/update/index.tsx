@@ -10,12 +10,13 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import FormField from "layouts/pages/account/components/FormField";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   code: Yup.string().required("Required *"),
   wing_name: Yup.string().required("Required *"),
-  academic_year: Yup.string().required("Required *"),
+  // academic_year: Yup.string().required("Required *"),
 });
 
 const Update = (props: any) => {
@@ -29,7 +30,7 @@ const Update = (props: any) => {
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_accademic_year", {
+      .get("http://10.0.20.200:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -44,7 +45,7 @@ const Update = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_wing/", {
+      .get("http://10.0.20.200:8000/mg_wing", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -63,14 +64,19 @@ const Update = (props: any) => {
     initialValues: {
       academic_year: editData.academic_year,
       wing_name: editData.wing_name,
-      code: editData.code,
       class_name: editData.class_name,
+      code: editData.class_code,
+      index: editData.index,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
-      const sendValues = { ...values, old_class_name: editData.class_name };
+      const sendValues = {
+        ...values,
+        old_class_name: editData.class_name,
+        old_code: editData.class_code,
+      };
       axios
-        .put("http://10.0.20.121:8000/mg_class", sendValues, {
+        .put("http://10.0.20.200:8000/mg_class", sendValues, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -91,124 +97,91 @@ const Update = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
         <Grid container>
-          <Grid item xs={12} sm={5}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Class Name
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="class_name"
-              value={values.class_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.class_name && Boolean(errors.class_name)}
-              helperText={touched.class_name && errors.class_name}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Class Code
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="code"
-              value={values.code}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.code && Boolean(errors.code)}
-              helperText={touched.code && errors.code}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Wing Name
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <Autocomplete
-              sx={{ width: "65%" }}
-              value={values.wing_name}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "wing_name", value },
-                });
-              }}
-              options={winginfo.map((acd) => acd.wing_name)}
-              renderInput={(params: any) => (
-                <MDInput
-                  name="wing_name"
-                  onChange={handleChange}
-                  value={values.wing_name}
-                  {...params}
-                  variant="standard"
-                  error={touched.wing_name && Boolean(errors.wing_name)}
-                  helperText={touched.wing_name && errors.wing_name}
-                />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Academic Year
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7} mb={2}>
-            <Autocomplete
-              sx={{ width: "65%" }}
-              value={values.academic_year}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "academic_year", value },
-                });
-              }}
-              options={academicData.map((acd) => acd.academic_year)}
-              renderInput={(params: any) => (
-                <MDInput
-                  name="academic_year"
-                  placeholder="eg. 2022-23"
-                  onChange={handleChange}
-                  value={values.academic_year}
-                  {...params}
-                  variant="standard"
-                  error={touched.academic_year && Boolean(errors.academic_year)}
-                  helperText={touched.academic_year && errors.academic_year}
-                />
-              )}
-            />
-          </Grid>
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-start" }}
-          >
-            <Grid item mt={4}>
-              <MDButton color="info" variant="contained" type="submit">
-                Save
-              </MDButton>
+          <Grid container spacing={3} pt={2} px={2}>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h6" fontWeight="bold" color="secondary">
+                Update Class
+              </MDTypography>
             </Grid>
-            <Grid item ml={2} mt={4}>
+          </Grid>
+          <Grid container spacing={3} p={2}>
+            <Grid item xs={12} sm={4}>
+              <MDInput mb={2} label="Index" variant="standard" name="index" value={values.index} />
+            </Grid>
+            <Grid item sm={4} xs={12}>
+              <Autocomplete
+                value={values.academic_year}
+                options={academicData.map((acd) => acd.academic_year)}
+                renderInput={(params: any) => (
+                  <FormField
+                    sx={{ width: "100%" }}
+                    label="Academic Year"
+                    autoComplete="off"
+                    InputLabelProps={{ shrink: true }}
+                    name="academic_year"
+                    value={values.academic_year}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Autocomplete
+                value={values.wing_name}
+                options={winginfo.map((acd) => acd.wing_name)}
+                renderInput={(params: any) => (
+                  <FormField
+                    label="Wing Name"
+                    autoComplete="off"
+                    InputLabelProps={{ shrink: true }}
+                    name="wing_name"
+                    value={values.wing_name}
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                label="Class Name"
+                variant="standard"
+                name="class_name"
+                value={values.class_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                label="Class Code"
+                variant="standard"
+                name="code"
+                value={values.code}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item mt={2}>
               <MDButton
-                color="primary"
-                variant="outlined"
+                color="dark"
+                variant="contained"
                 onClick={() => {
                   handleClose();
                 }}
               >
-                Cancel
+                Back
+              </MDButton>
+            </Grid>
+            <Grid item mt={2} ml={2}>
+              <MDButton color="info" variant="contained" type="submit">
+                Save
               </MDButton>
             </Grid>
           </Grid>

@@ -45,7 +45,7 @@ const Update = (props: any) => {
         old_leave_code: editData.leave_code,
       };
       axios
-        .put("http://10.0.20.121:8000/mg_leaves", sendValues, {
+        .put("http://10.0.20.200:8000/mg_leaves", sendValues, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

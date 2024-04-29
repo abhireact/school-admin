@@ -25,13 +25,13 @@ const Create = (props: any) => {
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      caste: "",
+      name: "",
       description: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.121:8000/mg_castes", values, {
+        .post("http://10.0.20.200:8000/mg_castes", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -63,11 +63,11 @@ const Create = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="caste"
-              value={values.caste}
+              name="name"
+              value={values.name}
               onChange={handleChange}
-              error={touched.caste && Boolean(errors.caste)}
-              helperText={touched.caste && errors.caste}
+              error={touched.name && Boolean(errors.name)}
+              helperText={touched.name && errors.name}
               onBlur={handleBlur}
             />
           </Grid>

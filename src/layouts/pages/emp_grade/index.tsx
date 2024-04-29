@@ -31,7 +31,7 @@ const EmpGrade = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -81,7 +81,7 @@ const EmpGrade = () => {
   }; //End
   const fetchEmployeeGrade = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_empgrd", {
+      .get("http://10.0.20.200:8000/mg_empgrd", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ const EmpGrade = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_emptype", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_emptype", {
         data: { emp_type: name.emp_type },
         headers: {
           "Content-Type": "application/json",

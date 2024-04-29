@@ -32,7 +32,7 @@ const EmpAccount = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ const EmpAccount = () => {
   }; //End
   const fetchAccountData = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_accounts", {
+      .get("http://10.0.20.200:8000/mg_accounts", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const EmpAccount = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_subject", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_subject", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,
@@ -124,7 +124,7 @@ const EmpAccount = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectinfoupdate") ? (
+            rbacData?.find((element: string) => element === "schoolaccountupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -140,7 +140,7 @@ const EmpAccount = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectinfodelete") ? (
+            rbacData?.find((element: string) => element === "schoolaccountdelete") ? (
               <IconButton
                 onClick={() => {
                   handleDelete(row);
@@ -178,7 +178,7 @@ const EmpAccount = () => {
               Account
             </MDTypography>
             {rbacData ? (
-              rbacData?.find((element: string) => element === "subjectinfocreate") ? (
+              rbacData?.find((element: string) => element === "schoolaccountcreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
                   + New Account
                 </MDButton>

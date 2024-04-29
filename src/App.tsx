@@ -65,7 +65,7 @@ export default function App() {
   // store rbac data
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

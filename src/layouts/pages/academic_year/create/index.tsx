@@ -36,7 +36,7 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.121:8000/mg_accademic_year", values, {
+        .post("http://10.0.20.200:8000/mg_accademic_year", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

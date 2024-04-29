@@ -63,7 +63,7 @@ const Update = (props: any) => {
   }
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_accademic_year", {
+      .get("http://10.0.20.200:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ const Update = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_class", {
+      .get("http://10.0.20.200:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const Update = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_section", {
+      .get("http://10.0.20.200:8000/mg_section", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -159,7 +159,7 @@ const Update = (props: any) => {
       onSubmit: (values, action) => {
         // action.resetForm();
         axios
-          .put("http://10.0.20.121:8000/mg_student", values, {
+          .put("http://10.0.20.200:8000/mg_student", values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,

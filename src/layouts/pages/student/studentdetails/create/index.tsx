@@ -46,7 +46,7 @@ const Create = (props: any) => {
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
-
+  console.log(classdata, "jjjjjjjjjjjj");
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
       .filter((item: any) => item.academic_year === acdName)
@@ -55,25 +55,39 @@ const Create = (props: any) => {
   }
   const [sectiondata, setsectiondata] = useState([]);
   const [filteredSection, setFilteredSection] = useState([]);
+  const options = filteredSection.map((section) => ({ label: section }));
   function filterSectionData(data: any, class_name: any) {
-    let filtereddata = data
-      .filter((item: any) => item.class_name === class_name)
-      .map((item: any) => item.section_name);
-    setFilteredSection(filtereddata);
+    console.log(classdata, "jjjjjjjjjjjjjjjjjjjkkkkkkkkkkkkkk");
+    let filtereddata = classdata
+      .filter(
+        (item: any) => item.class_name === class_name && item.academic_year === values.academic_year
+      )
+      .map((item: any) => item.section_data);
+
+    console.log(filtereddata, "jjjjjjjjjjjjjjjjjjjjjjjllllkkkk");
+    const filteredsection = [];
+    for (let i = 0; i < filtereddata.length; i++) {
+      filteredsection.push(filtereddata[0][i].section_name);
+    }
+    console.log(filteredsection, "sectionnnnnnnnnnnnnnnnssssssssssss");
+    setFilteredSection(Array.from(filteredsection));
   }
+
+  console.log(filteredSection, "section nameeeeeeeeee");
   const [casteData, setCasteData] = useState([]);
   const [castecategoryData, setCastecategoryData] = useState([]);
   const [studentcategoryData, setStudentcategoryData] = useState([]);
   const [houseData, setHouseData] = useState([]);
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_house_detail", {
+      .get("http://10.0.20.200:8000/mg_house_detail", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
+        console.log(response, "housedetailsssssssssss");
         setHouseData(response.data);
 
         console.log(response.data, "House data");
@@ -82,7 +96,7 @@ const Create = (props: any) => {
         console.error("Error fetching House data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_studcategory", {
+      .get("http://10.0.20.200:8000/mg_studcategory", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -97,13 +111,14 @@ const Create = (props: any) => {
         console.error("Error fetching Student Category data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_castes", {
+      .get("http://10.0.20.200:8000/mg_castes", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
+        console.log(response, "casteeeeeeeeeeeeeeeeeeeeee");
         setCasteData(response.data);
 
         console.log(response.data, "caste category data");
@@ -112,7 +127,7 @@ const Create = (props: any) => {
         console.error("Error fetching Caste Category data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_caste_category", {
+      .get("http://10.0.20.200:8000/mg_caste_category", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -127,7 +142,7 @@ const Create = (props: any) => {
         console.error("Error fetching Caste data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_accademic_year", {
+      .get("http://10.0.20.200:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -141,23 +156,24 @@ const Create = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    axios
-      .get("http://10.0.20.121:8000/mg_section", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setsectiondata(response.data);
+    // axios
+    //   .get("http://10.0.20.200:8000/mg_section", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    // .then((response) => {
+    //   setsectiondata(response.data);
 
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    //   console.log(response.data);
+    // })
+    // .catch((error) => {
+    //   console.error("Error fetching data:", error);
+    // });
+
     axios
-      .get("http://10.0.20.121:8000/mg_class", {
+      .get("http://10.0.20.200:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -242,7 +258,7 @@ const Create = (props: any) => {
       onSubmit: (values, action) => {
         // action.resetForm();
         axios
-          .post("http://10.0.20.121:8000/mg_student", values, {
+          .post("http://10.0.20.200:8000/mg_student", values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -292,7 +308,7 @@ const Create = (props: any) => {
     }
   };
   const [previousEducation, setPreviousEducation] = useState(false);
-
+  console.log(casteData, "caste dataaaaaa");
   return (
     <Card id="student-info">
       <form onSubmit={handleSubmit}>
@@ -450,7 +466,7 @@ const Create = (props: any) => {
             <Grid item xs={6} sm={4}>
               <Autocomplete
                 sx={{ width: "80%" }}
-                value={values.section_name}
+                // value={values.section_name}
                 onChange={
                   filteredSection.length >= 1
                     ? (event, value) => {
@@ -460,7 +476,7 @@ const Create = (props: any) => {
                       }
                     : undefined
                 }
-                options={filteredSection}
+                options={options}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
@@ -586,7 +602,7 @@ const Create = (props: any) => {
                   });
                 }}
                 disableClearable
-                options={casteData.map((acd) => acd.caste)}
+                options={casteData.map((acd) => acd.name)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
@@ -664,7 +680,7 @@ const Create = (props: any) => {
                   });
                 }}
                 disableClearable
-                options={houseData.map((acd) => acd.house_details)}
+                options={houseData.map((acd) => acd.house_name)}
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}

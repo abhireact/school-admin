@@ -31,7 +31,7 @@ const Caste = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -81,7 +81,7 @@ const Caste = () => {
   }; //End
   const FetchCastes = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_castes", {
+      .get("http://10.0.20.200:8000/mg_castes", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ const Caste = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_castes", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_castes", {
         data: { caste_name: name },
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const Caste = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Caste", accessor: "caste" },
+      { Header: "Caste", accessor: "name" },
 
       { Header: "Description", accessor: "description" },
 
@@ -130,7 +130,7 @@ const Caste = () => {
     ],
 
     rows: data.map((row, index) => ({
-      caste: <MDTypography variant="p">{row.caste}</MDTypography>,
+      name: <MDTypography variant="p">{row.name}</MDTypography>,
 
       action: (
         <MDTypography variant="p">

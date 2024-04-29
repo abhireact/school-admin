@@ -49,7 +49,7 @@ function SchoolShowPage() {
   });
   const fetchSchoolInfo = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_school", {
+      .get("http://10.0.20.200:8000/mg_school", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -113,7 +113,7 @@ function SchoolShowPage() {
           const sendData = {
             ...values,
           };
-          const response = await axios.put("http://10.0.20.121:8000/mg_school", sendData, {
+          const response = await axios.put("http://10.0.20.200:8000/mg_school", sendData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,

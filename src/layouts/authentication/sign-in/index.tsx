@@ -41,10 +41,10 @@ function CoverLogin() {
       // Input validation using validator.js
       const errors = {};
 
-      if (!isEmail(email)) {
-        // errors.email = "Invalid email address";
-        alert("Invalid email address");
-      }
+      // if (!isEmail(email)) {
+      //   // errors.email = "Invalid email address";
+      //   alert("Invalid email address");
+      // }
 
       if (!isLength(password, { min: 8 })) {
         // errors.password = "Password must be at least 8 characters long";
@@ -61,9 +61,9 @@ function CoverLogin() {
       const sanitizedPassword = password.replace(/[<>"]/g, "");
 
       const res = await axios.post(
-        "http://10.0.20.121:8000/token",
+        "http://10.0.20.200:8000/token",
         {
-          username: sanitizedEmail,
+          username: email,
           //   email: sanitizedEmail,
           password: sanitizedPassword,
           //   ph_num: phone,
@@ -119,7 +119,6 @@ function CoverLogin() {
           <form onSubmit={handleSubmit}>
             <MDBox mb={2}>
               <MDInput
-                type="email"
                 label="Email"
                 variant="standard"
                 fullWidth

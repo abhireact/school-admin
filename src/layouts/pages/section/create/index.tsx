@@ -37,7 +37,7 @@ const Create = (props: any) => {
   }
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_accademic_year", {
+      .get("http://10.0.20.200:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ const Create = (props: any) => {
         console.error("Error fetching academic data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_class", {
+      .get("http://10.0.20.200:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.121:8000/mg_section", values, {
+        .post("http://10.0.20.200:8000/mg_batches", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

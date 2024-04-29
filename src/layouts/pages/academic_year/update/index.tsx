@@ -17,9 +17,6 @@ import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 const validationSchema = Yup.object().shape({
-  academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
-    .required("Academic year is required"),
   start_date: Yup.date().required("Start date is required"),
   end_date: Yup.date().required("End date is required"),
 });
@@ -34,21 +31,19 @@ const Update = (props: any) => {
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       academic_year: editData.academic_year,
-
       start_date: editData.start_date,
       end_date: editData.end_date,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
-        old_academic_year: editData.academic_year,
         academic_year: values.academic_year,
-
+        old_academic_year: editData.academic_year,
         start_date: values.start_date,
         end_date: values.end_date,
       };
       axios
-        .put("http://10.0.20.121:8000/mg_accademic_update", sendData, {
+        .put("http://10.0.20.200:8000/mg_accademic_year", sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -57,6 +52,7 @@ const Update = (props: any) => {
         .then(() => {
           message.success("Updated  successfully!");
           fetchData();
+          handleCloseupdate();
           handleCloseupdate();
         })
         .catch(() => {
@@ -82,9 +78,9 @@ const Update = (props: any) => {
               variant="standard"
               name="academic_year"
               value={values.academic_year}
-              onBlur={handleBlur}
-              error={touched.academic_year && Boolean(errors.academic_year)}
-              helperText={touched.academic_year && errors.academic_year}
+              // onBlur={handleBlur}
+              // error={touched.academic_year && Boolean(errors.academic_year)}
+              // helperText={touched.academic_year && errors.academic_year}
             />
           </Grid>
 

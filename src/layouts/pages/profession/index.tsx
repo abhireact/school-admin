@@ -31,7 +31,7 @@ const Class = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -82,7 +82,7 @@ const Class = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_prof", {
+      .get("http://10.0.20.200:8000/mg_prof", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ const Class = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_prof", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_prof", {
         data: { category: name.category, prof_name: name.prof_name },
         headers: {
           "Content-Type": "application/json",

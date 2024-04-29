@@ -32,7 +32,7 @@ const Create = (props: any) => {
   const calculationtypes = ["By Days", "By Months", "By Day to Day"];
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_accounts", {
+      .get("http://10.0.20.200:8000/mg_accounts", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ const Create = (props: any) => {
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.121:8000/fee_fine", values, {
+          .post("http://10.0.20.200:8000/fee_fine", values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,

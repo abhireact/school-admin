@@ -44,7 +44,7 @@ const Update = (props: any) => {
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.121:8000/fee_fine", values, {
+          .post("http://10.0.20.200:8000/fee_fine", values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,

@@ -32,7 +32,7 @@ const NonAcademicGrade = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ const NonAcademicGrade = () => {
   }; //End
   const fetchExamtypes = () => {
     axios
-      .get("http://10.0.20.121:8000/exam_type", {
+      .get("http://10.0.20.200:8000/exam_type", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const NonAcademicGrade = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/grades", {
+      const response = await axios.delete("http://10.0.20.200:8000/grades", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,

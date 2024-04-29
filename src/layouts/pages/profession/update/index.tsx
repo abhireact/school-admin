@@ -30,7 +30,7 @@ const Update = (props: any) => {
     onSubmit: (values, action) => {
       const sendValues = { ...values, old_prof_name: editData.prof_name };
       axios
-        .put("http://10.0.20.121:8000/mg_prof", sendValues, {
+        .put("http://10.0.20.200:8000/mg_prof", sendValues, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

@@ -55,7 +55,7 @@ const Create = (props: any) => {
   }
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_section", {
+      .get("http://10.0.20.200:8000/mg_section", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ const Create = (props: any) => {
       });
 
     axios
-      .get("http://10.0.20.121:8000/mg_accademic_year", {
+      .get("http://10.0.20.200:8000/mg_accademic_year", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.121:8000/mg_class", {
+      .get("http://10.0.20.200:8000/mg_class", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.121:8000/fee_collection", values, {
+        .post("http://10.0.20.200:8000/fee_collection", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -235,26 +235,6 @@ const Create = (props: any) => {
                     helperText={touched.section_name && errors.section_name}
                   />
                 )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="collection_date"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Collection Date
-                  </MDTypography>
-                }
-                value={values.collection_date}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.collection_date && Boolean(errors.collection_date)}
-                success={values.collection_date.length && !errors.collection_date}
-                helperText={touched.collection_date && errors.collection_date}
               />
             </Grid>
 

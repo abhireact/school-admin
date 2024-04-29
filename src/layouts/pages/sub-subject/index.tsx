@@ -32,7 +32,7 @@ const SubSubject = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ const SubSubject = () => {
 
   const fetchSubjects = () => {
     axios
-      .get("http://10.0.20.121:8000/sub_subjects", {
+      .get("http://10.0.20.200:8000/sub_subjects", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ const SubSubject = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_subject", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_subject", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,

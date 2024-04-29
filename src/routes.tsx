@@ -54,6 +54,7 @@ import FineParticular from "layouts/pages/fine";
 import FeeCollection from "layouts/pages/fee_collection";
 import FeeCollectionByAdmission from "layouts/pages/fee_collection _by_admission";
 import FeeReceipt from "layouts/pages/fee_receipt";
+import FeeSchedule from "layouts/pages/fee_schedule";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -72,7 +73,7 @@ const token = Cookies.get("token");
 
 try {
   if (token) {
-    const response = await axios.get("http://10.0.20.121:8000/mg_rbac_current_user", {
+    const response = await axios.get("http://10.0.20.200:8000/mg_rbac_current_user", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -129,54 +130,6 @@ const routes = [
         key: "myprofile",
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
-      },
-      {
-        type: "collapse",
-        name: "Fee",
-        key: "fee",
-        icon: (
-          <Icon fontSize="medium">
-            <CurrencyRupeeIcon />
-          </Icon>
-        ),
-        collapse: [
-          {
-            name: "Late Fee",
-            key: "latefee",
-            route: "pages/fee/latefee",
-            component: <LateFee />,
-          },
-          {
-            name: "Excess Fee ",
-            key: "excessfee",
-            route: "pages/fee/excessfee",
-            component: <ExcessFee />,
-          },
-          {
-            name: "Fine Particular",
-            key: "fineparticular",
-            route: "pages/fee/fineparticular",
-            component: <FineParticular />,
-          },
-          {
-            name: "Fee Collection",
-            key: "feecollection",
-            route: "pages/fee/feecollection",
-            component: <FeeCollection />,
-          },
-          {
-            name: "Fee By Admission Number",
-            key: "feecollectionbyadmission",
-            route: "pages/fee/feecollectionbyadmission",
-            component: <FeeCollectionByAdmission />,
-          },
-          {
-            name: "Fee Receipt",
-            key: "feereceipt",
-            route: "pages/fee/feereceipt",
-            component: <FeeReceipt />,
-          },
-        ],
       },
     ],
   },
