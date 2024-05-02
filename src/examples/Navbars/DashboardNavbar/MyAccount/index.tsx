@@ -16,12 +16,15 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import MDTypography from "components/MDTypography";
+import { useNavigate } from "react-router-dom";
 
 export default function MYAccount() {
   const token = Cookies.get("token");
+
   const [mydata, setMydata] = useState([]);
   const [userData, setUserData] = useState();
   const [rbacData, setRbacData] = useState([]);
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -59,8 +62,8 @@ export default function MYAccount() {
   const handleLogout = () => {
     // Remove cookies here
     Cookies.remove("token");
+    navigate("/authentication/sign-in/cover");
     setAnchorEl(null);
-    window.location.reload();
   };
 
   return (

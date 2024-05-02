@@ -83,7 +83,7 @@ function CoverLogin() {
         const token = res.data.access_token;
         Cookies.set("token", token, { expires: 7 });
         navigate("/dashboards/analytics");
-
+        window.location.reload();
         message.success("Login Successful");
       } else {
         message.error("Invalid email or password");

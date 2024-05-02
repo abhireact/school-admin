@@ -72,7 +72,7 @@ function CoverLayout({ coverHeight, image, children }: Props): JSX.Element {
           </Grid>
         </Grid>
       </MDBox>
-      <Footer />
+      {/* <Footer /> */}
     </PageLayout>
   );
 }

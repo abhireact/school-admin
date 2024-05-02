@@ -322,8 +322,14 @@ const ManageSection = (props: any) => {
                 </MDButton>
               </Grid>
             </Grid>
-            <Dialog open={open} onClose={handleCloseSection} maxWidth="lg">
-              <UpdateSection sectionData={sectionData} setOpen={setOpen} />
+            <Dialog open={open} onClose={handleCloseSection} maxWidth="sm">
+              <UpdateSection
+                sectionData={sectionData}
+                class_name={editData.class_name}
+                academic_year={editData.academic_year}
+                setOpen={setOpen}
+                fetchData={fetchData}
+              />
             </Dialog>
             <Grid
               item

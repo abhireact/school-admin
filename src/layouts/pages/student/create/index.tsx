@@ -14,11 +14,6 @@ import { useState } from "react";
 
 const Create = (props: any) => {
   const { setShowpage } = props;
-  const [studentname, setStudentname] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [middleName, setMiddleName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [dob, setdob] = useState("");
 
   return (
     <MDBox mt={4}>
@@ -29,22 +24,17 @@ const Create = (props: any) => {
         <Grid item xs={12} sm={9}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
-              <Student
-                setFirsName={setFirstName}
-                setMiddleName={setMiddleName}
-                setLastName={setLastName}
-                setdob={setdob}
-              />
+              <Student setShowpage={setShowpage} />
             </Grid>
-            <Grid item xs={12} sm={12}>
+            {/* <Grid item xs={12} sm={12}>
               <Guardian
                 student_first_name={firstName}
                 student_middle_name={middleName}
                 student_last_name={lastName}
                 student_dob={dob}
               />
-            </Grid>
-            <Grid item xs={12} sm={12}>
+            </Grid> */}
+            {/* <Grid item xs={12} sm={12}>
               <Activity
                 student_guardian={studentname}
                 student_first_name={firstName}
@@ -52,13 +42,19 @@ const Create = (props: any) => {
                 student_last_name={lastName}
                 student_dob={dob}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Grid>
       </Grid>
 
       <MDBox mt={4}>
-        <Grid container sx={{ display: "flex", justifyContent: "space-between" }} pr={8} pb={2}>
+        <Grid
+          container
+          sx={{ display: "flex", justifyContent: "space-between" }}
+          pr={8}
+          pb={2}
+          mt={-2}
+        >
           <MDButton
             color="error"
             variant="text"
@@ -67,9 +63,9 @@ const Create = (props: any) => {
           >
             &lt;- back
           </MDButton>
-          <MDButton color="info" variant="contained">
+          {/* <MDButton color="info" variant="contained">
             finish &nbsp; <AssignmentTurnedInIcon />
-          </MDButton>
+          </MDButton> */}
         </Grid>
       </MDBox>
     </MDBox>

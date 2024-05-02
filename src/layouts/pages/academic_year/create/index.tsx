@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
   start_date: Yup.date().required("Required *"),
   end_date: Yup.date().required("Required *"),
@@ -67,7 +67,7 @@ const Create = (props: any) => {
           <Grid item xs={12} sm={7}>
             <MDInput
               mb={2}
-              placeholder="eg. 2023-24"
+              placeholder="eg. 2023-2024"
               sx={{ width: "65%" }}
               variant="standard"
               name="academic_year"

@@ -43,7 +43,7 @@ const Student = () => {
   }, [token]);
   //End
   const [data, setData] = useState([]);
-
+  const [pageNumber, setPageNumber] = useState(1);
   //Start
   const navigate = useNavigate();
 
@@ -59,7 +59,7 @@ const Student = () => {
     console.log(main_data, "maindata");
 
     setOpenupdate(true);
-    setEditData(main_data);
+    setEditData(main_data.user_id);
   };
 
   const handleCloseupdate = () => {
@@ -67,7 +67,7 @@ const Student = () => {
   }; //End
   const fetchStudents = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_student", {
+      .get(`http://10.0.20.200:8000/mg_student?page=${pageNumber}&per_page=10`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -84,7 +84,7 @@ const Student = () => {
   };
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [pageNumber]);
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete("http://10.0.20.200:8000/mg_student", {
@@ -113,24 +113,33 @@ const Student = () => {
       { Header: "Class", accessor: "class_name" },
       { Header: "Section", accessor: "section_name" },
       { Header: "Gender", accessor: "gender" },
-      { Header: "Academic Year", accessor: "academic_year" },
-      { Header: "Mobile Number", accessor: "mobile_number" },
+      { Header: "Admission Number", accessor: "admission_number" },
+      { Header: "User ID", accessor: "user_id" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p"> {row.academic_year}</MDTypography>,
+      admission_number: <MDTypography variant="p"> {row.admission_number}</MDTypography>,
+      user_id: <MDTypography variant="p"> {row.user_id}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
+          {rbacData ? (
+            rbacData?.find((element: string) => element === "studentdetailsupdate") ? (
+              <IconButton
+                onClick={() => {
+                  handleOpenupdate(index);
+                }}
+              >
+                <CreateRoundedIcon />
+              </IconButton>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
 
           <IconButton
             onClick={() => {
@@ -166,27 +175,48 @@ const Student = () => {
         </>
       ) : (
         <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Student
-            </MDTypography>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "studentdetailscreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + Student
-                </MDButton>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-          </Grid>
-          <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-            <Update setOpenupdate={setOpenupdate} editData={editData} />
-          </Dialog>
+          {openupdate ? (
+            <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchStudents} />
+          ) : (
+            <>
+              <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  Student
+                </MDTypography>
+                {rbacData ? (
+                  rbacData?.find((element: string) => element === "studentdetailscreate") ? (
+                    <MDButton
+                      variant="outlined"
+                      color="info"
+                      type="submit"
+                      onClick={handleShowPage}
+                    >
+                      + Student
+                    </MDButton>
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  ""
+                )}
+              </Grid>
 
-          <DataTable table={dataTableData} />
+              <DataTable table={dataTableData} entriesPerPage={false} showTotalEntries={false} />
+              <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} my={1}>
+                <MDButton
+                  onClick={() => setPageNumber((prevCount) => prevCount - 1)}
+                  disabled={pageNumber === 1}
+                >
+                  &lt;
+                </MDButton>
+                &nbsp; <MDTypography>{pageNumber}</MDTypography> &nbsp;
+                <MDButton onClick={() => setPageNumber((prevCount) => prevCount + 1)}>
+                  &gt;
+                </MDButton>
+                <MDButton variant="text"></MDButton>
+              </Grid>
+            </>
+          )}
         </>
       )}
     </BaseLayout>

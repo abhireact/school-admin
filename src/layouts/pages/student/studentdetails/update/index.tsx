@@ -1,6 +1,7 @@
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import Dialog from "@mui/material/Dialog";
 import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
@@ -9,44 +10,70 @@ import { message } from "antd";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import UpdateGuardian from "./guardian";
 import {
-  Autocomplete,
   FormControlLabel,
+  Autocomplete,
   FormControl,
   Radio,
   RadioGroup,
   Checkbox,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
+
+import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
 
   admission_date: Yup.date().required("Required *"),
-  admission_number: Yup.string().required("Required *"),
-  city: Yup.string().required("Required *"),
-  state: Yup.string().required("Required *"),
-  country: Yup.string().required("Required *"),
+  dob: Yup.date().required("Required *"),
+  admission_number: Yup.string(),
+  fee_code: Yup.string(),
   first_name: Yup.string().required("Required *"),
   last_name: Yup.string().required("Required *"),
   mobile_number: Yup.string()
     .matches(/^[0-9]{10}$/, "Incorrect Format *")
     .required("Required *"),
-  alt_mobile_number: Yup.string()
-    .matches(/^[0-9]{10}$/, "Incorrect Format *")
-    .required("Required *"),
-  email: Yup.string().email("Incorrect Format *").required("Required *"),
+  alt_phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format *"),
+  pen_number: Yup.string().matches(/^\d+$/, "Incorrect Format *"),
+  aadhaar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format *"),
+  email: Yup.string().email("Incorrect Format *"),
 });
-import SaveIcon from "@mui/icons-material/Save";
 
 const Update = (props: any) => {
-  const { editData } = props;
+  const [guardianData, setGuardianData] = useState({});
+  const [open, setOpen] = useState(false);
+
+  const handleCloseGuardian = () => {
+    setOpen(false);
+  };
+  const handleOpenGuardian = (data: any) => {
+    setOpen(true);
+    const main_data = data;
+    console.log(main_data, "Guardian edit Data");
+
+    setGuardianData(main_data);
+  };
+  const { editData, username, setOpenupdate, guardianInfo, fetchData } = props;
+  const [showGuardian, setShowGuardian] = useState(false);
+
+  const handleClose = () => {
+    setOpenupdate(false);
+  };
+  console.log(editData, "student info update");
+  console.log(guardianInfo, "guardian info data");
+
   const token = Cookies.get("token");
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
-
+  console.log(classdata, "jj");
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
       .filter((item: any) => item.academic_year === acdName)
@@ -55,13 +82,88 @@ const Update = (props: any) => {
   }
   const [sectiondata, setsectiondata] = useState([]);
   const [filteredSection, setFilteredSection] = useState([]);
+
   function filterSectionData(data: any, class_name: any) {
-    let filtereddata = data
-      .filter((item: any) => item.class_name === class_name)
-      .map((item: any) => item.section_name);
+    console.log(classdata, "class data");
+    let filtereddata = classdata
+      .filter(
+        (item: any) => item.class_name === class_name && item.academic_year === values.academic_year
+      )
+      .map((item: any) => item.section_data);
+
+    console.log(filtereddata, "filter section Data");
     setFilteredSection(filtereddata);
   }
+
+  console.log(filteredSection, "section nameeeeeeeeee");
+  const [casteData, setCasteData] = useState([]);
+  const [castecategoryData, setCastecategoryData] = useState([]);
+  const [studentcategoryData, setStudentcategoryData] = useState([]);
+  const [houseData, setHouseData] = useState([]);
+
   useEffect(() => {
+    axios
+      .get("http://10.0.20.200:8000/mg_house_detail", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response, "housedetailsssssssssss");
+        setHouseData(response.data);
+
+        console.log(response.data, "House data");
+      })
+      .catch((error) => {
+        console.error("Error fetching House data:", error);
+      });
+    axios
+      .get("http://10.0.20.200:8000/mg_studcategory", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setStudentcategoryData(response.data);
+
+        console.log(response.data, "Student Category data");
+      })
+      .catch((error) => {
+        console.error("Error fetching Student Category data:", error);
+      });
+    axios
+      .get("http://10.0.20.200:8000/mg_castes", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response, "caste");
+        setCasteData(response.data);
+
+        console.log(response.data, "caste category data");
+      })
+      .catch((error) => {
+        console.error("Error fetching Caste Category data:", error);
+      });
+    axios
+      .get("http://10.0.20.200:8000/mg_caste_category", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setCastecategoryData(response.data);
+
+        console.log(response.data, "caste category data");
+      })
+      .catch((error) => {
+        console.error("Error fetching Caste data:", error);
+      });
     axios
       .get("http://10.0.20.200:8000/mg_accademic_year", {
         headers: {
@@ -77,6 +179,22 @@ const Update = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+    // axios
+    //   .get("http://10.0.20.200:8000/mg_section", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setsectiondata(response.data);
+
+    //     console.log(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching data:", error);
+    //   });
+
     axios
       .get("http://10.0.20.200:8000/mg_class", {
         headers: {
@@ -92,27 +210,16 @@ const Update = (props: any) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    axios
-      .get("http://10.0.20.200:8000/mg_section", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setsectiondata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
   }, []);
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
+
+  //formik
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
+        user_name: username,
         admission_date: editData.admission_date,
         admission_number: editData.admission_number,
+        fee_code: editData.fee_code,
         first_name: editData.first_name,
         middle_name: editData.middle_name,
         last_name: editData.last_name,
@@ -120,28 +227,35 @@ const Update = (props: any) => {
         class_name: editData.class_name,
         section_name: editData.section_name,
         dob: editData.dob,
-        gender: editData.gender,
+        gender: editData.gender || "",
         birth_place: editData.birth_place,
         blood_group: editData.blood_group,
-        aadhaar_number: editData.aadhaar_number,
+        aadhaar_number: editData.aadhaar_number || "",
         religion: editData.religion,
         mother_tongue: editData.mother_tongue,
+        pen_number: editData.pen_number || "",
+
+        house_details: editData.house_details,
+        student_category: editData.student_category,
         caste_category: editData.caste_category,
-        pen_number: editData.pen_number,
-        address_line: editData.address_line,
+        caste: editData.caste,
+
+        address_line1: editData.address_line1,
+        address_line2: editData.address_line2,
         pin_code: editData.pin_code,
         city: editData.city,
         state: editData.state,
         country: editData.country,
-        pr_address_line: editData.pr_address_line,
+        pr_address_line1: editData.pr_address_line1,
+        pr_address_line2: editData.pr_address_line2,
         pr_pin_code: editData.pr_pin_code,
         pr_city: editData.pr_city,
         pr_state: editData.pr_state,
         pr_country: editData.pr_country,
         quota: editData.quota,
         mobile_number: editData.mobile_number,
-        alt_mobile_number: editData.alt_mobile_number,
-        email: editData.email,
+        alt_phone_number: editData.alt_phone_number,
+        email: editData.email || "",
         hobby: editData.hobby,
         prev_school_name: editData.prev_school_name,
         prev_class_name: editData.prev_class_name,
@@ -150,14 +264,31 @@ const Update = (props: any) => {
         total_marks: editData.total_marks,
         grade_percentage: editData.grade_percentage,
         sibling: editData.sibling,
+        sibling_name: editData.sibling_name,
+        sibling_relationship: editData.sibling_relationship,
+        sibling_class: editData.sibling_class,
+        sibling_section: editData.sibling_section,
+        sibling_roll_number: editData.sibling_roll_number,
+        sibling_date_of_admission: editData.sibling_date_of_admission,
+        sibling_admission_number: editData.sibling_admission_number,
         birth_certificate: editData.birth_certificate,
         character_certificate: editData.character_certificate,
         transfer_certificate: editData.transfer_certificate,
         stud_img: null,
+        sport_activity: editData.sport_activity,
+        extra_curricular: editData.extra_curricular,
+        health_record: editData.health_record,
+        class_record: editData.class_record,
+        sport_activity_files: [],
+        extra_curricular_files: [],
+        health_record_files: [],
+        class_record_files: [],
       },
+      enableReinitialize: true,
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         // action.resetForm();
+
         axios
           .put("http://10.0.20.200:8000/mg_student", values, {
             headers: {
@@ -167,6 +298,8 @@ const Update = (props: any) => {
           })
           .then(() => {
             message.success(" Student Updated successfully!");
+            fetchData();
+            handleClose();
           })
           .catch(() => {
             message.error("Error on Updating Student !");
@@ -191,12 +324,146 @@ const Update = (props: any) => {
       }
     }
   };
+  const [transferCertificate, setTransferCertificate] = useState(false);
+  const handleTransferCertificate = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
 
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        setFieldValue("transfer_certificate", e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+  const [characterCertificate, setCharacterCertificate] = useState(false);
+  const handleCharacterCertificate = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        setFieldValue("character_certificate", e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+
+  const [birthCertificate, setBirthCertificate] = useState(false);
+  const handleBirthCertificate = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        setFieldValue("birth_certificate", e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+  const handleSportActivity = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        // setFieldValue("stud_img", e.target.files[0]);
+        values.sport_activity_files.push(e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+  const handleExtraCurricular = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        // setFieldValue("stud_img", e.target.files[0]);
+        values.extra_curricular_files.push(e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+  const handleHealthRecord = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        // setFieldValue("stud_img", e.target.files[0]);
+        values.health_record_files.push(e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+  const handleClassRecord = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        // setFieldValue("stud_img", e.target.files[0]);
+        values.class_record_files.push(e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
   const [checkAddress, setCheckedAddress] = useState(false);
   const handleCheckAddress = () => {
     setCheckedAddress(!checkAddress);
     if (!checkAddress) {
-      setFieldValue("pr_address_line", values.address_line);
+      setFieldValue("pr_address_line1", values.address_line1);
+      setFieldValue("pr_address_lin2", values.address_line2);
 
       setFieldValue("pr_pin_code", values.pin_code);
       setFieldValue("pr_city", values.city);
@@ -205,10 +472,12 @@ const Update = (props: any) => {
     }
   };
   const [previousEducation, setPreviousEducation] = useState(false);
+  console.log(casteData, "caste dataaaaaa");
+  const [activityRecord, setActivityRecord] = useState(false);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card id="student-info">
+    <Card id="student-info">
+      <form onSubmit={handleSubmit}>
         <MDBox pt={4} px={4}>
           <Grid container>
             <Grid item xs={12} sm={12} mt={2}>
@@ -216,14 +485,18 @@ const Update = (props: any) => {
                 Student Details
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 mb={2}
                 type="date"
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Admission Date </MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Admission Date
+                  </MDTypography>
+                }
                 name="admission_date"
                 value={values.admission_date}
                 onChange={handleChange}
@@ -232,18 +505,42 @@ const Update = (props: any) => {
                 helperText={touched.admission_date && errors.admission_date}
               />
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Admission Number </MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Admission Number{" "}
+                  </MDTypography>
+                }
                 name="admission_number"
                 value={values.admission_number}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.admission_number && Boolean(errors.admission_number)}
                 helperText={touched.admission_number && errors.admission_number}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Fee Code
+                  </MDTypography>
+                }
+                name="fee_code"
+                value={values.fee_code}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.fee_code && Boolean(errors.fee_code)}
+                helperText={touched.fee_code && errors.fee_code}
               />
             </Grid>
             <Grid item xs={12} sm={12} mt={2}>
@@ -256,7 +553,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">First Name</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    First Name
+                  </MDTypography>
+                }
                 name="first_name"
                 value={values.first_name}
                 onChange={(event: { target: { value: any } }) => {
@@ -274,7 +576,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Middle Name</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Middle Name
+                  </MDTypography>
+                }
                 name="middle_name"
                 value={values.middle_name}
                 onChange={(event: { target: { value: any } }) => {
@@ -283,6 +590,8 @@ const Update = (props: any) => {
                   });
                 }}
                 onBlur={handleBlur}
+                error={touched.middle_name && Boolean(errors.middle_name)}
+                helperText={touched.middle_name && errors.middle_name}
               />
             </Grid>{" "}
             <Grid item xs={6} sm={4}>
@@ -290,7 +599,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Last Name</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Last Name
+                  </MDTypography>
+                }
                 name="last_name"
                 value={values.last_name}
                 onChange={(event: { target: { value: any } }) => {
@@ -304,89 +618,55 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={4}>
-              <Autocomplete
+              <MDInput
                 sx={{ width: "80%" }}
+                InputLabelProps={{ shrink: true }}
+                name="academic_year"
+                placeholder="2022-2023"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Academic Year
+                  </MDTypography>
+                }
+                onChange={handleChange}
                 value={values.academic_year}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "academic_year", value },
-                  });
-                  filterDataByAcdName(classdata, value);
-                }}
-                options={academicdata.map((acd) => acd.academic_year)}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="academic_year"
-                    placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
-                    onChange={handleChange}
-                    value={values.academic_year}
-                    {...params}
-                    variant="standard"
-                    error={touched.academic_year && Boolean(errors.academic_year)}
-                    helperText={touched.academic_year && errors.academic_year}
-                  />
-                )}
+                variant="standard"
+                error={touched.academic_year && Boolean(errors.academic_year)}
+                helperText={touched.academic_year && errors.academic_year}
               />
             </Grid>
             <Grid item xs={6} sm={4}>
-              <Autocomplete
+              <MDInput
                 sx={{ width: "80%" }}
-                value={values.class_name}
-                onChange={
-                  filteredClass.length >= 1
-                    ? (event, value) => {
-                        handleChange({
-                          target: { name: "class_name", value },
-                        });
-                        filterSectionData(sectiondata, value);
-                      }
-                    : undefined
+                InputLabelProps={{ shrink: true }}
+                name="class_name"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Class Name
+                  </MDTypography>
                 }
-                options={filteredClass}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
-                    onChange={handleChange}
-                    value={values.class_name}
-                    {...params}
-                    variant="standard"
-                    error={touched.class_name && Boolean(errors.class_name)}
-                    helperText={touched.class_name && errors.class_name}
-                  />
-                )}
+                onChange={handleChange}
+                value={values.class_name}
+                variant="standard"
+                error={touched.class_name && Boolean(errors.class_name)}
+                helperText={touched.class_name && errors.class_name}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <Autocomplete
+            <Grid item xs={6} sm={4}>
+              <MDInput
                 sx={{ width: "80%" }}
-                value={values.section_name}
-                onChange={
-                  filteredSection.length >= 1
-                    ? (event, value) => {
-                        handleChange({
-                          target: { name: "section_name", value },
-                        });
-                      }
-                    : undefined
+                InputLabelProps={{ shrink: true }}
+                name="section_name"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Section Name
+                  </MDTypography>
                 }
-                options={filteredSection}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="section_name"
-                    label={<MDTypography variant="body2">Section Name</MDTypography>}
-                    onChange={handleChange}
-                    value={values.section_name}
-                    {...params}
-                    variant="standard"
-                    error={touched.section_name && Boolean(errors.section_name)}
-                    helperText={touched.section_name && errors.section_name}
-                  />
-                )}
+                onChange={handleChange}
+                value={values.section_name}
+                variant="standard"
+                error={touched.section_name && Boolean(errors.section_name)}
+                helperText={touched.section_name && errors.section_name}
               />
             </Grid>
             <Grid item xs={6} sm={4}>
@@ -396,7 +676,11 @@ const Update = (props: any) => {
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Date of Birth</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Date of Birth
+                  </MDTypography>
+                }
                 name="dob"
                 value={values.dob}
                 onChange={handleChange}
@@ -410,7 +694,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Birth Place</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Birth Place
+                  </MDTypography>
+                }
                 name="birth_place"
                 value={values.birth_place}
                 onChange={handleChange}
@@ -424,7 +713,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Blood Group</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Blood Group
+                  </MDTypography>
+                }
                 name="blood_group"
                 value={values.blood_group}
                 onChange={handleChange}
@@ -438,7 +732,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Aadhaar Number</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Aadhaar Number
+                  </MDTypography>
+                }
                 name="aadhaar_number"
                 value={values.aadhaar_number}
                 onChange={handleChange}
@@ -452,7 +751,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Mother Tongue</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Mother Tongue
+                  </MDTypography>
+                }
                 name="mother_tongue"
                 value={values.mother_tongue}
                 onChange={handleChange}
@@ -466,7 +770,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Hobby</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Hobby
+                  </MDTypography>
+                }
                 name="hobby"
                 value={values.hobby}
                 onChange={handleChange}
@@ -480,7 +789,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Religion</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Religion
+                  </MDTypography>
+                }
                 name="religion"
                 value={values.religion}
                 onChange={handleChange}
@@ -490,26 +804,136 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={4}>
-              <MDInput
-                mb={2}
+              <Autocomplete
                 sx={{ width: "80%" }}
-                variant="standard"
-                label={<MDTypography variant="body2">Quota</MDTypography>}
-                name="quota"
-                value={values.quota}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.quota && Boolean(errors.quota)}
-                helperText={touched.quota && errors.quota}
+                value={values.caste}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "caste", value },
+                  });
+                }}
+                disableClearable
+                options={casteData.map((acd) => acd.name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="caste"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Caste
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.caste}
+                    {...params}
+                    variant="standard"
+                    error={touched.caste && Boolean(errors.caste)}
+                    helperText={touched.caste && errors.caste}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                sx={{ width: "80%" }}
+                value={values.caste_category}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "caste_category", value },
+                  });
+                }}
+                disableClearable
+                options={castecategoryData.map((acd) => acd.caste_category)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="caste_category"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Caste Category
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.caste_category}
+                    {...params}
+                    variant="standard"
+                    error={touched.caste_category && Boolean(errors.caste_category)}
+                    helperText={touched.caste_category && errors.caste_category}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                sx={{ width: "80%" }}
+                value={values.student_category}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "student_category", value },
+                  });
+                }}
+                disableClearable
+                options={studentcategoryData.map((acd) => acd.category_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="student_category"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Student Category
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.student_category}
+                    {...params}
+                    variant="standard"
+                    error={touched.student_category && Boolean(errors.student_category)}
+                    helperText={touched.student_category && errors.student_category}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                sx={{ width: "80%" }}
+                value={values.house_details}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "house_details", value },
+                  });
+                }}
+                disableClearable
+                options={houseData.map((acd) => acd.house_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="house_details"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        House Details
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.house_details}
+                    {...params}
+                    variant="standard"
+                    error={touched.house_details && Boolean(errors.house_details)}
+                    helperText={touched.house_details && errors.house_details}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
                 mb={2}
-                type="number"
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">PEN Number</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    PEN Number
+                  </MDTypography>
+                }
                 name="pen_number"
                 value={values.pen_number}
                 onChange={handleChange}
@@ -519,79 +943,9 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={2} mt={3}>
-              <MDTypography variant="body2">Category .:</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={10} mt={2}>
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  row
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        checked={values.caste_category.includes("SC")}
-                        onChange={handleChange}
-                        name="caste_category"
-                        value="SC"
-                      />
-                    }
-                    label={<MDTypography variant="body2">SC</MDTypography>}
-                  />
-                  <FormControlLabel
-                    // value="male"
-                    control={
-                      <Radio
-                        checked={values.caste_category.includes("ST")}
-                        onChange={handleChange}
-                        name="caste_category"
-                        value="ST"
-                      />
-                    }
-                    label={<MDTypography variant="body2">ST</MDTypography>}
-                  />
-                  <FormControlLabel
-                    // value="male"
-                    control={
-                      <Radio
-                        checked={values.caste_category.includes("Female")}
-                        onChange={handleChange}
-                        name="caste_category"
-                        value="Female"
-                      />
-                    }
-                    label={<MDTypography variant="body2">OBC</MDTypography>}
-                  />
-                  <FormControlLabel
-                    // value="male"
-                    control={
-                      <Radio
-                        checked={values.caste_category.includes("EWS")}
-                        onChange={handleChange}
-                        name="caste_category"
-                        value="EWS"
-                      />
-                    }
-                    label={<MDTypography variant="body2">EWS</MDTypography>}
-                  />
-                  <FormControlLabel
-                    // value="male"
-                    control={
-                      <Radio
-                        checked={values.caste_category.includes("General")}
-                        onChange={handleChange}
-                        name="caste_category"
-                        value="General"
-                      />
-                    }
-                    label={<MDTypography variant="body2">General</MDTypography>}
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6} sm={2} mt={3}>
-              <MDTypography variant="body2">Gender .:</MDTypography>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Gender .:
+              </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4} mt={2}>
               <FormControl>
@@ -609,7 +963,11 @@ const Update = (props: any) => {
                         value="Male"
                       />
                     }
-                    label={<MDTypography variant="body2">Male</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Male
+                      </MDTypography>
+                    }
                   />
                   <FormControlLabel
                     // value="male"
@@ -621,33 +979,201 @@ const Update = (props: any) => {
                         value="Female"
                       />
                     }
-                    label={<MDTypography variant="body2">Female</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Female
+                      </MDTypography>
+                    }
                   />
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={6} sm={2} mt={3}>
-              <MDTypography variant="body2">Sibling .:</MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={4} mt={2}>
-              <Checkbox checked={values.sibling} onChange={handleChange} name="sibling" />
-            </Grid>
-            <Grid item xs={12} sm={4} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Upload Image *
+            <Grid item xs={6} sm={2} mt={2}>
+              <MDTypography variant="body2" fontWeight="bold">
+                Upload Image
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={8} mt={2}>
+            <Grid item xs={6} sm={4} mt={2}>
               <MDInput
+                sx={{ width: "80%" }}
                 type="file"
                 accept="image/*"
                 name="stud_img"
                 onChange={handleImage}
-                sx={{ width: "90%" }}
                 variant="standard"
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
+            <Grid item xs={6} sm={4} mt={3}>
+              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
+                Sibling
+              </MDTypography>
+            </Grid>
+            <Grid item xs={6} sm={8} mt={2}>
+              <Checkbox checked={values.sibling} onChange={handleChange} name="sibling" />
+            </Grid>
+            {values.sibling && (
+              <>
+                {" "}
+                <Grid item xs={6} sm={4}>
+                  <MDInput
+                    mb={2}
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Sibling Name{" "}
+                      </MDTypography>
+                    }
+                    name="sibling_name"
+                    value={values.sibling_name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <Autocomplete
+                    sx={{ width: "80%" }}
+                    value={values.sibling_class}
+                    onChange={
+                      filteredClass.length >= 1
+                        ? (event, value) => {
+                            handleChange({
+                              target: { name: "sibling_class", value },
+                            });
+                            filterSectionData(sectiondata, value);
+                          }
+                        : undefined
+                    }
+                    options={filteredClass}
+                    renderInput={(params: any) => (
+                      <MDInput
+                        InputLabelProps={{ shrink: true }}
+                        name="sibling_class"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Sibling Class
+                          </MDTypography>
+                        }
+                        onChange={handleChange}
+                        value={values.sibling_class}
+                        {...params}
+                        variant="standard"
+                        error={touched.sibling_class && Boolean(errors.sibling_class)}
+                        helperText={touched.sibling_class && errors.sibling_class}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <Autocomplete
+                    sx={{ width: "80%" }}
+                    value={values.sibling_section}
+                    onChange={
+                      filteredSection.length >= 1
+                        ? (event, value) => {
+                            handleChange({
+                              target: { name: "sibling_section", value },
+                            });
+                          }
+                        : undefined
+                    }
+                    options={
+                      filteredSection[0]
+                        ? filteredSection[0].map((sectiondata: any) => sectiondata.section_name)
+                        : ""
+                    }
+                    renderInput={(params: any) => (
+                      <MDInput
+                        InputLabelProps={{ shrink: true }}
+                        name="sibling_section"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Sibling Section
+                          </MDTypography>
+                        }
+                        onChange={handleChange}
+                        value={values.sibling_section}
+                        {...params}
+                        variant="standard"
+                        error={touched.sibling_section && Boolean(errors.sibling_section)}
+                        helperText={touched.sibling_section && errors.sibling_section}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <MDInput
+                    mb={2}
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Relation
+                      </MDTypography>
+                    }
+                    name="sibling_relationship"
+                    value={values.sibling_relationship}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <MDInput
+                    mb={2}
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Roll Number
+                      </MDTypography>
+                    }
+                    name="sibling_roll_number"
+                    value={values.sibling_roll_number}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <MDInput
+                    mb={2}
+                    type="date"
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Date of Admission
+                      </MDTypography>
+                    }
+                    name="sibling_date_of_admission"
+                    value={values.sibling_date_of_admission}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <MDInput
+                    mb={2}
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Admission Number
+                      </MDTypography>
+                    }
+                    name="sibling_admission_number"
+                    value={values.sibling_admission_number}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+              </>
+            )}
             <Grid item xs={12} sm={12} mt={2}>
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
                 Contact Details
@@ -658,7 +1184,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Mobile Number *</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Mobile Number *
+                  </MDTypography>
+                }
                 name="mobile_number"
                 value={values.mobile_number}
                 onChange={handleChange}
@@ -672,13 +1203,18 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Alternate Number</MDTypography>}
-                name="alt_mobile_number"
-                value={values.alt_mobile_number}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Alternate Number
+                  </MDTypography>
+                }
+                name="alt_phone_number"
+                value={values.alt_phone_number}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                error={touched.alt_mobile_number && Boolean(errors.alt_mobile_number)}
-                helperText={touched.alt_mobile_number && errors.alt_mobile_number}
+                error={touched.alt_phone_number && Boolean(errors.alt_phone_number)}
+                helperText={touched.alt_phone_number && errors.alt_phone_number}
               />
             </Grid>
             <Grid item xs={6} sm={4}>
@@ -686,7 +1222,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Email ID *</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Email ID *
+                  </MDTypography>
+                }
                 name="email"
                 value={values.email}
                 onChange={handleChange}
@@ -694,6 +1235,11 @@ const Update = (props: any) => {
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
               />
+            </Grid>
+            <Grid item xs={12} sm={12} mt={2} id="guardian-info">
+              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
+                Guardian Info
+              </MDTypography>
             </Grid>
             <Grid item xs={12} sm={12} mt={2}>
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
@@ -705,13 +1251,37 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Address Line</MDTypography>}
-                name="address_line"
-                value={values.address_line}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Address Line 1
+                  </MDTypography>
+                }
+                name="address_line1"
+                value={values.address_line1}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                error={touched.address_line && Boolean(errors.address_line)}
-                helperText={touched.address_line && errors.address_line}
+                error={touched.address_line1 && Boolean(errors.address_line1)}
+                helperText={touched.address_line1 && errors.address_line1}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Address Line 2
+                  </MDTypography>
+                }
+                name="address_line2"
+                value={values.address_line2}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.address_line2 && Boolean(errors.address_line2)}
+                helperText={touched.address_line2 && errors.address_line2}
               />
             </Grid>
             <Grid item xs={6} sm={4}>
@@ -720,7 +1290,12 @@ const Update = (props: any) => {
                 type="number"
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Pincode</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Pincode
+                  </MDTypography>
+                }
                 name="pin_code"
                 value={values.pin_code}
                 onChange={handleChange}
@@ -734,7 +1309,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">City</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    City
+                  </MDTypography>
+                }
                 name="city"
                 value={values.city}
                 onChange={handleChange}
@@ -748,7 +1328,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">State</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    State
+                  </MDTypography>
+                }
                 name="state"
                 value={values.state}
                 onChange={handleChange}
@@ -762,7 +1347,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Country</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Country
+                  </MDTypography>
+                }
                 name="country"
                 value={values.country}
                 onChange={handleChange}
@@ -770,14 +1360,16 @@ const Update = (props: any) => {
                 error={touched.country && Boolean(errors.country)}
                 helperText={touched.country && errors.country}
               />
-            </Grid>
+            </Grid>{" "}
             <Grid item xs={12} sm={12} mt={2}>
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
                 Permanent Address
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4.1} mt={2}>
-              <MDTypography variant="body2">Same as Current Address</MDTypography>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Same as Current Address
+              </MDTypography>
             </Grid>
             <Grid item xs={6} sm={6} mt={1}>
               <Checkbox checked={checkAddress} onChange={handleCheckAddress} />
@@ -787,9 +1379,14 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Address Line</MDTypography>}
-                name="pr_address_line"
-                value={values.pr_address_line}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Address Line 1
+                  </MDTypography>
+                }
+                name="pr_address_line1"
+                value={values.pr_address_line1}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -799,7 +1396,29 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Pincode</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Address Line 2
+                  </MDTypography>
+                }
+                name="pr_address_line2"
+                value={values.pr_address_line2}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Pincode
+                  </MDTypography>
+                }
                 name="pr_pin_code"
                 value={values.pr_pin_code}
                 onChange={handleChange}
@@ -811,7 +1430,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">City</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    City
+                  </MDTypography>
+                }
                 name="pr_city"
                 value={values.pr_city}
                 onChange={handleChange}
@@ -823,7 +1447,12 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">State</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    State
+                  </MDTypography>
+                }
                 name="pr_state"
                 value={values.pr_state}
                 onChange={handleChange}
@@ -835,14 +1464,19 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Country</MDTypography>}
+                InputLabelProps={{ shrink: true }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Country
+                  </MDTypography>
+                }
                 name="pr_country"
                 value={values.pr_country}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4.1} mt={2}>
+            <Grid item xs={6} sm={4.1} mt={2} mb={2}>
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
                 Previous Education
               </MDTypography>
@@ -860,7 +1494,12 @@ const Update = (props: any) => {
                     mb={2}
                     sx={{ width: "80%" }}
                     variant="standard"
-                    label={<MDTypography variant="body2">School Name </MDTypography>}
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        School Name{" "}
+                      </MDTypography>
+                    }
                     name="prev_school_name"
                     value={values.prev_school_name}
                     onChange={handleChange}
@@ -872,19 +1511,30 @@ const Update = (props: any) => {
                     mb={2}
                     sx={{ width: "80%" }}
                     variant="standard"
-                    label={<MDTypography variant="body2">Class</MDTypography>}
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class
+                      </MDTypography>
+                    }
                     name="prev_class_name"
                     value={values.prev_class_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
+
                 <Grid item xs={6} sm={4}>
                   <MDInput
                     mb={2}
                     sx={{ width: "80%" }}
                     variant="standard"
-                    label={<MDTypography variant="body2">Year</MDTypography>}
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Year
+                      </MDTypography>
+                    }
                     name="year"
                     value={values.year}
                     onChange={handleChange}
@@ -896,7 +1546,12 @@ const Update = (props: any) => {
                     mb={2}
                     sx={{ width: "80%" }}
                     variant="standard"
-                    label={<MDTypography variant="body2">Marks Obtained </MDTypography>}
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Marks Obtained{" "}
+                      </MDTypography>
+                    }
                     name="marks_obtained"
                     value={values.marks_obtained}
                     onChange={handleChange}
@@ -908,7 +1563,12 @@ const Update = (props: any) => {
                     mb={2}
                     sx={{ width: "80%" }}
                     variant="standard"
-                    label={<MDTypography variant="body2">Total Marks</MDTypography>}
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Total Marks
+                      </MDTypography>
+                    }
                     name="total_marks"
                     value={values.total_marks}
                     onChange={handleChange}
@@ -921,13 +1581,19 @@ const Update = (props: any) => {
                     sx={{ width: "80%" }}
                     type="number"
                     variant="standard"
-                    label={<MDTypography variant="body2">Percentage</MDTypography>}
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Percentage
+                      </MDTypography>
+                    }
                     name="grade_percentage"
                     value={values.grade_percentage}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
+
                 <Grid
                   item
                   xs={12}
@@ -947,9 +1613,8 @@ const Update = (props: any) => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.transfer_certificate}
-                            onChange={handleChange}
-                            name="transfer_certificate"
+                            checked={transferCertificate}
+                            onChange={() => setTransferCertificate(!transferCertificate)}
                           />
                         }
                         label={
@@ -959,6 +1624,17 @@ const Update = (props: any) => {
                         }
                       />
                     </RadioGroup>
+                    {transferCertificate && (
+                      <MDInput
+                        sx={{ width: "80%" }}
+                        type="file"
+                        accept="image/*"
+                        name="transfer_certificate"
+                        onChange={handleTransferCertificate}
+                        variant="standard"
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
                   </FormControl>
                 </Grid>
                 <Grid
@@ -980,9 +1656,8 @@ const Update = (props: any) => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.character_certificate}
-                            onChange={handleChange}
-                            name="character_certificate"
+                            checked={characterCertificate}
+                            onChange={() => setCharacterCertificate(!characterCertificate)}
                           />
                         }
                         label={
@@ -992,6 +1667,17 @@ const Update = (props: any) => {
                         }
                       />
                     </RadioGroup>
+                    {characterCertificate && (
+                      <MDInput
+                        sx={{ width: "80%" }}
+                        type="file"
+                        accept="image/*"
+                        name="character_certificate"
+                        onChange={handleCharacterCertificate}
+                        variant="standard"
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
                   </FormControl>
                 </Grid>
                 <Grid
@@ -1013,9 +1699,8 @@ const Update = (props: any) => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={values.birth_certificate}
-                            onChange={handleChange}
-                            name="birth_certificate"
+                            checked={birthCertificate}
+                            onChange={() => setBirthCertificate(!birthCertificate)}
                           />
                         }
                         label={
@@ -1025,10 +1710,266 @@ const Update = (props: any) => {
                         }
                       />
                     </RadioGroup>
+                    {birthCertificate && (
+                      <MDInput
+                        sx={{ width: "80%" }}
+                        type="file"
+                        accept="image/*"
+                        name="birth_certificate"
+                        onChange={handleBirthCertificate}
+                        variant="standard"
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
                   </FormControl>
                 </Grid>
               </>
+            )}{" "}
+            <Grid item xs={12} sm={4.1} mt={2} mb={2} id="activities">
+              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
+                Activities
+              </MDTypography>
+            </Grid>
+            <Grid item xs={6} sm={6} mt={1}>
+              <Checkbox
+                checked={activityRecord}
+                onChange={() => setActivityRecord(!activityRecord)}
+              />
+            </Grid>
+            {activityRecord && (
+              <>
+                {" "}
+                <Grid item xs={12} sm={12} mt={2}>
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Sport Activity{" "}
+                  </MDTypography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    mb={2}
+                    autoComplete="off"
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Name
+                      </MDTypography>
+                    }
+                    name="sport_activity"
+                    value={values.sport_activity}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    type="file"
+                    accept="image/*"
+                    name="sport_activity_files"
+                    onChange={handleSportActivity}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12} mt={2}>
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Extra Curricular
+                  </MDTypography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    mb={2}
+                    autoComplete="off"
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Name
+                      </MDTypography>
+                    }
+                    name="extra_curricular"
+                    value={values.extra_curricular}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    type="file"
+                    accept="image/*"
+                    name="extra_curricular_files"
+                    onChange={handleExtraCurricular}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12} mt={2}>
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Class Record
+                  </MDTypography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    mb={2}
+                    autoComplete="off"
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Name
+                      </MDTypography>
+                    }
+                    name="class_record"
+                    value={values.class_record}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    type="file"
+                    accept="image/*"
+                    name="class_record_files"
+                    onChange={handleClassRecord}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12} mt={2}>
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Health Record
+                  </MDTypography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    mb={2}
+                    autoComplete="off"
+                    sx={{ width: "80%" }}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Name
+                      </MDTypography>
+                    }
+                    name="health_record"
+                    value={values.health_record}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    type="file"
+                    accept="image/*"
+                    name="health_record_files"
+                    onChange={handleHealthRecord}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+              </>
             )}
+            <Grid item xs={12} sm={4.1} mt={2} id="guardian-info">
+              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
+                Guardian Info
+              </MDTypography>
+            </Grid>
+            <Grid item xs={6} sm={6} mt={1}>
+              <Checkbox checked={showGuardian} onChange={() => setShowGuardian(!showGuardian)} />
+            </Grid>
+            {showGuardian &&
+              guardianInfo.map((guardianinfo: any, index: any) => (
+                <>
+                  <Grid item xs={12} sm={12}>
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Guardian {index + 1}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item xs={12} sm={4} key={index + "first_name"}>
+                    <MDInput
+                      mb={2}
+                      sx={{ width: "80%" }}
+                      variant="standard"
+                      InputLabelProps={{ shrink: true }}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          First Name
+                        </MDTypography>
+                      }
+                      value={guardianinfo.first_name}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} key={index + "middle_name"}>
+                    <MDInput
+                      mb={2}
+                      sx={{ width: "80%" }}
+                      variant="standard"
+                      InputLabelProps={{ shrink: true }}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Middle Name
+                        </MDTypography>
+                      }
+                      value={guardianinfo.middle_name}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} key={index + "last_name"}>
+                    <MDInput
+                      mb={2}
+                      sx={{ width: "80%" }}
+                      variant="standard"
+                      InputLabelProps={{ shrink: true }}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Last Name
+                        </MDTypography>
+                      }
+                      value={guardianinfo.last_name}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} key={index + "relationship"}>
+                    <MDInput
+                      mb={2}
+                      sx={{ width: "80%" }}
+                      variant="standard"
+                      InputLabelProps={{ shrink: true }}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          RelationShip
+                        </MDTypography>
+                      }
+                      value={guardianinfo.relationship}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} key={index + "mobile_number"}>
+                    <MDInput
+                      mb={2}
+                      sx={{ width: "80%" }}
+                      variant="standard"
+                      InputLabelProps={{ shrink: true }}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Mobile Number
+                        </MDTypography>
+                      }
+                      value={guardianinfo.mobile_number}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3} py={1} key={index + "space"}>
+                    <IconButton onClick={() => handleOpenGuardian(guardianinfo)}>
+                      <CreateRoundedIcon />
+                    </IconButton>
+                  </Grid>
+                </>
+              ))}
           </Grid>
           <Grid container>
             <Grid
@@ -1036,18 +1977,31 @@ const Update = (props: any) => {
               xs={12}
               sm={12}
               py={2}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
+              sx={{ display: "flex", justifyContent: "space-between" }}
               mr={5}
             >
+              {" "}
+              <MDButton
+                color="dark"
+                variant="contained"
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Back
+              </MDButton>
               <MDButton color="info" variant="contained" type="submit">
-                update &nbsp;
+                Save &nbsp;
                 <SaveIcon />
               </MDButton>
             </Grid>
           </Grid>
         </MDBox>
-      </Card>
-    </form>
+      </form>
+      <Dialog open={open} onClose={handleCloseGuardian} maxWidth="sm">
+        <UpdateGuardian guardianData={guardianData} setOpen={setOpen} fetchData={fetchData} />
+      </Dialog>
+    </Card>
   );
 };
 
