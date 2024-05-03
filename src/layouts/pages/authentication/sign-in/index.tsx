@@ -13,14 +13,9 @@ import isEmail from "validator/lib/isEmail";
 import Cookies from "js-cookie";
 import { message } from "antd";
 
-import CoverLayout from "layouts/authentication/components/CoverLayout";
+import CoverLayout from "layouts/pages/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-in-cover.jpeg";
-// import {
-//   updateAcademicName,
-//   updateClassName,
-//   updateName,
-//   updateSectionName,
-// } from "../../Redux/action/dummyDataActions";
+
 import { useNavigate } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 function CoverLogin() {
@@ -35,104 +30,10 @@ function CoverLogin() {
   const [tokendata, setTokendata] = useState("");
   //   const dispatched = useDispatch();
   const navigate = useNavigate();
-  const token = Cookies.get("token");
-  console.log("myname", token);
+
   //storing token
-
-  console.log(data, typeof data, "academic data");
-  // storing acdemic data
-
-  //   useEffect(() => {
-  //     dispatched(updateAcademicName(data));
-  //     // console.log(dispatched, "dispatfrhjufwefhevhjwvfhj");
-  //   }, [dispatched, data]);
-  // storing class data
-  console.log(classData, typeof classData, "academic classData");
-  //   useEffect(() => {
-  //     dispatched(updateClassName(classData));
-  //     // console.log(dispatched, "dispatfrhjufwefhevhjwvfhj");
-  //   }, [dispatched, classData]);
-  //   useEffect(() => {
-  //     dispatched(updateSectionName(sectionData));
-  //     // console.log(dispatched, "dispatfrhjufwefhevhjwvfhj");
-  //   }, [dispatched, sectionData]);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  //   const academicdata = useSelector((state: any) => state.academicName);
-  //   console.log("academicdata", academicdata);
-  //   const classdata = useSelector((state: any) => state.className);
-  //   console.log("classdata", classdata);
-  //   const sectiondata = useSelector((state: any) => state.sectionName);
-  //   console.log("sectiondata", sectiondata);
-  //   useEffect(() => {
-  //     fetchAPI(); // Fetch data from API on component mount
-  //   }, []);
-
-  //   const fetchAPI = async () => {
-  //     try {
-  //       const response = await fetch("http://web:8000/mg_academic_year", {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       const data = await response.json();
-
-  //       setData(data);
-  //       console.log(data, typeof data);
-  //       //   decryptData(data[0].encrypted_data);
-  //       //   console.log(data[0].encrypted_data, "ghihwefgkwefh");
-  //     } catch (error) {
-  //       console.log("Error fetching data:", error);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchAPIClass(); // Fetch data from API on component mount
-  //   }, []);
-
-  //   const fetchAPIClass = async () => {
-  //     try {
-  //       const response = await fetch("http://10.0.20.133:8001/mg_class", {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       const classdata = await response.json();
-
-  //       setClassData(classdata);
-  //       console.log(classdata, typeof classdata);
-  //       //   decryptData(data[0].encrypted_data);
-  //       //   console.log(data[0].encrypted_data, "ghihwefgkwefh");
-  //     } catch (error) {
-  //       console.log("Error fetching classdata:", error);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchAPISection(); // Fetch data from API on component mount
-  //   }, []);
-
-  //   const fetchAPISection = async () => {
-  //     try {
-  //       const response = await fetch("http://10.0.20.133:8001/mg_section", {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       const sectiondata = await response.json();
-
-  //       setSectionData(sectiondata);
-  //       console.log(sectiondata, typeof sectiondata);
-  //       //   decryptData(data[0].encrypted_data);
-  //       //   console.log(data[0].encrypted_data, "ghihwefgkwefh");
-  //     } catch (error) {
-  //       console.log("Error fetching classdata:", error);
-  //     }
-  //   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(rememberMe, "rememrmber me");
@@ -140,10 +41,10 @@ function CoverLogin() {
       // Input validation using validator.js
       const errors = {};
 
-      if (!isEmail(email)) {
-        // errors.email = "Invalid email address";
-        alert("Invalid email address");
-      }
+      // if (!isEmail(email)) {
+      //   // errors.email = "Invalid email address";
+      //   alert("Invalid email address");
+      // }
 
       if (!isLength(password, { min: 8 })) {
         // errors.password = "Password must be at least 8 characters long";
@@ -160,9 +61,9 @@ function CoverLogin() {
       const sanitizedPassword = password.replace(/[<>"]/g, "");
 
       const res = await axios.post(
-        "http://122.166.211.176:8000/login",
+        "http://10.0.20.200:8000/token",
         {
-          username: sanitizedEmail,
+          username: email,
           //   email: sanitizedEmail,
           password: sanitizedPassword,
           //   ph_num: phone,
@@ -174,14 +75,15 @@ function CoverLogin() {
           },
         }
       );
-      console.log(res, "hubhcdasssssssssssssssl");
+      console.log(res, "login response");
 
       if (res.data.access_token) {
         // setTokendata(res.data.access_token);
         // Cookies.set("token", res.data.access_token, { httpOnly: true });
         const token = res.data.access_token;
         Cookies.set("token", token, { expires: 7 });
-        navigate("/pages/organisations/new-organisation");
+        navigate("/dashboards/analytics");
+        window.location.reload();
         message.success("Login Successful");
       } else {
         message.error("Invalid email or password");
@@ -217,7 +119,6 @@ function CoverLogin() {
           <form onSubmit={handleSubmit}>
             <MDBox mb={2}>
               <MDInput
-                type="email"
                 label="Email"
                 variant="standard"
                 fullWidth

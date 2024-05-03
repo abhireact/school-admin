@@ -2,8 +2,7 @@ import { Card, Grid } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Guardian from "layouts/pages/student/guardian/create";
-import Activity from "layouts/pages/student/activities/create";
+
 import Student from "layouts/pages/student/studentdetails/create";
 import MDButton from "components/MDButton";
 import MDBox from "components/MDBox";
@@ -26,23 +25,6 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={12}>
               <Student setShowpage={setShowpage} />
             </Grid>
-            {/* <Grid item xs={12} sm={12}>
-              <Guardian
-                student_first_name={firstName}
-                student_middle_name={middleName}
-                student_last_name={lastName}
-                student_dob={dob}
-              />
-            </Grid> */}
-            {/* <Grid item xs={12} sm={12}>
-              <Activity
-                student_guardian={studentname}
-                student_first_name={firstName}
-                student_middle_name={middleName}
-                student_last_name={lastName}
-                student_dob={dob}
-              />
-            </Grid> */}
           </Grid>
         </Grid>
       </Grid>

@@ -30,7 +30,7 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 import pageRoutes from "page.routes";
 
 // Authentication pages components
-import Footer from "layouts/authentication/components/Footer";
+import Footer from "layouts/pages/authentication/components/Footer";
 
 // Declaring props types for BasicLayout
 interface Props {

@@ -2,8 +2,7 @@ import { Card, Grid } from "@mui/material";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Guardian from "layouts/pages/student/guardian/update";
-import Activity from "layouts/pages/student/activities/update";
+
 import Student from "layouts/pages/student/studentdetails/update";
 import MDButton from "components/MDButton";
 import { useState, useEffect } from "react";

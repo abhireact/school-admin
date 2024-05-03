@@ -26,36 +26,30 @@ import MDBox from "components/MDBox";
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
+// Authentication layout components
+import Footer from "layouts/pages/authentication/components/Footer";
+
 // Material Dashboard 2 PRO React page layout routes
 import pageRoutes from "page.routes";
 
-// Authentication pages components
-import Footer from "layouts/authentication/components/Footer";
-
-// Declaring props types for BasicLayout
+// Declaring props types for CoverLayout
 interface Props {
+  coverHeight?: string;
   image: string;
   children: ReactNode;
 }
 
-function BasicLayout({ image, children }: Props): JSX.Element {
+function CoverLayout({ coverHeight, image, children }: Props): JSX.Element {
   return (
     <PageLayout>
-      <DefaultNavbar
-        routes={pageRoutes}
-        action={{
-          type: "external",
-          route: "https://creative-tim.com/product/material-dashboard-2-pro-react-ts",
-          label: "buy now",
-          color: "info",
-        }}
-        transparent
-        light
-      />
       <MDBox
-        position="absolute"
-        width="100%"
-        minHeight="100vh"
+        width="calc(100% - 2rem)"
+        minHeight={coverHeight}
+        borderRadius="xl"
+        mx={2}
+        my={2}
+        pt={6}
+        pb={28}
         sx={{
           backgroundImage: ({
             functions: { linearGradient, rgba },
@@ -63,24 +57,29 @@ function BasicLayout({ image, children }: Props): JSX.Element {
           }: Theme) =>
             image &&
             `${linearGradient(
-              rgba(gradients.dark.main, 0.6),
-              rgba(gradients.dark.state, 0.6)
+              rgba(gradients.dark.main, 0.4),
+              rgba(gradients.dark.state, 0.4)
             )}, url(${image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       />
-      <MDBox px={1} width="100%" height="100vh" mx="auto">
-        <Grid container spacing={1} justifyContent="center" alignItems="center" height="100%">
+      <MDBox mt={{ xs: -20, lg: -18 }} px={1} width="calc(100% - 2rem)" mx="auto">
+        <Grid container spacing={1} justifyContent="center">
           <Grid item xs={11} sm={9} md={5} lg={4} xl={3}>
             {children}
           </Grid>
         </Grid>
       </MDBox>
-      <Footer light />
+      {/* <Footer /> */}
     </PageLayout>
   );
 }
 
-export default BasicLayout;
+// Declaring default props for CoverLayout
+CoverLayout.defaultProps = {
+  coverHeight: "35vh",
+};
+
+export default CoverLayout;

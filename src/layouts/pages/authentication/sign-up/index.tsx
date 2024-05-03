@@ -13,7 +13,7 @@ import isEmail from "validator/lib/isEmail";
 import Cookies from "js-cookie";
 import { message } from "antd";
 
-import CoverLayout from "layouts/authentication/components/CoverLayout";
+import CoverLayout from "layouts/pages/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-in-cover.jpeg";
 // import {
 //   updateAcademicName,
@@ -31,7 +31,7 @@ const initialValues = {
   username: "",
   password: "",
   ph_num: "",
-  organization_name: "",
+  school_name: "",
   role_name: "Admin",
 };
 function Cover() {
@@ -46,11 +46,10 @@ function Cover() {
   });
 
   const [rememberMe, setRememberMe] = useState(true);
-  const [tokendata, setTokendata] = useState("");
-  //   const dispatched = useDispatch();
+
   const navigate = useNavigate();
   const token = Cookies.get("token");
-  console.log("myname", token);
+  console.log("my token ", token);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const handleFormSubmit = async () => {
@@ -101,7 +100,7 @@ function Cover() {
             <MDBox mb={2}>
               <MDInput
                 type="name"
-                label="username"
+                label="Username"
                 name="username"
                 value={values.username}
                 placeholder="Enter Your username"
@@ -121,7 +120,7 @@ function Cover() {
             <MDBox mb={2}>
               <MDInput
                 type="name"
-                label="email"
+                label="Email"
                 name="email"
                 value={values.email}
                 placeholder="Enter Your email"
@@ -141,7 +140,7 @@ function Cover() {
             <MDBox mb={2}>
               <MDInput
                 type="name"
-                label="password"
+                label="Password"
                 name="password"
                 value={values.password}
                 placeholder="Enter Your password"
@@ -163,18 +162,19 @@ function Cover() {
               <MDInput
                 type="name"
                 label="School Name"
-                name="organization_name"
-                value={values.organization_name}
+                name="school_name"
+                value={values.school_name}
+                placeholder="Enter Your school_name"
                 variant="standard"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                error={errors.organization_name && touched.organization_name}
-                success={values.organization_name.length && !errors.organization_name}
+                error={errors.school_name && touched.school_name}
+                success={values.school_name.length && !errors.school_name}
               />
-              {errors.organization_name && touched.organization_name ? (
+              {errors.school_name && touched.school_name ? (
                 // <p className="form-error">{errors.name}</p>
                 <MDTypography variant="caption" fontWeight="regular" color="error">
-                  {errors.organization_name}
+                  {errors.school_name}
                 </MDTypography>
               ) : null}
             </MDBox>
@@ -207,7 +207,7 @@ function Cover() {
                 Already have an account?{" "}
                 <MDTypography
                   component={Link}
-                  to="/page/template1/create"
+                  to="/authentication/sign-in/cover"
                   variant="button"
                   color="info"
                   fontWeight="medium"

@@ -23,7 +23,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
 // Authentication layout components
-import CoverLayout from "layouts/authentication/components/CoverLayout";
+import CoverLayout from "layouts/pages/authentication/components/CoverLayout";
 
 // Images
 import bgImage from "assets/images/bg-reset-cover.jpeg";
