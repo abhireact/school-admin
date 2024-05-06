@@ -36,9 +36,7 @@ import CasteCategory from "layouts/pages/student/caste_category";
 import StudentCategory from "layouts/pages/student/student_category";
 import HouseDetails from "layouts/pages/student/house_details";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-
 import SchoolAccount from "layouts/pages/school/school_account";
-
 import ExcessFee from "layouts/pages/fee/excess_fee";
 import LateFee from "layouts/pages/fee/late_fee";
 import FineParticular from "layouts/pages/fee/fine";
@@ -46,6 +44,9 @@ import FeeCollection from "layouts/pages/fee/fee_collection";
 import FeeCollectionByAdmission from "layouts/pages/fee/fee_collection _by_admission";
 import FeeReceipt from "layouts/pages/fee/fee_receipt";
 import FeeSchedule from "layouts/pages/fee/fee_schedule";
+import FeeCertificate from "layouts/pages/fee/fee_certificate";
+import FeeRegister from "layouts/pages/fee/fee_register_wtihout_paymentmode";
+import StudentCertificate from "layouts/pages/fee/student_certificate";
 
 const routes = [
   {
@@ -355,6 +356,24 @@ const routes = [
         key: "feeschedule",
         route: "pages/fee/feeschedule",
         component: <FeeSchedule />,
+      },
+      {
+        name: "Fee Certificate",
+        key: "feecertificate",
+        route: "pages/fee/feecertificate",
+        component: <FeeCertificate />,
+      },
+      {
+        name: "Fee Register without Payment Mode",
+        key: "feeregister",
+        route: "pages/fee/feeregister",
+        component: <FeeRegister />,
+      },
+      {
+        name: "Student Certificate",
+        key: "studentcertificate",
+        route: "pages/fee/studentcertificate",
+        component: <StudentCertificate />,
       },
     ],
   },

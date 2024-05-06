@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
     .required("Required *"),
 });
-const FeeCertificate = (props: any) => {
+const HeadWise = (props: any) => {
   const token = Cookies.get("token");
 
   const { handleShowPage, setData } = props;
@@ -104,17 +104,11 @@ const FeeCertificate = (props: any) => {
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      fee_category: "",
-      fee_particular: "",
-
       class_name: "",
 
       academic_year: "",
 
       section_name: "",
-      financial_year: "",
-      wings_name: "",
-      guardian: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -147,122 +141,6 @@ const FeeCertificate = (props: any) => {
               <Grid item xs={12} sm={4} py={1}>
                 <Autocomplete
                   sx={{ width: "70%" }}
-                  value={values.fee_category}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "fee_category", value },
-                    });
-                  }}
-                  options={academicdata.map((acd) => acd.fee_category)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="fee_category"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Fee Category
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.fee_category}
-                      {...params}
-                      variant="standard"
-                      error={touched.fee_category && Boolean(errors.fee_category)}
-                      helperText={touched.fee_category && errors.fee_category}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} py={1}>
-                <Autocomplete
-                  sx={{ width: "70%" }}
-                  value={values.fee_particular}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "fee_particular", value },
-                    });
-                  }}
-                  options={academicdata.map((acd) => acd.fee_particular)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="fee_particular"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Fee Particular
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.fee_particular}
-                      {...params}
-                      variant="standard"
-                      error={touched.fee_particular && Boolean(errors.fee_particular)}
-                      helperText={touched.fee_particular && errors.fee_particular}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} py={1}>
-                <Autocomplete
-                  sx={{ width: "70%" }}
-                  value={values.financial_year}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "financial_year", value },
-                    });
-                  }}
-                  options={academicdata.map((acd) => acd.financial_year)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="financial_year"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Financial Year
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.financial_year}
-                      {...params}
-                      variant="standard"
-                      error={touched.financial_year && Boolean(errors.financial_year)}
-                      helperText={touched.financial_year && errors.financial_year}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} py={1}>
-                <Autocomplete
-                  sx={{ width: "70%" }}
-                  value={values.financial_year}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "financial_year", value },
-                    });
-                  }}
-                  options={academicdata.map((acd) => acd.financial_year)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="financial_year"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Financial Year
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.financial_year}
-                      {...params}
-                      variant="standard"
-                      error={touched.financial_year && Boolean(errors.financial_year)}
-                      helperText={touched.financial_year && errors.financial_year}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} py={1}>
-                <Autocomplete
-                  sx={{ width: "70%" }}
                   value={values.academic_year}
                   onChange={(event, value) => {
                     handleChange({
@@ -291,37 +169,7 @@ const FeeCertificate = (props: any) => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4} py={1}>
-                <Autocomplete
-                  sx={{ width: "70%" }}
-                  value={values.wings_name}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "wings_name", value },
-                    });
-                    filterClassData(classdata, value);
-                  }}
-                  options={academicdata.map((acd) => acd.wings_name)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="wings_name"
-                      placeholder="2022-23"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Wing
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.wings_name}
-                      {...params}
-                      variant="standard"
-                      error={touched.wings_name && Boolean(errors.wings_name)}
-                      helperText={touched.wings_name && errors.wings_name}
-                    />
-                  )}
-                />
-              </Grid>
+
               <Grid item xs={12} sm={4} py={1}>
                 <Autocomplete
                   sx={{ width: "70%" }}
@@ -391,36 +239,6 @@ const FeeCertificate = (props: any) => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4} py={1}>
-                <Autocomplete
-                  sx={{ width: "70%" }}
-                  value={values.guardian}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "guardian", value },
-                    });
-                    filterClassData(classdata, value);
-                  }}
-                  options={["Both", "Father", "Mother"]}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="guardian"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Guardian
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.guardian}
-                      {...params}
-                      variant="standard"
-                      error={touched.guardian && Boolean(errors.guardian)}
-                      helperText={touched.guardian && errors.guardian}
-                    />
-                  )}
-                />
-              </Grid>
 
               <Grid
                 item
@@ -454,4 +272,4 @@ const FeeCertificate = (props: any) => {
   );
 };
 
-export default FeeCertificate;
+export default HeadWise;

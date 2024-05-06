@@ -55,10 +55,11 @@ const Editrole = (props: any) => {
           },
         })
         .then(() => {
-          message.success("Role created successfully!");
+          handleCloseupdate();
+          message.success("Role updated successfully!");
         })
         .catch(() => {
-          message.error("Error on creating role !");
+          message.error("Error on updating role !");
         });
 
       action.resetForm();
@@ -84,29 +85,21 @@ const Editrole = (props: any) => {
               onBlur={handleBlur}
             />
           </Grid>
-
-          <Grid item container sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-            <Grid item mt={4}>
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item mt={2}>
               <MDButton
-                color="info"
+                color="dark"
                 variant="contained"
-                type="submit"
                 onClick={() => {
                   handleCloseupdate();
                 }}
               >
-                Update
+                Back
               </MDButton>
             </Grid>
-            <Grid item ml={2} mt={4}>
-              <MDButton
-                color="primary"
-                variant="outlined"
-                onClick={() => {
-                  handleCloseupdate();
-                }}
-              >
-                Cancel
+            <Grid item mt={2} ml={2}>
+              <MDButton color="info" variant="contained" type="submit">
+                update
               </MDButton>
             </Grid>
           </Grid>

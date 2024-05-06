@@ -137,6 +137,7 @@ const pageRoutes = [
       },
     ],
   },
+
   {
     name: "application",
     collapse: [

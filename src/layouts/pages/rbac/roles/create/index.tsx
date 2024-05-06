@@ -44,6 +44,7 @@ const Addrole = (props: any) => {
         })
         .then(() => {
           message.success("Role created successfully!");
+          handleClose();
         })
         .catch(() => {
           message.error("Error on creating role !");
@@ -178,34 +179,21 @@ const Addrole = (props: any) => {
             />
           </Grid>
 
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-start" }}
-          >
-            <Grid item mt={4}>
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item mt={2}>
               <MDButton
-                color="info"
+                color="dark"
                 variant="contained"
-                type="submit"
                 onClick={() => {
                   handleClose();
                 }}
               >
-                Save
+                Back
               </MDButton>
             </Grid>
-            <Grid item ml={2} mt={4}>
-              <MDButton
-                color="primary"
-                variant="outlined"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Cancel
+            <Grid item mt={2} ml={2}>
+              <MDButton color="info" variant="contained" type="submit">
+                Save
               </MDButton>
             </Grid>
           </Grid>

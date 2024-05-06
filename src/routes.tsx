@@ -45,16 +45,8 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/authentication/myprofile";
-import StudentDetails from "layouts/pages/student";
-import NewStudent from "layouts/pages/student/create";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import ExcessFee from "layouts/pages/fee/excess_fee";
-import LateFee from "layouts/pages/fee/late_fee";
-import FineParticular from "layouts/pages/fee/fine";
-import FeeCollection from "layouts/pages/fee/fee_collection";
-import FeeCollectionByAdmission from "layouts/pages/fee/fee_collection _by_admission";
-import FeeReceipt from "layouts/pages/fee/fee_receipt";
-import FeeSchedule from "layouts/pages/fee/fee_schedule";
+import FeeCertificate from "layouts/pages/fee/fee_certificate";
+import FeeRegister from "layouts/pages/fee/fee_register_wtihout_paymentmode";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
