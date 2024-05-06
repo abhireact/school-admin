@@ -1,6 +1,7 @@
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import Dialog from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useFormik } from "formik";
@@ -22,7 +23,30 @@ import IconButton from "@mui/material/IconButton";
 const token = Cookies.get("token");
 
 const StudentInfo = () => {
-    const [openBonafide]
+  const [openBonafide, setOpenBonafide] = useState(false);
+
+  const handleCloseBonafide = () => {
+    setOpenBonafide(false);
+  };
+  const handleOpenBonafide = () => {
+    setOpenBonafide(true);
+  };
+  const [openCharacter, setOpenCharacter] = useState(false);
+
+  const handleCloseCharacter = () => {
+    setOpenCharacter(false);
+  };
+  const handleOpenCharacter = () => {
+    setOpenCharacter(true);
+  };
+  const [openTransfer, setOpenTransfer] = useState(false);
+
+  const handleCloseTransfer = () => {
+    setOpenTransfer(false);
+  };
+  const handleOpenTransfer = () => {
+    setOpenTransfer(true);
+  };
   return (
     <Card>
       <MDBox p={4}>
@@ -141,21 +165,30 @@ const StudentInfo = () => {
         </table>
         <Grid container py={2}>
           <Grid item sm={4}>
-            <MDButton color="info" variant="outlined">
+            <MDButton color="info" variant="outlined" onClick={() => handleOpenBonafide()}>
               Generate Bonafide Certificate
             </MDButton>
           </Grid>
           <Grid item sm={4}>
-            <MDButton color="info" variant="outlined">
+            <MDButton color="info" variant="outlined" onClick={() => handleOpenCharacter()}>
               Generate Character Certificate
             </MDButton>
           </Grid>
           <Grid item sm={4}>
-            <MDButton color="info" variant="outlined">
+            <MDButton color="info" variant="outlined" onClick={() => handleOpenTransfer()}>
               Generate Transfer Certificate
             </MDButton>
           </Grid>
         </Grid>
+        <Dialog open={openBonafide} onClose={handleCloseBonafide} maxWidth="sm">
+          hello bonafide
+        </Dialog>
+        <Dialog open={openCharacter} onClose={handleCloseCharacter} maxWidth="sm">
+          hello character
+        </Dialog>
+        <Dialog open={openTransfer} onClose={handleCloseTransfer} maxWidth="sm">
+          hello transfer
+        </Dialog>
       </MDBox>
     </Card>
   );

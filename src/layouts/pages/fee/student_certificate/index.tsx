@@ -15,7 +15,7 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
-import MDAvatar from "components/MDAvatar";
+import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DataTable from "examples/Tables/DataTable";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import IconButton from "@mui/material/IconButton";
