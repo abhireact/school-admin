@@ -40,7 +40,6 @@ import brandDark from "assets/images/orglogo.png";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { storeRBAC } from "layouts/pages/redux/dataSlice";
 import React, { createContext } from "react";
 import MDTypography from "components/MDTypography";
 const MyContext = createContext([]);
@@ -83,10 +82,6 @@ export default function App() {
     fetchRbac(); // Fetch data from API on component mount
   }, [token]);
   console.log("rbac data storing in app.tsx ", rbacInfo);
-
-  useEffect(() => {
-    dispatched(storeRBAC(rbacInfo));
-  }, [dispatched, rbacInfo]);
 
   // Cache for the rtl
   useMemo(() => {

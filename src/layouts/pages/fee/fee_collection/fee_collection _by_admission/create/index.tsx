@@ -77,7 +77,7 @@ const Create = (props: any) => {
         {" "}
         <MDBox p={4}>
           <Grid container>
-            <Grid item xs={12} sm={6} py={1}>
+            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.wing_name}
@@ -106,7 +106,7 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6} py={1}>
+            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.fee_code}
@@ -135,7 +135,7 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6} py={1}>
+            <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
@@ -155,7 +155,7 @@ const Create = (props: any) => {
                 helperText={touched.collection_date && errors.collection_date}
               />
             </Grid>
-            <Grid item xs={12} sm={6} py={1}>
+            <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
