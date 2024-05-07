@@ -37,16 +37,16 @@ import StudentCategory from "layouts/pages/student/student_category";
 import HouseDetails from "layouts/pages/student/house_details";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import SchoolAccount from "layouts/pages/school/school_account";
-import ExcessFee from "layouts/pages/fee/excess_fee";
-import LateFee from "layouts/pages/fee/late_fee";
+import ExcessFee from "layouts/pages/fee/manage_fee/excess_fee";
+import LateFee from "layouts/pages/fee/manage_fee/late_fee";
 import FineParticular from "layouts/pages/fee/fine";
-import FeeCollection from "layouts/pages/fee/fee_collection";
-import FeeCollectionByAdmission from "layouts/pages/fee/fee_collection _by_admission";
-import FeeReceipt from "layouts/pages/fee/fee_receipt";
+import FeeCollection from "layouts/pages/fee/fee_collection/fee_collection_by_name";
+import FeeCollectionByAdmission from "layouts/pages/fee/fee_collection/fee_collection _by_admission";
+import FeeReceipt from "layouts/pages/fee/generate_fee_slip";
 import FeeSchedule from "layouts/pages/fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_register_wtihout_paymentmode";
-import StudentCertificate from "layouts/pages/fee/student_certificate";
+import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 
 const routes = [
   {
