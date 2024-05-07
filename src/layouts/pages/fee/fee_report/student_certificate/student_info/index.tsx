@@ -20,9 +20,13 @@ import MDAvatar from "components/MDAvatar";
 import DataTable from "examples/Tables/DataTable";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import IconButton from "@mui/material/IconButton";
+import BonafideCertificate from "./bonafide_certificate";
+import CharacterCertificate from "./character_certificate";
+import TransferCertificate from "./transfer_certificate";
 const token = Cookies.get("token");
 
 const StudentInfo = () => {
+  const [bonafideData, setBonafideData] = useState({});
   const [openBonafide, setOpenBonafide] = useState(false);
 
   const handleCloseBonafide = () => {
@@ -31,6 +35,8 @@ const StudentInfo = () => {
   const handleOpenBonafide = () => {
     setOpenBonafide(true);
   };
+
+  const [characterData, setCharacterData] = useState({});
   const [openCharacter, setOpenCharacter] = useState(false);
 
   const handleCloseCharacter = () => {
@@ -39,6 +45,8 @@ const StudentInfo = () => {
   const handleOpenCharacter = () => {
     setOpenCharacter(true);
   };
+
+  const [transferData, setTransferData] = useState({});
   const [openTransfer, setOpenTransfer] = useState(false);
 
   const handleCloseTransfer = () => {
@@ -180,14 +188,14 @@ const StudentInfo = () => {
             </MDButton>
           </Grid>
         </Grid>
-        <Dialog open={openBonafide} onClose={handleCloseBonafide} maxWidth="sm">
-          hello bonafide
+        <Dialog open={openBonafide} onClose={handleCloseBonafide} maxWidth="md">
+          <BonafideCertificate data={bonafideData} />
         </Dialog>
-        <Dialog open={openCharacter} onClose={handleCloseCharacter} maxWidth="sm">
-          hello character
+        <Dialog open={openCharacter} onClose={handleCloseCharacter} maxWidth="md">
+          <CharacterCertificate data={characterData} />
         </Dialog>
-        <Dialog open={openTransfer} onClose={handleCloseTransfer} maxWidth="sm">
-          hello transfer
+        <Dialog open={openTransfer} onClose={handleCloseTransfer} maxWidth="md">
+          <TransferCertificate data={transferData} />
         </Dialog>
       </MDBox>
     </Card>

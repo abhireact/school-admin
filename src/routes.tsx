@@ -45,8 +45,9 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/authentication/myprofile";
-import FeeCertificate from "layouts/pages/fee/fee_certificate";
-import FeeRegister from "layouts/pages/fee/fee_register_wtihout_paymentmode";
+import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
+import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
+import MyDashboard from "layouts/pages/dashboard";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -89,7 +90,7 @@ const routes = [
         name: "Analytics",
         key: "analytics",
         route: "/dashboards/analytics",
-        component: <Analytics />,
+        component: <MyDashboard />,
       },
     ],
   },
