@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
 
   academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YY format")
     .required("Required *"),
 });
 const FeeCertificate = (props: any) => {

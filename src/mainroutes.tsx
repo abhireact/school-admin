@@ -346,7 +346,7 @@ const routes = [
         component: <FeeCollectionByAdmission />,
       },
       {
-        name: "Fee Receipt",
+        name: "Generate Fee Slip",
         key: "feereceipt",
         route: "pages/fee/feereceipt",
         component: <FeeReceipt />,
