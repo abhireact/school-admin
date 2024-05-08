@@ -120,9 +120,10 @@ const Rbac = (props: any) => {
             );
             if (response.status === 200) {
               console.log("Created  Successfully");
-              message.success("Created Successfully");
+              message.success("Updated Successfully");
               // window.location.reload();
               setOpenupdate2(false);
+              window.location.reload();
             }
           } catch (error) {
             console.error("Error saving data:", error);
