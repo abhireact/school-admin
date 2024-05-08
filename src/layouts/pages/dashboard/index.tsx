@@ -12,10 +12,10 @@ const MyDashboard = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchWings());
-    dispatch(fetchRbac());
-    dispatch(fetchStudentCategory());
-    dispatch(fetchStudent());
+    dispatch(fetchWings() as any);
+    dispatch(fetchRbac() as any);
+    dispatch(fetchStudentCategory() as any);
+    dispatch(fetchStudent() as any);
   }, [dispatch]);
 
   return (
