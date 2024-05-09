@@ -81,7 +81,7 @@ const Create = (props: any) => {
   const [houseData, setHouseData] = useState([]);
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_house_detail", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -97,7 +97,7 @@ const Create = (props: any) => {
         console.error("Error fetching House data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_studcategory", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ const Create = (props: any) => {
         console.error("Error fetching Student Category data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_castes", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_castes`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -128,7 +128,7 @@ const Create = (props: any) => {
         console.error("Error fetching Caste Category data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_caste_category", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_caste_category`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -143,7 +143,7 @@ const Create = (props: any) => {
         console.error("Error fetching Caste data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -158,7 +158,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     // axios
-    //   .get("http://10.0.20.200:8000/mg_section", {
+    //   .get(`${process.env.REACT_APP_BASE_URL}/mg_section`, {
     //     headers: {
     //       "Content-Type": "application/json",
     //       Authorization: `Bearer ${token}`,
@@ -174,7 +174,7 @@ const Create = (props: any) => {
     //   });
 
     axios
-      .get("http://10.0.20.200:8000/mg_class", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -290,7 +290,7 @@ const Create = (props: any) => {
         const guardiandata = guardian_info;
 
         axios
-          .post("http://10.0.20.200:8000/mg_student", sendValues, {
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_student`, sendValues, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -305,7 +305,7 @@ const Create = (props: any) => {
               guardian_data: guardiandata,
             };
             axios
-              .post("http://10.0.20.200:8000/mg_guardian", guardianDetails, {
+              .post(`${process.env.REACT_APP_BASE_URL}/mg_guardian`, guardianDetails, {
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${token}`,

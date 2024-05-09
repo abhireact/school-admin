@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 const token = Cookies.get("token");
 const Academic = () => {
   // To fetch rbac from redux:  Start
-  const rbacData = useSelector((state: any) => state.rbacData);
+  const rbacData = useSelector((state: any) => state.rbac);
   console.log("rbac user wings", rbacData);
   //End
 
@@ -58,7 +58,7 @@ const Academic = () => {
   }; //End
   const fetchWings = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_wing/", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_wing/`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -78,12 +78,15 @@ const Academic = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(`http://10.0.20.200:8000/mg_wing?wing_name=${name}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/mg_wing?wing_name=${name}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
         message.success("Deleted successFully");
         // Filter out the deleted user from the data

@@ -17,7 +17,7 @@ import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 const validationSchema = Yup.object().shape({
-  house_details: Yup.string().required("Required *"),
+  house_name: Yup.string().required("Required *"),
 });
 const Update = (props: any) => {
   const { setOpenupdate, fetchData, editData } = props;
@@ -29,20 +29,20 @@ const Update = (props: any) => {
   // editData to give intial values
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      house_details: editData.house_details,
+      house_name: editData.house_name,
 
       description: editData.description,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
-        old_house_details: editData.house_details,
-        house_details: values.house_details,
+        old_house_name: editData.house_name,
+        house_name: values.house_name,
 
         description: values.description,
       };
       axios
-        .put("http://10.0.20.200:8000/mg_studcategory", sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -74,11 +74,11 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="house_details"
-              value={values.house_details}
+              name="house_name"
+              value={values.house_name}
               onChange={handleChange}
-              error={touched.house_details && Boolean(errors.house_details)}
-              helperText={touched.house_details && errors.house_details}
+              error={touched.house_name && Boolean(errors.house_name)}
+              helperText={touched.house_name && errors.house_name}
               onBlur={handleBlur}
             />
           </Grid>
@@ -96,7 +96,7 @@ const Update = (props: any) => {
               sx={{ width: "65%" }}
               rows={3}
               variant="standard"
-              placeholder="write something here..."
+              placeholder="Enter Description"
               name="description"
               value={values.description}
               onChange={handleChange}

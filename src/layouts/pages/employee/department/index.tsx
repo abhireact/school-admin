@@ -31,7 +31,7 @@ const Employee = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -100,12 +100,15 @@ const Employee = () => {
 
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(`http://10.0.20.200:8000/mg_dept?Dept_name=${name}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/mg_dept?Dept_name=${name}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
         message.error("Deleted successFully");
         // Filter out the deleted user from the data

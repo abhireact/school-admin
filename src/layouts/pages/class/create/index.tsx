@@ -34,7 +34,7 @@ const Create = (props: any) => {
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
     // axios
-    //   .get("http://10.0.20.200:8000/mg_accademic_year", {
+    //   .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year", {
     //     headers: {
     //       "Content-Type": "application/json",
     //       Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ const Create = (props: any) => {
     //   });
 
     axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_wing", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_wing`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ const Create = (props: any) => {
     onSubmit: (values, action) => {
       axios
         .post(
-          "http://10.0.20.200:8000/mg_class",
+          `${process.env.REACT_APP_BASE_URL}/mg_class`,
           {
             class_data: {
               academic_year: values.academic_year,

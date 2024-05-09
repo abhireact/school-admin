@@ -43,7 +43,7 @@ const Update = (props: any) => {
         end_date: values.end_date,
       };
       axios
-        .put("http://10.0.20.200:8000/mg_accademic_year", sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

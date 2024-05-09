@@ -17,7 +17,7 @@ import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 const validationSchema = Yup.object().shape({
-  caste: Yup.string().required("Required *"),
+  name: Yup.string().required("Required *"),
 });
 const Update = (props: any) => {
   const { setOpenupdate, fetchData, editData } = props;
@@ -29,20 +29,20 @@ const Update = (props: any) => {
   // editData to give intial values
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      caste: editData.caste,
+      name: editData.name,
 
       description: editData.description,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
-        old_caste_name: editData.caste,
-        caste: values.caste,
+        old_caste_name: editData.name,
+        name: values.name,
 
         description: values.description,
       };
       axios
-        .put("http://10.0.20.200:8000/mg_castes", sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_castes`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -74,11 +74,11 @@ const Update = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="caste"
-              value={values.caste}
+              name="name"
+              value={values.name}
               onChange={handleChange}
-              error={touched.caste && Boolean(errors.caste)}
-              helperText={touched.caste && errors.caste}
+              error={touched.name && Boolean(errors.name)}
+              helperText={touched.name && errors.name}
               onBlur={handleBlur}
             />
           </Grid>
@@ -96,7 +96,7 @@ const Update = (props: any) => {
               sx={{ width: "65%" }}
               rows={3}
               variant="standard"
-              placeholder="write something here..."
+              placeholder="Enter Description"
               name="description"
               value={values.description}
               onChange={handleChange}

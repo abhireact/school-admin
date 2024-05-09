@@ -21,7 +21,7 @@ const Update = (props: any) => {
   useEffect(() => {
     axios
       .post(
-        "http://10.0.20.200:8000/mg_student/retrive",
+        `${process.env.REACT_APP_BASE_URL}/mg_student/retrive`,
         {
           user_name: editData,
         },
@@ -41,7 +41,7 @@ const Update = (props: any) => {
       });
     axios
       .post(
-        "http://10.0.20.200:8000/mg_guardian/manage",
+        `${process.env.REACT_APP_BASE_URL}/mg_guardian/manage`,
         { student_user_name: editData },
         {
           headers: {
