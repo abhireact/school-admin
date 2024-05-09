@@ -297,7 +297,6 @@ const Create = (props: any) => {
             },
           })
           .then((response: any) => {
-            message.success(" Student Created successfully!");
             const guardianDetails = {
               student_data: {
                 user_name: response.data.user_name,
@@ -312,7 +311,7 @@ const Create = (props: any) => {
                 },
               })
               .then(() => {
-                message.success(" Guardian Info Added");
+                message.success(" Student Created successfully!");
                 handleClose();
               })
               .catch(() => {
