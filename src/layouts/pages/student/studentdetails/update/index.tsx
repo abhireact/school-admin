@@ -103,7 +103,7 @@ const Update = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_house_detail", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -119,7 +119,7 @@ const Update = (props: any) => {
         console.error("Error fetching House data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_studcategory", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -134,7 +134,7 @@ const Update = (props: any) => {
         console.error("Error fetching Student Category data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_castes", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_castes`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -150,7 +150,7 @@ const Update = (props: any) => {
         console.error("Error fetching Caste Category data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_caste_category", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_caste_category`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -165,7 +165,7 @@ const Update = (props: any) => {
         console.error("Error fetching Caste data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -180,7 +180,7 @@ const Update = (props: any) => {
         console.error("Error fetching data:", error);
       });
     // axios
-    //   .get("http://10.0.20.200:8000/mg_section", {
+    //   .get(`${process.env.REACT_APP_BASE_URL}/mg_section", {
     //     headers: {
     //       "Content-Type": "application/json",
     //       Authorization: `Bearer ${token}`,
@@ -196,7 +196,7 @@ const Update = (props: any) => {
     //   });
 
     axios
-      .get("http://10.0.20.200:8000/mg_class", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -290,7 +290,7 @@ const Update = (props: any) => {
         // action.resetForm();
 
         axios
-          .put("http://10.0.20.200:8000/mg_student", values, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_student`, values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -628,7 +628,6 @@ const Update = (props: any) => {
                     Academic Year
                   </MDTypography>
                 }
-                onChange={handleChange}
                 value={values.academic_year}
                 variant="standard"
                 error={touched.academic_year && Boolean(errors.academic_year)}
@@ -645,7 +644,6 @@ const Update = (props: any) => {
                     Class Name
                   </MDTypography>
                 }
-                onChange={handleChange}
                 value={values.class_name}
                 variant="standard"
                 error={touched.class_name && Boolean(errors.class_name)}
@@ -662,7 +660,6 @@ const Update = (props: any) => {
                     Section Name
                   </MDTypography>
                 }
-                onChange={handleChange}
                 value={values.section_name}
                 variant="standard"
                 error={touched.section_name && Boolean(errors.section_name)}

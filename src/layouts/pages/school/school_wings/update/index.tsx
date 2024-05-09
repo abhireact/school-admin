@@ -38,7 +38,7 @@ const Update = (props: any) => {
         wing_name: values.wing_name,
       };
       axios
-        .put("http://10.0.20.200:8000/mg_wing/", sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_wing/`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

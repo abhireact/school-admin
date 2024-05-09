@@ -30,7 +30,7 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.200:8000/mg_wing", values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_wing`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

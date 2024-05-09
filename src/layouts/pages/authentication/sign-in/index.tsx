@@ -61,7 +61,7 @@ function CoverLogin() {
       const sanitizedPassword = password.replace(/[<>"]/g, "");
 
       const res = await axios.post(
-        "http://10.0.20.200:8000/token",
+        `${process.env.REACT_APP_BASE_URL}/token`,
         {
           username: email,
           //   email: sanitizedEmail,

@@ -47,6 +47,7 @@ import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
+import Admin from "layouts/pages/school/create";
 
 const routes = [
   {
@@ -70,6 +71,12 @@ const routes = [
         key: "user",
         route: "pages/rbac/user",
         component: <User />,
+      },
+      {
+        name: "Master Admin",
+        key: "master",
+        route: "pages/rbac/master",
+        component: <Admin />,
       },
     ],
   },

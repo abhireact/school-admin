@@ -30,11 +30,12 @@ const Class = () => {
   //End
 
   // Fetch rbac  Date from useEffect: Start
+  console.log(process.env.baseURL, "environment variable");
 
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -71,7 +72,7 @@ const Class = () => {
   }; //End
   const fetchClasses = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_class", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -91,7 +92,7 @@ const Class = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_class", {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         data: { class_name: name },
         headers: {
           "Content-Type": "application/json",

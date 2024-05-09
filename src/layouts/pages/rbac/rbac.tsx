@@ -145,6 +145,7 @@ const Rbac = (props: any) => {
               console.log("Update Successfully");
               message.success("Updated Successfully");
               setOpenupdate2(false);
+              window.location.reload();
             }
           } catch (error) {
             console.error("Error saving data:", error);
@@ -253,7 +254,7 @@ const Rbac = (props: any) => {
   const fetchRbac = async (school_name: string, roles_name: string) => {
     try {
       const response = await axios.get(
-        `http://10.0.20.200:8000/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
+        `${process.env.REACT_APP_BASE_URL}/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -291,7 +292,7 @@ const Rbac = (props: any) => {
 
   useEffect(() => {
     axios
-      .get(`http://10.0.20.200:8000/mg_school`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_school`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
