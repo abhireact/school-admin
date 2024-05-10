@@ -32,7 +32,7 @@ import DataTable from "examples/Tables/DataTable";
 import Dialog from "@mui/material/Dialog";
 const token = Cookies.get("token");
 
-const Guardian = (props: any) => {
+const Update = (props: any) => {
   const { guardianData, fetchData, setOpen } = props;
   const [guardianInfo, setGuardianInfo] = useState({});
   useEffect(() => {
@@ -135,7 +135,7 @@ const Guardian = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card id="guardian-info">
-        <MDBox px={4}>
+        <MDBox p={4}>
           <Grid container>
             <Grid item xs={12} sm={12} py={2}>
               <MDTypography variant="h5">Update Guardian Information</MDTypography>
@@ -317,4 +317,4 @@ const Guardian = (props: any) => {
   );
 };
 
-export default Guardian;
+export default Update;

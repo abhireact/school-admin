@@ -1403,6 +1403,7 @@ const Create = (props: any) => {
                   <MDInput
                     mb={2}
                     sx={{ width: "80%" }}
+                    type="date"
                     variant="standard"
                     name={`guardian_info[${index}].date_of_birth`}
                     label={
