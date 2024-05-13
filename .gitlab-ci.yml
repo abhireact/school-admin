@@ -15,3 +15,6 @@ deploy:
   stage: deploy
   script:
     - cp -rf ./build/* /usr/share/nginx/school/
+    
+  only:
+    - main
