@@ -17,4 +17,4 @@ test:
 deploy:
   stage: deploy
   script:
-    - scp -r build/* root@10.0.20.133:/usr/share/nginx/school/
+    - scp -r build/* /usr/share/nginx/school/
