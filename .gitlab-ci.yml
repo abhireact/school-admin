@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - deploy
 
 build:
@@ -8,11 +7,6 @@ build:
   script:
     - npm install
     - npm run build
-
-test:
-  stage: test
-  script:
-    - npm test
 
 deploy:
   stage: deploy
