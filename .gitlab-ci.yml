@@ -9,9 +9,9 @@ build:
     - npm run build
   artifacts:
     paths:
-      - /build
+      - ./build
 
 deploy:
   stage: deploy
   script:
-    - scp -r build/* /usr/share/nginx/school/
+    - cp -rf ./build/* /usr/share/nginx/school/
