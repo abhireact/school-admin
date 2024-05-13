@@ -38,7 +38,7 @@ const UpdateSection = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.200:8000/mg_batches", values, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_batches`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

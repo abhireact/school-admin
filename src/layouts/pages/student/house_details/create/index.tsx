@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
-  house_details: Yup.string().required("Required *"),
+  house_name: Yup.string().required("Required *"),
 });
 
 const Create = (props: any) => {
@@ -31,7 +31,7 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.200:8000/mg_house_detail", values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ const Create = (props: any) => {
               sx={{ width: "65%" }}
               rows={3}
               variant="standard"
-              placeholder="write something here..."
+              placeholder="Enter Description"
               name="description"
               value={values.description}
               onChange={handleChange}

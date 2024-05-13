@@ -42,7 +42,7 @@ const Update = (props: any) => {
         description: values.description,
       };
       axios
-        .put("http://10.0.20.200:8000/mg_studcategory", sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ const Update = (props: any) => {
               sx={{ width: "65%" }}
               rows={3}
               variant="standard"
-              placeholder="write something here..."
+              placeholder="Enter Description"
               name="description"
               value={values.description}
               onChange={handleChange}

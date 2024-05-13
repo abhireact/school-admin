@@ -31,7 +31,7 @@ const HouseDetails = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -81,7 +81,7 @@ const HouseDetails = () => {
   }; //End
   const FetchHouse = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_house_detail", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ const HouseDetails = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_house_detail/", {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_house_detail/`, {
         data: { caste_name: name },
         headers: {
           "Content-Type": "application/json",

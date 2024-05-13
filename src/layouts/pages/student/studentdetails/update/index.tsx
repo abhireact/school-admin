@@ -10,7 +10,11 @@ import { message } from "antd";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import UpdateGuardian from "./guardian";
+import AddIcon from "@mui/icons-material/Add";
+import UpdateGuardian from "./guardian/update";
+import CreateGuardian from "./guardian/create";
+
+import Tooltip from "@mui/material/Tooltip";
 import {
   FormControlLabel,
   Autocomplete,
@@ -20,7 +24,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
+
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 
@@ -48,8 +52,8 @@ const validationSchema = Yup.object().shape({
 
 const Update = (props: any) => {
   const [guardianData, setGuardianData] = useState({});
-  const [open, setOpen] = useState(false);
 
+  const [open, setOpen] = useState(false);
   const handleCloseGuardian = () => {
     setOpen(false);
   };
@@ -59,6 +63,13 @@ const Update = (props: any) => {
     console.log(main_data, "Guardian edit Data");
 
     setGuardianData(main_data);
+  };
+  const [createOpen, setCreateOpen] = useState(false);
+  const handleCloseCreate = () => {
+    setCreateOpen(false);
+  };
+  const handleOpenCreate = () => {
+    setCreateOpen(true);
   };
   const { editData, username, setOpenupdate, guardianInfo, fetchData } = props;
   const [showGuardian, setShowGuardian] = useState(false);
@@ -103,7 +114,7 @@ const Update = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_house_detail", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -119,7 +130,7 @@ const Update = (props: any) => {
         console.error("Error fetching House data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_studcategory", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -134,7 +145,7 @@ const Update = (props: any) => {
         console.error("Error fetching Student Category data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_castes", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_castes`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -150,7 +161,7 @@ const Update = (props: any) => {
         console.error("Error fetching Caste Category data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_caste_category", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_caste_category`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -165,7 +176,7 @@ const Update = (props: any) => {
         console.error("Error fetching Caste data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -180,7 +191,7 @@ const Update = (props: any) => {
         console.error("Error fetching data:", error);
       });
     // axios
-    //   .get("http://10.0.20.200:8000/mg_section", {
+    //   .get(`${process.env.REACT_APP_BASE_URL}/mg_section", {
     //     headers: {
     //       "Content-Type": "application/json",
     //       Authorization: `Bearer ${token}`,
@@ -196,7 +207,7 @@ const Update = (props: any) => {
     //   });
 
     axios
-      .get("http://10.0.20.200:8000/mg_class", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -290,7 +301,7 @@ const Update = (props: any) => {
         // action.resetForm();
 
         axios
-          .put("http://10.0.20.200:8000/mg_student", values, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_student`, values, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -628,7 +639,6 @@ const Update = (props: any) => {
                     Academic Year
                   </MDTypography>
                 }
-                onChange={handleChange}
                 value={values.academic_year}
                 variant="standard"
                 error={touched.academic_year && Boolean(errors.academic_year)}
@@ -645,7 +655,6 @@ const Update = (props: any) => {
                     Class Name
                   </MDTypography>
                 }
-                onChange={handleChange}
                 value={values.class_name}
                 variant="standard"
                 error={touched.class_name && Boolean(errors.class_name)}
@@ -662,7 +671,6 @@ const Update = (props: any) => {
                     Section Name
                   </MDTypography>
                 }
-                onChange={handleChange}
                 value={values.section_name}
                 variant="standard"
                 error={touched.section_name && Boolean(errors.section_name)}
@@ -1889,7 +1897,7 @@ const Update = (props: any) => {
               guardianInfo.map((guardianinfo: any, index: any) => (
                 <>
                   <Grid item xs={12} sm={12}>
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    <MDTypography variant="button" fontWeight="bold" color="info">
                       Guardian {index + 1}
                     </MDTypography>
                   </Grid>
@@ -1963,13 +1971,31 @@ const Update = (props: any) => {
                       value={guardianinfo.mobile_number}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3} py={1} key={index + "space"}>
+                  <Grid item xs={12} sm={4} key={index + "space"}></Grid>
+                  <Grid item xs={12} sm={4} key={index + "login_access"} mt={2}>
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Login Access : {guardianinfo.login_access ? "Yes" : "No"}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item xs={12} sm={4} key={index + "primary_contact"} mt={2}>
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Primary Contact : {guardianinfo.primary_contact ? "Exist" : "Not Exist"}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item xs={12} sm={2} py={1} key={index + "space"}>
                     <IconButton onClick={() => handleOpenGuardian(guardianinfo)}>
-                      <CreateRoundedIcon />
+                      <CreateRoundedIcon color="info" />
                     </IconButton>
                   </Grid>
                 </>
               ))}
+            {showGuardian && (
+              <Grid item xs={12} sm={2} mt={1}>
+                <Tooltip title="Add Guardian" placement="top">
+                  <AddIcon color="secondary" fontSize="large" onClick={() => handleOpenCreate()} />
+                </Tooltip>
+              </Grid>
+            )}
           </Grid>
           <Grid container>
             <Grid
@@ -1998,7 +2024,10 @@ const Update = (props: any) => {
           </Grid>
         </MDBox>
       </form>
-      <Dialog open={open} onClose={handleCloseGuardian} maxWidth="sm">
+      <Dialog open={createOpen} onClose={handleCloseCreate} maxWidth="md">
+        <CreateGuardian setCreateOpen={setCreateOpen} username={username} />
+      </Dialog>
+      <Dialog open={open} onClose={handleCloseGuardian} maxWidth="md">
         <UpdateGuardian guardianData={guardianData} setOpen={setOpen} fetchData={fetchData} />
       </Dialog>
     </Card>

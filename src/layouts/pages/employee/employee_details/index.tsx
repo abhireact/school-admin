@@ -32,7 +32,7 @@ const EmpInfo = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ const EmpInfo = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_emp", {
+      .get("http://10.0.20.200:8000/mg_employees", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -109,12 +109,13 @@ const EmpInfo = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Name", accessor: "name" },
-      { Header: "Profession", accessor: "employee_profile" },
-      { Header: "Category", accessor: "employee_category" },
-      { Header: "Max Class Per Day", accessor: "max_class_per_day" },
+      { Header: "Employee Name", accessor: "employee_name" },
 
-      { Header: "Department", accessor: "employee_department" },
+      { Header: "Position", accessor: "position" },
+      { Header: "Department", accessor: "department" },
+      { Header: "User ID", accessor: "user_id" },
+
+      { Header: "Joining Date", accessor: "joining_date" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -156,16 +157,12 @@ const EmpInfo = () => {
         </MDTypography>
       ),
 
-      name: (
-        <MDTypography variant="p">
-          {row.first_name} {row.middle_name} {row.last_name}
-        </MDTypography>
-      ),
-      employee_department: <MDTypography variant="p">{row.employee_department}</MDTypography>,
-      employee_category: <MDTypography variant="p">{row.employee_category}</MDTypography>,
+      employee_name: row.employee_name,
+      department: row.department,
+      position: row.position,
 
-      max_class_per_day: <MDTypography variant="p">{row.max_class_per_day}</MDTypography>,
-      employee_profile: <MDTypography variant="p">{row.employee_profile}</MDTypography>,
+      user_id: row.user_id,
+      joining_date: row.joining_date,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -203,7 +200,7 @@ const EmpInfo = () => {
               <Update setOpenupdate={setOpenupdate} editData={editData} />
             </Dialog>
           </Grid>
-          <DataTable table={dataTableData} />
+          <DataTable table={dataTableData} canSearch />
         </>
       )}
     </DashboardLayout>

@@ -32,13 +32,13 @@ import DataTable from "examples/Tables/DataTable";
 import Dialog from "@mui/material/Dialog";
 const token = Cookies.get("token");
 
-const Guardian = (props: any) => {
+const Update = (props: any) => {
   const { guardianData, fetchData, setOpen } = props;
   const [guardianInfo, setGuardianInfo] = useState({});
   useEffect(() => {
     axios
       .post(
-        "http://10.0.20.200:8000/mg_guardian/retrive",
+        `${process.env.REACT_APP_BASE_URL}/mg_guardian/retrive`,
         {
           guardian_user_name: guardianData.user_name,
         },
@@ -64,22 +64,35 @@ const Guardian = (props: any) => {
       first_name: guardianData.first_name,
       middle_name: guardianData.middle_name,
       last_name: guardianData.last_name,
-      relation: "",
-      date_of_birth: "",
-      occupation: "",
-      annual_income: "",
-      education: "",
-      aadhaar_number: "",
-      mobile_number: "",
-      email: "",
-      img: "",
+      relation: guardianData.relationship,
+      dob: guardianData.dob,
+      occupation: guardianData.occupation,
+      income: guardianData.income,
+      education: guardianData.education,
+      adharnumber: guardianData.adhar_number,
+      mobile_number: guardianData.mobile_number,
+      _number: guardianData._number,
+      email_id: guardianData.email,
+      address_line1: guardianData.address_line1,
+      address_line2: guardianData.address_line2,
+      street: guardianData.street,
+      landmark: guardianData.landmark,
+      city: guardianData.city,
+      state: guardianData.state,
+      country: guardianData.country,
+      pin_code: guardianData.pin_code,
+      guardian_img: null,
+      mobile_subscription: guardianData.mobile_subscription,
+      mobile_notification: guardianData.mobile_notification,
+      email_subscription: guardianData.email_subscription,
+      email_notification: guardianData.email_notification,
     },
 
     // validationSchema: validationSchema,
     enableReinitialize: true,
     onSubmit: (values, action) => {
       axios
-        .put("http://10.0.20.200:8000/mg_guardian", values, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_guardian/retrive`, values, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
@@ -87,6 +100,7 @@ const Guardian = (props: any) => {
         })
         .then(() => {
           console.log("gettting guardian info ");
+          message.success("Guardian Info Updated ");
           setOpen(false);
         })
         .catch(() => {
@@ -111,7 +125,7 @@ const Guardian = (props: any) => {
 
       // Check file type
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("img", e.target.files[0]);
+        setFieldValue("guardian_img", e.target.files[0]);
       } else {
         message.error("Please select a valid PNG, JPEG, or HEIC image.");
       }
@@ -121,7 +135,7 @@ const Guardian = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card id="guardian-info">
-        <MDBox px={4}>
+        <MDBox p={4}>
           <Grid container>
             <Grid item xs={12} sm={12} py={2}>
               <MDTypography variant="h5">Update Guardian Information</MDTypography>
@@ -192,8 +206,8 @@ const Guardian = (props: any) => {
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Annual Income</MDTypography>}
-                name="annual_income"
-                value={values.annual_income}
+                name="income"
+                value={values.income}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -216,8 +230,8 @@ const Guardian = (props: any) => {
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Aadhaar Number</MDTypography>}
-                name="aadhaar_number"
-                value={values.aadhaar_number}
+                name="adharnumber"
+                value={values.adharnumber}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -241,7 +255,7 @@ const Guardian = (props: any) => {
                 variant="standard"
                 label={<MDTypography variant="body2">Email</MDTypography>}
                 name="email"
-                value={values.email}
+                value={values.email_id}
                 onChange={handleChange}
               />
             </Grid>
@@ -253,8 +267,8 @@ const Guardian = (props: any) => {
                 variant="standard"
                 InputLabelProps={{ shrink: true }}
                 label={<MDTypography variant="body2">Date Of Birth</MDTypography>}
-                name="date_of_birth"
-                value={values.date_of_birth}
+                name="dob"
+                value={values.dob}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -264,7 +278,7 @@ const Guardian = (props: any) => {
                 mb={2}
                 type="file"
                 accept="image/*"
-                name="img"
+                name="guardian_img"
                 onChange={handleImage}
                 sx={{ width: "80%" }}
                 variant="standard"
@@ -303,4 +317,4 @@ const Guardian = (props: any) => {
   );
 };
 
-export default Guardian;
+export default Update;
