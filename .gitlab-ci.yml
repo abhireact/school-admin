@@ -6,6 +6,7 @@ build:
   stage: build
   script:
     - npm install
+    - npx prettier --write .
     - npm run build
   artifacts:
     paths:
