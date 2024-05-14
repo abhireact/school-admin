@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -180,33 +180,40 @@ const EmpInfo = () => {
         </>
       ) : (
         <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Grid item>
-              <MDTypography variant="h5">Employee Information</MDTypography>
-            </Grid>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "employee_infocreate") ? (
-                <Grid item>
-                  <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                    + New Employee
-                  </MDButton>
-                </Grid>
+          <Card>
+            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Grid item pt={2} pl={2}>
+                <MDTypography variant="h5">Employee Information</MDTypography>
+              </Grid>
+              {rbacData ? (
+                rbacData?.find((element: string) => element === "employee_infocreate") ? (
+                  <Grid item pt={2} pr={2}>
+                    <MDButton
+                      variant="outlined"
+                      color="info"
+                      type="submit"
+                      onClick={handleShowPage}
+                    >
+                      + New Employee
+                    </MDButton>
+                  </Grid>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
-              )
-            ) : (
-              ""
-            )}
+              )}
 
-            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update
-                setOpenupdate={setOpenupdate}
-                editData={editData}
-                fetchData={fetchEmployees}
-              />
-            </Dialog>
-          </Grid>
-          <DataTable table={dataTableData} canSearch />
+              <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+                <Update
+                  setOpenupdate={setOpenupdate}
+                  editData={editData}
+                  fetchData={fetchEmployees}
+                />
+              </Dialog>
+            </Grid>
+            <DataTable table={dataTableData} canSearch />
+          </Card>
         </>
       )}
     </DashboardLayout>

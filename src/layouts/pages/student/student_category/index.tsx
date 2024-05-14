@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -173,23 +173,29 @@ const StudentCategory = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h4" fontWeight="bold" color="secondary">
-          Student Category
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "studentcategorycreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + Add Student Category
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-      </Grid>
-
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Student Category
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "studentcategorycreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + Add Student Category
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+          <DataTable table={dataTableData} />
+        </Grid>
+      </Card>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={FetchStudentCategory} />
       </Dialog>
@@ -201,8 +207,6 @@ const StudentCategory = () => {
           fetchData={FetchStudentCategory}
         />
       </Dialog>
-
-      <DataTable table={dataTableData} />
     </DashboardLayout>
   );
 };

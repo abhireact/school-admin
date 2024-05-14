@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -172,34 +172,41 @@ const EmpProfile = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            {" "}
+            <MDTypography variant="h5" color="secondary" fontWeight="bold">
+              Employee Profile
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "employee_profilecreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + New Employee Profile
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchEmployeePosition} />
+      </Dialog>
 
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employee Profile</MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "employee_profilecreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employee Profile
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} fetchData={fetchEmployeePosition} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update
-            setOpenupdate={setOpenupdate}
-            editData={editData}
-            fetchData={fetchEmployeePosition}
-          />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update
+          setOpenupdate={setOpenupdate}
+          editData={editData}
+          fetchData={fetchEmployeePosition}
+        />
+      </Dialog>
     </DashboardLayout>
   );
 };
