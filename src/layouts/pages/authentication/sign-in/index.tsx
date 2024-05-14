@@ -344,10 +344,13 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { isLength } from "validator";
 import axios from "axios";
-
+interface LogoData {
+  school_logo: string;
+  // Add other properties if needed
+}
 function CoverLogin(): JSX.Element {
   const [username, setUsername] = useState("");
-  const [logoData, setLogoData] = useState();
+const [logoData, setLogoData] = useState<LogoData | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
