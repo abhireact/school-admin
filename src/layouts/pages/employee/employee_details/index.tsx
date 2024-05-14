@@ -68,10 +68,9 @@ const EmpInfo = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchEmployees = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_employees", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -85,10 +84,13 @@ const EmpInfo = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchEmployees();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_leaves", {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_leaves`, {
         data: { leave_type: name.leave_type, leave_code: name.leave_code },
         headers: {
           "Content-Type": "application/json",
@@ -174,7 +176,7 @@ const EmpInfo = () => {
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create handleShowPage={handleShowPage} />
+          <Create handleShowPage={handleShowPage} fetchData={fetchEmployees} />
         </>
       ) : (
         <>
@@ -197,7 +199,11 @@ const EmpInfo = () => {
             )}
 
             <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update setOpenupdate={setOpenupdate} editData={editData} />
+              <Update
+                setOpenupdate={setOpenupdate}
+                editData={editData}
+                fetchData={fetchEmployees}
+              />
             </Dialog>
           </Grid>
           <DataTable table={dataTableData} canSearch />

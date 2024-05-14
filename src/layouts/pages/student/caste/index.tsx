@@ -6,6 +6,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
@@ -172,33 +173,37 @@ const Caste = () => {
   };
   return (
     <DashboardLayout>
-      <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5" fontWeight="bold" color="secondary">
-          Caste
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "academiccreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + Add Caste
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-      </Grid>
-
+      <DashboardNavbar />{" "}
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Caste
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {" "}
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "academiccreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + Add Caste
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={FetchCastes} />
       </Dialog>
-
       <Dialog open={openupdate} onClose={handleCloseupdate}>
         <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchCastes} />
       </Dialog>
-
-      <DataTable table={dataTableData} />
     </DashboardLayout>
   );
 };

@@ -5,48 +5,48 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
+import SaveIcon from "@mui/icons-material/Save";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import SaveIcon from "@mui/icons-material/Save";
+
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 
-const Update = (props: any) => {
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData, fetchData } = props;
+  const { setOpen, fetchData } = props;
   const handleClose = () => {
-    setOpenupdate(false);
+    setOpen(false);
   };
   //end
 
-  const { values, handleChange, handleBlur, handleSubmit, touched, errors, setFieldValue } =
+  const { values, handleChange, handleBlur, handleSubmit, setFieldValue, touched, errors } =
     useFormik({
       initialValues: {
-        old_dept_name: editData.dept_name,
-        dept_name: editData.dept_name,
-        dept_code: editData.dept_code,
-        status: editData.satus ? "Active" : "InActive",
+        grade_name: "",
+        status: "",
+        priority: "",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
         const sendValues = { ...values, status: values.status === "Active" ? true : false };
         axios
-          .put(`${process.env.REACT_APP_BASE_URL}/employee_department`, sendValues, {
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_empgrd`, sendValues, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           })
           .then(() => {
-            fetchData();
             handleClose();
-            message.success(" Updated Successfully!");
+            fetchData();
+            message.success(" Created successfully!");
           })
           .catch(() => {
-            message.error("Error on  Updating  !");
+            message.error("Error on creating  !");
           });
 
         action.resetForm();
@@ -58,52 +58,51 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Name
+              Grade Name
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
-              required
               mb={2}
+              required
               sx={{ width: "65%" }}
               variant="standard"
-              name="dept_name"
-              value={values.dept_name}
+              name="grade_name"
+              value={values.grade_name}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.dept_name && Boolean(errors.dept_name)}
-              success={values.dept_name.length && !errors.dept_name}
-              helperText={touched.dept_name && errors.dept_name}
+              error={touched.grade_name && Boolean(errors.grade_name)}
+              success={values.grade_name.length && !errors.grade_name}
+              helperText={touched.grade_name && errors.grade_name}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Code
+              Priority
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
-              required
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="dept_code"
-              value={values.dept_code}
+              name="priority"
+              value={values.priority}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.dept_code && Boolean(errors.dept_code)}
-              success={values.dept_code.length && !errors.dept_code}
-              helperText={touched.dept_code && errors.dept_code}
+              error={touched.priority && Boolean(errors.priority)}
+              success={values.priority.length && !errors.priority}
+              helperText={touched.priority && errors.priority}
             />
           </Grid>
-          <Grid item xs={12} sm={4} mt={2}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
               Status
             </MDTypography>
           </Grid>
-          <Grid sm={7} item mt={2}>
+          <Grid sm={7} item>
             <FormControl>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
@@ -135,7 +134,6 @@ const Update = (props: any) => {
               </RadioGroup>
             </FormControl>
           </Grid>
-
           <Grid
             item
             container
@@ -167,4 +165,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

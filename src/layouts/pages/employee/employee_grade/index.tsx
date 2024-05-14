@@ -81,7 +81,7 @@ const EmpGrade = () => {
   }; //End
   const fetchEmployeeGrade = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_empgrd", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_empgrd`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ const EmpGrade = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_emptype", {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
         data: { emp_type: name.emp_type },
         headers: {
           "Content-Type": "application/json",
@@ -186,11 +186,15 @@ const EmpGrade = () => {
         )}
 
         <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
+          <Create setOpen={setOpen} fetchData={fetchEmployeeGrade} />
         </Dialog>
 
         <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
+          <Update
+            setOpenupdate={setOpenupdate}
+            editData={editData}
+            fetchData={fetchEmployeeGrade}
+          />
         </Dialog>
       </Grid>
       <DataTable table={dataTableData} />

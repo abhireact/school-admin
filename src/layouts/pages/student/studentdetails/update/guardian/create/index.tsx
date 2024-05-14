@@ -73,13 +73,12 @@ const Create = (props: any) => {
         .then(() => {
           console.log("guardian created for this student ");
           message.success("Guardian Added SuccessFully");
+          action.resetForm();
           setCreateOpen(false);
         })
         .catch(() => {
           message.error("Error on Adding  Guardian!");
         });
-
-      action.resetForm();
     },
   });
 

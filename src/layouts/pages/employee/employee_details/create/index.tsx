@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
+import SaveIcon from "@mui/icons-material/Save";
 import { message } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -14,12 +15,13 @@ import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 
 const Create = (props: any) => {
+  const [referred, setReferred] = useState(false);
   const token = Cookies.get("token");
   const categories = ["None", "Single", "Married", "Divorced", "Widowed"];
   const Employeecategories = ["None", "Teaching Staff", "Non-Teaching Staff"];
   const Employeegrades = ["None", "A+", "A", "B+", "B", "C+", "C", "D+", "D", "E+", "E"];
   const genders = ["None", "Male", "Female"];
-  const { handleShowPage } = props;
+  const { handleShowPage, fetchData } = props;
 
   //end
 
@@ -30,58 +32,75 @@ const Create = (props: any) => {
       middle_name: "",
       last_name: "",
       gender: "None",
-      date_of_birth: "",
-      employee_profile: "",
+      employee_dob: "",
+      empoy_profile: "",
       employee_category: "",
       employee_department: "",
       job_title: "",
       qualification: "",
-      total_year_experience: 0,
+      total_yrs_experience: 0,
       total_month_experience: 0,
       employee_type: "",
-      mother_tongue: "",
       ltc_applicable: false,
-      max_class_per_day: 0,
       employee_grade: "None",
-
       status: "",
       aadhar_number: "",
+
+      last_working_day: "",
+      esi_number: "",
+      una_number: "",
+      phone_number: "",
+      employee_notification: "",
+      employee_subscription: "",
+      employee_email_notificaton: "",
+      employee_email_subscription: "",
+      emergency_contact_name: "",
+      emergency_contact_number: "",
+      hobby: "",
+      sport_activity: "",
+      sport_activity_files: [],
+      extra_curricular: "",
+      extra_curricular_files: [],
+
       bank_name: "",
-      account_number: "",
+      account_name: "",
       branch_name: "",
-      ifsc_code: "",
+      ifsc_number: "",
       marital_status: "None",
       mother_name: "",
       father_name: "",
       blood_group: "",
-      referred: false,
-      referred_by: "",
+      refered_by: "",
       designation: "",
-
-      address_line: "",
+      address_line1: "",
+      address_line2: "",
       pin_code: "",
       city: "",
       state: "",
       country: "",
-      pr_address_line: "",
+      landmark: "",
+      pr_landmark: "",
+      pr_address_line1: "",
+      pr_address_line2: "",
       pr_pin_code: "",
       pr_city: "",
       pr_state: "",
       pr_country: "",
-      mob_no: "",
+      mobile_number: "",
       email: "",
-      emp_image: null,
+      employee_img: null,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.200:8000/mg_emp", values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_employees`, values, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
+          fetchData();
           message.success("Created Successfully!");
           action.resetForm();
         })
@@ -94,8 +113,9 @@ const Create = (props: any) => {
   const handleCheckAddress = () => {
     setCheckedAddress(!checkAddress);
     if (!checkAddress) {
-      setFieldValue("pr_address_line", values.address_line);
-
+      setFieldValue("pr_landmark", values.landmark);
+      setFieldValue("pr_address_line1", values.address_line1);
+      setFieldValue("pr_address_line2", values.address_line2);
       setFieldValue("pr_pin_code", values.pin_code);
       setFieldValue("pr_city", values.city);
       setFieldValue("pr_state", values.state);
@@ -114,7 +134,45 @@ const Create = (props: any) => {
 
       // Check file type
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("emp_img", e.target.files[0]);
+        setFieldValue("employee_img", e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+  const handleSportActivity = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        // setFieldValue("stud_img", e.target.files[0]);
+        values.sport_activity_files.push(e.target.files[0]);
+      } else {
+        message.error("Please select a valid PNG, JPEG, or HEIC image.");
+      }
+    }
+  };
+  const handleExtraCurricular = (e: { target: { files: any[] } }) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Check file size (5 MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        message.error("File size exceeds 5 MB limit.");
+        return;
+      }
+
+      // Check file type
+      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
+        // setFieldValue("stud_img", e.target.files[0]);
+        values.extra_curricular_files.push(e.target.files[0]);
       } else {
         message.error("Please select a valid PNG, JPEG, or HEIC image.");
       }
@@ -172,7 +230,7 @@ const Create = (props: any) => {
               <MDInput
                 type="file"
                 accept="image/*"
-                name="emp_img"
+                name="employee_img"
                 onChange={handleImage}
                 sx={{ width: "90%" }}
                 variant="standard"
@@ -198,9 +256,9 @@ const Create = (props: any) => {
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "80%" }}
                 variant="standard"
-                name="date_of_birth"
+                name="employee_dob"
                 label={<MDTypography variant="body2">Date of Birth</MDTypography>}
-                value={values.date_of_birth}
+                value={values.employee_dob}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -232,9 +290,9 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "80%" }}
                 variant="standard"
-                name="employee_profile"
+                name="empoy_profile"
                 label={<MDTypography variant="body2">Profile *</MDTypography>}
-                value={values.employee_profile}
+                value={values.empoy_profile}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -301,8 +359,8 @@ const Create = (props: any) => {
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Mobile Number</MDTypography>}
-                name="mob_no"
-                value={values.mob_no}
+                name="mobile_number"
+                value={values.mobile_number}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -312,9 +370,9 @@ const Create = (props: any) => {
                 sx={{ width: "80%" }}
                 type="number"
                 variant="standard"
-                name="total_year_experience"
+                name="total_yrs_experience"
                 label={<MDTypography variant="body2">Total Year Experience</MDTypography>}
-                value={values.total_year_experience}
+                value={values.total_yrs_experience}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -333,34 +391,11 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                type="number"
-                sx={{ width: "80%" }}
-                variant="standard"
-                name="max_class_per_day"
-                label={<MDTypography variant="body2">Max. Classes Per Day</MDTypography>}
-                value={values.max_class_per_day}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <MDInput
                 sx={{ width: "80%" }}
                 variant="standard"
                 name="employee_type"
                 label={<MDTypography variant="body2">Employement Type *</MDTypography>}
                 value={values.employee_type}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <MDInput
-                sx={{ width: "80%" }}
-                variant="standard"
-                name="mother_tongue"
-                label={<MDTypography variant="body2">Mother Tongue</MDTypography>}
-                value={values.mother_tongue}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -421,7 +456,18 @@ const Create = (props: any) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-            </Grid>{" "}
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                sx={{ width: "80%" }}
+                variant="standard"
+                name="last_working_day"
+                label={<MDTypography variant="body2">Last Working Day</MDTypography>}
+                value={values.last_working_day}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "80%" }}
@@ -437,9 +483,9 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "80%" }}
                 variant="standard"
-                name="account_number"
+                name="account_name"
                 label={<MDTypography variant="body2">Account Number</MDTypography>}
-                value={values.account_number}
+                value={values.account_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -459,9 +505,9 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "80%" }}
                 variant="standard"
-                name="ifsc_code"
+                name="ifsc_number"
                 label={<MDTypography variant="body2">IFSC Code</MDTypography>}
-                value={values.ifsc_code}
+                value={values.ifsc_number}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -546,16 +592,16 @@ const Create = (props: any) => {
               <MDTypography variant="body2">Was referred ?</MDTypography>
             </Grid>
             <Grid item xs={6} sm={1.5} mt={2}>
-              <Checkbox checked={values.referred} onChange={handleChange} name="referred" />
+              <Checkbox checked={referred} onChange={() => setReferred(!referred)} />
             </Grid>
-            {values.referred ? (
+            {referred ? (
               <Grid item xs={12} sm={4}>
                 <MDInput
                   sx={{ width: "80%" }}
                   variant="standard"
-                  name="referred_by"
+                  name="refered_by"
                   label={<MDTypography variant="body2">Referred By</MDTypography>}
-                  value={values.referred_by}
+                  value={values.refered_by}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -573,9 +619,21 @@ const Create = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Address Line</MDTypography>}
-                name="address_line"
-                value={values.address_line}
+                label={<MDTypography variant="body2">Address Line 1</MDTypography>}
+                name="address_line1"
+                value={values.address_line1}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                label={<MDTypography variant="body2">Address Line 2</MDTypography>}
+                name="address_line2"
+                value={values.address_line2}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -589,6 +647,18 @@ const Create = (props: any) => {
                 label={<MDTypography variant="body2">Pincode</MDTypography>}
                 name="pin_code"
                 value={values.pin_code}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                label={<MDTypography variant="body2">Landmark</MDTypography>}
+                name="landmark"
+                value={values.landmark}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -645,9 +715,21 @@ const Create = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Address Line</MDTypography>}
-                name="pr_address_line"
-                value={values.pr_address_line}
+                label={<MDTypography variant="body2">Address Line 1</MDTypography>}
+                name="pr_address_line1"
+                value={values.pr_address_line1}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                label={<MDTypography variant="body2">Address Line 2</MDTypography>}
+                name="pr_address_line2"
+                value={values.pr_address_line2}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -661,6 +743,18 @@ const Create = (props: any) => {
                 label={<MDTypography variant="body2">Pincode</MDTypography>}
                 name="pr_pin_code"
                 value={values.pr_pin_code}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                variant="standard"
+                label={<MDTypography variant="body2">Landmark</MDTypography>}
+                name="pr_landmark"
+                value={values.pr_landmark}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -706,12 +800,13 @@ const Create = (props: any) => {
               container
               xs={12}
               sm={12}
-              sx={{ display: "flex", justifyContent: "flex-start" }}
+              mt={4}
+              sx={{ display: "flex", justifyContent: "space-between" }}
             >
-              <Grid item mt={4}>
+              <Grid item>
                 <MDButton
-                  color="primary"
-                  variant="outlined"
+                  color="dark"
+                  variant="contained"
                   onClick={() => {
                     handleShowPage();
                   }}
@@ -719,9 +814,10 @@ const Create = (props: any) => {
                   Back
                 </MDButton>
               </Grid>
-              <Grid item ml={2} mt={4}>
+              <Grid item mr={6}>
                 <MDButton color="info" variant="contained" type="submit">
-                  Save
+                  Save&nbsp;
+                  <SaveIcon />
                 </MDButton>
               </Grid>
             </Grid>

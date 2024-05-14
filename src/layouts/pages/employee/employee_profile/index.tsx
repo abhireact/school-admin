@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const Class = () => {
+const EmpProfile = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -79,10 +79,9 @@ const Class = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchEmployeePosition = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_prof", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employee_positions`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,11 +95,14 @@ const Class = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchEmployeePosition();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_prof", {
-        data: { category: name.category, prof_name: name.prof_name },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
+        data: { emp_type: name.emp_type },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,8 +122,8 @@ const Class = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Category", accessor: "category" },
-      { Header: "Profession", accessor: "prof_name" },
+      { Header: "Employee Profile", accessor: "position_name" },
+      { Header: "Employee Category", accessor: "category_name" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -163,9 +165,8 @@ const Class = () => {
         </MDTypography>
       ),
 
-      category: <MDTypography variant="p">{row.category}</MDTypography>,
-
-      prof_name: <MDTypography variant="p">{row.prof_name}</MDTypography>,
+      position_name: <MDTypography variant="p">{row.position_name}</MDTypography>,
+      category_name: <MDTypography variant="p">{row.category_name}</MDTypography>,
     })),
   };
   return (
@@ -173,11 +174,11 @@ const Class = () => {
       <DashboardNavbar />
 
       <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employee Profession</MDTypography>
+        <MDTypography variant="h5">Employee Profile</MDTypography>
         {rbacData ? (
           rbacData?.find((element: string) => element === "employee_profilecreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Profile
+              + New Employee Profile
             </MDButton>
           ) : (
             ""
@@ -187,11 +188,15 @@ const Class = () => {
         )}
 
         <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
+          <Create setOpen={setOpen} fetchData={fetchEmployeePosition} />
         </Dialog>
 
         <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
+          <Update
+            setOpenupdate={setOpenupdate}
+            editData={editData}
+            fetchData={fetchEmployeePosition}
+          />
         </Dialog>
       </Grid>
       <DataTable table={dataTableData} />
@@ -199,4 +204,4 @@ const Class = () => {
   );
 };
 
-export default Class;
+export default EmpProfile;

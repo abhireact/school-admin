@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -173,23 +173,29 @@ const HouseDetails = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5" fontWeight="bold" color="secondary">
-          House Details
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "housedetailscreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + Add House
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-      </Grid>
-
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              House Details
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "housedetailscreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + Add House
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={FetchHouse} />
       </Dialog>
@@ -197,8 +203,6 @@ const HouseDetails = () => {
       <Dialog open={openupdate} onClose={handleCloseupdate}>
         <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchHouse} />
       </Dialog>
-
-      <DataTable table={dataTableData} />
     </DashboardLayout>
   );
 };
