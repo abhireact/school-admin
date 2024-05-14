@@ -44,6 +44,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const Create = (props: any) => {
+  const [loading, setLoading] = useState(false);
   const { setShowpage } = props;
   const handleClose = () => {
     setShowpage(false);
@@ -285,7 +286,7 @@ const Create = (props: any) => {
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
-        // action.resetForm();
+        setLoading(true);
         const { guardian_info, ...sendValues } = values;
         const guardiandata = guardian_info;
 
@@ -312,6 +313,8 @@ const Create = (props: any) => {
               })
               .then(() => {
                 message.success(" Student Created successfully!");
+                action.resetForm();
+                setLoading(false);
                 handleClose();
               })
               .catch(() => {
@@ -538,7 +541,7 @@ const Create = (props: any) => {
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Admission Date{" "}
+                    Admission Date
                   </MDTypography>
                 }
                 name="admission_date"
@@ -1026,7 +1029,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={2} mt={3}>
               <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Gender .:
+                Gender
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4} mt={2}>
@@ -1404,6 +1407,7 @@ const Create = (props: any) => {
                     mb={2}
                     sx={{ width: "80%" }}
                     type="date"
+                    InputLabelProps={{ shrink: true }}
                     variant="standard"
                     name={`guardian_info[${index}].date_of_birth`}
                     label={
@@ -2228,10 +2232,16 @@ const Create = (props: any) => {
               sx={{ display: "flex", justifyContent: "flex-end" }}
               mr={5}
             >
-              <MDButton color="info" variant="contained" type="submit">
-                Save &nbsp;
-                <SaveIcon />
-              </MDButton>
+              {loading ? (
+                <MDButton color="info" variant="contained" type="submit">
+                  Loading ...
+                </MDButton>
+              ) : (
+                <MDButton color="info" variant="contained" type="submit">
+                  Save &nbsp;
+                  <SaveIcon />
+                </MDButton>
+              )}
             </Grid>
           </Grid>
         </MDBox>

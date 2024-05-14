@@ -25,16 +25,13 @@ const Update = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit, touched, errors, setFieldValue } =
     useFormik({
       initialValues: {
-        old_dept_name: editData.dept_name,
-        dept_name: editData.dept_name,
-        dept_code: editData.dept_code,
-        status: editData.satus ? "Active" : "InActive",
+        old_employee_type: editData.employee_type,
+        employee_type: editData.employee_type,
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
-        const sendValues = { ...values, status: values.status === "Active" ? true : false };
         axios
-          .put(`${process.env.REACT_APP_BASE_URL}/employee_department`, sendValues, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -58,82 +55,23 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Name
+              Employee Type Name
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
-              required
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="dept_name"
-              value={values.dept_name}
+              name="employee_type"
+              value={values.employee_type}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.dept_name && Boolean(errors.dept_name)}
-              success={values.dept_name.length && !errors.dept_name}
-              helperText={touched.dept_name && errors.dept_name}
+              error={touched.employee_type && Boolean(errors.employee_type)}
+              success={values.employee_type.length && !errors.employee_type}
+              helperText={touched.employee_type && errors.employee_type}
             />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Code
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              required
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="dept_code"
-              value={values.dept_code}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.dept_code && Boolean(errors.dept_code)}
-              success={values.dept_code.length && !errors.dept_code}
-              helperText={touched.dept_code && errors.dept_code}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} mt={2}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Status
-            </MDTypography>
-          </Grid>
-          <Grid sm={7} item mt={2}>
-            <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                row
-                name="status"
-                value={values.status}
-                onChange={(event) => {
-                  setFieldValue("status", event.target.value);
-                }}
-              >
-                <FormControlLabel
-                  control={<Radio />}
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Active
-                    </MDTypography>
-                  }
-                  value="Active"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      InActive
-                    </MDTypography>
-                  }
-                  value="InActive"
-                />
-              </RadioGroup>
-            </FormControl>
           </Grid>
 
           <Grid

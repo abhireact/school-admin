@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const EmployementType = () => {
+const EmployeeType = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -79,10 +79,9 @@ const EmployementType = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchEmployeeType = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_emptype", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,11 +95,14 @@ const EmployementType = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchEmployeeType();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_emptype", {
-        data: { employee_type: name.employee_type },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
+        data: { emp_type: name.emp_type },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,7 +122,7 @@ const EmployementType = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Employment Type", accessor: "employee_type" },
+      { Header: "Employee Type", accessor: "employee_type" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -170,11 +172,11 @@ const EmployementType = () => {
       <DashboardNavbar />
 
       <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employement Type</MDTypography>
+        <MDTypography variant="h5">Employee Type</MDTypography>
         {rbacData ? (
           rbacData?.find((element: string) => element === "employee_typecreate") ? (
             <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employment Type
+              + New Employee Type
             </MDButton>
           ) : (
             ""
@@ -184,11 +186,11 @@ const EmployementType = () => {
         )}
 
         <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
+          <Create setOpen={setOpen} fetchData={fetchEmployeeType} />
         </Dialog>
 
         <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
+          <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchEmployeeType} />
         </Dialog>
       </Grid>
       <DataTable table={dataTableData} />
@@ -196,4 +198,4 @@ const EmployementType = () => {
   );
 };
 
-export default EmployementType;
+export default EmployeeType;

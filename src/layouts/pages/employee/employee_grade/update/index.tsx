@@ -25,16 +25,16 @@ const Update = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit, touched, errors, setFieldValue } =
     useFormik({
       initialValues: {
-        old_dept_name: editData.dept_name,
-        dept_name: editData.dept_name,
-        dept_code: editData.dept_code,
-        status: editData.satus ? "Active" : "InActive",
+        old_grade_name: editData.grade_name,
+        grade_name: editData.grade_name,
+        priority: editData.priority,
+        status: editData.status ? "Active" : "InActive",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
         const sendValues = { ...values, status: values.status === "Active" ? true : false };
         axios
-          .put(`${process.env.REACT_APP_BASE_URL}/employee_department`, sendValues, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_Egrade`, sendValues, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -58,52 +58,50 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Name
+              Grade Name
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
-              required
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="dept_name"
-              value={values.dept_name}
+              name="grade_name"
+              value={values.grade_name}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.dept_name && Boolean(errors.dept_name)}
-              success={values.dept_name.length && !errors.dept_name}
-              helperText={touched.dept_name && errors.dept_name}
+              error={touched.grade_name && Boolean(errors.grade_name)}
+              success={values.grade_name.length && !errors.grade_name}
+              helperText={touched.grade_name && errors.grade_name}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Code
+              Priority
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
-              required
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="dept_code"
-              value={values.dept_code}
+              name="priority"
+              value={values.priority}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.dept_code && Boolean(errors.dept_code)}
-              success={values.dept_code.length && !errors.dept_code}
-              helperText={touched.dept_code && errors.dept_code}
+              error={touched.priority && Boolean(errors.priority)}
+              success={values.priority.length && !errors.priority}
+              helperText={touched.priority && errors.priority}
             />
           </Grid>
-          <Grid item xs={12} sm={4} mt={2}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
               Status
             </MDTypography>
           </Grid>
-          <Grid sm={7} item mt={2}>
+          <Grid sm={7} item>
             <FormControl>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
@@ -135,7 +133,6 @@ const Update = (props: any) => {
               </RadioGroup>
             </FormControl>
           </Grid>
-
           <Grid
             item
             container

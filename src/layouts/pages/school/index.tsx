@@ -45,20 +45,20 @@ function SchoolShowPage() {
     email_id: "",
     timezone: "IST",
     currency_type: "INR",
-    grading_system: "CGPA",
-    logo: null,
+
+    school_logo: null,
   });
   const fetchSchoolInfo = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_school", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_school`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setSchoolData(response.data[0]);
-        console.log(response.data[0], "school information");
+        setSchoolData(response.data);
+        console.log(response.data, "school information");
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -70,31 +70,6 @@ function SchoolShowPage() {
 
   if (!schoolData) return <>loading...</>;
 
-  const initialValues = {
-    school_name: schoolData.school_name || "",
-    school_code: schoolData.school_code || "",
-    start_time: schoolData.start_time || "",
-    end_time: schoolData.end_time || "",
-    affiliacted_to: schoolData.affilicated_to || "",
-    reg_num: schoolData.reg_num || "",
-    mg_leave_calendar_start_date: schoolData.mg_leave_calendar_start_date || "",
-    address_line1: schoolData.address_line1 || "",
-    address_line2: schoolData.address_line2 || "",
-    street: schoolData.street || "",
-    landmark: schoolData.landmark || "",
-    city: schoolData.city || "",
-    state: schoolData.state || "",
-    pin_code: schoolData.pin_code || "",
-    country: schoolData.country || "",
-    mobile_number: schoolData.mobile_number || "",
-    fax_number: schoolData.fax_number || "000000000000",
-    email_id: schoolData.email_id || "",
-    timezone: schoolData.timezone || "IST",
-    currency_type: schoolData.currency_type || "INR",
-    grading_system: schoolData.grading_system || "CGPA",
-    logo: "",
-  };
-
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -104,55 +79,11 @@ function SchoolShowPage() {
   const handleClose = () => {
     setOpen(false);
   };
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
-    useFormik({
-      initialValues,
 
-      enableReinitialize: true,
-      onSubmit: async (values: any, action) => {
-        try {
-          const sendData = {
-            ...values,
-          };
-          const response = await axios.put("http://10.0.20.200:8000/mg_school", sendData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.status == 200) {
-            message.success("Updated Succesfully");
-            handleClose();
-            fetchSchoolInfo();
-          }
-          action.resetForm();
-        } catch (error) {
-          message.error("Error Occurred");
-        }
-      },
-    });
-  const handleImage = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("logo", e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container mt={2} spacing={1}>
+      <Grid container my={2} spacing={1}>
         <Grid item>
           <MDTypography variant="body1" color="secondary" fontWeight="bold">
             Edit
@@ -166,11 +97,7 @@ function SchoolShowPage() {
       </Grid>
       <Grid container>
         <Grid item xs={12} sm={4}>
-          <MDAvatar
-            alt="School Logo"
-            src={schoolData.logo}
-            sx={{ width: "65%", height: "auto", borderRadius: "50%" }}
-          />
+          <MDAvatar alt="School Logo" size="xxl" src={schoolData?.school_logo} />
         </Grid>
       </Grid>
 
@@ -206,17 +133,17 @@ function SchoolShowPage() {
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.school_name.toUpperCase()}
+                  {schoolData?.school_name?.toUpperCase()}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.school_code}
+                  {schoolData?.school_code}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.start_time}
+                  {schoolData?.start_time}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
@@ -236,17 +163,17 @@ function SchoolShowPage() {
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.end_time}
+                  {schoolData?.end_time}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.affilicated_to}
+                  {schoolData?.affilicated_to}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.reg_num}
+                  {schoolData?.reg_num}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
@@ -258,7 +185,7 @@ function SchoolShowPage() {
               <Grid item sm={4}></Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.mg_leave_calendar_start_date}
+                  {schoolData?.mg_leave_calendar_start_date}
                 </MDTypography>
               </Grid>
             </Grid>
@@ -294,17 +221,17 @@ function SchoolShowPage() {
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.address_line1}
+                  {schoolData?.address_line1}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.address_line2}
+                  {schoolData?.address_line2}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.street}
+                  {schoolData?.street}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
@@ -324,17 +251,17 @@ function SchoolShowPage() {
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.city}
+                  {schoolData?.city}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.state}
+                  {schoolData?.state}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.pin_code}
+                  {schoolData?.pin_code}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
@@ -350,12 +277,12 @@ function SchoolShowPage() {
               <Grid item sm={4}></Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.landmark}
+                  {schoolData?.landmark}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.country}
+                  {schoolData?.country}
                 </MDTypography>
               </Grid>
             </Grid>
@@ -390,17 +317,17 @@ function SchoolShowPage() {
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.mobile_number}
+                  {schoolData?.mobile_number}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.email_id}
+                  {schoolData?.email_id}
                 </MDTypography>
               </Grid>
               <Grid item sm={4}>
                 <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData.fax_number}
+                  {schoolData?.fax_number}
                 </MDTypography>
               </Grid>
             </Grid>
@@ -409,7 +336,7 @@ function SchoolShowPage() {
       </MDBox>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md">
-        <Update schoolData={schoolData} />
+        <Update schoolData={schoolData} handleClose={handleClose} fetchData={fetchSchoolInfo} />
       </Dialog>
     </DashboardLayout>
   );

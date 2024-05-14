@@ -42,7 +42,7 @@ interface FormValues {
   email_id: string;
   timezone: string;
   currency_type: string;
-  grading_system: string;
+
   logo: File | null; // Adjust the type according to your requirement
 }
 
@@ -86,7 +86,7 @@ const states = [
 ];
 
 const Create = (props: any) => {
-  const { schoolData } = props;
+  const { schoolData, handleClose, fetchData } = props;
   const initialValues: FormValues = {
     school_name: schoolData.school_name || "",
     school_code: schoolData.school_code || "",
@@ -108,7 +108,7 @@ const Create = (props: any) => {
     email_id: schoolData.email_id || "",
     timezone: schoolData.timezone || "IST",
     currency_type: schoolData.currency_type || "INR",
-    grading_system: schoolData.grading_system || "CGPA",
+
     logo: null,
     affiliated_to: "",
   };
@@ -118,23 +118,26 @@ const Create = (props: any) => {
 
       enableReinitialize: true,
       onSubmit: async (values: any, action) => {
-        try {
-          const sendData = {
-            ...values,
-          };
-          const response = await axios.put("http://10.0.20.200:8000/mg_school", sendData, {
+        const sendData = {
+          ...values,
+        };
+        await axios
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_school`, sendData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
+          })
+          .then((response) => {
+            handleClose();
+            fetchData();
+            message.success("School Updated Succesfully");
+            action.resetForm();
+          })
+          .catch((error: any) => {
+            console.log(error, "school error");
+            message.error(error.response.data.detail);
           });
-          if (response.status == 200) {
-            message.success("Created Leave Succesfully");
-          }
-          action.resetForm();
-        } catch (error: any) {
-          message.error(error.detail[0].msg);
-        }
       },
     });
   const handleImage = (e: { target: { files: any[] } }) => {
@@ -165,7 +168,7 @@ const Create = (props: any) => {
                 Update School Info
               </MDTypography>
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={8} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -178,22 +181,22 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12} mt={2}>
-              <MDTypography variant="body2">Upload School Logo .:</MDTypography>
+            <Grid item sm={6} xs={12} mt={2}>
+              <MDTypography variant="body2">Upload School Logo</MDTypography>
             </Grid>
-            <Grid item sm={4} xs={12} mt={2}>
+            <Grid item sm={6} xs={12} mt={2}>
               <MDInput
                 type="file"
                 accept="image/*"
                 name="logo"
                 onChange={handleImage}
-                sx={{ width: "84%" }}
                 variant="standard"
+                sx={{ width: "90%" }}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
 
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -206,7 +209,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -219,7 +222,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -232,7 +235,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -245,20 +248,8 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
-              <MDInput
-                required
-                autoComplete="off"
-                variant="standard"
-                name="grading_system"
-                label="Grading System"
-                value={values.grading_system}
-                onChange={handleChange}
-                sx={{ width: "90%" }}
-                mb={10}
-              />
-            </Grid>
-            <Grid item sm={4} xs={12}>
+
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -271,7 +262,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -285,7 +276,7 @@ const Create = (props: any) => {
               />
             </Grid>
 
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 placeholder="eg. 9:00 AM"
                 autoComplete="off"
@@ -298,7 +289,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 placeholder="eg. 5:00 PM"
                 autoComplete="off"
@@ -311,7 +302,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -323,7 +314,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -335,7 +326,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 placeholder="eg. 2018-19"
                 autoComplete="off"
@@ -348,7 +339,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -360,7 +351,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -372,7 +363,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -384,7 +375,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -396,7 +387,7 @@ const Create = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -410,7 +401,7 @@ const Create = (props: any) => {
                 sx={{ width: "90%" }}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <Autocomplete
                 sx={{ width: "90%" }}
                 onChange={(event, value) => {
@@ -434,7 +425,7 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 required
                 variant="standard"
@@ -446,7 +437,7 @@ const Create = (props: any) => {
                 sx={{ width: "90%" }}
               />
             </Grid>
-            <Grid item sm={4} xs={12}>
+            <Grid item sm={6} xs={12}>
               <MDInput
                 variant="standard"
                 name="country"

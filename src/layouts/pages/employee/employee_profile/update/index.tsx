@@ -22,19 +22,19 @@ const Update = (props: any) => {
   };
   //end
 
-  const { values, handleChange, handleBlur, handleSubmit, touched, errors, setFieldValue } =
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
-        old_dept_name: editData.dept_name,
-        dept_name: editData.dept_name,
-        dept_code: editData.dept_code,
+        old_position_name: editData.position_name,
+        position_name: editData.position_name,
+        category_name: editData.category_name || "",
         status: editData.satus ? "Active" : "InActive",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
         const sendValues = { ...values, status: values.status === "Active" ? true : false };
         axios
-          .put(`${process.env.REACT_APP_BASE_URL}/employee_department`, sendValues, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_employee_positions`, sendValues, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -56,48 +56,61 @@ const Update = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
         <Grid container>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Name
+              Category Name
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={7} mt={2}>
+            <Autocomplete
+              sx={{ width: "65%" }}
+              disableClearable
+              value={values.category_name}
+              onChange={(event, value) => {
+                handleChange({
+                  target: { name: "category_name", value },
+                });
+              }}
+              options={["Teaching Staff", "Non-Teaching Staff"]}
+              renderInput={(params: any) => (
+                <MDInput
+                  required
+                  InputLabelProps={{ shrink: true }}
+                  name="category_name"
+                  onChange={handleChange}
+                  value={values.category_name}
+                  {...params}
+                  variant="standard"
+                  onBlur={handleBlur}
+                  error={touched.category_name && Boolean(errors.category_name)}
+                  success={values.category_name.length && !errors.category_name}
+                  helperText={touched.category_name && errors.category_name}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={4} mt={2}>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              Position Name
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7} mt={2}>
             <MDInput
-              required
-              mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="dept_name"
-              value={values.dept_name}
+              required
+              name="position_name"
+              value={values.position_name}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.dept_name && Boolean(errors.dept_name)}
-              success={values.dept_name.length && !errors.dept_name}
-              helperText={touched.dept_name && errors.dept_name}
+              error={touched.position_name && Boolean(errors.position_name)}
+              success={values.position_name.length && !errors.position_name}
+              helperText={touched.position_name && errors.position_name}
             />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Department Code
-            </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              required
-              mb={2}
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="dept_code"
-              value={values.dept_code}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.dept_code && Boolean(errors.dept_code)}
-              success={values.dept_code.length && !errors.dept_code}
-              helperText={touched.dept_code && errors.dept_code}
-            />
-          </Grid>
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
               Status
@@ -135,7 +148,6 @@ const Update = (props: any) => {
               </RadioGroup>
             </FormControl>
           </Grid>
-
           <Grid
             item
             container
