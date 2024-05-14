@@ -1,5 +1,3 @@
-
-
 import { ReactNode } from "react";
 
 // @mui material components
@@ -23,6 +21,7 @@ import { useMaterialUIController } from "context";
 interface Props {
   header?: ReactNode;
   title?: string;
+  logo?: string;
   description?: string;
   children: ReactNode;
   illustration?: string;
@@ -31,6 +30,7 @@ interface Props {
 function IllustrationLayout({
   header,
   title,
+  logo,
   description,
   illustration,
   children,
@@ -40,15 +40,6 @@ function IllustrationLayout({
 
   return (
     <PageLayout background="white">
-      <DefaultNavbar
-        routes={pageRoutes}
-        action={{
-          type: "external",
-          route: "https://creative-tim.com/product/material-dashboard-2-pro-react-ts",
-          label: "buy now",
-          color: "info",
-        }}
-      />
       <Grid
         container
         sx={{
@@ -59,8 +50,8 @@ function IllustrationLayout({
         <Grid item xs={12} lg={6}>
           <MDBox
             display={{ xs: "none", lg: "flex" }}
-            width="calc(100% - 2rem)"
-            height="calc(100vh - 2rem)"
+            width="100%"
+            height="100%"
             borderRadius="lg"
             ml={2}
             mt={2}
@@ -69,21 +60,17 @@ function IllustrationLayout({
         </Grid>
         <Grid item xs={11} sm={8} md={6} lg={4} xl={3} sx={{ mx: "auto" }}>
           <MDBox display="flex" flexDirection="column" justifyContent="center" height="100vh">
-            <MDBox py={3} px={3} textAlign="center">
-              {!header ? (
-                <>
-                  <MDBox mb={1} textAlign="center">
-                    <MDTypography variant="h4" fontWeight="bold">
-                      {title}
-                    </MDTypography>
-                  </MDBox>
-                  <MDTypography variant="body2" color="text">
-                    {description}
-                  </MDTypography>
-                </>
-              ) : (
-                header
-              )}
+            <MDBox py={2} px={2} textAlign="center">
+              <MDBox textAlign="center">
+
+                <img src={logo} alt="logo" width={"75%"} />
+                <MDTypography variant="h4" fontWeight="bold">
+                  {title}
+                </MDTypography>
+              </MDBox>
+              <MDTypography variant="body2" color="text">
+                {description}
+              </MDTypography>
             </MDBox>
             <MDBox p={3}>{children}</MDBox>
           </MDBox>
@@ -97,6 +84,7 @@ function IllustrationLayout({
 IllustrationLayout.defaultProps = {
   header: "",
   title: "",
+  logo: "",
   description: "",
   illustration: "",
 };
