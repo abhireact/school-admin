@@ -49,7 +49,10 @@ import MYProfile from "layouts/pages/authentication/myprofile";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
 import MyDashboard from "layouts/pages/dashboard";
-
+import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create";
+import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
+import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
+import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -132,6 +135,30 @@ let routes = [
         component: <MYProfile />,
       },
     ],
+  },
+  {
+    name: "createfee category",
+    key: "createfeecategory",
+    route: "/fee/create_fee_category",
+    component: <CreateFeeCategory />,
+  },
+  {
+    name: "create fee amount perticular",
+    key: "createfeeamountperticular",
+    route: "/fee/create_fee_amount_perticular",
+    component: <CreateFeeParicularAmount />,
+  },
+  {
+    name: "edit fee amount perticular",
+    key: "editfeeamountperticular",
+    route: "/fee/edit_fee_amount_perticular",
+    component: <EditFeeParicularAmount />,
+  },
+  {
+    name: "Fee amount Perticular",
+    key: "manage_fee_amount_perticular",
+    route: "/fee/fee_category/manage_fee_amount_perticular",
+    component: <ManageFeeAmountPerticular />,
   },
 ];
 

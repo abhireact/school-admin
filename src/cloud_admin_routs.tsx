@@ -29,6 +29,5 @@ const CloudAdminRouts = [
       },
     ],
   },
-
 ];
 export default CloudAdminRouts;
