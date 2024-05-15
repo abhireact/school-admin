@@ -183,7 +183,9 @@ const EmpInfo = () => {
           <Card>
             <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
               <Grid item pt={2} pl={2}>
-                <MDTypography variant="h5">Employee Information</MDTypography>
+                <MDTypography variant="h5" color="secondary" fontWeight="bold">
+                  Employee Information
+                </MDTypography>
               </Grid>
               {rbacData ? (
                 rbacData?.find((element: string) => element === "employee_infocreate") ? (
