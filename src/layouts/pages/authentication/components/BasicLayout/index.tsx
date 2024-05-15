@@ -41,7 +41,6 @@ interface Props {
 function BasicLayout({ image, children }: Props): JSX.Element {
   return (
     <PageLayout>
-
       <MDBox
         position="absolute"
         width="100%"

@@ -48,6 +48,7 @@ import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import Admin from "layouts/pages/school/create";
+import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 
 const routes = [
   {
@@ -66,12 +67,6 @@ const routes = [
         route: "pages/rbac/roles",
         component: <Roles />,
       },
-      // {
-      //   name: "User",
-      //   key: "user",
-      //   route: "pages/rbac/user",
-      //   component: <User />,
-      // },
       {
         name: "Master Admin",
         key: "master",
@@ -322,6 +317,24 @@ const routes = [
       </Icon>
     ),
     collapse: [
+      {
+        name: "Manage Fee",
+        key: "manage_fee",
+        collapse: [
+          {
+            name: "Fee Category",
+            key: "fee_category",
+            route: "fee/fee_category",
+            component: <FeeCategory />,
+          },
+        ],
+      },
+      {
+        name: "Caste Category",
+        key: "castecategory",
+        route: "/pages/school/castecategory",
+        component: <CasteCategory />,
+      },
       {
         name: "Late Fee",
         key: "latefee",
