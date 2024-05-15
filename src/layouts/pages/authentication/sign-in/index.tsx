@@ -61,7 +61,7 @@
 //     const sanitizedPassword = password.replace(/[<>"]/g, "");
 
 //     const res = await axios.post(
-//       "http://10.0.20.200:8000/token",
+//       "http://10.0.20.200:8000/token1",
 //       {
 //         username: email,
 //         //   email: sanitizedEmail,
@@ -350,7 +350,7 @@ interface LogoData {
 }
 function CoverLogin(): JSX.Element {
   const [username, setUsername] = useState("");
-const [logoData, setLogoData] = useState<LogoData | null>(null);
+  const [logoData, setLogoData] = useState<LogoData | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -413,7 +413,7 @@ const [logoData, setLogoData] = useState<LogoData | null>(null);
       const sanitizedPassword = password.replace(/[<>"]/g, "");
 
       const res = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/token`,
+        `${process.env.REACT_APP_BASE_URL}/token1`,
         {
           username: email,
           url: url,
