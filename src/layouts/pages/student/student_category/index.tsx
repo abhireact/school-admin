@@ -114,10 +114,10 @@ const StudentCategory = () => {
         // Filter out the deleted user from the data
         FetchStudentCategory();
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
