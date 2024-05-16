@@ -33,6 +33,43 @@ const token = Cookies.get("token");
 function not(a: readonly string[], b: readonly string[]) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
+interface Section {
+  section_name: string;
+  start_date: string;
+  end_date: string;
+}
+
+interface Class {
+  academic_year: string;
+  wing_name: string;
+  class_name: string;
+  class_code: string;
+  index: number;
+  section_data: Section[];
+}
+
+interface TransformedSection {
+  section_name: string;
+  start_date: string;
+  end_date: string;
+}
+
+interface TransformedClass {
+  class_name: string;
+  sections: TransformedSection[];
+}
+
+interface TransformedWing {
+  wing_name: string;
+  classes: TransformedClass[];
+}
+
+interface WingMap {
+  [key: string]: {
+    wing_name: string;
+    classess: { [key: string]: TransformedClass };
+  };
+}
 
 export default function CreateFeeParicularAmount() {
   let initialValues = {
@@ -59,8 +96,11 @@ export default function CreateFeeParicularAmount() {
     },
   });
 
-  const { classes, account } = useSelector((state: any) => state);
-
+  // const { classes, account } = useSelector((state: any) => state);
+  const data = useSelector((state: any) => state);
+  console.log(data.wings, "lllllllllllllllllllllll");
+  const classes = data.classes;
+  const account = data.account;
   const [feeCategory, setFeecategory] = useState([]);
   const [checked, setChecked] = useState<readonly string[]>([]);
   const [selectedTab, setSelectedTab] = useState(0);
@@ -107,6 +147,30 @@ export default function CreateFeeParicularAmount() {
     setSelectedTab(newValue);
   };
 
+  const result: TransformedWing[] = [];
+  const wingMap: WingMap = {};
+
+  classes
+    ? classes.forEach((item: Class) => {
+        const { wing_name, class_name, section_data } = item;
+
+        // Initialize wing if it does not exist
+        if (!wingMap[wing_name]) {
+          wingMap[wing_name] = { wing_name, classess: {} };
+          result.push(wingMap[wing_name] as unknown as TransformedWing);
+        }
+
+        // Initialize class if it does not exist
+        if (!wingMap[wing_name].classess[class_name]) {
+          wingMap[wing_name].classess[class_name] = { class_name, sections: [] };
+        }
+
+        // Add section data to the class
+        wingMap[wing_name].classess[class_name].sections.push(...section_data);
+      })
+    : [];
+
+  console.log(classes, result, "llllllllllllllllooo");
   const wingdata = [
     {
       title: "Wing 1",
@@ -190,7 +254,7 @@ export default function CreateFeeParicularAmount() {
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "fee_category", value } });
                   }}
-                  options={feeCategory.map((item) => item.name)}
+                  options={feeCategory ? feeCategory.map((item) => item.name) : []}
                   renderInput={(params) => (
                     <MDInput
                       required
@@ -242,7 +306,7 @@ export default function CreateFeeParicularAmount() {
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "account", value } });
                   }}
-                  options={account.map((item: any) => item.account_name)}
+                  options={account ? account.map((item: any) => item.account_name) : []}
                   renderInput={(params) => (
                     <MDInput
                       required
@@ -361,9 +425,11 @@ export default function CreateFeeParicularAmount() {
                         onChange={(_event, value) => {
                           handleChange({ target: { name: "academic_year", value } });
                         }}
-                        options={Array.from(
-                          new Set(classes.map((item: any) => item.academic_year))
-                        )}
+                        options={
+                          classes
+                            ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                            : []
+                        }
                         renderInput={(params) => (
                           <MDInput
                             required
