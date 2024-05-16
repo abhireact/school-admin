@@ -166,6 +166,7 @@ const Create = (props: any) => {
                 sx={{ width: "80%" }}
                 variant="standard"
                 name={`relation`}
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Relation

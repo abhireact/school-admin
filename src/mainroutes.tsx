@@ -152,12 +152,12 @@ const routes = [
       //   route: "/pages/school/academicgrade",
       //   component: <AcademicGrade />,
       // },
-      {
-        name: "Non-Scholastic Grade",
-        key: "nonacademicgrade",
-        route: "/pages/school/nonacademicgrade",
-        component: <NonAcademicGrade />,
-      },
+      // {
+      //   name: "Non-Scholastic Grade",
+      //   key: "nonacademicgrade",
+      //   route: "/pages/school/nonacademicgrade",
+      //   component: <NonAcademicGrade />,
+      // },
       {
         name: "Caste",
         key: "caste",

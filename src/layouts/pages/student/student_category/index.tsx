@@ -193,7 +193,7 @@ const StudentCategory = () => {
               ""
             )}
           </Grid>
-          <DataTable table={dataTableData} />
+          <DataTable table={dataTableData} canSearch />
         </Grid>
       </Card>
       <Dialog open={open} onClose={handleClose}>

@@ -165,8 +165,8 @@ const EmpAccount = () => {
           )}
         </MDTypography>
       ),
-      description: <MDTypography variant="p">{row.description}</MDTypography>,
-      account_name: <MDTypography variant="p">{row.account_name}</MDTypography>,
+      description: row.description,
+      account_name: row.account_name,
     })),
   };
 
@@ -195,7 +195,7 @@ const EmpAccount = () => {
             )}
           </Grid>
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
       <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
         <Update setOpenupdate={setOpenupdate} editData={editData} fetchingData={fetchAccountData} />

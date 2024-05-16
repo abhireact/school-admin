@@ -21,12 +21,33 @@ import MDAvatar from "components/MDAvatar";
 const token = Cookies.get("token");
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { message } from "antd";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  school_name: Yup.string().required("Required *"),
+  school_code: Yup.string().required("Required *"),
+  address_line1: Yup.string().required("Required *"),
+  start_time: Yup.string().required("Required *"),
+  end_time: Yup.string().required("Required *"),
+  mobile_number: Yup.string()
+    .matches(/^[0-9]{10}$/, "Incorrect Format *")
+    .required("Required *"),
+  email_id: Yup.string().email("Incorrect Format *").required("Required *"),
+  city: Yup.string().required("Required *"),
+  state: Yup.string().required("Required *"),
+  pin_code: Yup.string()
+    .matches(/^[0-9]{6}$/, "Incorrect Format *")
+    .required("Required *"),
+  affilicated_to: Yup.string().required("Required *"),
+  fax_number: Yup.string().matches(/^\d+$/, "Incorrect Format *"),
+  reg_num: Yup.string().required("Required *"),
+  mg_leave_calendar_start_date: Yup.date().required("Required *"),
+});
 interface FormValues {
   school_name: string;
   school_code: string;
   start_time: string;
   end_time: string;
-  affiliated_to: string;
+  affilicated_to: string;
   reg_num: string;
   mg_leave_calendar_start_date: string;
   address_line1: string;
@@ -43,7 +64,7 @@ interface FormValues {
   timezone: string;
   currency_type: string;
 
-  logo: File | null; // Adjust the type according to your requirement
+  school_logo: File | null; // Adjust the type according to your requirement
 }
 const twentyfour = [
   "1:00am",
@@ -159,14 +180,15 @@ const Update = (props: any) => {
     timezone: schoolData.timezone || "IST",
     currency_type: schoolData.currency_type || "INR",
 
-    logo: null,
-    affiliated_to: "",
+    school_logo: null,
+    affilicated_to: schoolData.affilicated_to || "",
   };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
 
       enableReinitialize: true,
+      validationSchema: validationSchema,
       onSubmit: async (values: any, action) => {
         const sendData = {
           ...values,
@@ -202,7 +224,7 @@ const Update = (props: any) => {
 
       // Check file type
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("logo", e.target.files[0]);
+        setFieldValue("school_logo", e.target.files[0]);
       } else {
         message.error("Please select a valid PNG, JPEG, or HEIC image.");
       }
@@ -220,27 +242,30 @@ const Update = (props: any) => {
             </Grid>
             <Grid item sm={12} xs={12}>
               <MDInput
-                required
                 autoComplete="off"
                 variant="standard"
                 name="school_name"
                 label="School Name"
                 value={values.school_name}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.school_name && Boolean(errors.school_name)}
+                helperText={touched.school_name && errors.school_name}
+                success={values.school_name.length && !errors.school_name}
                 sx={{ width: "95%" }}
                 mb={10}
               />
             </Grid>
             <Grid item sm={6} xs={12} mt={2}>
               <MDTypography color="secondary" fontWeight="bold" variant="body2">
-                Upload School Logo
+                Upload School School Logo
               </MDTypography>
             </Grid>
             <Grid item sm={6} xs={12} mt={2}>
               <MDInput
                 type="file"
                 accept="image/*"
-                name="logo"
+                name="school_logo"
                 onChange={handleImage}
                 variant="standard"
                 sx={{ width: "90%" }}
@@ -250,52 +275,64 @@ const Update = (props: any) => {
 
             <Grid item sm={6} xs={12}>
               <MDInput
-                required
                 autoComplete="off"
                 variant="standard"
                 name="school_code"
                 label="School Code"
                 value={values.school_code}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.school_code && Boolean(errors.school_code)}
+                helperText={touched.school_code && errors.school_code}
+                success={values.school_code.length && !errors.school_code}
                 sx={{ width: "90%" }}
                 mb={10}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
               <MDInput
-                required
                 autoComplete="off"
                 variant="standard"
                 name="mobile_number"
                 label="Mobile Number"
                 value={values.mobile_number}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.mobile_number && Boolean(errors.mobile_number)}
+                helperText={touched.mobile_number && errors.mobile_number}
+                success={values.mobile_number.length && !errors.mobile_number}
                 sx={{ width: "90%" }}
                 mb={10}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
               <MDInput
-                required
                 autoComplete="off"
                 variant="standard"
                 name="email_id"
                 label="Email Id"
                 value={values.email_id}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.email_id && Boolean(errors.email_id)}
+                helperText={touched.email_id && errors.email_id}
+                success={values.email_id.length && !errors.school_code}
                 sx={{ width: "90%" }}
                 mb={10}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
               <MDInput
-                required
                 autoComplete="off"
                 variant="standard"
                 name="fax_number"
                 label="Fax Number"
                 value={values.fax_number}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.fax_number && Boolean(errors.fax_number)}
+                helperText={touched.fax_number && errors.fax_number}
+                success={values.fax_number.length && !errors.fax_number}
                 sx={{ width: "90%" }}
                 mb={10}
               />
@@ -303,26 +340,30 @@ const Update = (props: any) => {
 
             <Grid item sm={6} xs={12}>
               <MDInput
-                required
                 autoComplete="off"
                 variant="standard"
                 name="timezone"
                 label="Time Zone"
                 value={values.timezone}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.timezone && Boolean(errors.timezone)}
+                helperText={touched.timezone && errors.timezone}
+                success={values.timezone.length && !errors.timezone}
                 sx={{ width: "90%" }}
                 mb={10}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
               <Autocomplete
+                disableClearable
                 sx={{ width: "90%" }}
                 onChange={(event, value) => {
                   handleChange({
                     target: { name: "currency_type", value },
                   });
                 }}
-                value={values.state}
+                value={values.currency_type}
                 options={currencytypes}
                 renderInput={(params: any) => (
                   <FormField
@@ -331,7 +372,11 @@ const Update = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="currency_type"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.currency_type}
+                    error={touched.currency_type && Boolean(errors.currency_type)}
+                    helperText={touched.currency_type && errors.currency_type}
+                    success={values.currency_type.length && !errors.currency_type}
                     {...params}
                     variant="outlined"
                   />
@@ -345,8 +390,12 @@ const Update = (props: any) => {
                 variant="standard"
                 name="affilicated_to"
                 label="Affiliated To"
-                value={values.affiliated_to}
+                value={values.affilicated_to}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.affilicated_to && Boolean(errors.affilicated_to)}
+                helperText={touched.affilicated_to && errors.affilicated_to}
+                success={values.affilicated_to.length && !errors.affilicated_to}
                 sx={{ width: "90%" }}
                 mb={10}
               />
@@ -359,6 +408,10 @@ const Update = (props: any) => {
                 label="Registration Number"
                 value={values.reg_num}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.reg_num && Boolean(errors.reg_num)}
+                helperText={touched.reg_num && errors.reg_num}
+                success={values.reg_num.length && !errors.reg_num}
                 sx={{ width: "90%" }}
                 mb={10}
               />
@@ -381,7 +434,11 @@ const Update = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="start_time"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.start_time}
+                    error={touched.start_time && Boolean(errors.start_time)}
+                    helperText={touched.start_time && errors.start_time}
+                    success={values.start_time.length && !errors.start_time}
                     {...params}
                     variant="outlined"
                   />
@@ -406,7 +463,11 @@ const Update = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="end_time"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.end_time}
+                    error={touched.end_time && Boolean(errors.end_time)}
+                    helperText={touched.end_time && errors.end_time}
+                    success={values.end_time.length && !errors.end_time}
                     {...params}
                     variant="outlined"
                   />
@@ -415,13 +476,24 @@ const Update = (props: any) => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <MDInput
-                placeholder="eg. 2018-19"
                 autoComplete="off"
                 variant="standard"
+                type="date"
                 name="mg_leave_calendar_start_date"
                 label="Leave Calendar Date"
                 value={values.mg_leave_calendar_start_date}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={
+                  touched.mg_leave_calendar_start_date &&
+                  Boolean(errors.mg_leave_calendar_start_date)
+                }
+                helperText={
+                  touched.mg_leave_calendar_start_date && errors.mg_leave_calendar_start_date
+                }
+                success={
+                  values.mg_leave_calendar_start_date.length && !errors.mg_leave_calendar_start_date
+                }
                 sx={{ width: "90%" }}
                 mb={10}
               />
@@ -434,6 +506,10 @@ const Update = (props: any) => {
                 label="Landmark"
                 value={values.landmark}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.landmark && Boolean(errors.landmark)}
+                helperText={touched.landmark && errors.landmark}
+                success={values.landmark.length && !errors.landmark}
                 sx={{ width: "90%" }}
                 mb={10}
               />
@@ -446,6 +522,10 @@ const Update = (props: any) => {
                 label="Address Line 1"
                 value={values.address_line1}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.address_line1 && Boolean(errors.address_line1)}
+                helperText={touched.address_line1 && errors.address_line1}
+                success={values.address_line1.length && !errors.address_line1}
                 sx={{ width: "90%" }}
                 mb={10}
               />
@@ -458,6 +538,10 @@ const Update = (props: any) => {
                 label="Address Line 2"
                 value={values.address_line2}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.address_line2 && Boolean(errors.address_line2)}
+                helperText={touched.address_line2 && errors.address_line2}
+                success={values.address_line2.length && !errors.address_line2}
                 sx={{ width: "90%" }}
                 mb={10}
               />
@@ -470,19 +554,26 @@ const Update = (props: any) => {
                 label="Street"
                 value={values.street}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.street && Boolean(errors.street)}
+                helperText={touched.street && errors.street}
+                success={values.street.length && !errors.street}
                 sx={{ width: "90%" }}
                 mb={10}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
               <MDInput
-                required
                 autoComplete="off"
                 variant="standard"
                 name="city"
                 label="City"
                 value={values.city}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.city && Boolean(errors.city)}
+                helperText={touched.city && errors.city}
+                success={values.city.length && !errors.city}
                 mb={10}
                 mt={10}
                 sx={{ width: "90%" }}
@@ -505,7 +596,11 @@ const Update = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="state"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.state}
+                    error={touched.state && Boolean(errors.state)}
+                    helperText={touched.state && errors.state}
+                    success={values.state.length && !errors.state}
                     {...params}
                     variant="outlined"
                   />
@@ -514,12 +609,15 @@ const Update = (props: any) => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <MDInput
-                required
                 variant="standard"
                 name="pin_code"
-                label="Pin_code"
+                label="Pin Code"
                 value={values.pin_code}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.pin_code && Boolean(errors.pin_code)}
+                helperText={touched.pin_code && errors.pin_code}
+                success={values.pin_code.length && !errors.pin_code}
                 mb={10}
                 sx={{ width: "90%" }}
               />
@@ -531,6 +629,10 @@ const Update = (props: any) => {
                 label="Country"
                 value={values.country}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.country && Boolean(errors.country)}
+                helperText={touched.country && errors.country}
+                success={values.country.length && !errors.country}
                 mb={10}
                 sx={{ width: "90%" }}
               />

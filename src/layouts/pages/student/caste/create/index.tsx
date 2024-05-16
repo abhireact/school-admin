@@ -38,50 +38,49 @@ const Create = (props: any) => {
           },
         })
         .then(() => {
-          message.success("Created successfully!");
-          fetchData();
-          handleClose();
-        })
-        .catch(() => {
-          message.error("Error on creating  !");
-        });
+          action.resetForm();
 
-      action.resetForm();
+          handleClose();
+          message.success("Created Successfully!");
+          fetchData();
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
     },
   });
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               CASTE
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               sx={{ width: "65%" }}
               variant="standard"
               name="name"
+              placeholder="Enter Caste"
               value={values.name}
               onChange={handleChange}
               error={touched.name && Boolean(errors.name)}
               helperText={touched.name && errors.name}
+              success={values.name.length && !errors.name}
               onBlur={handleBlur}
             />
           </Grid>
 
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               DESCRIPTION
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              multiline
-              mb={2}
               sx={{ width: "65%" }}
               rows={3}
               variant="standard"
@@ -91,6 +90,7 @@ const Create = (props: any) => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.description && Boolean(errors.description)}
+              success={values.description.length && !errors.description}
               helperText={touched.description && errors.description}
             />
           </Grid>

@@ -167,7 +167,7 @@ const Academic = () => {
             )}{" "}
           </Grid>
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={fetchWings} />

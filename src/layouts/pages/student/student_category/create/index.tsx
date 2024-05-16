@@ -68,6 +68,7 @@ const Create = (props: any) => {
               onChange={handleChange}
               error={touched.category_name && Boolean(errors.category_name)}
               helperText={touched.category_name && errors.category_name}
+              success={values.category_name.length && !errors.category_name}
               onBlur={handleBlur}
             />
           </Grid>
@@ -92,6 +93,7 @@ const Create = (props: any) => {
               onBlur={handleBlur}
               error={touched.description && Boolean(errors.description)}
               helperText={touched.description && errors.description}
+              success={values.description.length && !errors.description}
             />
           </Grid>
 
