@@ -307,93 +307,162 @@ const routes = [
       },
     ],
   },
+  // {
+  //   type: "collapse",
+  //   name: "Fee",
+  //   key: "fee",
+  //   icon: (
+  //     <Icon fontSize="medium">
+  //       <CurrencyRupeeIcon />
+  //     </Icon>
+  //   ),
+  //   collapse: [
+  //     {
+  //       name: "Late Fee",
+  //       key: "latefee",
+  //       route: "pages/fee/latefee",
+  //       component: <LateFee />,
+  //     },
+  //     {
+  //       name: "Excess Fee ",
+  //       key: "excessfee",
+  //       route: "pages/fee/excessfee",
+  //       component: <ExcessFee />,
+  //     },
+  //     {
+  //       name: "Fine Particular",
+  //       key: "fineparticular",
+  //       route: "pages/fee/fineparticular",
+  //       component: <FineParticular />,
+  //     },
+  //     {
+  //       name: "Fee Collection",
+  //       key: "feecollection",
+  //       route: "pages/fee/feecollection",
+  //       component: <FeeCollection />,
+  //     },
+  //     {
+  //       name: "Fee By Admission Number",
+  //       key: "feecollectionbyadmission",
+  //       route: "pages/fee/feecollectionbyadmission",
+  //       component: <FeeCollectionByAdmission />,
+  //     },
+  //     {
+  //       name: "Generate Fee Slip",
+  //       key: "feereceipt",
+  //       route: "pages/fee/feereceipt",
+  //       component: <FeeReceipt />,
+  //     },
+  //     {
+  //       name: "Fee Schedule",
+  //       key: "feeschedule",
+  //       route: "pages/fee/feeschedule",
+  //       component: <FeeSchedule />,
+  //     },
+  //     {
+  //       name: "Fee Certificate",
+  //       key: "feecertificate",
+  //       route: "pages/fee/feecertificate",
+  //       component: <FeeCertificate />,
+  //     },
+  //     {
+  //       name: "Fee Register without Payment Mode",
+  //       key: "feeregister",
+  //       route: "pages/fee/feeregister",
+  //       component: <FeeRegister />,
+  //     },
+  //     {
+  //       name: "Student Certificate",
+  //       key: "studentcertificate",
+  //       route: "pages/fee/studentcertificate",
+  //       component: <StudentCertificate />,
+  //     },
+  //   ],
+  // },
   {
     type: "collapse",
     name: "Fee",
     key: "fee",
-    icon: (
-      <Icon fontSize="medium">
-        <CurrencyRupeeIcon />
-      </Icon>
-    ),
+    icon: <Icon fontSize="medium">dashboard</Icon>,
     collapse: [
       {
-        name: "Manage Fee",
-        key: "manage_fee",
+        // type: "collapse",
+        name: "Manage Fees",
+        key: "managefees",
+
         collapse: [
           {
-            name: "Fee Category",
-            key: "fee_category",
-            route: "fee/fee_category",
-            component: <FeeCategory />,
+            name: "Excess Fee ",
+            key: "excessfee",
+            route: "pages/fee/excessfee",
+            component: <ExcessFee />,
+          },
+          {
+            name: "Late Fee",
+            key: "latefee",
+            route: "pages/fee/latefee",
+            component: <LateFee />,
+          },
+          {
+            name: "Fee Collection",
+            key: "feecollection",
+            route: "pages/fee/feecollection",
+            component: <FeeCollection />,
+          },
+          {
+            name: "Fee By Admission No",
+            key: "feecollectionbyadmission",
+            route: "pages/fee/feecollectionbyadmission",
+            component: <FeeCollectionByAdmission />,
+          },
+
+          {
+            name: "Fee Schedule",
+            key: "feeschedule",
+            route: "pages/fee/feeschedule",
+            component: <FeeSchedule />,
+          },
+          {
+            name: "Fine Particular",
+            key: "fineparticular",
+            route: "pages/fee/fineparticular",
+            component: <FineParticular />,
           },
         ],
       },
+
       {
-        name: "Caste Category",
-        key: "castecategory",
-        route: "/pages/school/castecategory",
-        component: <CasteCategory />,
-      },
-      {
-        name: "Late Fee",
-        key: "latefee",
-        route: "pages/fee/latefee",
-        component: <LateFee />,
-      },
-      {
-        name: "Excess Fee ",
-        key: "excessfee",
-        route: "pages/fee/excessfee",
-        component: <ExcessFee />,
-      },
-      {
-        name: "Fine Particular",
-        key: "fineparticular",
-        route: "pages/fee/fineparticular",
-        component: <FineParticular />,
-      },
-      {
-        name: "Fee Collection",
-        key: "feecollection",
-        route: "pages/fee/feecollection",
-        component: <FeeCollection />,
-      },
-      {
-        name: "Fee By Admission Number",
-        key: "feecollectionbyadmission",
-        route: "pages/fee/feecollectionbyadmission",
-        component: <FeeCollectionByAdmission />,
-      },
-      {
-        name: "Generate Fee Slip",
-        key: "feereceipt",
-        route: "pages/fee/feereceipt",
-        component: <FeeReceipt />,
-      },
-      {
-        name: "Fee Schedule",
-        key: "feeschedule",
-        route: "pages/fee/feeschedule",
-        component: <FeeSchedule />,
-      },
-      {
-        name: "Fee Certificate",
-        key: "feecertificate",
-        route: "pages/fee/feecertificate",
-        component: <FeeCertificate />,
-      },
-      {
-        name: "Fee Register without Payment Mode",
-        key: "feeregister",
-        route: "pages/fee/feeregister",
-        component: <FeeRegister />,
-      },
-      {
-        name: "Student Certificate",
-        key: "studentcertificate",
-        route: "pages/fee/studentcertificate",
-        component: <StudentCertificate />,
+        // type: "collapse",
+        name: "Fee Reports",
+        icon: <Icon fontSize="medium">F</Icon>,
+        key: "feereports",
+
+        collapse: [
+          {
+            name: "Fee Receipt",
+            key: "feereceipt",
+            route: "pages/fee/feereceipt",
+            component: <FeeReceipt />,
+          },
+          {
+            name: "Fee Register without Payment Mode",
+            key: "feeregister",
+            route: "pages/fee/feeregister",
+            component: <FeeRegister />,
+          },
+          {
+            name: "Fee Certificate",
+            key: "feecertificate",
+            route: "pages/fee/feecertificate",
+            component: <FeeCertificate />,
+          },
+          {
+            name: "Student Certificate",
+            key: "studentcertificate",
+            route: "pages/fee/studentcertificate",
+            component: <StudentCertificate />,
+          },
+        ],
       },
     ],
   },
