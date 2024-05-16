@@ -187,7 +187,7 @@ const Create = () => {
                 />
               </Grid>
               <Grid item sm={3} xs={12} mt={2}>
-                <MDTypography variant="body2"> School Logo .:</MDTypography>
+                <MDTypography variant="body2"> School Logo </MDTypography>
               </Grid>
               <Grid item sm={6} xs={12} mt={2}>
                 <MDInput

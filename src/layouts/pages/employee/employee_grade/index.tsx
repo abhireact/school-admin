@@ -14,13 +14,13 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const EmployementType = () => {
+const EmpGrade = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -79,10 +79,9 @@ const EmployementType = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchEmployeeGrade = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_emptype", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_empgrd`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,11 +95,14 @@ const EmployementType = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchEmployeeGrade();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_emptype", {
-        data: { employee_type: name.employee_type },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
+        data: { emp_type: name.emp_type },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -112,15 +114,15 @@ const EmployementType = () => {
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
     columns: [
-      { Header: "Employment Type", accessor: "employee_type" },
+      { Header: "Employee Grade", accessor: "grade_name" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -162,38 +164,45 @@ const EmployementType = () => {
         </MDTypography>
       ),
 
-      employee_type: <MDTypography variant="p">{row.employee_type}</MDTypography>,
+      grade_name: <MDTypography variant="p">{row.grade_name}</MDTypography>,
     })),
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            <MDTypography variant="h5" color="secondary" fontWeight="bold">
+              Employee Grade
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {" "}
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "employee_typecreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + New Employee Grade
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchEmployeeGrade} />
+      </Dialog>
 
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employement Type</MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "employee_typecreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employment Type
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchEmployeeGrade} />
+      </Dialog>
     </DashboardLayout>
   );
 };
 
-export default EmployementType;
+export default EmpGrade;

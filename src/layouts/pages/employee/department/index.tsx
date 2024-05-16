@@ -14,13 +14,13 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const Employee = () => {
+const Department = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -48,26 +48,8 @@ const Employee = () => {
   useEffect(() => {
     fetchRbac();
   }, [token]);
-
   //End
   const [data, setData] = useState([]);
-  useEffect(() => {
-    axios
-      .get("http://10.0.20.200:8000/mg_dept", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
 
   //Start
 
@@ -97,33 +79,50 @@ const Employee = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
+  const fetchEmployeeType = () => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/employee_department`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setData(response.data);
 
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  useEffect(() => {
+    fetchEmployeeType();
+  }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(
-        `${process.env.REACT_APP_BASE_URL}/mg_dept?Dept_name=${name}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
+        data: { emp_type: name.emp_type },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status === 200) {
-        message.error("Deleted successFully");
+        message.success("Deleted successFully");
         // Filter out the deleted user from the data
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
     columns: [
-      { Header: "Department Name ", accessor: "dept_name" },
+      { Header: "Department Name", accessor: "dept_name" },
       { Header: "Department Code", accessor: "dept_code" },
 
       { Header: "Action", accessor: "action" },
@@ -147,11 +146,12 @@ const Employee = () => {
           ) : (
             ""
           )}
+
           {rbacData ? (
             rbacData?.find((element: string) => element === "departmentdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.dept_name);
+                  handleDelete(row);
                 }}
               >
                 <DeleteIcon />
@@ -166,39 +166,46 @@ const Employee = () => {
       ),
 
       dept_name: <MDTypography variant="p">{row.dept_name}</MDTypography>,
-
       dept_code: <MDTypography variant="p">{row.dept_code}</MDTypography>,
     })),
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            {" "}
+            <MDTypography variant="h5" fontweight="bold" color="secondary">
+              Department
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {" "}
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "departmentcreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + New Department
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>{" "}
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
 
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Department</MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "departmentcreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Department
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update setOpenupdate={setOpenupdate} editData={editData} />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchEmployeeType} />
+      </Dialog>
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchEmployeeType} />
+      </Dialog>
     </DashboardLayout>
   );
 };
 
-export default Employee;
+export default Department;

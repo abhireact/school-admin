@@ -66,7 +66,7 @@ function BaseLayout({ stickyNavbar, children }: Props): JSX.Element {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar absolute={!stickyNavbar} isMini />
+      <DashboardNavbar absolute={!stickyNavbar} />
       <MDBox mt={stickyNavbar ? 3 : 10}>{children}</MDBox>
     </DashboardLayout>
   );

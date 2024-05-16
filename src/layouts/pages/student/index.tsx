@@ -144,22 +144,20 @@ const Student = () => {
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
     columns: [
       { Header: "Student Name", accessor: "full_name" },
-
       { Header: "Class", accessor: "class_name" },
       { Header: "Section", accessor: "section_name" },
       { Header: "Gender", accessor: "gender" },
       { Header: "Admission Number", accessor: "admission_number" },
       { Header: "User ID", accessor: "user_id" },
-
       { Header: "Action", accessor: "action" },
     ],
 
@@ -256,31 +254,35 @@ const Student = () => {
             <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchStudents} />
           ) : (
             <>
-              <Grid container pt={2} sx={{ display: "flex", justifyContent: "space-between" }}>
-                <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Student List
-                </MDTypography>
-
-                {rbacData ? (
-                  rbacData?.find((element: string) => element === "studentdetailscreate") ? (
-                    <MDButton
-                      variant="outlined"
-                      color="info"
-                      type="submit"
-                      onClick={handleShowPage}
-                    >
-                      + Create New Student
-                    </MDButton>
-                  ) : (
-                    ""
-                  )
-                ) : (
-                  ""
-                )}
-              </Grid>{" "}
-              <form onSubmit={handleSubmit}>
-                <MDBox p={2}>
-                  <Grid container>
+              <Card>
+                <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Grid item pt={2} pl={2}>
+                    {" "}
+                    <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                      Student List
+                    </MDTypography>
+                  </Grid>
+                  <Grid item pt={2} pr={2}>
+                    {rbacData ? (
+                      rbacData?.find((element: string) => element === "studentdetailscreate") ? (
+                        <MDButton
+                          variant="outlined"
+                          color="info"
+                          type="submit"
+                          onClick={handleShowPage}
+                        >
+                          + Create New Student
+                        </MDButton>
+                      ) : (
+                        ""
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </Grid>
+                </Grid>{" "}
+                <form onSubmit={handleSubmit}>
+                  <Grid container m={2}>
                     <Grid item xs={12} sm={4}>
                       <Autocomplete
                         sx={{ width: "80%" }}
@@ -361,19 +363,17 @@ const Student = () => {
                         filter
                       </MDButton>
                     </Grid>
-                  </Grid>
-                </MDBox>
-              </form>
-              {data.length > 1 && (
-                <MDBox p={2} pb={4}>
+                  </Grid>{" "}
+                </form>
+                {data.length > 1 && (
                   <DataTable
                     canSearch={true}
                     table={dataTableData}
                     entriesPerPage={false}
                     showTotalEntries={false}
                   />
-                </MDBox>
-              )}
+                )}
+              </Card>
             </>
           )}
         </>

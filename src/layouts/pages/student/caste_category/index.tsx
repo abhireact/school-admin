@@ -6,6 +6,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
@@ -114,10 +115,10 @@ const CasteCategory = () => {
         // Filter out the deleted user from the data
         FetchCastes();
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
@@ -173,22 +174,31 @@ const CasteCategory = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5" fontWeight="bold" color="secondary">
-          Caste Category
-        </MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "castecategorycreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + Add Caste Category
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-      </Grid>
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            {" "}
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Caste Category
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {" "}
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "castecategorycreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + Add Caste Category
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
 
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={FetchCastes} />
@@ -197,8 +207,6 @@ const CasteCategory = () => {
       <Dialog open={openupdate} onClose={handleCloseupdate}>
         <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchCastes} />
       </Dialog>
-
-      <DataTable table={dataTableData} />
     </DashboardLayout>
   );
 };

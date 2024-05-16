@@ -48,8 +48,8 @@ const Create = (props: any) => {
           fetchData();
           handleClose();
         })
-        .catch(() => {
-          message.error("Error on creating  !");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
 
       action.resetForm();

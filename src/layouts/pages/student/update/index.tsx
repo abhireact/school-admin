@@ -64,17 +64,13 @@ const Update = (props: any) => {
         <Sidenav />
       </Grid>
       <Grid item xs={12} sm={9}>
-        {studentInfo && guardianInfo.length > 1 ? (
-          <Student
-            editData={studentInfo}
-            username={editData}
-            setOpenupdate={setOpenupdate}
-            fetchData={fetchData}
-            guardianInfo={guardianInfo}
-          />
-        ) : (
-          ""
-        )}
+        <Student
+          editData={studentInfo}
+          username={editData}
+          setOpenupdate={setOpenupdate}
+          fetchData={fetchData}
+          guardianInfo={guardianInfo}
+        />
       </Grid>
     </Grid>
   );

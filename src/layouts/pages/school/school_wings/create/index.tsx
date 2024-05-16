@@ -26,6 +26,7 @@ const Create = (props: any) => {
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       wing_name: "",
+      status: true,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -41,8 +42,8 @@ const Create = (props: any) => {
           fetchData();
           handleClose();
         })
-        .catch(() => {
-          message.error("Error on creating  !");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
 
       action.resetForm();

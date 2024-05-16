@@ -230,7 +230,7 @@ const Update = (props: any) => {
         user_name: username,
         admission_date: editData.admission_date,
         admission_number: editData.admission_number,
-        fee_code: editData.fee_code,
+        fee_code: editData.fee_code || "",
         first_name: editData.first_name,
         middle_name: editData.middle_name,
         last_name: editData.last_name,
@@ -540,7 +540,7 @@ const Update = (props: any) => {
                 mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
-                InputLabelProps={{ shrink: true }}
+                //InputLabelProps={{ shrink: true }}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Fee Code
@@ -952,7 +952,7 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={2} mt={3}>
               <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Gender .:
+                Gender
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4} mt={2}>
@@ -1243,11 +1243,6 @@ const Update = (props: any) => {
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
               />
-            </Grid>
-            <Grid item xs={12} sm={12} mt={2} id="guardian-info">
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Guardian Info
-              </MDTypography>
             </Grid>
             <Grid item xs={12} sm={12} mt={2}>
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">

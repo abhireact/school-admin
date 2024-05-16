@@ -42,7 +42,7 @@ const Update = (props: any) => {
         description: values.description,
       };
       axios
-        .put(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              DESCRIPTION .:
+              DESCRIPTION
             </MDTypography>
           </Grid>
 

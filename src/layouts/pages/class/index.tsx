@@ -15,7 +15,7 @@ import Update from "./update";
 import ManageSection from "./manage_section";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -60,16 +60,27 @@ const Class = () => {
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    const main_data = data[index];
-    console.log(main_data, "maindata");
+    console.log(data[index], "maindata");
 
     setOpenupdate(true);
-    setEditData(main_data);
+    setEditData(data[index]);
   };
 
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
+  const [managepage, setManagepage] = useState(false);
+
+  const [manageSection, setManageSection] = useState([]);
+  const [indexnumber, setIndexnumber] = useState(0);
+
+  const handleManagePage = (index: number) => {
+    setIndexnumber(index);
+    setManageSection(data[index]);
+    console.log("manage section data", data[index]);
+    setManagepage(true);
+  };
+
   const fetchClasses = () => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
@@ -80,7 +91,10 @@ const Class = () => {
       })
       .then((response) => {
         setData(response.data);
-
+        if (managepage) {
+          setManageSection(response.data[indexnumber]);
+          console.log("successfull section change", data[indexnumber]);
+        }
         console.log(response.data);
       })
       .catch((error) => {
@@ -105,10 +119,10 @@ const Class = () => {
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
@@ -122,7 +136,7 @@ const Class = () => {
     ],
 
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+      academic_year: row.academic_year,
 
       action: (
         <MDTypography variant="p">
@@ -172,23 +186,14 @@ const Class = () => {
         </MDTypography>
       ),
 
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      class_code: <MDTypography variant="p">{row.class_code}</MDTypography>,
-      wing_name: <MDTypography variant="p">{row.wing_name}</MDTypography>,
+      class_name: row.class_name,
+      class_code: row.class_code,
+      wing_name: row.wing_name,
     })),
   };
   const [showpage, setShowpage] = useState(false);
   const handleShowPage = () => {
     setShowpage(!showpage);
-  };
-  const [managepage, setManagepage] = useState(false);
-  const [manageSection, setManageSection] = useState([]);
-  const handleManagePage = (index: number) => {
-    const main_data = data[index];
-    console.log(main_data, "manage section data");
-
-    setManagepage(true);
-    setManageSection(main_data);
   };
 
   return (
@@ -207,28 +212,34 @@ const Class = () => {
             />
           ) : (
             <>
-              {" "}
-              <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-                <MDTypography variant="h5" fontWeight="bold" color="secondary">
-                  Class
-                </MDTypography>
-                {rbacData ? (
-                  rbacData?.find((element: string) => element === "classcreate") ? (
-                    <MDButton
-                      variant="outlined"
-                      color="info"
-                      type="submit"
-                      onClick={() => handleShowPage()}
-                    >
-                      + New Class
-                    </MDButton>
-                  ) : (
-                    ""
-                  )
-                ) : (
-                  ""
-                )}
-              </Grid>
+              <Card>
+                <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Grid item pt={2} pl={2}>
+                    <MDTypography variant="h5" fontWeight="bold" color="secondary">
+                      Class
+                    </MDTypography>
+                  </Grid>
+                  <Grid item pt={2} pr={2}>
+                    {rbacData ? (
+                      rbacData?.find((element: string) => element === "classcreate") ? (
+                        <MDButton
+                          variant="outlined"
+                          color="info"
+                          type="submit"
+                          onClick={() => handleShowPage()}
+                        >
+                          + New Class
+                        </MDButton>
+                      ) : (
+                        ""
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </Grid>
+                </Grid>
+                <DataTable table={dataTableData} canSearch />
+              </Card>
               <Dialog open={openupdate} onClose={handleCloseupdate}>
                 <Update
                   setOpenupdate={setOpenupdate}
@@ -236,7 +247,6 @@ const Class = () => {
                   fetchData={fetchClasses}
                 />
               </Dialog>
-              <DataTable table={dataTableData} />
             </>
           )}
         </>

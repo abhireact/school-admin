@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -68,10 +68,9 @@ const EmpInfo = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-
-  useEffect(() => {
+  const fetchEmployees = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_employees", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -85,10 +84,13 @@ const EmpInfo = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  };
+  useEffect(() => {
+    fetchEmployees();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_leaves", {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_leaves`, {
         data: { leave_type: name.leave_type, leave_code: name.leave_code },
         headers: {
           "Content-Type": "application/json",
@@ -101,10 +103,10 @@ const EmpInfo = () => {
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
@@ -174,33 +176,46 @@ const EmpInfo = () => {
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create handleShowPage={handleShowPage} />
+          <Create handleShowPage={handleShowPage} fetchData={fetchEmployees} />
         </>
       ) : (
         <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Grid item>
-              <MDTypography variant="h5">Employee Information</MDTypography>
-            </Grid>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "employee_infocreate") ? (
-                <Grid item>
-                  <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                    + New Employee
-                  </MDButton>
-                </Grid>
+          <Card>
+            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Grid item pt={2} pl={2}>
+                <MDTypography variant="h5" color="secondary" fontWeight="bold">
+                  Employee Information
+                </MDTypography>
+              </Grid>
+              {rbacData ? (
+                rbacData?.find((element: string) => element === "employee_infocreate") ? (
+                  <Grid item pt={2} pr={2}>
+                    <MDButton
+                      variant="outlined"
+                      color="info"
+                      type="submit"
+                      onClick={handleShowPage}
+                    >
+                      + New Employee
+                    </MDButton>
+                  </Grid>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
-              )
-            ) : (
-              ""
-            )}
+              )}
 
-            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update setOpenupdate={setOpenupdate} editData={editData} />
-            </Dialog>
-          </Grid>
-          <DataTable table={dataTableData} canSearch />
+              <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+                <Update
+                  setOpenupdate={setOpenupdate}
+                  editData={editData}
+                  fetchData={fetchEmployees}
+                />
+              </Dialog>
+            </Grid>
+            <DataTable table={dataTableData} canSearch />
+          </Card>
         </>
       )}
     </DashboardLayout>

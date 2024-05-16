@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { REHYDRATE } from "redux-persist";
 
 const token = Cookies.get("token");
-const baseURL = "http://10.0.20.200:8000";
+const baseURL = `${process.env.REACT_APP_BASE_URL}`;
 const headers = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${token}`,

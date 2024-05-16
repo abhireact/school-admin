@@ -27,18 +27,30 @@ function convertData(inputData: any[]) {
     end_date: item.end_date.split(" ")[0],
   }));
 }
+function updateObjectAtIndex(array: any, index: number, newData: any) {
+  if (index < 0 || index >= array.length) {
+    // If the index is out of bounds, return null or handle error as needed
+    return null;
+  }
+
+  // Update the object at the specified index with newData
+  array[index] = { ...array[index], ...newData };
+
+  // Return the updated array
+  return array;
+}
 
 const ManageSection = (props: any) => {
   const token = Cookies.get("token");
   const [academicdata, setAcademicdata] = useState([]);
   const { handleManagePage, fetchData, editData } = props;
   editData.section_data = convertData(editData.section_data);
+  console.log(editData.section_data, "section data may 15");
   const handleClose = () => {
     handleManagePage(false);
   };
   const validationSchema = Yup.object().shape({
     class_name: Yup.string().required("Required *"),
-
     academic_year: Yup.string().required("Required *"),
   });
 
@@ -92,12 +104,11 @@ const ManageSection = (props: any) => {
             message.success(" Created successfully!");
             fetchData();
             handleClose();
+            action.resetForm();
           })
           .catch(() => {
             message.error("Error on creating  !");
           });
-
-        action.resetForm();
       },
     });
   const handleAddField = () => {
@@ -119,13 +130,37 @@ const ManageSection = (props: any) => {
   const handleCloseSection = () => {
     setOpen(false);
   };
-  const handleOpenSection = (data: any) => {
-    setOpen(true);
+  const handleOpenSection = (data: any, index: number) => {
     const main_data = data;
     console.log(main_data, "section edit Data");
 
-    setSectionData(main_data);
+    setSectionData(data);
+    setOpen(true);
   };
+  const handleDeleteSection = (data: any, index: number) => {
+    const main_data = {
+      ...data,
+      academic_year: editData.academic_year,
+      class_name: editData.class_name,
+    };
+    axios
+      .delete(`${process.env.REACT_APP_BASE_URL}/mg_MgBatch`, {
+        data: main_data,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        console.log("create successfully");
+        message.success(" Created successfully!");
+        fetchData();
+      })
+      .catch((error: any) => {
+        message.error(error.response.data.detail);
+      });
+  };
+
   return (
     <Card>
       {" "}
@@ -137,6 +172,7 @@ const ManageSection = (props: any) => {
                 <Autocomplete
                   sx={{ width: "80%" }}
                   value={values.academic_year}
+                  disableClearable
                   onChange={(event, value) => {
                     handleChange({
                       target: { name: "academic_year", value },
@@ -174,7 +210,7 @@ const ManageSection = (props: any) => {
                   variant="standard"
                   name="class_name"
                   value={values.class_name}
-                  onChange={handleChange}
+                  //onChange={handleChange}
                   onBlur={handleBlur}
                   error={touched.class_name && Boolean(errors.class_name)}
                   success={values.class_name.length && !errors.class_name}
@@ -184,7 +220,7 @@ const ManageSection = (props: any) => {
             </Grid>
             <Grid container spacing={3} px={2}>
               <Grid item xs={12} sm={12}>
-                <MDTypography variant="body2" fontWeight="bold" color="secondary">
+                <MDTypography variant="h5" fontWeight="bold" color="secondary">
                   Manage Sections
                 </MDTypography>
               </Grid>
@@ -237,8 +273,11 @@ const ManageSection = (props: any) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3} py={1} key={index + "space"}>
-                    <IconButton onClick={() => handleOpenSection(clone)}>
+                    <IconButton onClick={() => handleOpenSection(clone, index)}>
                       <CreateRoundedIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteSection(clone, index)}>
+                      <DeleteIcon />
                     </IconButton>
                   </Grid>
                 </>

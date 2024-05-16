@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -57,7 +57,6 @@ const EmpAccount = () => {
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
     const main_data = data[index];
     console.log(main_data, "maindata");
 
@@ -68,6 +67,17 @@ const EmpAccount = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
+  //Create Dialog Box Start
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  //End
   const fetchAccountData = () => {
     axios
       .get("http://10.0.20.200:8000/mg_accounts", {
@@ -91,11 +101,10 @@ const EmpAccount = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_subject", {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, {
         data: {
-          class_code: name.class_code,
-          subject_code: name.subject_code,
-          subject_name: name.subject_name,
+          account_name: name.account_name,
+          description: name.description,
         },
         headers: {
           "Content-Type": "application/json",
@@ -106,10 +115,10 @@ const EmpAccount = () => {
         message.success("Deleted successFully");
         fetchAccountData();
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
@@ -160,26 +169,22 @@ const EmpAccount = () => {
       account_name: <MDTypography variant="p">{row.account_name}</MDTypography>,
     })),
   };
-  const [showpage, setShowpage] = useState(false);
-  const handleShowPage = () => {
-    setShowpage(!showpage);
-  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showpage ? (
-        <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchAccountData} />
-        </>
-      ) : (
-        <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
             <MDTypography variant="h5" fontWeight="bold" color="secondary">
               Account
             </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {" "}
             {rbacData ? (
               rbacData?.find((element: string) => element === "schoolaccountcreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleOpen}>
                   + New Account
                 </MDButton>
               ) : (
@@ -188,18 +193,16 @@ const EmpAccount = () => {
             ) : (
               ""
             )}
-
-            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update
-                setOpenupdate={setOpenupdate}
-                editData={editData}
-                fetchingData={fetchAccountData}
-              />
-            </Dialog>
           </Grid>
-          <DataTable table={dataTableData} />
-        </>
-      )}
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
+      <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchingData={fetchAccountData} />
+      </Dialog>
+      <Dialog open={open} onClose={handleClose} maxWidth="sm">
+        <Create handleClose={handleClose} fetchingData={fetchAccountData} />
+      </Dialog>
     </DashboardLayout>
   );
 };
