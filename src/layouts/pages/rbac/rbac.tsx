@@ -123,7 +123,7 @@ const Rbac = (props: any) => {
               message.success("Updated Successfully");
               // window.location.reload();
               setOpenupdate2(false);
-              window.location.reload();
+              // window.location.reload(); right now
             }
           } catch (error) {
             console.error("Error saving data:", error);
@@ -145,7 +145,7 @@ const Rbac = (props: any) => {
               console.log("Update Successfully");
               message.success("Updated Successfully");
               setOpenupdate2(false);
-              window.location.reload();
+              // window.location.reload(); right now
             }
           } catch (error) {
             console.error("Error saving data:", error);
@@ -153,6 +153,35 @@ const Rbac = (props: any) => {
         }
       },
     });
+  // const treeData: DataNode[] = [];
+  // let count = 0;
+  // if (count === 0) {
+  //   for (const item of route2) {
+  //     if (item.collapse) {
+  //       const module: any = {};
+  //       module.title = item.name;
+  //       module.key = item.key;
+  //       const modulechildren = [];
+  //       for (const subitem of item.collapse) {
+  //         const submodule: any = {};
+  //         submodule.title = subitem.name;
+  //         submodule.key = subitem.key;
+  //         submodule.children = [
+  //           { title: "read", key: `${submodule.key}read` },
+  //           { title: "update", key: `${submodule.key}update` },
+  //           { title: "delete", key: `${submodule.key}delete` },
+  //           { title: "create", key: `${submodule.key}create` },
+  //         ];
+  //         const submodulechildren = [];
+
+  //         modulechildren.push(submodule);
+  //       }
+  //       module.children = modulechildren;
+  //       treeData.push(module);
+  //     }
+  //   }
+  //   count += 1;
+  // }
   const treeData: DataNode[] = [];
   let count = 0;
   if (count === 0) {
@@ -162,6 +191,9 @@ const Rbac = (props: any) => {
         module.title = item.name;
         module.key = item.key;
         const modulechildren = [];
+
+        console.log(item.collapse, "sub module");
+
         for (const subitem of item.collapse) {
           const submodule: any = {};
           submodule.title = subitem.name;
@@ -173,7 +205,31 @@ const Rbac = (props: any) => {
             { title: "create", key: `${submodule.key}create` },
           ];
           const submodulechildren = [];
-
+          if ("collapse" in subitem && Array.isArray(subitem.collapse)) {
+            for (const subitemmenu of subitem.collapse) {
+              const submodulemenu: any = {};
+              submodulemenu.title = subitemmenu.name;
+              submodulemenu.key = subitemmenu.key;
+              // Add common children for the second level
+              submodulemenu.children = [
+                { title: "update", key: `${subitemmenu.key}update` },
+                { title: "delete", key: `${subitemmenu.key}delete` },
+                { title: "create", key: `${subitemmenu.key}create` },
+              ];
+              submodulechildren.push(submodulemenu);
+              console.log("submodulemenuchildren", submodulemenu);
+            }
+            // console.log("submodulemenuchildren2", submodulemenu);
+          }
+          submodule.children =
+            submodulechildren.length > 0
+              ? submodulechildren
+              : [
+                  { title: "read", key: `${submodule.key}read` },
+                  { title: "update", key: `${submodule.key}update` },
+                  { title: "delete", key: `${submodule.key}delete` },
+                  { title: "create", key: `${submodule.key}create` },
+                ];
           modulechildren.push(submodule);
         }
         module.children = modulechildren;
@@ -182,7 +238,7 @@ const Rbac = (props: any) => {
     }
     count += 1;
   }
-
+  console.log(treeData, "treedata");
   const getParentKeys = (key: React.Key, nodes: DataNode[] | undefined): React.Key[] => {
     const parentKeys: React.Key[] = [];
     const findParent = (currentKey: React.Key, nodesArray: DataNode[] | undefined): void => {
@@ -251,10 +307,51 @@ const Rbac = (props: any) => {
     console.log("onSelect", selectedKeysValue);
     setSelectedKeys(selectedKeysValue);
   };
-  const fetchRbac = async (school_name: string, roles_name: string) => {
+  // const fetchRbac = async (school_name: string, roles_name: string) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_BACKEND_URL}/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       console.log(
+  //         "filtered data",
+  //         response.data[0].sub_module_menu.filter(
+  //           (item: string) =>
+  //             item.endsWith("read") ||
+  //             item.endsWith("update") ||
+  //             item.endsWith("delete") ||
+  //             item.endsWith("create")
+  //         )
+  //       );
+  //       setCheckedKeys(
+  //         response.data[0].sub_module_menu.filter(
+  //           (item: string) =>
+  //             item.endsWith("read") ||
+  //             item.endsWith("update") ||
+  //             item.endsWith("delete") ||
+  //             item.endsWith("create")
+  //         )
+  //       );
+  //       setEditorcreate("edit");
+  //       setRbacData(response.data[0].sub_module_menu);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  const fetchRbac = async (roles_name: string) => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
+      const response = await axios.post(
+        `http://10.0.20.200:8000/get_all_mg_rbac `,
+        { role_name: roles_name },
         {
           headers: {
             "Content-Type": "application/json",
@@ -263,43 +360,26 @@ const Rbac = (props: any) => {
         }
       );
       if (response.status === 200) {
-        console.log(
-          "filtered data",
-          response.data[0].sub_module_menu.filter(
-            (item: string) =>
-              item.endsWith("read") ||
-              item.endsWith("update") ||
-              item.endsWith("delete") ||
-              item.endsWith("create")
-          )
-        );
-        setCheckedKeys(
-          response.data[0].sub_module_menu.filter(
-            (item: string) =>
-              item.endsWith("read") ||
-              item.endsWith("update") ||
-              item.endsWith("delete") ||
-              item.endsWith("create")
-          )
-        );
+        console.log(response.data, "get_all_mg_rbac ");
+
+        setCheckedKeys(response.data);
         setEditorcreate("edit");
-        setRbacData(response.data[0].sub_module_menu);
+        setRbacData(response.data);
       }
     } catch (error) {
       console.error(error);
     }
   };
-
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_school`, {
+      .get(`http://10.0.20.200:8000/mg_school`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        fetchRbac(response.data[0].school_name, editData2?.role_name);
+        fetchRbac(editData2?.role_name);
       })
       .catch((error) => console.log(error));
 

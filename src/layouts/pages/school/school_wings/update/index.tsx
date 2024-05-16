@@ -36,6 +36,7 @@ const Update = (props: any) => {
       let sendData = {
         old_wing_name: editData.wing_name,
         wing_name: values.wing_name,
+        status: true,
       };
       axios
         .put(`${process.env.REACT_APP_BASE_URL}/mg_wing/`, sendData, {
@@ -45,14 +46,14 @@ const Update = (props: any) => {
           },
         })
         .then(() => {
+          action.resetForm();
+          handleCloseupdate();
           message.success("Updated  successfully!");
           fetchData();
         })
-        .catch(() => {
-          message.error("Error on updating !");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
-
-      action.resetForm();
     },
   });
   return (

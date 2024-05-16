@@ -31,21 +31,22 @@ const Update = (props: any) => {
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
-        old_account_name: editData.old_account_name,
+        old_account_name: editData.account_name,
         account_name: editData.account_name,
-        description: editData.description,
+        description: editData.description || "",
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
+        console.log(values, "my edit Data");
         axios
-          .put("http://10.0.20.200:8000/mg_accounts", values, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           })
           .then(() => {
-            message.success(" Created successfully!");
+            message.success(" Updated Successfully!");
             fetchingData();
             action.resetForm();
             handleClose();
@@ -62,16 +63,16 @@ const Update = (props: any) => {
         {" "}
         <MDBox p={4}>
           <Grid container>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={5} py={1}>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Account
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={7} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="account_name"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Account
-                  </MDTypography>
-                }
                 value={values.account_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -80,18 +81,19 @@ const Update = (props: any) => {
                 helperText={touched.account_name && errors.account_name}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={5} py={1}>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Description
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={7} py={1}>
               <MDInput
                 multiline
                 rows={2}
                 sx={{ width: "70%" }}
                 variant="standard"
+                placeholder="Enter the description"
                 name="description"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Description ...
-                  </MDTypography>
-                }
                 value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}

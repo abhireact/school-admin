@@ -102,8 +102,8 @@ const HouseDetails = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_house_detail/`, {
-        data: { caste_name: name },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, {
+        data: { house_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -114,10 +114,10 @@ const HouseDetails = () => {
         // Filter out the deleted user from the data
         FetchHouse();
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
@@ -153,7 +153,7 @@ const HouseDetails = () => {
             rbacData?.find((element: string) => element === "housedetailsdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.caste);
+                  handleDelete(row.house_name);
                 }}
               >
                 <DeleteIcon />

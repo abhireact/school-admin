@@ -12,11 +12,7 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
-  academic_year: Yup.string()
-    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
-    .required("Required *"),
-  start_date: Yup.date().required("Required *"),
-  end_date: Yup.date().required("Required *"),
+  name: Yup.string().required("Required *"),
 });
 
 const Create = (props: any) => {
@@ -29,27 +25,25 @@ const Create = (props: any) => {
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      academic_year: "",
-      start_date: "",
-      end_date: "",
+      name: "",
+      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_castes`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success(" Created successfully!");
-
+          message.success("Created successfully!");
           fetchData();
           handleClose();
         })
-        .catch((error: any) => {
-          message.error(error.response.data.detail);
+        .catch(() => {
+          message.error("Error on creating  !");
         });
 
       action.resetForm();
@@ -59,64 +53,45 @@ const Create = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
         <Grid container>
-          <Grid item xs={12} sm={5} mb={2}>
+          <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Academic Year
+              CASTE
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
               mb={2}
-              placeholder="eg. 2023-2024"
               sx={{ width: "65%" }}
               variant="standard"
-              name="academic_year"
-              value={values.academic_year}
+              name="name"
+              value={values.name}
               onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.academic_year && Boolean(errors.academic_year)}
-              success={values.academic_year.length && !errors.academic_year}
-              helperText={touched.academic_year && errors.academic_year}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5} mb={2}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Start Date
-            </MDTypography>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              mb={2}
-              type="date"
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="start_date"
-              value={values.start_date}
-              onChange={handleChange}
-              error={touched.start_date && Boolean(errors.start_date)}
-              helperText={touched.start_date && errors.start_date}
+              error={touched.name && Boolean(errors.name)}
+              helperText={touched.name && errors.name}
               onBlur={handleBlur}
             />
           </Grid>
 
-          <Grid item xs={12} sm={5} mb={2}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              End Date
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+              DESCRIPTION
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7} mb={2}>
             <MDInput
+              multiline
               mb={2}
-              type="date"
               sx={{ width: "65%" }}
+              rows={3}
               variant="standard"
-              name="end_date"
-              value={values.end_date}
+              placeholder="Enter Description"
+              name="description"
+              value={values.description}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.end_date && Boolean(errors.end_date)}
-              helperText={touched.end_date && errors.end_date}
+              error={touched.description && Boolean(errors.description)}
+              helperText={touched.description && errors.description}
             />
           </Grid>
 

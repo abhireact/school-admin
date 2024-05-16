@@ -42,7 +42,7 @@ const Update = (props: any) => {
         description: values.description,
       };
       axios
-        .put(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_house_detail`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

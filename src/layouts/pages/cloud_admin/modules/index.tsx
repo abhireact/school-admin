@@ -6,6 +6,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
@@ -14,41 +15,14 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { Card, useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const Academic = () => {
-  // To fetch rbac from redux:  Start
-  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
-  // console.log("rbac user", rbacData);
-  //End
-
-  // Fetch rbac  Date from useEffect: Start
-
-  const [rbacData, setRbacData] = useState([]);
-  const fetchRbac = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        console.log("rbac user", response.data);
-        setRbacData(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchRbac();
-  }, [token]);
-  //End
+const Module = () => {
+  const rbacData = useSelector((state: any) => state?.rbacData);
   const [data, setData] = useState([]);
 
   //Start
@@ -79,9 +53,9 @@ const Academic = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const FetchAcademicYear = () => {
+  const FetchModule = () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_castes`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -98,12 +72,12 @@ const Academic = () => {
   };
 
   useEffect(() => {
-    FetchAcademicYear();
+    FetchModule();
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
-        data: { academic_year: name },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_castes`, {
+        data: { caste_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -112,32 +86,30 @@ const Academic = () => {
       if (response.status === 200) {
         message.success("Deleted successFully");
         // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        FetchModule();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error(error.response.data.detail);
+      message.error("An unexpected error occurred");
     }
   };
   const dataTableData = {
     columns: [
-      { Header: "Academic Year", accessor: "academic_year" },
+      { Header: "Caste", accessor: "name" },
 
-      { Header: "Start Date", accessor: "start_date" },
-      { Header: "End Date", accessor: "end_date" },
+      { Header: "Description", accessor: "description" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+      name: <MDTypography variant="p">{row.name}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "academicupdate") ? (
+            rbacData?.find((element: string) => element === "casteupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -155,7 +127,7 @@ const Academic = () => {
             rbacData?.find((element: string) => element === "academicdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.academic_year);
+                  handleDelete(row.caste);
                 }}
               >
                 <DeleteIcon />
@@ -169,25 +141,25 @@ const Academic = () => {
         </MDTypography>
       ),
 
-      start_date: <MDTypography variant="p">{row.start_date}</MDTypography>,
-      end_date: <MDTypography variant="p">{row.end_date}</MDTypography>,
+      description: <MDTypography variant="p">{row.description}</MDTypography>,
     })),
   };
   return (
     <DashboardLayout>
-      <DashboardNavbar />
+      <DashboardNavbar />{" "}
       <Card>
         <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
           <Grid item pt={2} pl={2}>
-            <MDTypography variant="h5" fontWeight="bold" color="secondary">
-              Academic Year
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Caste
             </MDTypography>
           </Grid>
           <Grid item pt={2} pr={2}>
+            {" "}
             {rbacData ? (
               rbacData?.find((element: string) => element === "academiccreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-                  + New Academic Year
+                  + Add Caste
                 </MDButton>
               ) : (
                 ""
@@ -200,13 +172,13 @@ const Academic = () => {
         <DataTable table={dataTableData} />
       </Card>
       <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={FetchAcademicYear} />
+        <Create setOpen={setOpen} fetchData={FetchModule} />
       </Dialog>
       <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchAcademicYear} />
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchModule} />
       </Dialog>
     </DashboardLayout>
   );
 };
 
-export default Academic;
+export default Module;

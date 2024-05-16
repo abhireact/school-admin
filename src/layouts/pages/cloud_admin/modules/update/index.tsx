@@ -5,45 +5,51 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
-import { useState, useEffect } from "react";
+
 import axios from "axios";
-import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
-import { useSelector } from "react-redux";
 import * as Yup from "yup";
-
-const Create = (props: any) => {
+// import { useEffect, useState } from "react";
+// import Autocomplete from "@mui/material/Autocomplete";
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("Required *"),
+});
+const Update = (props: any) => {
+  const { setOpenupdate, fetchData, editData } = props;
   const token = Cookies.get("token");
-
-  const { setOpen, fetchData } = props;
-  const handleClose = () => {
-    setOpen(false);
+  console.log(editData, "edit data ");
+  const handleCloseupdate = () => {
+    setOpenupdate(false);
   };
-  const validationSchema = Yup.object().shape({
-    wing_name: Yup.string().required("Required *"),
-  });
-
+  // editData to give intial values
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      wing_name: "",
-      status: true,
+      name: editData.name,
+
+      description: editData.description,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
+      let sendData = {
+        old_caste_name: editData.name,
+        name: values.name,
+
+        description: values.description,
+      };
       axios
-        .post(`${process.env.REACT_APP_BASE_URL}/mg_wing`, values, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_castes`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success(" Created successfully!");
+          message.success("Updated  successfully!");
           fetchData();
-          handleClose();
+          handleCloseupdate();
         })
-        .catch((error: any) => {
-          message.error(error.response.data.detail);
+        .catch(() => {
+          message.error("Error on updating !");
         });
 
       action.resetForm();
@@ -55,7 +61,7 @@ const Create = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Wing Name
+              CASTE
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -63,12 +69,35 @@ const Create = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="wing_name"
-              value={values.wing_name}
+              name="name"
+              value={values.name}
+              onChange={handleChange}
+              error={touched.name && Boolean(errors.name)}
+              helperText={touched.name && errors.name}
+              onBlur={handleBlur}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={5}>
+            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+              DESCRIPTION
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={7} mb={2}>
+            <MDInput
+              multiline
+              mb={2}
+              sx={{ width: "65%" }}
+              rows={3}
+              variant="standard"
+              placeholder="Enter Description"
+              name="description"
+              value={values.description}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.wing_name && Boolean(errors.wing_name)}
-              helperText={touched.wing_name && errors.wing_name}
+              error={touched.description && Boolean(errors.description)}
+              helperText={touched.description && errors.description}
             />
           </Grid>
 
@@ -78,7 +107,7 @@ const Create = (props: any) => {
                 color="dark"
                 variant="contained"
                 onClick={() => {
-                  handleClose();
+                  handleCloseupdate();
                 }}
               >
                 Back
@@ -96,4 +125,4 @@ const Create = (props: any) => {
   );
 };
 
-export default Create;
+export default Update;

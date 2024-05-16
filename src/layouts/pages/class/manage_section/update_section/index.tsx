@@ -36,6 +36,7 @@ const UpdateSection = (props: any) => {
       old_section_name: sectionData.section_name,
     },
     validationSchema: validationSchema,
+    enableReinitialize: true,
     onSubmit: (values, action) => {
       axios
         .put(`${process.env.REACT_APP_BASE_URL}/mg_batches`, values, {
@@ -45,16 +46,15 @@ const UpdateSection = (props: any) => {
           },
         })
         .then(() => {
-          message.success("Updated successfully!");
           fetchData();
+          message.success("Updated successfully!");
+          action.resetForm();
 
           handleClose();
         })
         .catch(() => {
           message.error("Error on updating!");
         });
-
-      action.resetForm();
     },
   });
   return (

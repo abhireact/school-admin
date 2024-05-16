@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -114,10 +114,10 @@ const EmpGrade = () => {
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
@@ -170,34 +170,37 @@ const EmpGrade = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Card>
+        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid item pt={2} pl={2}>
+            <MDTypography variant="h5" color="secondary" fontWeight="bold">
+              Employee Grade
+            </MDTypography>
+          </Grid>
+          <Grid item pt={2} pr={2}>
+            {" "}
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "employee_typecreate") ? (
+                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                  + New Employee Grade
+                </MDButton>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Grid>
+        </Grid>
+        <DataTable table={dataTableData} />
+      </Card>
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchEmployeeGrade} />
+      </Dialog>
 
-      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h5">Employee Grade</MDTypography>
-        {rbacData ? (
-          rbacData?.find((element: string) => element === "employee_typecreate") ? (
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + New Employee Grade
-            </MDButton>
-          ) : (
-            ""
-          )
-        ) : (
-          ""
-        )}
-
-        <Dialog open={open} onClose={handleClose}>
-          <Create setOpen={setOpen} fetchData={fetchEmployeeGrade} />
-        </Dialog>
-
-        <Dialog open={openupdate} onClose={handleCloseupdate}>
-          <Update
-            setOpenupdate={setOpenupdate}
-            editData={editData}
-            fetchData={fetchEmployeeGrade}
-          />
-        </Dialog>
-      </Grid>
-      <DataTable table={dataTableData} />
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchEmployeeGrade} />
+      </Dialog>
     </DashboardLayout>
   );
 };

@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 export default function MYAccount() {
   const token = Cookies.get("token");
 
-  const [mydata, setMydata] = useState([]);
+  const [mydata, setMydata] = useState();
   const [userData, setUserData] = useState();
   const [rbacData, setRbacData] = useState([]);
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ export default function MYAccount() {
   // store rbac
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_user_name/", {
+      .get(`${process.env.REACT_APP_BASE_URL}/profile`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ export default function MYAccount() {
         console.error("Error fetching data:", error);
       });
   }, []); // Include token as a dependency for the useEffect
-  console.log(mydata[0], "mydata");
+  console.log(mydata, "mydata");
   console.log(userData, "UserData");
   Cookies.set("UserRole", userData, { expires: 7 });
 
@@ -79,8 +79,7 @@ export default function MYAccount() {
             aria-expanded={open ? "true" : undefined}
           >
             <Avatar sx={{ width: 25, height: 25, bgcolor: "#7B809A" }}>
-              {mydata ? mydata[0]?.username[0].toUpperCase() : ""}
-              {/* {mydata[0].username[0] ? mydata[0].username[0] : ""} */}
+              {/* {mydata ? mydata.user_name[0].toUpperCase() : ""} */}
             </Avatar>
           </IconButton>
         </Tooltip>
