@@ -37,6 +37,7 @@ import User from "layouts/pages/user";
 import Student from "layouts/pages/student";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import mainroutes from "mainroutes";
+import CloudAdminRouts from "cloud_admin_routs";
 import Academic from "layouts/pages/academic_year";
 import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
@@ -48,7 +49,10 @@ import MYProfile from "layouts/pages/authentication/myprofile";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
 import MyDashboard from "layouts/pages/dashboard";
-
+import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create";
+import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
+import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
+import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -63,7 +67,13 @@ interface RouteItem {
 let submm: string[] = [];
 
 const token = Cookies.get("token");
+const url = window.location.href;
+const parts = url.substring(url.indexOf("http://") + 7).split(".");
 
+// Get the first part which is before the first dot
+const trimmed = parts[0];
+
+console.log(trimmed, "school code "); // Output: "mindcom"
 try {
   if (token) {
     const response = await axios.get("http://10.0.20.200:8000/mg_rbac_current_user", {
@@ -79,7 +89,7 @@ try {
 } catch (error) {
   console.error(error);
 }
-const routes = [
+let routes = [
   {
     type: "collapse",
     name: "Dashboards",
@@ -126,33 +136,63 @@ const routes = [
       },
     ],
   },
+  {
+    name: "createfee category",
+    key: "createfeecategory",
+    route: "/fee/create_fee_category",
+    component: <CreateFeeCategory />,
+  },
+  {
+    name: "create fee amount perticular",
+    key: "createfeeamountperticular",
+    route: "/fee/create_fee_amount_perticular",
+    component: <CreateFeeParicularAmount />,
+  },
+  {
+    name: "edit fee amount perticular",
+    key: "editfeeamountperticular",
+    route: "/fee/edit_fee_amount_perticular",
+    component: <EditFeeParicularAmount />,
+  },
+  {
+    name: "Fee amount Perticular",
+    key: "manage_fee_amount_perticular",
+    route: "/fee/fee_category/manage_fee_amount_perticular",
+    component: <ManageFeeAmountPerticular />,
+  },
 ];
-for (const i of route2 as RouteItem[]) {
-  const module: any = {};
-  module.name = i.name;
-  module.key = i.key;
-  module.type = i.type;
-  module.icon = i.icon;
-  const submodule: any[] = [];
 
-  if (i.collapse) {
-    for (const j of i.collapse) {
-      if (submm.includes(j.key)) {
-        submodule.push(j);
-      } else {
+if (token && trimmed == "mindcom") {
+  routes = CloudAdminRouts;
+} else {
+  for (const i of route2 as RouteItem[]) {
+    const module: any = {};
+    module.name = i.name;
+    module.key = i.key;
+    module.type = i.type;
+    module.icon = i.icon;
+    const submodule: any[] = [];
+
+    if (i.collapse) {
+      for (const j of i.collapse) {
         if (submm.includes(j.key)) {
           submodule.push(j);
+        } else {
+          if (submm.includes(j.key)) {
+            submodule.push(j);
+          }
         }
       }
     }
-  }
 
-  module.collapse = submodule;
-  if (module.collapse.length > 0) {
-    routes.push(module);
+    module.collapse = submodule;
+    if (module.collapse.length > 0) {
+      routes.push(module);
+    }
+    console.log(" my complete routes", routes);
   }
-  console.log(" my complete routes", routes);
 }
+
 export default routes;
 
 export { route2 };
