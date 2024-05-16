@@ -89,9 +89,7 @@ const Academic = () => {
       );
       if (response.status === 200) {
         message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.wing_name !== name);
-        setData(updatedData); // Update the state with the new data
+        fetchWings();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);

@@ -45,7 +45,7 @@ interface FormValues {
 
   logo: File | null; // Adjust the type according to your requirement
 }
-
+const twemtyfour = [];
 const states = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -84,6 +84,7 @@ const states = [
   "Ladakh",
   "Lakshadweep",
 ];
+const currencytypes = ["$", "₹"];
 
 const Create = (props: any) => {
   const { schoolData, handleClose, fetchData } = props;
@@ -164,11 +165,11 @@ const Create = (props: any) => {
         <MDBox>
           <Grid container p={4} spacing={2}>
             <Grid item sm={12} sx={{ display: "flex", justifyContent: "flex-start" }}>
-              <MDTypography color="info" variant="h5" py={2}>
+              <MDTypography color="secondary" fontWeight="bold" variant="h5" py={2}>
                 Update School Info
               </MDTypography>
             </Grid>
-            <Grid item sm={8} xs={12}>
+            <Grid item sm={12} xs={12}>
               <MDInput
                 required
                 autoComplete="off"
@@ -177,12 +178,14 @@ const Create = (props: any) => {
                 label="School Name"
                 value={values.school_name}
                 onChange={handleChange}
-                sx={{ width: "90%" }}
+                sx={{ width: "95%" }}
                 mb={10}
               />
             </Grid>
             <Grid item sm={6} xs={12} mt={2}>
-              <MDTypography variant="body2">Upload School Logo</MDTypography>
+              <MDTypography color="secondary" fontWeight="bold" variant="body2">
+                Upload School Logo
+              </MDTypography>
             </Grid>
             <Grid item sm={6} xs={12} mt={2}>
               <MDInput
@@ -263,43 +266,75 @@ const Create = (props: any) => {
               />
             </Grid>
             <Grid item sm={6} xs={12}>
-              <MDInput
-                required
-                autoComplete="off"
-                variant="standard"
-                name="currency_type"
-                label="Currency Type"
-                value={values.currency_type}
-                onChange={handleChange}
+              <Autocomplete
                 sx={{ width: "90%" }}
-                mb={10}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "currency_type", value },
+                  });
+                }}
+                value={values.state}
+                options={currencytypes}
+                renderInput={(params: any) => (
+                  <FormField
+                    label="Currency Type"
+                    autoComplete="off"
+                    InputLabelProps={{ shrink: true }}
+                    name="currency_type"
+                    onChange={handleChange}
+                    value={values.currency_type}
+                    {...params}
+                    variant="outlined"
+                  />
+                )}
               />
             </Grid>
-
             <Grid item sm={6} xs={12}>
-              <MDInput
-                placeholder="eg. 9:00 AM"
-                autoComplete="off"
-                variant="standard"
-                name="start_time"
-                label="Start Time"
+              <Autocomplete
+                sx={{ width: "90%" }}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "start_time", value },
+                  });
+                }}
                 value={values.start_time}
-                onChange={handleChange}
-                sx={{ width: "90%" }}
-                mb={10}
+                options={currencytypes}
+                renderInput={(params: any) => (
+                  <FormField
+                    label="Start Time"
+                    autoComplete="off"
+                    InputLabelProps={{ shrink: true }}
+                    name="start_time"
+                    onChange={handleChange}
+                    value={values.start_time}
+                    {...params}
+                    variant="outlined"
+                  />
+                )}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
-              <MDInput
-                placeholder="eg. 5:00 PM"
-                autoComplete="off"
-                variant="standard"
-                name="end_time"
-                label="End Time"
-                value={values.end_time}
-                onChange={handleChange}
+              <Autocomplete
                 sx={{ width: "90%" }}
-                mb={10}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "end_time", value },
+                  });
+                }}
+                value={values.end_time}
+                options={currencytypes}
+                renderInput={(params: any) => (
+                  <FormField
+                    label="End Time"
+                    autoComplete="off"
+                    InputLabelProps={{ shrink: true }}
+                    name="end_time"
+                    onChange={handleChange}
+                    value={values.end_time}
+                    {...params}
+                    variant="outlined"
+                  />
+                )}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -413,7 +448,7 @@ const Create = (props: any) => {
                 options={states}
                 renderInput={(params: any) => (
                   <FormField
-                    label="States"
+                    label="State"
                     autoComplete="off"
                     InputLabelProps={{ shrink: true }}
                     name="state"
