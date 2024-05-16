@@ -14,7 +14,6 @@ import { message } from "antd";
 const token = Cookies.get("token");
 export default function EditFeeCategory(props: any) {
   const [particularFields, setParticularFields] = useState([]);
-  const [existingParticularFields, setexistingParticularFields] = useState(["string", "string"]);
   const propdata = props.data;
   const initialValues = {
     old_name: propdata.name,

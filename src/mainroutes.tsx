@@ -49,6 +49,7 @@ import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_payme
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import Admin from "layouts/pages/school/create";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
+import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
 
 const routes = [
   {
@@ -326,6 +327,12 @@ const routes = [
             key: "fee_category",
             route: "fee/fee_category",
             component: <FeeCategory />,
+          },
+          {
+            name: "Fee Concession",
+            key: "fee_concession",
+            route: "fee/fee_concession",
+            component: <FeeConcession />,
           },
         ],
       },

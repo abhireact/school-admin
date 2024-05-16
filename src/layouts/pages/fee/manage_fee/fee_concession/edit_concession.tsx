@@ -1,24 +1,13 @@
-import React, { useState } from "react";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import FormField from "layouts/pages/account/components/FormField";
 import { useFormik } from "formik";
-import { Grid, Card, Link, Autocomplete } from "@mui/material";
+import { Grid, Card } from "@mui/material";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
-import Icon from "@mui/material/Icon";
-import MDInput from "components/MDInput";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import List from "@mui/material/List";
-import CardHeader from "@mui/material/CardHeader";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Checkbox from "@mui/material/Checkbox";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import { Tree } from "antd";
 import MDBox from "components/MDBox";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { message } from "antd";
+const token = Cookies.get("token");
 export default function EditConcession(props: any) {
   const initialValues = props.data;
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
@@ -27,7 +16,24 @@ export default function EditConcession(props: any) {
       // validationSchema: createschema,
       enableReinitialize: true,
       onSubmit: async (values, action) => {
-        props.onSuccess();
+        axios
+          .put(
+            "http://10.0.20.200:8000/fee_concession",
+            { ...values, old_name: props.data.name },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((response) => {
+            message.success(response.data.message);
+            props.onSuccess();
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
       },
     });
   return (
@@ -45,16 +51,16 @@ export default function EditConcession(props: any) {
             <Grid item xs={12} sm={4}>
               <FormField
                 label="Concession Type"
-                name="concession_type"
-                value={values.concession_type}
+                name="discount_type"
+                value={values.discount_type}
                 disabled
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormField
                 label="Concession Name"
-                name="concession_name"
-                value={values.concession_name}
+                name="name"
+                value={values.name}
                 onChange={handleChange}
               />
             </Grid>
@@ -62,7 +68,7 @@ export default function EditConcession(props: any) {
               <FormField
                 label="Class Section"
                 name="class_section"
-                value={values.class_section}
+                value={values.class_name + "-" + values.section_name}
                 disabled
               />
             </Grid>
@@ -75,31 +81,23 @@ export default function EditConcession(props: any) {
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField
-                label="Student Category"
-                name="student_category"
-                value={values.student_category}
-                disabled
-              />
+              <FormField label="Student Category" name="quota" value={values.quota} disabled />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormField label="User Id" name="user_id" value={values.user_id} disabled />
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormField
-                label="Admission Number"
-                name="admission_number"
-                value={values.admission_number}
-                disabled
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormField
+                required
+                type="number"
                 label="Concession Amount"
-                name="concession_amount"
-                value={values.concession_amount}
+                name="discount"
+                value={values.discount}
                 onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField label="Account" name="account" value={values.account} disabled />
+              <FormField label="Account" name="account_name" value={values.account_name} disabled />
             </Grid>
           </Grid>
           <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>

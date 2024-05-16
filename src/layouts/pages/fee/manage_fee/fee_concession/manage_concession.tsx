@@ -1,30 +1,22 @@
-import React, { useState } from "react";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import FormField from "layouts/pages/account/components/FormField";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { Grid, Card, Link, Autocomplete } from "@mui/material";
+import { Grid, Card } from "@mui/material";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
-import Icon from "@mui/material/Icon";
-import MDInput from "components/MDInput";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import List from "@mui/material/List";
-import CardHeader from "@mui/material/CardHeader";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Checkbox from "@mui/material/Checkbox";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import { Tree } from "antd";
 import MDBox from "components/MDBox";
-import { Radio, Table } from "antd";
+import { Table } from "antd";
 import type { TableColumnsType } from "antd";
+import axios from "axios";
+import { message } from "antd";
+import Cookies from "js-cookie";
+
+const token = Cookies.get("token");
 
 interface DataType {
   key: React.Key;
   name: string;
+  disabled: boolean;
+  checked: boolean;
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -34,54 +26,94 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "Nov month",
-  },
-  {
-    key: "2",
-    name: "Jan month",
-  },
-  {
-    key: "3",
-    name: "Feb",
-  },
-  {
-    key: "4",
-    name: "MArch",
-  },
-  {
-    key: "41",
-    name: "Sports",
-  },
-  {
-    key: "42",
-    name: "ssss",
-  },
-];
-
-// rowSelection object indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
-  },
-};
-
 export default function ManageConcession(props: any) {
+  const [manageconcession, setManageconcession] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [getdata, setGetdata] = useState([]);
   const initialValues = props.data;
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
-    useFormik({
-      initialValues,
-      enableReinitialize: true,
-      onSubmit: async (values, action) => {
-        props.onSuccess();
-      },
-    });
+
+  useEffect(() => {
+    fetchData();
+  }, [props.data]); // Ensure props.data is included as a dependency
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        `http://10.0.20.200:8000/fee_concession/collection`,
+        props.data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setGetdata(response.data);
+        const fetchedData = response.data.map((dataa: any, index: number) => ({
+          key: index,
+          name: dataa.collection_name,
+          disabled: dataa.is_disabled,
+          checked: dataa.select,
+        }));
+        setManageconcession(fetchedData);
+
+        // Set the initial selected row keys based on the fetched data
+        const initiallySelectedKeys = fetchedData
+          .filter((item: DataType) => item.checked)
+          .map((item: DataType) => item.key);
+        setSelectedRowKeys(initiallySelectedKeys);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+    getCheckboxProps: (record: DataType) => ({
+      disabled: record.disabled,
+      name: record.name,
+    }),
+  };
+
+  const formik = useFormik({
+    initialValues,
+    enableReinitialize: true,
+    onSubmit: async (values, actions) => {
+      const editedvalue = manageconcession;
+      getdata.forEach((item: any, index) => {
+        item.select = selectedRowKeys.includes(index);
+      });
+
+      axios
+        .put(
+          "http://10.0.20.200:8000/fee_concession/collection",
+          { ...props.data, discount_collections: getdata },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            // message.success(response.data.message);
+            props.onSuccess();
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    },
+  });
   return (
     <Card>
       <MDBox p={3}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
           <Grid container>
             <Grid item xs={12} sm={12}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
@@ -96,7 +128,7 @@ export default function ManageConcession(props: any) {
                 ...rowSelection,
               }}
               columns={columns}
-              dataSource={data}
+              dataSource={manageconcession}
               pagination={false}
               scroll={{ y: 400, x: true }}
             />
