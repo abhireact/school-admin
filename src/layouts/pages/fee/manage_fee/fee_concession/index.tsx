@@ -19,6 +19,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { commonacademicyear } from "layouts/pages/fee/common_validationschema";
+import { useSelector } from "react-redux";
 const token = Cookies.get("token");
 const initialValues = {
   academic_year: "",
@@ -26,6 +27,7 @@ const initialValues = {
   section_name: "",
 };
 export default function FeeConcession() {
+  const { classes, account, studentcategory } = useSelector((state: any) => state);
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
   const [managedata, setManagedata] = useState({});
@@ -169,19 +171,24 @@ export default function FeeConcession() {
                     onChange={(_event, value) => {
                       handleChange({ target: { name: "academic_year", value } });
                     }}
-                    options={["2023-2024", "2024-2025"]}
+                    options={
+                      classes
+                        ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                        : []
+                    }
                     renderInput={(params) => (
                       <MDInput
                         required
                         name="academic_year"
                         onChange={handleChange}
                         value={values.academic_year}
-                        label="Academic Year"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Academic Year
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
-                        onBlur={handleBlur}
-                        error={errors.academic_year && touched.academic_year}
-                        success={values.academic_year && !errors.academic_year}
                       />
                     )}
                   />
@@ -191,7 +198,13 @@ export default function FeeConcession() {
                     onChange={(_event, value) => {
                       handleChange({ target: { name: "class_name", value } });
                     }}
-                    options={["I", "II", "III"]}
+                    options={
+                      values.academic_year !== ""
+                        ? classes
+                            .filter((item: any) => item.academic_year === values.academic_year)
+                            .map((item: any) => item.class_name)
+                        : []
+                    }
                     renderInput={(params) => (
                       <MDInput
                         required
@@ -201,9 +214,6 @@ export default function FeeConcession() {
                         label="Class"
                         {...params}
                         variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.class_name && Boolean(errors.class_name)}
-                        success={values.class_name && !errors.class_name}
                       />
                     )}
                   />
@@ -213,7 +223,17 @@ export default function FeeConcession() {
                     onChange={(_event, value) => {
                       handleChange({ target: { name: "section_name", value } });
                     }}
-                    options={["A", "B", "C"]}
+                    options={
+                      values.class_name !== ""
+                        ? classes
+                            .filter(
+                              (item: any) =>
+                                item.academic_year === values.academic_year &&
+                                item.class_name === values.class_name
+                            )[0]
+                            .section_data.map((item: any) => item.section_name)
+                        : []
+                    }
                     renderInput={(params) => (
                       <MDInput
                         required
@@ -223,9 +243,6 @@ export default function FeeConcession() {
                         label="Section"
                         {...params}
                         variant="standard"
-                        onBlur={handleBlur}
-                        error={errors.section_name && touched.section_name}
-                        success={values.section_name && !errors.section_name}
                       />
                     )}
                   />

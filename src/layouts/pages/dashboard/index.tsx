@@ -6,6 +6,7 @@ import {
   fetchAcademicYear,
   fetchClasses,
   fetchAccount,
+  fetchStudent,
 } from "../redux/dataSlice";
 
 import React, { useEffect } from "react";
@@ -25,6 +26,7 @@ const MyDashboard = () => {
     dispatch(fetchClasses() as any);
     dispatch(fetchAcademicYear() as any);
     dispatch(fetchAccount() as any);
+    dispatch(fetchStudent() as any);
   }, [dispatch]);
 
   return (

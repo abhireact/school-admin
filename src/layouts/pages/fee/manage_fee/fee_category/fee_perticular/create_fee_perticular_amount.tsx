@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import FormField from "layouts/pages/account/components/FormField";
 import { useFormik } from "formik";
@@ -33,42 +33,22 @@ const token = Cookies.get("token");
 function not(a: readonly string[], b: readonly string[]) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
-interface Section {
+interface SectionData {
   section_name: string;
   start_date: string;
   end_date: string;
 }
 
 interface Class {
-  academic_year: string;
   wing_name: string;
   class_name: string;
-  class_code: string;
-  index: number;
-  section_data: Section[];
+  section_data: SectionData[];
 }
 
-interface TransformedSection {
-  section_name: string;
-  start_date: string;
-  end_date: string;
-}
-
-interface TransformedClass {
-  class_name: string;
-  sections: TransformedSection[];
-}
-
-interface TransformedWing {
-  wing_name: string;
-  classes: TransformedClass[];
-}
-
-interface WingMap {
-  [key: string]: {
-    wing_name: string;
-    classess: { [key: string]: TransformedClass };
-  };
+interface TreeNode {
+  title: string;
+  key: string;
+  children?: TreeNode[];
 }
 
 export default function CreateFeeParicularAmount() {
@@ -92,23 +72,80 @@ export default function CreateFeeParicularAmount() {
     enableReinitialize: true,
     onSubmit: async (values) => {
       console.log(values, "on submit");
-      // Handle form submission logic here
+      if (selectedTab === 0) {
+        const checkedSectionKeys = checkedKeys
+          .filter((key) => key.toString().includes("section:"))
+          .map((item) => {
+            const [classKey, sectionKey] = item.toString().split(",");
+            const classValue = classKey.split(":")[1];
+            const sectionValue = sectionKey.split(":")[1];
+            return { class_name: classValue, section_name: sectionValue };
+          });
+        setChecked(checkedSectionKeys);
+        const submitvalue = {
+          fee_category: values.fee_category,
+          fee_particular: values.fee_perticular,
+          user_id: [] as any[],
+          classes: checked,
+          academic_year: values.academic_year,
+          amount: values.amount,
+          student_category: values.student_category,
+          account_name: values.account,
+        };
+
+        axios
+          .post("http://10.0.20.200:8000/fee_particular", submitvalue, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            message.success(response.data.message);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      } else {
+        const submitvalue = {
+          fee_category: values.fee_category,
+          fee_particular: values.fee_perticular,
+          user_id: checkedKeys,
+          classes: [] as any[],
+          academic_year: values.academic_year,
+          amount: values.amount,
+          student_category: values.student_category,
+          account_name: values.account,
+        };
+        axios
+          .post("http://10.0.20.200:8000/fee_particular", submitvalue, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            message.success(response.data.message);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
     },
   });
 
-  // const { classes, account } = useSelector((state: any) => state);
-  const data = useSelector((state: any) => state);
-  console.log(data.wings, "lllllllllllllllllllllll");
-  const classes = data.classes;
-  const account = data.account;
+  const { classes, account, studentcategory, student } = useSelector((state: any) => state);
+
   const [feeCategory, setFeecategory] = useState([]);
-  const [checked, setChecked] = useState<readonly string[]>([]);
+  const [checked, setChecked] = useState([]);
+  const [studentdata, setStudentdata] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
-
+  const [result, setResult] = useState([]);
+  console.log(checked, "kkkkkkkkkkkkkkkkksss");
   useEffect(() => {
     axios
       .get("http://10.0.20.200:8000/fee_category", {
@@ -147,95 +184,71 @@ export default function CreateFeeParicularAmount() {
     setSelectedTab(newValue);
   };
 
-  const result: TransformedWing[] = [];
-  const wingMap: WingMap = {};
+  useEffect(() => {
+    const filteredClassData = classes.filter(
+      (item: any) => item.academic_year === values.academic_year
+    );
+    const result: TreeNode[] = [];
+    const wingMap: { [key: string]: TreeNode } = {};
+    console.log(classes, "inside use effect");
+    filteredClassData.forEach(({ wing_name, class_name, section_data }: Class, index: number) => {
+      if (!wingMap[wing_name]) {
+        wingMap[wing_name] = {
+          title: wing_name,
+          key: `wing-${wing_name}`,
+          children: [],
+        };
+        result.push(wingMap[wing_name]);
+      }
 
-  classes
-    ? classes.forEach((item: Class) => {
-        const { wing_name, class_name, section_data } = item;
+      const wing = wingMap[wing_name];
 
-        // Initialize wing if it does not exist
-        if (!wingMap[wing_name]) {
-          wingMap[wing_name] = { wing_name, classess: {} };
-          result.push(wingMap[wing_name] as unknown as TransformedWing);
+      if (!wing.children?.find((child) => child.title === class_name)) {
+        wing.children?.push({
+          title: class_name,
+          key: `wing-${wing_name},class-${class_name}`,
+          children: [],
+        });
+      }
+      const classItem = wing.children?.find((child) => child.title === class_name);
+      section_data.forEach((section: any) => {
+        if (classItem && classItem.children) {
+          classItem.children.push({
+            title: `section ${section.section_name}`,
+            key: `class:${class_name},section:${section.section_name}`,
+          });
         }
+      });
+    });
 
-        // Initialize class if it does not exist
-        if (!wingMap[wing_name].classess[class_name]) {
-          wingMap[wing_name].classess[class_name] = { class_name, sections: [] };
-        }
+    setResult(result);
+  }, [values.academic_year]);
 
-        // Add section data to the class
-        wingMap[wing_name].classess[class_name].sections.push(...section_data);
-      })
-    : [];
-
-  console.log(classes, result, "llllllllllllllllooo");
-  const wingdata = [
-    {
-      title: "Wing 1",
-      key: "wing1",
-      children: [
-        {
-          title: "class1",
-          key: "class1",
-          children: [
-            { title: "section A", key: "0-0-0-0" },
-            { title: "Section B", key: "0-0-0-1" },
-            { title: "section C", key: "0-0-0-2" },
-          ],
-        },
-        {
-          title: "class2",
-          key: "class2",
-          children: [
-            { title: "section A", key: "0-0-1-0" },
-            { title: "Section B", key: "0-0-1-1" },
-            { title: "section C", key: "0-0-1-2" },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Wing 2",
-      key: "wing2",
-      children: [
-        {
-          title: "class3",
-          key: "class3",
-          children: [
-            { title: "section A", key: "0-0-2-0" },
-            { title: "Section B", key: "0-0-2-1" },
-            { title: "section C", key: "0-0-2-2" },
-          ],
-        },
-        {
-          title: "class4",
-          key: "class4",
-          children: [
-            { title: "section A", key: "0-0-3-0" },
-            { title: "Section B", key: "0-0-3-1" },
-            { title: "section C", key: "0-0-3-2" },
-          ],
-        },
-      ],
-    },
-  ];
-
-  const studentdata = [
-    {
-      title: "student 1",
-      key: "student1",
-    },
-    {
-      title: "student 2",
-      key: "student2",
-    },
-  ];
+  const filteredStudentData = useMemo(() => {
+    if (values.academic_year && values.class_name && values.section_name) {
+      return student
+        .filter(
+          (item: any) =>
+            item.academic_year === values.academic_year &&
+            item.class_name === values.class_name &&
+            item.section_name === values.section_name
+        )
+        .map((item: any) => ({
+          title: `${item.first_name} ${item.middle_name} ${item.last_name}`,
+          key: item.user_id,
+        }));
+    }
+    return [];
+  }, [values.academic_year, values.class_name, values.section_name, student]);
+  useEffect(() => {
+    setStudentdata(filteredStudentData);
+    console.log(filteredStudentData, "Filtered student data");
+  }, [filteredStudentData]);
 
   const treeData: TreeDataNode[] =
-    selectedTab === 0 ? wingdata : selectedTab === 1 ? studentdata : [];
+    selectedTab === 0 ? result : selectedTab === 1 ? studentdata : [];
 
+  console.log(student, "aaaaaaaaa student data");
   return (
     <DashboardLayout>
       <form onSubmit={handleSubmit}>
@@ -293,6 +306,33 @@ export default function CreateFeeParicularAmount() {
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Fee Perticular
+                        </MDTypography>
+                      }
+                      {...params}
+                      variant="standard"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "academic_year", value } });
+                  }}
+                  options={
+                    classes
+                      ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                      : []
+                  }
+                  renderInput={(params) => (
+                    <MDInput
+                      required
+                      name="academic_year"
+                      onChange={handleChange}
+                      value={values.academic_year}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Academic Year
                         </MDTypography>
                       }
                       {...params}
@@ -401,10 +441,13 @@ export default function CreateFeeParicularAmount() {
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "student_category", value } });
                       }}
-                      options={["ALL", "Ac", "General"]}
+                      options={
+                        studentcategory
+                          ? studentcategory.map((item: any) => item.category_name)
+                          : []
+                      }
                       renderInput={(params) => (
                         <MDInput
-                          required
                           name="student_category"
                           onChange={handleChange}
                           value={values.student_category}
@@ -420,29 +463,6 @@ export default function CreateFeeParicularAmount() {
               {selectedTab === 1 && (
                 <>
                   <Grid container spacing={3} px={4} pt={4}>
-                    <Grid item xs={12} sm={4}>
-                      <Autocomplete
-                        onChange={(_event, value) => {
-                          handleChange({ target: { name: "academic_year", value } });
-                        }}
-                        options={
-                          classes
-                            ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                            : []
-                        }
-                        renderInput={(params) => (
-                          <MDInput
-                            required
-                            name="academic_year"
-                            onChange={handleChange}
-                            value={values.academic_year}
-                            label="Academic Year"
-                            {...params}
-                            variant="standard"
-                          />
-                        )}
-                      />
-                    </Grid>
                     <Grid item xs={12} sm={4}>
                       <Autocomplete
                         onChange={(_event, value) => {
