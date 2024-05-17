@@ -52,19 +52,20 @@ const Update = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
-          <Grid item xs={12} sm={4}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Employee Type Name
+              EMPLOYEE TYPE NAME
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
+              required
               sx={{ width: "65%" }}
               variant="standard"
               name="employee_type"
+              placeholder="Enter Employee Type Name"
               value={values.employee_type}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -80,7 +81,7 @@ const Update = (props: any) => {
             xs={12}
             sm={12}
             mt={4}
-            sx={{ display: "flex", justifyContent: "space-between" }}
+            sx={{ display: "flex", justifyContent: "flex-end" }}
           >
             <Grid item>
               <MDButton

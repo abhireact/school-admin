@@ -33,7 +33,7 @@ import Dialog from "@mui/material/Dialog";
 const token = Cookies.get("token");
 
 const Update = (props: any) => {
-  const { guardianData, fetchData, setOpen } = props;
+  const { guardianData, fetchData, setOpen, fetchGuardian } = props;
   const [guardianInfo, setGuardianInfo] = useState({});
   useEffect(() => {
     axios
@@ -100,10 +100,11 @@ const Update = (props: any) => {
         })
         .then(() => {
           console.log("gettting guardian info ");
+          fetchGuardian();
           message.success("Guardian Info Updated ");
           setOpen(false);
         })
-        .catch(() => {
+        .catch((error) => {
           message.error("Error on updating Guardian!");
         });
 

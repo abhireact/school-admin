@@ -95,6 +95,7 @@ const Caste = () => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        message.error(error.response.data.detail);
       });
   };
 
@@ -104,7 +105,7 @@ const Caste = () => {
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_castes`, {
-        data: { caste_name: name },
+        data: { name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -131,7 +132,7 @@ const Caste = () => {
     ],
 
     rows: data.map((row, index) => ({
-      name: <MDTypography variant="p">{row.name}</MDTypography>,
+      name: row.name,
 
       action: (
         <MDTypography variant="p">
@@ -154,7 +155,7 @@ const Caste = () => {
             rbacData?.find((element: string) => element === "academicdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.caste);
+                  handleDelete(row.name);
                 }}
               >
                 <DeleteIcon />
@@ -168,7 +169,7 @@ const Caste = () => {
         </MDTypography>
       ),
 
-      description: <MDTypography variant="p">{row.description}</MDTypography>,
+      description: row.description,
     })),
   };
   return (

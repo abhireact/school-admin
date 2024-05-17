@@ -32,7 +32,7 @@ const Create = (props: any) => {
   const calculationtypes = ["By Days", "By Months", "By Day to Day"];
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_accounts", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -54,12 +54,12 @@ const Create = (props: any) => {
         account_name: "",
         description: "",
         late_fee_calculation_type: "",
-        fee_fine_dues: [{ days_after_due_date: "", amount: "" }],
+        due_date: [{ day_after_due_date: "", amount: "" }],
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.200:8000/fee_fine", values, {
+          .post(`${process.env.REACT_APP_BASE_URL}/late_fee`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -71,22 +71,19 @@ const Create = (props: any) => {
             action.resetForm();
             handleShowPage();
           })
-          .catch(() => {
-            message.error("Error on creating  !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
       },
     });
   const handleAddField = () => {
-    setFieldValue("fee_fine_dues", [
-      ...values.fee_fine_dues,
-      { days_after_due_date: "", amount: "" },
-    ]);
+    setFieldValue("due_date", [...values.due_date, { day_after_due_date: "", amount: "" }]);
   };
 
   const handleRemoveField = (index: number) => {
-    const newDues = [...values.fee_fine_dues];
+    const newDues = [...values.due_date];
     newDues.splice(index, 1);
-    setFieldValue("fee_fine_dues", newDues);
+    setFieldValue("due_date", newDues);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -146,14 +143,13 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
-                multiline
                 rows={2}
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="description"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Description ...
+                    Description
                   </MDTypography>
                 }
                 value={values.description}
@@ -214,20 +210,20 @@ const Create = (props: any) => {
               </Grid>
             )}
             {cloneFields &&
-              values.fee_fine_dues.map((clone, index) => (
+              values.due_date.map((clone, index) => (
                 <>
-                  <Grid item xs={12} sm={4} py={1} key={index + "days_after_due_date"}>
+                  <Grid item xs={12} sm={4} py={1} key={index + "day_after_due_date"}>
                     <MDInput
                       required
                       sx={{ width: "70%" }}
                       variant="standard"
-                      name={`fee_fine_dues[${index}].days_after_due_date`}
+                      name={`due_date[${index}].day_after_due_date`}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Days After Due Date
                         </MDTypography>
                       }
-                      value={values.fee_fine_dues[index].days_after_due_date}
+                      value={values.due_date[index].day_after_due_date}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
@@ -237,19 +233,20 @@ const Create = (props: any) => {
                       required
                       sx={{ width: "70%" }}
                       variant="standard"
-                      name={`fee_fine_dues[${index}].amount`}
+                      name={`due_date[${index}].amount`}
+                      type="number"
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Amount
                         </MDTypography>
                       }
-                      value={values.fee_fine_dues[index].amount}
+                      value={values.due_date[index].amount}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4} pt={4} key={index + "amount"}>
-                    {values.fee_fine_dues.length > 1 ? (
+                    {values.due_date.length > 1 ? (
                       <Icon
                         fontSize="medium"
                         onClick={() => {

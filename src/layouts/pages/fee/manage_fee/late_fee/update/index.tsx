@@ -44,7 +44,7 @@ const Update = (props: any) => {
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.200:8000/fee_fine", values, {
+          .post("http://10.0.20.200:8000/late_fee", values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -56,8 +56,8 @@ const Update = (props: any) => {
             action.resetForm();
             handleClose();
           })
-          .catch(() => {
-            message.error("Error on creating  !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
       },
     });
