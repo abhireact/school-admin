@@ -29,23 +29,6 @@ const CloudAdminRouts = [
       },
     ],
   },
-  {
-    type: "collapse",
-    name: "Module",
-    key: "module",
-    icon: (
-      <Icon fontSize="medium">
-        <ManageAccountsIcon />
-      </Icon>
-    ),
-    collapse: [
-      {
-        name: "All module",
-        key: "all_module",
-        route: "pages/module/all_module",
-        component: <Roles />,
-      },
-    ],
-  },
+
 ];
 export default CloudAdminRouts;
