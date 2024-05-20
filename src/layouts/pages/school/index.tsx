@@ -83,20 +83,21 @@ function SchoolShowPage() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container my={2} spacing={1}>
-        <Grid item>
-          <MDTypography variant="body1" color="secondary" fontWeight="bold">
-            Edit
-          </MDTypography>
-        </Grid>
-        <Grid item>
-          <MDAvatar bgColor="secondary" size="sm" onClick={() => handleOpen()} variant="square">
-            <ModeEditOutlineIcon />
-          </MDAvatar>
-        </Grid>
-      </Grid>
       <Grid container>
-        <Grid item xs={12} sm={4}>
+        <Grid container item sm={6} my={2} spacing={1}>
+          <Grid item>
+            <MDTypography variant="body1" color="secondary" fontWeight="bold">
+              Edit
+            </MDTypography>
+          </Grid>
+          <Grid item>
+            <MDAvatar bgColor="secondary" size="sm" onClick={() => handleOpen()} variant="square">
+              <ModeEditOutlineIcon />
+            </MDAvatar>
+          </Grid>
+        </Grid>
+
+        <Grid item sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
           <MDAvatar alt="School Logo" size="xxl" src={schoolData?.school_logo} />
         </Grid>
       </Grid>

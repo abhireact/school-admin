@@ -13,12 +13,13 @@ import Cookies from "js-cookie";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Icon from "@mui/material/Icon";
+import Tooltip from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   fine_name: Yup.string().required("Required *"),
-  account_name: Yup.string().required("Required *"),
+  account_name: Yup.string(),
   late_fee_calculation_type: Yup.string().required("Required *"),
 });
 
@@ -182,15 +183,17 @@ const Create = (props: any) => {
                     name="late_fee_calculation_type"
                     onChange={handleChange}
                     value={values.late_fee_calculation_type}
-                    onBlur={handleBlur}
+                    {...params}
+                    variant="standard"
                     error={
                       touched.late_fee_calculation_type && Boolean(errors.late_fee_calculation_type)
+                    }
+                    success={
+                      values.late_fee_calculation_type.length && !errors.late_fee_calculation_type
                     }
                     helperText={
                       touched.late_fee_calculation_type && errors.late_fee_calculation_type
                     }
-                    {...params}
-                    variant="standard"
                   />
                 )}
               />

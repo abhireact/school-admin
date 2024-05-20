@@ -83,11 +83,9 @@ const FeeSchedule = () => {
     <DashboardLayout>
       <DashboardNavbar />
 
-      <Create handleShowPage={handleShowPage} setData={setData} />
+      <Create handleClose={handleShowPage} setData={setData} />
 
       {data.length > 1 ? <DataTable table={dataTableData} /> : ""}
-      <NewFeeSchedule />
-      <UnscheduledStudents />
     </DashboardLayout>
   );
 };

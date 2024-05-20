@@ -18,33 +18,52 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   fine_name: Yup.string().required("Required *"),
-  account_name: Yup.string().required("Required *"),
+  account_name: Yup.string(),
   late_fee_calculation_type: Yup.string().required("Required *"),
 });
 
 const Update = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData, fetchingData } = props;
+  const { setOpen, editData, fetchingData } = props;
   const handleClose = () => {
-    setOpenupdate(false);
+    setOpen(false);
   };
-  const [cloneFields, setCloneFields] = useState(false);
+
+  const [accountData, setAccountData] = useState([]);
 
   const calculationtypes = ["By Days", "By Months", "By Day to Day"];
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setAccountData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
+        old_fine_name: editData.fine_name,
         fine_name: editData.fine_name,
-        account_name: editData.account_name,
+        account_name: editData.account_name || "",
         description: editData.description,
         late_fee_calculation_type: editData.late_fee_calculation_type,
-        fee_fine_dues: editData.fee_fine_dues,
+        due_date: editData.due_date,
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.200:8000/late_fee", values, {
+          .put(`${process.env.REACT_APP_BASE_URL}/late_fee`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -62,16 +81,13 @@ const Update = (props: any) => {
       },
     });
   const handleAddField = () => {
-    setFieldValue("fee_fine_dues", [
-      ...values.fee_fine_dues,
-      { days_after_due_date: "", amount: "" },
-    ]);
+    setFieldValue("due_date", [...values.due_date, { day_after_due_date: "", amount: "" }]);
   };
 
   const handleRemoveField = (index: number) => {
-    const newDues = [...values.fee_fine_dues];
+    const newDues = [...values.due_date];
     newDues.splice(index, 1);
-    setFieldValue("fee_fine_dues", newDues);
+    setFieldValue("due_date", newDues);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -98,33 +114,46 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
-              <MDInput
+              <Autocomplete
+                disableClearable
                 sx={{ width: "70%" }}
-                variant="standard"
-                name="account_name"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Account
-                  </MDTypography>
-                }
                 value={values.account_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.account_name && Boolean(errors.account_name)}
-                success={values.account_name.length && !errors.account_name}
-                helperText={touched.account_name && errors.account_name}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "account_name", value },
+                  });
+                }}
+                options={accountData.map((acd) => acd.account_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="account_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Account
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.account_name}
+                    {...params}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.account_name && Boolean(errors.account_name)}
+                    helperText={touched.account_name && errors.account_name}
+                    success={values.account_name.length && !errors.account_name}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
-                multiline
                 rows={2}
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="description"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Description ...
+                    Description
                   </MDTypography>
                 }
                 value={values.description}
@@ -137,30 +166,31 @@ const Update = (props: any) => {
             </Grid>
             <Grid xs={12} sm={4} py={1}>
               <Autocomplete
-                value={values.late_fee_calculation_type}
                 sx={{ width: "70%" }}
                 onChange={(event, value) => {
                   handleChange({
                     target: { name: "late_fee_calculation_type", value },
                   });
-                  setCloneFields(true);
                 }}
                 disableClearable
                 options={calculationtypes}
+                value={values.late_fee_calculation_type}
                 renderInput={(params: any) => (
                   <MDInput
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Late Fee Calculatin Type
+                        Late Fee Calculation Type
                       </MDTypography>
                     }
                     InputLabelProps={{ shrink: true }}
                     name="late_fee_calculation_type"
                     onChange={handleChange}
                     value={values.late_fee_calculation_type}
-                    onBlur={handleBlur}
                     error={
                       touched.late_fee_calculation_type && Boolean(errors.late_fee_calculation_type)
+                    }
+                    success={
+                      values.late_fee_calculation_type.length && !errors.late_fee_calculation_type
                     }
                     helperText={
                       touched.late_fee_calculation_type && errors.late_fee_calculation_type
@@ -178,26 +208,27 @@ const Update = (props: any) => {
                   handleAddField();
                 }}
                 color="info"
-                variant="outlined"
+                variant="text"
+                fontSize="medium"
               >
                 ADD +
               </MDButton>
             </Grid>
 
-            {values.fee_fine_dues.map((clone: any, index: any) => (
+            {values.due_date.map((clone: any, index: any) => (
               <>
-                <Grid item xs={12} sm={4} py={1} key={index + "days_after_due_date"}>
+                <Grid item xs={12} sm={4} py={1} key={index + "day_after_due_date"}>
                   <MDInput
                     required
                     sx={{ width: "70%" }}
                     variant="standard"
-                    name={`fee_fine_dues[${index}].days_after_due_date`}
+                    name={`due_date[${index}].day_after_due_date`}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         Days After Due Date
                       </MDTypography>
                     }
-                    value={values.fee_fine_dues[index].days_after_due_date}
+                    value={values.due_date[index].day_after_due_date}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
@@ -207,19 +238,20 @@ const Update = (props: any) => {
                     required
                     sx={{ width: "70%" }}
                     variant="standard"
-                    name={`fee_fine_dues[${index}].amount`}
+                    name={`due_date[${index}].amount`}
+                    type="number"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         Amount
                       </MDTypography>
                     }
-                    value={values.fee_fine_dues[index].amount}
+                    value={values.due_date[index].amount}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4} pt={4} key={index + "amount"}>
-                  {values.fee_fine_dues.length > 1 ? (
+                  {values.due_date.length > 1 ? (
                     <Icon
                       fontSize="medium"
                       onClick={() => {

@@ -13,9 +13,12 @@ import axios from "axios";
 import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Tooltip from "@mui/material/Tooltip";
 import { useTheme } from "@emotion/react";
+import BuildIcon from "@mui/icons-material/Build";
 import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
+import ManageSchedule from "./manageschedule";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
@@ -63,7 +66,15 @@ const LateFine = () => {
     setEditData(main_data);
     setUpdatepage(true);
   };
+  const [manageData, setManageData] = useState(null);
 
+  const handleManageSchedule = (index: number) => {
+    const main_data = data[index];
+    console.log(main_data, "maindata");
+
+    setManageData(main_data);
+    setManageSchedule(true);
+  };
   const handleCloseupdate = () => {
     setUpdatepage(false);
   }; //End
@@ -91,11 +102,7 @@ const LateFine = () => {
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/late_fee`, {
-        data: {
-          class_code: name.class_code,
-          subject_code: name.subject_code,
-          subject_name: name.subject_name,
-        },
+        data: name,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -111,6 +118,11 @@ const LateFine = () => {
       message.error(error.response.data.detail);
     }
   };
+  const [showpage, setShowpage] = useState(false);
+  const handleShowPage = () => {
+    setShowpage(!showpage);
+  };
+  const [manageSchedule, setManageSchedule] = useState(false);
   const dataTableData = {
     columns: [
       { Header: "Fine ", accessor: "fine_name" },
@@ -123,23 +135,36 @@ const LateFine = () => {
 
     rows: data.map((row, index) => ({
       action: (
-        <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
+        <>
+          <Tooltip title="Update">
+            <IconButton
+              onClick={() => {
+                handleOpenupdate(index);
+              }}
+            >
+              <CreateRoundedIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              onClick={() => {
+                handleDelete(row);
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
 
-          <IconButton
-            onClick={() => {
-              handleDelete(row);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </MDTypography>
+          <Tooltip title="Manage Schedule">
+            <IconButton
+              onClick={() => {
+                handleManageSchedule(index);
+              }}
+            >
+              <BuildIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       ),
       account_name: row.account_name,
       fine_name: row.fine_name,
@@ -147,50 +172,46 @@ const LateFine = () => {
       late_fee_calculation_type: row.late_fee_calculation_type,
     })),
   };
-  const [showpage, setShowpage] = useState(false);
-  const handleShowPage = () => {
-    setShowpage(!showpage);
-  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showpage ? (
-        <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchLateFees} />
-        </>
+      {manageSchedule ? (
+        <ManageSchedule manageData={manageData} handleClose={setManageSchedule} />
       ) : (
         <>
-          {!updatepage && (
+          {showpage ? (
+            <Create handleShowPage={handleShowPage} fetchingData={fetchLateFees} />
+          ) : (
             <>
-              <Card>
-                <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Grid item pt={2} pl={2}>
-                    <MDTypography variant="h5" fontWeight="bold" color="secondary">
-                      Late Fee
-                    </MDTypography>
+              {updatepage ? (
+                <Update setOpen={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
+              ) : (
+                <Card>
+                  <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Grid item pt={2} pl={2}>
+                      <MDTypography variant="h5" fontWeight="bold" color="secondary">
+                        Late Fee
+                      </MDTypography>
+                    </Grid>
+                    <Grid item pt={2} pr={2}>
+                      <MDButton
+                        variant="outlined"
+                        color="info"
+                        type="submit"
+                        onClick={handleShowPage}
+                      >
+                        + New Late Fee
+                      </MDButton>
+                    </Grid>
                   </Grid>
-                  <Grid item pt={2} pr={2}>
-                    <MDButton
-                      variant="outlined"
-                      color="info"
-                      type="submit"
-                      onClick={handleShowPage}
-                    >
-                      + New Late Fee
-                    </MDButton>
-                  </Grid>
-                </Grid>
-                <DataTable table={dataTableData} />
-              </Card>
+                  <DataTable table={dataTableData} />
+                </Card>
+              )}
             </>
           )}
         </>
       )}
-      <>
-        {updatepage && (
-          <Update setOpenupdate={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
-        )}
-      </>
     </DashboardLayout>
   );
 };

@@ -75,7 +75,7 @@ const Create = (props: any) => {
     setFilteredSection(filtereddata);
   }
 
-  console.log(filteredSection, "section nameeeeeeeeee");
+  console.log(filteredSection, "section name");
   const [casteData, setCasteData] = useState([]);
   const [castecategoryData, setCastecategoryData] = useState([]);
   const [studentcategoryData, setStudentcategoryData] = useState([]);
