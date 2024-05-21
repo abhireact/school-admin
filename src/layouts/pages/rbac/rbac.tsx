@@ -449,7 +449,7 @@ const Rbac = (props: any) => {
               onSelect={onSelect}
               selectedKeys={selectedKeys}
             >
-              {renderTreeNodes(treeData)}
+              {renderTreeNodes(treeData.filter(node => node.key !== "fee"))}
             </Tree>
           </MDBox>
         </Card>
