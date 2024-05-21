@@ -103,8 +103,8 @@ const CasteCategory = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_caste_category/`, {
-        data: { caste_name: name },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_caste_category`, {
+        data: { caste_category: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -154,7 +154,7 @@ const CasteCategory = () => {
             rbacData?.find((element: string) => element === "castecategorydelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.caste);
+                  handleDelete(row.caste_category);
                 }}
               >
                 <DeleteIcon />
@@ -179,7 +179,7 @@ const CasteCategory = () => {
           <Grid item pt={2} pl={2}>
             {" "}
             <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Caste Category
+              Caste&nbsp;&nbsp;Category
             </MDTypography>
           </Grid>
           <Grid item pt={2} pr={2}>
@@ -197,7 +197,7 @@ const CasteCategory = () => {
             )}
           </Grid>
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
 
       <Dialog open={open} onClose={handleClose}>

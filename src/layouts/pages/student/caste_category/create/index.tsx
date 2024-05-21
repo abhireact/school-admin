@@ -38,50 +38,48 @@ const Create = (props: any) => {
           },
         })
         .then(() => {
+          handleClose();
+          action.resetForm();
           message.success("Created successfully!");
           fetchData();
-          handleClose();
         })
-        .catch(() => {
-          message.error("Error on creating  !");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
-
-      action.resetForm();
     },
   });
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               CASTE CATEGORY
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               sx={{ width: "65%" }}
               variant="standard"
               name="caste_category"
+              placeholder="Enter Caste Category"
               value={values.caste_category}
               onChange={handleChange}
-              error={touched.caste_category && Boolean(errors.caste_category)}
-              helperText={touched.caste_category && errors.caste_category}
               onBlur={handleBlur}
+              error={touched.caste_category && Boolean(errors.caste_category)}
+              success={values.caste_category.length && !errors.caste_category}
+              helperText={touched.caste_category && errors.caste_category}
             />
           </Grid>
 
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               DESCRIPTION
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              multiline
-              mb={2}
               sx={{ width: "65%" }}
               rows={3}
               variant="standard"
@@ -91,6 +89,7 @@ const Create = (props: any) => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.description && Boolean(errors.description)}
+              success={values.description.length && !errors.description}
               helperText={touched.description && errors.description}
             />
           </Grid>

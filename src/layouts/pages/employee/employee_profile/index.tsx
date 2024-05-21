@@ -165,8 +165,8 @@ const EmpProfile = () => {
         </MDTypography>
       ),
 
-      position_name: <MDTypography variant="p">{row.position_name}</MDTypography>,
-      category_name: <MDTypography variant="p">{row.category_name}</MDTypography>,
+      position_name: row.position_name,
+      category_name: row.category_name,
     })),
   };
   return (
@@ -194,7 +194,7 @@ const EmpProfile = () => {
             )}
           </Grid>
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={fetchEmployeePosition} />

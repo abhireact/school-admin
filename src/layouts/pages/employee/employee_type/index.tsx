@@ -164,7 +164,7 @@ const EmployeeType = () => {
         </MDTypography>
       ),
 
-      employee_type: <MDTypography variant="p">{row.employee_type}</MDTypography>,
+      employee_type: row.employee_type,
     })),
   };
   return (
@@ -192,7 +192,7 @@ const EmployeeType = () => {
             )}
           </Grid>
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
 
       <Dialog open={open} onClose={handleClose}>

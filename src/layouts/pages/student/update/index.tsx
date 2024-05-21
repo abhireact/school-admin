@@ -18,6 +18,27 @@ const Update = (props: any) => {
   const [studentInfo, setStudentInfo] = useState({});
   const [guardianInfo, setGuardianInfo] = useState([]);
 
+  const fetchGuardian = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASE_URL}/mg_guardian/manage`,
+        { student_user_name: editData },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setGuardianInfo(response.data);
+        console.log(guardianInfo, "guardian info");
+      })
+      .catch((error) => {
+        console.error("Error fetching guardian data:", error);
+      });
+  };
+
   useEffect(() => {
     axios
       .post(
@@ -39,24 +60,8 @@ const Update = (props: any) => {
       .catch(() => {
         console.error("Error on getting student info");
       });
-    axios
-      .post(
-        `${process.env.REACT_APP_BASE_URL}/mg_guardian/manage`,
-        { student_user_name: editData },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        setGuardianInfo(response.data);
-        console.log(guardianInfo, "guardian info");
-      })
-      .catch((error) => {
-        console.error("Error fetching guardian data:", error);
-      });
+
+    fetchGuardian();
   }, []);
   return (
     <Grid container spacing={4}>
@@ -70,6 +75,7 @@ const Update = (props: any) => {
           setOpenupdate={setOpenupdate}
           fetchData={fetchData}
           guardianInfo={guardianInfo}
+          fetchGuardian={fetchGuardian}
         />
       </Grid>
     </Grid>

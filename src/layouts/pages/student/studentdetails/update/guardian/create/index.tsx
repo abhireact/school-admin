@@ -33,7 +33,7 @@ import Dialog from "@mui/material/Dialog";
 const token = Cookies.get("token");
 
 const Create = (props: any) => {
-  const { username, guardianData, setCreateOpen } = props;
+  const { username, guardianData, setCreateOpen, fetchGuardian } = props;
 
   const { values, handleChange, handleBlur, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
@@ -61,23 +61,24 @@ const Create = (props: any) => {
         student_data: {
           user_name: username,
         },
-        guardian_data: values,
+        guardian_data: [values],
       };
       axios
         .post(`${process.env.REACT_APP_BASE_URL}/mg_guardian`, guardianDetails, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
           console.log("guardian created for this student ");
           message.success("Guardian Added SuccessFully");
+          fetchGuardian();
           action.resetForm();
           setCreateOpen(false);
         })
-        .catch(() => {
-          message.error("Error on Adding  Guardian!");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
     },
   });
@@ -166,6 +167,7 @@ const Create = (props: any) => {
                 sx={{ width: "80%" }}
                 variant="standard"
                 name={`relation`}
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Relation

@@ -130,7 +130,7 @@ const HouseDetails = () => {
     ],
 
     rows: data.map((row, index) => ({
-      house_name: <MDTypography variant="p">{row.house_name}</MDTypography>,
+      house_name: row.house_name,
 
       action: (
         <MDTypography variant="p">
@@ -167,7 +167,7 @@ const HouseDetails = () => {
         </MDTypography>
       ),
 
-      description: <MDTypography variant="p">{row.description}</MDTypography>,
+      description: row.description,
     })),
   };
   return (

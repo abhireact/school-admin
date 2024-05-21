@@ -52,36 +52,35 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               HOUSE DETAILS
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               sx={{ width: "65%" }}
               variant="standard"
               name="house_name"
+              placeholder="Enter House Name"
               value={values.house_name}
               onChange={handleChange}
               error={touched.house_name && Boolean(errors.house_name)}
+              success={values.house_name.length && !errors.house_name}
               helperText={touched.house_name && errors.house_name}
               onBlur={handleBlur}
             />
           </Grid>
 
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               DESCRIPTION
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              multiline
-              mb={2}
               sx={{ width: "65%" }}
               rows={3}
               variant="standard"

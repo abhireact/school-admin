@@ -93,7 +93,7 @@ const StudentCategory = () => {
         console.log(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        message.error(error.response.data.detail);
       });
   };
 
@@ -103,7 +103,7 @@ const StudentCategory = () => {
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_studcategory`, {
-        data: { caste_name: name },
+        data: { category_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -124,13 +124,11 @@ const StudentCategory = () => {
     columns: [
       { Header: "Student Category", accessor: "category_name" },
 
-      { Header: "Description", accessor: "description" },
-
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      category_name: <MDTypography variant="p">{row.category_name}</MDTypography>,
+      category_name: row.category_name,
 
       action: (
         <MDTypography variant="p">
@@ -153,7 +151,7 @@ const StudentCategory = () => {
             rbacData?.find((element: string) => element === "studentcategorydelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row.caste);
+                  handleDelete(row.category_name);
                 }}
               >
                 <DeleteIcon />
@@ -167,7 +165,7 @@ const StudentCategory = () => {
         </MDTypography>
       ),
 
-      description: <MDTypography variant="p">{row.description}</MDTypography>,
+      description: row.description,
     })),
   };
   return (
@@ -193,7 +191,7 @@ const StudentCategory = () => {
               ""
             )}
           </Grid>
-          <DataTable table={dataTableData} />
+          <DataTable table={dataTableData} canSearch />
         </Grid>
       </Card>
       <Dialog open={open} onClose={handleClose}>

@@ -165,8 +165,8 @@ const Department = () => {
         </MDTypography>
       ),
 
-      dept_name: <MDTypography variant="p">{row.dept_name}</MDTypography>,
-      dept_code: <MDTypography variant="p">{row.dept_code}</MDTypography>,
+      dept_name: row.dept_name,
+      dept_code: row.dept_code,
     })),
   };
   return (
@@ -195,7 +195,7 @@ const Department = () => {
             )}
           </Grid>{" "}
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
 
       <Dialog open={open} onClose={handleClose}>

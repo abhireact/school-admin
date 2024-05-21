@@ -71,7 +71,7 @@ const Update = (props: any) => {
   const handleOpenCreate = () => {
     setCreateOpen(true);
   };
-  const { editData, username, setOpenupdate, guardianInfo, fetchData } = props;
+  const { editData, username, setOpenupdate, guardianInfo, fetchData, fetchGuardian } = props;
   const [showGuardian, setShowGuardian] = useState(false);
 
   const handleClose = () => {
@@ -486,6 +486,27 @@ const Update = (props: any) => {
   console.log(casteData, "caste dataaaaaa");
   const [activityRecord, setActivityRecord] = useState(false);
 
+  const handleDeleteGuardian = async (name: any) => {
+    console.log(name, "guardian delete data");
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_guardian`, {
+        data: { guardian_user_name: name },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success("Deleted successFully");
+        // Filter out the deleted user from the data
+        fetchGuardian();
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      const myError = error as Error;
+      message.error(error.response.data.detail);
+    }
+  };
   return (
     <Card id="student-info">
       <form onSubmit={handleSubmit}>
@@ -1979,7 +2000,11 @@ const Update = (props: any) => {
                   </Grid>
                   <Grid item xs={12} sm={2} py={1} key={index + "space"}>
                     <IconButton onClick={() => handleOpenGuardian(guardianinfo)}>
-                      <CreateRoundedIcon color="info" />
+                      <CreateRoundedIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteGuardian(guardianinfo.user_name)}>
+                      {guardianinfo.guardian_user_name}
+                      <DeleteIcon />
                     </IconButton>
                   </Grid>
                 </>
@@ -1987,7 +2012,7 @@ const Update = (props: any) => {
             {showGuardian && (
               <Grid item xs={12} sm={2} mt={1}>
                 <Tooltip title="Add Guardian" placement="top">
-                  <AddIcon color="secondary" fontSize="large" onClick={() => handleOpenCreate()} />
+                  <AddIcon fontSize="large" color="info" onClick={() => handleOpenCreate()} />
                 </Tooltip>
               </Grid>
             )}
@@ -2020,10 +2045,19 @@ const Update = (props: any) => {
         </MDBox>
       </form>
       <Dialog open={createOpen} onClose={handleCloseCreate} maxWidth="md">
-        <CreateGuardian setCreateOpen={setCreateOpen} username={username} />
+        <CreateGuardian
+          setCreateOpen={setCreateOpen}
+          username={username}
+          fetchGuardian={fetchGuardian}
+        />
       </Dialog>
       <Dialog open={open} onClose={handleCloseGuardian} maxWidth="md">
-        <UpdateGuardian guardianData={guardianData} setOpen={setOpen} fetchData={fetchData} />
+        <UpdateGuardian
+          guardianData={guardianData}
+          setOpen={setOpen}
+          fetchData={fetchData}
+          fetchGuardian={fetchGuardian}
+        />
       </Dialog>
     </Card>
   );
