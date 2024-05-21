@@ -190,7 +190,6 @@ export default function CreateFeeParicularAmount() {
     );
     const result: TreeNode[] = [];
     const wingMap: { [key: string]: TreeNode } = {};
-    console.log(classes, "inside use effect");
     filteredClassData.forEach(({ wing_name, class_name, section_data }: Class, index: number) => {
       if (!wingMap[wing_name]) {
         wingMap[wing_name] = {
@@ -247,8 +246,6 @@ export default function CreateFeeParicularAmount() {
 
   const treeData: TreeDataNode[] =
     selectedTab === 0 ? result : selectedTab === 1 ? studentdata : [];
-
-  console.log(student, "aaaaaaaaa student data");
   return (
     <DashboardLayout>
       <form onSubmit={handleSubmit}>
@@ -371,6 +368,7 @@ export default function CreateFeeParicularAmount() {
                       Amount
                     </MDTypography>
                   }
+                  sx={{ width: "100%" }}
                   name="amount"
                   value={values.amount}
                   placeholder="Enter Amount"
@@ -404,37 +402,21 @@ export default function CreateFeeParicularAmount() {
               </Tabs>
               {selectedTab === 0 && (
                 <Grid container spacing={2} pt={3} p={4}>
-                  <Grid item xs={12} sm={4}>
-                    <MDBox
-                      p={3}
-                      sx={{
-                        height: "300px",
-                        overflowY: "auto",
-                        display: "inline-block",
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                      }}
-                    >
-                      <MDTypography
-                        variant="button"
-                        fontWeight="bold"
-                        color="secondary"
-                        alignItems="center"
-                      >
-                        Select Wing &gt;&gt; Class &gt;&gt; Section
-                      </MDTypography>
-                      <Divider />
-                      <Tree
-                        checkable
-                        onExpand={onExpand}
-                        expandedKeys={expandedKeys}
-                        autoExpandParent={autoExpandParent}
-                        onCheck={onCheck}
-                        checkedKeys={checkedKeys}
-                        onSelect={onSelect}
-                        selectedKeys={selectedKeys}
-                        treeData={treeData}
-                      />
-                    </MDBox>
+                  <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "250px", overflowY: "auto" }}>
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Select Class & sections
+                    </MDTypography>
+                    <Tree
+                      checkable
+                      onExpand={onExpand}
+                      expandedKeys={expandedKeys}
+                      autoExpandParent={autoExpandParent}
+                      onCheck={onCheck}
+                      checkedKeys={checkedKeys}
+                      onSelect={onSelect}
+                      selectedKeys={selectedKeys}
+                      treeData={treeData}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
@@ -451,7 +433,11 @@ export default function CreateFeeParicularAmount() {
                           name="student_category"
                           onChange={handleChange}
                           value={values.student_category}
-                          label="Select Student Category"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Select Student Category
+                            </MDTypography>
+                          }
                           {...params}
                           variant="standard"
                         />
@@ -481,7 +467,11 @@ export default function CreateFeeParicularAmount() {
                             name="class_name"
                             onChange={handleChange}
                             value={values.class_name}
-                            label="Class"
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Class
+                              </MDTypography>
+                            }
                             {...params}
                             variant="standard"
                           />
@@ -510,26 +500,33 @@ export default function CreateFeeParicularAmount() {
                             name="section_name"
                             onChange={handleChange}
                             value={values.section_name}
-                            label="Section"
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Section
+                              </MDTypography>
+                            }
                             {...params}
                             variant="standard"
                           />
                         )}
                       />
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2} justifyContent="center" alignItems="center" pt={4}>
-                    <Tree
-                      checkable
-                      onExpand={onExpand}
-                      expandedKeys={expandedKeys}
-                      autoExpandParent={autoExpandParent}
-                      onCheck={onCheck}
-                      checkedKeys={checkedKeys}
-                      onSelect={onSelect}
-                      selectedKeys={selectedKeys}
-                      treeData={treeData}
-                    />
+                    <Grid item xs={12} sm={4} style={{ maxHeight: "250px", overflowY: "auto" }}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Select Students
+                      </MDTypography>
+                      <Tree
+                        checkable
+                        onExpand={onExpand}
+                        expandedKeys={expandedKeys}
+                        autoExpandParent={autoExpandParent}
+                        onCheck={onCheck}
+                        checkedKeys={checkedKeys}
+                        onSelect={onSelect}
+                        selectedKeys={selectedKeys}
+                        treeData={treeData}
+                      />
+                    </Grid>
                   </Grid>
                 </>
               )}

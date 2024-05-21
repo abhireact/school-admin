@@ -50,6 +50,8 @@ import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate
 import Admin from "layouts/pages/school/create";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
+import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
+import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
 
 const routes = [
   {
@@ -405,12 +407,6 @@ const routes = [
         ],
       },
       {
-        name: "Caste Category",
-        key: "castecategory",
-        route: "/pages/school/castecategory",
-        component: <CasteCategory />,
-      },
-      {
         name: "Late Fee",
         key: "latefee",
         route: "pages/fee/latefee",
@@ -465,12 +461,6 @@ const routes = [
 
         collapse: [
           {
-            name: "Fee Receipt",
-            key: "feereceipt",
-            route: "pages/fee/feereceipt",
-            component: <FeeReceipt />,
-          },
-          {
             name: "Fee Register without Payment Mode",
             key: "feeregister",
             route: "pages/fee/feeregister",
@@ -487,6 +477,18 @@ const routes = [
             key: "studentcertificate",
             route: "pages/fee/studentcertificate",
             component: <StudentCertificate />,
+          },
+          {
+            name: "Fee Receipt Report",
+            key: "feereceiptreport",
+            route: "pages/fee/feereceiptreport",
+            component: <FeeReceiptReport />,
+          },
+          {
+            name: "Fee Concession Report",
+            key: "feeconcessionreport",
+            route: "pages/fee/feeconcessionreport",
+            component: <FeeConcessionReport />,
           },
         ],
       },
