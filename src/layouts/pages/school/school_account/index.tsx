@@ -197,7 +197,7 @@ const EmpAccount = () => {
         </Grid>
         <DataTable table={dataTableData} canSearch />
       </Card>
-      <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+      <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="sm">
         <Update setOpenupdate={setOpenupdate} editData={editData} fetchingData={fetchAccountData} />
       </Dialog>
       <Dialog open={open} onClose={handleClose} maxWidth="sm">

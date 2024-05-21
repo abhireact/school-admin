@@ -31,7 +31,7 @@ const Update = (props: any) => {
     initialValues: {
       name: editData.name,
 
-      description: editData.description,
+      description: editData.description || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {

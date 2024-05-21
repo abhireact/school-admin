@@ -418,16 +418,22 @@ const routes = [
 
         collapse: [
           {
-            name: "Excess Fee ",
-            key: "excessfee",
-            route: "pages/fee/excessfee",
-            component: <ExcessFee />,
-          },
-          {
             name: "Late Fee",
             key: "latefee",
             route: "pages/fee/latefee",
             component: <LateFee />,
+          },
+          {
+            name: "Fee Schedule",
+            key: "feeschedule",
+            route: "pages/fee/feeschedule",
+            component: <FeeSchedule />,
+          },
+          {
+            name: "Excess Fee ",
+            key: "excessfee",
+            route: "pages/fee/excessfee",
+            component: <ExcessFee />,
           },
           {
             name: "Fee Collection",
@@ -442,12 +448,6 @@ const routes = [
             component: <FeeCollectionByAdmission />,
           },
 
-          {
-            name: "Fee Schedule",
-            key: "feeschedule",
-            route: "pages/fee/feeschedule",
-            component: <FeeSchedule />,
-          },
           {
             name: "Fine Particular",
             key: "fineparticular",

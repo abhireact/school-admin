@@ -801,7 +801,7 @@ const Create = (props: any) => {
               xs={12}
               sm={12}
               mt={4}
-              sx={{ display: "flex", justifyContent: "space-between" }}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Grid item>
                 <MDButton

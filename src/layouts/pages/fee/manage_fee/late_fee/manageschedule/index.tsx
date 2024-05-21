@@ -20,8 +20,9 @@ const validationSchema = Yup.object().shape({
   section_name: Yup.string().required("Required *"),
 });
 
-const Create = (props: any) => {
-  const { handleClose } = props;
+const ManageSchedule = (props: any) => {
+  const { manageData, handleClose } = props;
+
   const [data, setData] = useState([]);
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
@@ -89,11 +90,12 @@ const Create = (props: any) => {
         academic_year: "",
         class_name: "",
         section_name: "",
+        fine_name: manageData.fine_name,
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/search`, values, {
+          .post(`${process.env.REACT_APP_BASE_URL}/late_fee/collection`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -108,23 +110,45 @@ const Create = (props: any) => {
           });
       },
     });
-  const dataTableData = {
-    columns: [
-      { Header: "Index ", accessor: "index", width: "10%" },
-      { Header: "Sub-Subject ", accessor: "sub_subject" },
-      { Header: "Subject", accessor: "subject_name" },
-      { Header: "Class Name", accessor: "class_name" },
-      { Header: "Section Name", accessor: "section_name" },
-    ],
+  // console.log(manageData.fine_name, "fine name");
+  const handleCheckboxChange = (index: number) => {
+    setData((prevSelections) => [
+      ...prevSelections,
+      (prevSelections[index].select = !prevSelections[index].select),
+    ]);
+    console.log(data, "change checkbox");
+  };
+  const handleSelectAll = () => {
+    setData((prevData) => prevData.map((item) => ({ ...item, select: true })));
+    console.log(data, "all checkbox");
+    setAllCheck(true);
+    setNoneCheck(false);
+  };
 
-    rows: data.map((row, index) => ({
-      sub_subject: <MDTypography variant="p">{row.sub_subject}</MDTypography>,
-      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
+  const handleSelectNone = () => {
+    setData((prevData) => prevData.map((item) => ({ ...item, select: false })));
+    console.log(data, "none checkbox");
+    setAllCheck(false);
+    setNoneCheck(true);
+  };
+  const [allCheck, setAllCheck] = useState(false);
+  const [noneCheck, setNoneCheck] = useState(false);
 
-      index: <MDTypography variant="p">{row.index}</MDTypography>,
-      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-    })),
+  const handleCollectionSubmit = () => {
+    const sendValues = { ...values, collections: data };
+    axios
+      .put(`${process.env.REACT_APP_BASE_URL}/late_fee/collection`, sendValues, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        message.success("Updated Successfully");
+      })
+      .catch((error: any) => {
+        message.error(error.response.data.detail);
+      });
   };
   return (
     <>
@@ -269,8 +293,89 @@ const Create = (props: any) => {
             </Grid>
           </MDBox>
         </form>
+
+        {data.length == 0 ? (
+          ""
+        ) : (
+          <>
+            <MDBox p={4}>
+              <Grid container>
+                <Grid item sm={12} xs={12}>
+                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead>
+                      <tr>
+                        <td
+                          style={{
+                            fontSize: "15px",
+                            textAlign: "left",
+                          }}
+                        >
+                          {" "}
+                          <b>Collection Name</b>
+                        </td>
+                        <td
+                          style={{
+                            fontSize: "15px",
+                            textAlign: "left",
+                          }}
+                        >
+                          <b>Select</b>: &nbsp;All
+                          <Checkbox checked={allCheck} onChange={() => handleSelectAll()} />
+                          &nbsp; None
+                          <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
+                        </td>
+                        <td>
+                          {" "}
+                          <MDButton
+                            color="info"
+                            variant="contained"
+                            onClick={() => handleCollectionSubmit()}
+                          >
+                            Submit
+                          </MDButton>
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((datainfo, index) => (
+                        <tr key={index}>
+                          <td style={{ textAlign: "left" }}>
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              {datainfo.collection_name}
+                            </MDTypography>
+                          </td>
+                          <td>
+                            <Checkbox
+                              checked={datainfo.select}
+                              onChange={() => handleCheckboxChange(index)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Grid>
+
+                {/* <Grid
+                  item
+                  container
+                  xs={12}
+                  sm={6}
+                  mr={8}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <Grid item mt={2}>
+                    <MDButton color="info" variant="contained">
+                      Submit
+                    </MDButton>
+                  </Grid>
+                </Grid> */}
+              </Grid>
+            </MDBox>
+          </>
+        )}
       </Card>
     </>
   );
 };
-export default Create;
+export default ManageSchedule;

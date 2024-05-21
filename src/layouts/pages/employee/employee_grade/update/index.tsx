@@ -45,8 +45,8 @@ const Update = (props: any) => {
             handleClose();
             message.success(" Updated Successfully!");
           })
-          .catch(() => {
-            message.error("Error on  Updating  !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
 
         action.resetForm();
@@ -55,20 +55,21 @@ const Update = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Grade Name
+              GRADE NAME
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
+              required
               sx={{ width: "65%" }}
               variant="standard"
               name="grade_name"
               value={values.grade_name}
+              placeholder="Enter Grade Name"
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.grade_name && Boolean(errors.grade_name)}
@@ -78,16 +79,16 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Priority
+              PRIORITY
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               sx={{ width: "65%" }}
               variant="standard"
               name="priority"
+              placeholder="Enter Priority"
               value={values.priority}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -98,7 +99,7 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Status
+              STATUS
             </MDTypography>
           </Grid>
           <Grid sm={7} item>
@@ -116,7 +117,7 @@ const Update = (props: any) => {
                   control={<Radio />}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Active
+                      ACTIVE
                     </MDTypography>
                   }
                   value="Active"
@@ -125,7 +126,7 @@ const Update = (props: any) => {
                   control={<Radio />}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      InActive
+                      INACTIVE
                     </MDTypography>
                   }
                   value="InActive"

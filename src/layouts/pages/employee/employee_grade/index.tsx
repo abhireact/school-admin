@@ -164,7 +164,7 @@ const EmpGrade = () => {
         </MDTypography>
       ),
 
-      grade_name: <MDTypography variant="p">{row.grade_name}</MDTypography>,
+      grade_name: row.grade_name,
     })),
   };
   return (
@@ -192,7 +192,7 @@ const EmpGrade = () => {
             )}
           </Grid>
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={fetchEmployeeGrade} />

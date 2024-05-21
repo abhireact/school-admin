@@ -58,7 +58,7 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Category Name
+              CATEGORY NAME
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
@@ -77,6 +77,7 @@ const Update = (props: any) => {
                   required
                   InputLabelProps={{ shrink: true }}
                   name="category_name"
+                  placeholder="Choose Category Name"
                   onChange={handleChange}
                   value={values.category_name}
                   {...params}
@@ -92,7 +93,7 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Position Name
+              POSITION NAME
             </MDTypography>
           </Grid>
 
@@ -101,6 +102,7 @@ const Update = (props: any) => {
               sx={{ width: "65%" }}
               variant="standard"
               required
+              placeholder="Enter Position Name"
               name="position_name"
               value={values.position_name}
               onChange={handleChange}
@@ -113,7 +115,7 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Status
+              STATUS
             </MDTypography>
           </Grid>
           <Grid sm={7} item mt={2}>
@@ -131,7 +133,7 @@ const Update = (props: any) => {
                   control={<Radio />}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Active
+                      ACTIVE
                     </MDTypography>
                   }
                   value="Active"
@@ -140,7 +142,7 @@ const Update = (props: any) => {
                   control={<Radio />}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      InActive
+                      INACTIVE
                     </MDTypography>
                   }
                   value="InActive"
@@ -154,7 +156,7 @@ const Update = (props: any) => {
             xs={12}
             sm={12}
             mt={4}
-            sx={{ display: "flex", justifyContent: "space-between" }}
+            sx={{ display: "flex", justifyContent: "flex-end" }}
           >
             <Grid item>
               <MDButton

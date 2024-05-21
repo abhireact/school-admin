@@ -40,7 +40,7 @@ const validationSchema = Yup.object().shape({
   affilicated_to: Yup.string().required("Required *"),
   fax_number: Yup.string().matches(/^\d+$/, "Incorrect Format *"),
   reg_num: Yup.string().required("Required *"),
-  mg_leave_calendar_start_date: Yup.date().required("Required *"),
+  mg_leave_calendar_start_date: Yup.date(),
 });
 interface FormValues {
   school_name: string;
@@ -49,7 +49,7 @@ interface FormValues {
   end_time: string;
   affilicated_to: string;
   reg_num: string;
-  mg_leave_calendar_start_date: string;
+  mg_leave_calendar_start_date: any;
   address_line1: string;
   address_line2: string;
   street: string;
@@ -165,7 +165,7 @@ const Update = (props: any) => {
     end_time: schoolData.end_time || "",
     // affilicated_to: schoolData.affilicated_to || "",
     reg_num: schoolData.reg_num || "",
-    mg_leave_calendar_start_date: schoolData.mg_leave_calendar_start_date || "",
+    mg_leave_calendar_start_date: schoolData.mg_leave_calendar_start_date || Date(),
     address_line1: schoolData.address_line1 || "",
     address_line2: schoolData.address_line2 || "",
     street: schoolData.street || "",
