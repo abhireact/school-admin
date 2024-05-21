@@ -54,6 +54,7 @@ import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
 
+import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -165,6 +166,12 @@ let routes = [
 
 
 
+  {
+    name: "create conssion",
+    key: "createconcession",
+    route: "/fee/create_concession",
+    component: <CreateConcession />,
+  },
 ];
 
 if (token && trimmed == "mindcom") {

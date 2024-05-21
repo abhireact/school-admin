@@ -26,7 +26,6 @@ const Create = (props: any) => {
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       category_name: "",
-      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -42,8 +41,8 @@ const Create = (props: any) => {
           fetchData();
           handleClose();
         })
-        .catch(() => {
-          message.error("Error on creating  !");
+        .catch((error) => {
+          message.error(error.response.data.detail);
         });
 
       action.resetForm();
@@ -54,44 +53,22 @@ const Create = (props: any) => {
       <MDBox p={4}>
         <Grid container>
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               STUDENT CATEGORY
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               sx={{ width: "65%" }}
               variant="standard"
               name="category_name"
+              placeholder="Enter Student Category"
               value={values.category_name}
               onChange={handleChange}
               error={touched.category_name && Boolean(errors.category_name)}
               helperText={touched.category_name && errors.category_name}
+              success={values.category_name.length && !errors.category_name}
               onBlur={handleBlur}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              DESCRIPTION
-            </MDTypography>
-          </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
-            <MDInput
-              multiline
-              mb={2}
-              sx={{ width: "65%" }}
-              rows={3}
-              variant="standard"
-              placeholder="Enter Description"
-              name="description"
-              value={values.description}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.description && Boolean(errors.description)}
-              helperText={touched.description && errors.description}
             />
           </Grid>
 

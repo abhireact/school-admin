@@ -58,15 +58,15 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
-          <Grid item xs={12} sm={5} mb={2}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Academic Year
+        {" "}
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={5}>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              ACADEMIC YEAR
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               placeholder="eg. 2023-2024"
               sx={{ width: "65%" }}
               variant="standard"
@@ -79,14 +79,13 @@ const Create = (props: any) => {
               helperText={touched.academic_year && errors.academic_year}
             />
           </Grid>
-          <Grid item xs={12} sm={5} mb={2}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Start Date
+          <Grid item xs={12} sm={5}>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              START DATE
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               type="date"
               sx={{ width: "65%" }}
               variant="standard"
@@ -99,15 +98,14 @@ const Create = (props: any) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={5} mb={2}>
+          <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              End Date
+              END DATE
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               type="date"
               sx={{ width: "65%" }}
               variant="standard"

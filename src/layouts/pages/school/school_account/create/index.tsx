@@ -68,6 +68,7 @@ const Create = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="account_name"
+                placeholder="Enter Account"
                 value={values.account_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -83,7 +84,6 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={7} py={1}>
               <MDInput
-                multiline
                 rows={2}
                 sx={{ width: "70%" }}
                 variant="standard"

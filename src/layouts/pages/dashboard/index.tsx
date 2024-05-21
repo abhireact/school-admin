@@ -1,5 +1,13 @@
 import { Grid } from "@mui/material";
-import { fetchWings, fetchRbac, fetchStudentCategory, fetchAcademicYear } from "../redux/dataSlice";
+import {
+  fetchWings,
+  fetchRbac,
+  fetchStudentCategory,
+  fetchAcademicYear,
+  fetchClasses,
+  fetchAccount,
+  fetchStudent,
+} from "../redux/dataSlice";
 
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +23,10 @@ const MyDashboard = () => {
     dispatch(fetchWings() as any);
     dispatch(fetchRbac() as any);
     dispatch(fetchStudentCategory() as any);
-
+    dispatch(fetchClasses() as any);
     dispatch(fetchAcademicYear() as any);
+    dispatch(fetchAccount() as any);
+    dispatch(fetchStudent() as any);
   }, [dispatch]);
 
   return (

@@ -40,7 +40,6 @@ import SchoolAccount from "layouts/pages/school/school_account";
 import ExcessFee from "layouts/pages/fee/manage_fee/excess_fee";
 import LateFee from "layouts/pages/fee/manage_fee/late_fee";
 import FineParticular from "layouts/pages/fee/manage_fee/fine";
-import FeeCollection from "layouts/pages/fee/fee_collection/fee_collection_by_name";
 import FeeCollectionByAdmission from "layouts/pages/fee/fee_collection/fee_collection _by_admission";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
@@ -49,6 +48,10 @@ import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_payme
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import Admin from "layouts/pages/school/create";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
+import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
+import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
+import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
+import FeeCollection from "layouts/pages/fee/fee_collection";
 
 const routes = [
   {
@@ -152,12 +155,12 @@ const routes = [
       //   route: "/pages/school/academicgrade",
       //   component: <AcademicGrade />,
       // },
-      {
-        name: "Non-Scholastic Grade",
-        key: "nonacademicgrade",
-        route: "/pages/school/nonacademicgrade",
-        component: <NonAcademicGrade />,
-      },
+      // {
+      //   name: "Non-Scholastic Grade",
+      //   key: "nonacademicgrade",
+      //   route: "/pages/school/nonacademicgrade",
+      //   component: <NonAcademicGrade />,
+      // },
       {
         name: "Caste",
         key: "caste",
@@ -386,16 +389,20 @@ const routes = [
     icon: <Icon fontSize="medium">dashboard</Icon>,
     collapse: [
       {
-        // type: "collapse",
-        name: "Manage Fees",
-        key: "managefees",
-
+        name: "Manage Fee",
+        key: "manage_fee",
         collapse: [
           {
-            name: "Excess Fee ",
-            key: "excessfee",
-            route: "pages/fee/excessfee",
-            component: <ExcessFee />,
+            name: "Fee Category",
+            key: "fee_category",
+            route: "fee/fee_category",
+            component: <FeeCategory />,
+          },
+          {
+            name: "Fee Concession",
+            key: "fee_concession",
+            route: "fee/fee_concession",
+            component: <FeeConcession />,
           },
           {
             name: "Late Fee",
@@ -404,33 +411,49 @@ const routes = [
             component: <LateFee />,
           },
           {
-            name: "Fee Collection",
-            key: "feecollection",
-            route: "pages/fee/feecollection",
-            component: <FeeCollection />,
-          },
-          {
-            name: "Fee By Admission No",
-            key: "feecollectionbyadmission",
-            route: "pages/fee/feecollectionbyadmission",
-            component: <FeeCollectionByAdmission />,
-          },
-
-          {
             name: "Fee Schedule",
             key: "feeschedule",
             route: "pages/fee/feeschedule",
             component: <FeeSchedule />,
           },
           {
-            name: "Fine Particular",
-            key: "fineparticular",
-            route: "pages/fee/fineparticular",
-            component: <FineParticular />,
+            name: "Excess Fee ",
+            key: "excessfee",
+            route: "pages/fee/excessfee",
+            component: <ExcessFee />,
+          },
+    
+          // {
+          //   name: "Fee By Admission No",
+          //   key: "feecollectionbyadmission",
+          //   route: "pages/fee/feecollectionbyadmission",
+          //   component: <FeeCollectionByAdmission />,
+          // },
+
+          // {
+          //   name: "Fine Particular",
+          //   key: "fineparticular",
+          //   route: "pages/fee/fineparticular",
+          //   component: <FineParticular />,
+          // },
+        ],
+      },
+      // Fee Collection
+      {
+        // type: "collapse",
+        name: "Fee Collection",
+        icon: <Icon fontSize="medium">F</Icon>,
+        key: "feecollection",
+
+        collapse: [
+          {
+            name: "Fee Collection",
+            key: "feecollection",
+            route: "pages/fee/feecollection",
+            component: <FeeCollection />,
           },
         ],
       },
-
       {
         // type: "collapse",
         name: "Fee Reports",
@@ -438,12 +461,6 @@ const routes = [
         key: "feereports",
 
         collapse: [
-          {
-            name: "Fee Receipt",
-            key: "feereceipt",
-            route: "pages/fee/feereceipt",
-            component: <FeeReceipt />,
-          },
           {
             name: "Fee Register without Payment Mode",
             key: "feeregister",
@@ -461,6 +478,18 @@ const routes = [
             key: "studentcertificate",
             route: "pages/fee/studentcertificate",
             component: <StudentCertificate />,
+          },
+          {
+            name: "Fee Receipt Report",
+            key: "feereceiptreport",
+            route: "pages/fee/feereceiptreport",
+            component: <FeeReceiptReport />,
+          },
+          {
+            name: "Fee Concession Report",
+            key: "feeconcessionreport",
+            route: "pages/fee/feeconcessionreport",
+            component: <FeeConcessionReport />,
           },
         ],
       },

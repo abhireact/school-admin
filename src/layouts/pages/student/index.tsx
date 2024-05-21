@@ -131,8 +131,8 @@ const Student = () => {
 
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_student/search`, {
-        data: { stud_name: name },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_student`, {
+        data: { user_name: name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -146,7 +146,7 @@ const Student = () => {
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
-      const myError = error as Error;
+
       message.error(error.response.data.detail);
     }
   };
@@ -185,7 +185,7 @@ const Student = () => {
 
           <IconButton
             onClick={() => {
-              handleDelete(row.first_name + " " + row.middle_name + " " + row.last_name);
+              handleDelete(row.user_id);
             }}
           >
             <DeleteIcon />

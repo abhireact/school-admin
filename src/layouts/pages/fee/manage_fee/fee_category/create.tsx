@@ -207,10 +207,6 @@ export default function CreateFeeCategory() {
                 >
                   {"ADD +"}
                 </MDButton>
-
-                {/* <MDButton >
-
-            </MDButton> */}
               </Grid>
             </Grid>
 
