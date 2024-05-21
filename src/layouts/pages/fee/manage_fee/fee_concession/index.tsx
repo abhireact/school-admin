@@ -211,7 +211,11 @@ export default function FeeConcession() {
                         name="class_name"
                         onChange={handleChange}
                         value={values.class_name}
-                        label="Class"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Class
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -240,7 +244,11 @@ export default function FeeConcession() {
                         name="section_name"
                         onChange={handleChange}
                         value={values.section_name}
-                        label="Section"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Section
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />

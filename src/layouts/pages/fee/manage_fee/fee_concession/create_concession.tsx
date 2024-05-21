@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import FormField from "layouts/pages/account/components/FormField";
@@ -48,12 +48,14 @@ export default function CreateConcession() {
   const [feecategorydata, setFeecategorydata] = useState([]);
   const [result, setResult] = useState([]);
   const [checked, setChecked] = useState([]);
+  const [studentdata, setStudentdata] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
-  const { classes, account, studentcategory } = useSelector((state: any) => state);
+
+  const { classes, account, studentcategory, student } = useSelector((state: any) => state);
   const initialValues = {
     concession_type: "",
     concession_name: "",
@@ -67,6 +69,73 @@ export default function CreateConcession() {
     section_name: "",
     account: "",
   };
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    resetForm,
+  } = useFormik({
+    initialValues,
+    // validationSchema: createschema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      const checkedSectionKeys =
+        values.concession_type != "student"
+          ? checkedKeys
+              .filter((key) => key.toString().includes("section:"))
+              .map((item) => {
+                const [classKey, sectionKey] = item.toString().split(",");
+                const classValue = classKey.split(":")[1];
+                const sectionValue = sectionKey.split(":")[1];
+                return { class_name: classValue, section_name: sectionValue };
+              })
+          : [];
+      const section_value = {
+        discount_type: values.concession_type,
+        academic_year: values.academic_year,
+        name: values.concession_name,
+        account_name: values.account,
+        discount: values.concession_amount,
+        fee_category: values.fee_category,
+        user_id: values.concession_type === "student" ? checkedKeys : [],
+        class_name: values.class_name,
+        section_name: values.section_name,
+        classes: checkedSectionKeys,
+        student_category: values.student_category,
+      };
+      axios
+        .post("http://10.0.20.200:8000/fee_concession", section_value, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          message.success(response.data.message);
+          const newInitialValues = {
+            concession_type: values.concession_type, // Retain the concession_type value
+            concession_name: "", // Reset other fields
+            class_section: "",
+            fee_category: "",
+            student_category: "",
+            admission_number: 0,
+            concession_amount: 0,
+            academic_year: "",
+            class_name: "",
+            section_name: "",
+            account: "",
+          };
+          resetForm({ values: newInitialValues });
+        })
+        .catch((error) => {
+          message.error("Error fetching data:", error);
+        });
+    },
+  });
   useEffect(() => {
     axios
       .get("http://10.0.20.200:8000/fee_category", {
@@ -82,52 +151,38 @@ export default function CreateConcession() {
         message.error("Error fetching data:", error);
       });
   }, []);
+  useEffect(() => {
+    setResult([]); // Clear result data
+    setChecked([]); // Clear checked data
+    setStudentdata([]); // Clear student data
+    setSelectedTab(0); // Reset selected tab
+    setExpandedKeys([]); // Clear expanded keys
+    setCheckedKeys([]); // Clear checked keys
+    setSelectedKeys([]); // Clear selected keys
+    setAutoExpandParent(true); // Reset autoExpandParent
+  }, [values.concession_type]);
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
-    useFormik({
-      initialValues,
-      // validationSchema: createschema,
-      enableReinitialize: true,
-      onSubmit: async (values, action) => {
-        const checkedSectionKeys =
-          values.concession_type != "student"
-            ? checkedKeys
-                .filter((key) => key.toString().includes("section:"))
-                .map((item) => {
-                  const [classKey, sectionKey] = item.toString().split(",");
-                  const classValue = classKey.split(":")[1];
-                  const sectionValue = sectionKey.split(":")[1];
-                  return { class_name: classValue, section_name: sectionValue };
-                })
-            : [];
-        const section_value = {
-          discount_type: values.concession_type,
-          academic_year: values.academic_year,
-          name: values.concession_name,
-          account_name: values.account,
-          discount: values.concession_amount,
-          fee_category: values.fee_category,
-          user_id: [] as any[],
-          class_name: values.class_name,
-          section_name: values.section_name,
-          classes: checkedSectionKeys,
-          student_category: values.student_category,
-        };
-        axios
-          .post("http://10.0.20.200:8000/fee_concession", section_value, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            message.success(response.data.message);
-          })
-          .catch((error) => {
-            message.error("Error fetching data:", error);
-          });
-      },
-    });
+  const filteredStudentData = useMemo(() => {
+    if (values.academic_year && values.class_name && values.section_name) {
+      return student
+        .filter(
+          (item: any) =>
+            item.academic_year === values.academic_year &&
+            item.class_name === values.class_name &&
+            item.section_name === values.section_name
+        )
+        .map((item: any) => ({
+          title: `${item.first_name} ${item.middle_name} ${item.last_name}`,
+          key: item.user_id,
+        }));
+    }
+    return [];
+  }, [values.academic_year, values.class_name, values.section_name, student]);
+  useEffect(() => {
+    setStudentdata(filteredStudentData);
+    console.log(filteredStudentData, "Filtered student data");
+  }, [filteredStudentData]);
+  console.log(studentdata, "student data");
   const onExpand: TreeProps["onExpand"] = (expandedKeysValue) => {
     setExpandedKeys(expandedKeysValue);
     setAutoExpandParent(false);
@@ -206,7 +261,11 @@ export default function CreateConcession() {
                         name="concession_type"
                         onChange={handleChange}
                         value={values.concession_type}
-                        label="Concession Type"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Concession Type
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -218,13 +277,18 @@ export default function CreateConcession() {
             {values.concession_type == "student" ? (
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
-                  <FormField
+                  <MDInput
                     required
-                    label="Concession Name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Concession Name
+                      </MDTypography>
+                    }
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="concession_name"
                     value={values.concession_name}
                     onChange={handleChange}
-                    variant="standard"
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -243,7 +307,11 @@ export default function CreateConcession() {
                         name="academic_year"
                         onChange={handleChange}
                         value={values.academic_year}
-                        label="Academic Year"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Academic Year
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -268,7 +336,11 @@ export default function CreateConcession() {
                         name="class"
                         onChange={handleChange}
                         value={values.class_name}
-                        label="Class"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Class
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -297,7 +369,11 @@ export default function CreateConcession() {
                         name="section_name"
                         onChange={handleChange}
                         value={values.section_name}
-                        label="Section"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Section
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -316,7 +392,11 @@ export default function CreateConcession() {
                         name="account"
                         onChange={handleChange}
                         value={values.account}
-                        label="Account"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Account
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -335,7 +415,11 @@ export default function CreateConcession() {
                         name="fee_category"
                         onChange={handleChange}
                         value={values.fee_category}
-                        label="Fee Category"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Fee Category
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -343,21 +427,49 @@ export default function CreateConcession() {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
+                  <MDInput
                     type="number"
-                    label="Concession Amount"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Concession Amount
+                      </MDTypography>
+                    }
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="concession_amount"
                     value={values.concession_amount}
                     onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} style={{ maxHeight: "200px", overflowY: "auto" }}>
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Select Students
+                  </MDTypography>
+                  <Tree
+                    checkable
+                    onExpand={onExpand}
+                    expandedKeys={expandedKeys}
+                    autoExpandParent={autoExpandParent}
+                    onCheck={onCheck}
+                    checkedKeys={checkedKeys}
+                    onSelect={onSelect}
+                    selectedKeys={selectedKeys}
+                    treeData={studentdata}
                   />
                 </Grid>
               </Grid>
             ) : values.concession_type == "section" ? (
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
-                  <FormField
+                  <MDInput
                     required
-                    label="Concession Name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Concession Name
+                      </MDTypography>
+                    }
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="concession_name"
                     value={values.concession_name}
                     onChange={handleChange}
@@ -379,7 +491,11 @@ export default function CreateConcession() {
                         name="academic_year"
                         onChange={handleChange}
                         value={values.academic_year}
-                        label="Academic Year"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Academic Year
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -398,7 +514,11 @@ export default function CreateConcession() {
                         name="account"
                         onChange={handleChange}
                         value={values.account}
-                        label="Account"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Account
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -417,7 +537,11 @@ export default function CreateConcession() {
                         name="fee_category"
                         onChange={handleChange}
                         value={values.fee_category}
-                        label="Fee Category"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Fee Category
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -425,15 +549,21 @@ export default function CreateConcession() {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
+                  <MDInput
                     type="number"
-                    label="Concession Amount"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Concession Amount
+                      </MDTypography>
+                    }
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="concession_amount"
                     value={values.concession_amount}
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item xs={12} sm={12} p={3}>
+                <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "200px", overflowY: "auto" }}>
                   <Tree
                     checkable
                     onExpand={onExpand}
@@ -450,9 +580,15 @@ export default function CreateConcession() {
             ) : values.concession_type == "student_category" ? (
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
-                  <FormField
+                  <MDInput
                     required
-                    label="Concession Name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Concession Name
+                      </MDTypography>
+                    }
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="concession_name"
                     value={values.concession_name}
                     onChange={handleChange}
@@ -472,7 +608,11 @@ export default function CreateConcession() {
                         name="student_category"
                         onChange={handleChange}
                         value={values.student_category}
-                        label="Student Category"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Student Category
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -495,7 +635,11 @@ export default function CreateConcession() {
                         name="academic_year"
                         onChange={handleChange}
                         value={values.academic_year}
-                        label="Academic Year"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Academic Year
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -514,7 +658,11 @@ export default function CreateConcession() {
                         name="account"
                         onChange={handleChange}
                         value={values.account}
-                        label="Account"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Account
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -533,7 +681,11 @@ export default function CreateConcession() {
                         name="fee_category"
                         onChange={handleChange}
                         value={values.fee_category}
-                        label="Fee Category"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Fee Category
+                          </MDTypography>
+                        }
                         {...params}
                         variant="standard"
                       />
@@ -541,15 +693,21 @@ export default function CreateConcession() {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
+                  <MDInput
                     type="number"
-                    label="Concession Amount"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Concession Amount
+                      </MDTypography>
+                    }
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="concession_amount"
                     value={values.concession_amount}
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item xs={12} sm={12}>
+                <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "200px", overflowY: "auto" }}>
                   <Tree
                     checkable
                     onExpand={onExpand}
