@@ -68,13 +68,10 @@ const Section = () => {
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
     const main_data = data[index];
     console.log(main_data, "maindata");
-
-    setOpenupdate(true);
     setEditData(main_data);
-    console.log(main_data, "update dataaaaaaaaaaaa");
+    setOpenupdate(true);
   };
 
   const handleCloseupdate = () => {
@@ -135,7 +132,7 @@ const Section = () => {
     ],
 
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+      academic_year: row.academic_year,
 
       action: (
         <MDTypography variant="p">
@@ -172,8 +169,8 @@ const Section = () => {
         </MDTypography>
       ),
 
-      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
+      section_name: row.section_name,
+      class_name: row.class_name,
     })),
   };
   return (
