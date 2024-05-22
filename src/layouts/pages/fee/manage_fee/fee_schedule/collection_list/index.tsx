@@ -144,16 +144,16 @@ const CollectionList = () => {
   };
   const [manageData, setManageData] = useState(null);
   const [managepage, setManagepage] = useState(false);
-
+  const [sendData, setSendData] = useState(null);
   const handleOpenManage = (index: number) => {
     const main_data = data[index];
     console.log(main_data, "maindata");
-    const sendData = {
+    setSendData({
       name: main_data.name,
       academic_year: main_data.academic_year,
       class_name: main_data.class_name,
       section_name: main_data.section_name,
-    };
+    });
     axios
       .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/students`, sendData, {
         headers: {
@@ -225,7 +225,7 @@ const CollectionList = () => {
   return (
     <>
       {managepage ? (
-        <ManageSchedule manageData={manageData} handleClose={setManagepage} />
+        <ManageSchedule manageData={manageData} handleClose={setManagepage} sendData={sendData} />
       ) : (
         <>
           {updatepage ? (

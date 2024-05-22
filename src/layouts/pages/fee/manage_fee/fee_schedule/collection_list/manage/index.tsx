@@ -34,6 +34,26 @@ function categoryValue(data: any) {
 
   return monthFeeValues;
 }
+function getMonthFee(data: any) {
+  const fees: number[] = [];
+
+  data.forEach((item: { category: { [x: string]: { [x: string]: any } } }) => {
+    if (item.category) {
+      for (const categoryKey in item.category) {
+        if (item.category[categoryKey]) {
+          for (const feeKey in item.category[categoryKey]) {
+            const fee = item.category[categoryKey][feeKey];
+            if (typeof fee === "number") {
+              fees.push(fee);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return fees;
+}
 const token = Cookies.get("token");
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string().required("Required *"),
@@ -42,7 +62,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const ManageSchedule = (props: any) => {
-  const { handleClose, manageData } = props;
+  const { handleClose, manageData, sendData } = props;
   const monthFeeKey = categoryKey(manageData);
   const monthFeeValues = categoryValue(manageData);
   const [data, setData] = useState([]);
@@ -141,7 +161,8 @@ const ManageSchedule = (props: any) => {
     setEditData(main_data);
     setUpdatepage(true);
   };
-
+  const feesArray = getMonthFee(manageData);
+  console.log(feesArray, "fee amount");
   return (
     <>
       {updatepage ? (
@@ -149,6 +170,10 @@ const ManageSchedule = (props: any) => {
       ) : (
         <>
           <MDBox p={4}>
+            <MDTypography variant="h5" color="secondary" fontWeight="bold">
+              {sendData.name} &nbsp;For&nbsp;
+              {sendData.class_name} - {sendData.section_name}
+            </MDTypography>
             <table
               style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #f0f2f5" }}
             >
@@ -158,16 +183,136 @@ const ManageSchedule = (props: any) => {
                     style={{
                       fontSize: "15px",
                       textAlign: "left",
+                      paddingLeft: "5px",
                       border: "1px solid #f0f2f5",
                     }}
                   >
-                    {monthFeeKey}: {monthFeeValues}
+                    Admisson Number
+                  </td>
+                  <td
+                    style={{
+                      fontSize: "15px",
+                      textAlign: "left",
+                      paddingLeft: "5px",
+                      border: "1px solid #f0f2f5",
+                    }}
+                  >
+                    Name
                   </td>
 
-                  <td></td>
-                  <td></td>
+                  <td
+                    style={{
+                      fontSize: "15px",
+                      textAlign: "left",
+                      border: "1px solid #f0f2f5",
+                      paddingLeft: "5px",
+                    }}
+                  >
+                    {monthFeeKey}
+                    <br />
+                    <MDTypography variant="button">{monthFeeValues}</MDTypography>
+                  </td>
+                  <td
+                    style={{
+                      fontSize: "15px",
+                      textAlign: "left",
+                      border: "1px solid #f0f2f5",
+                      paddingLeft: "5px",
+                    }}
+                  >
+                    Discount
+                  </td>
+                  <td
+                    style={{
+                      fontSize: "15px",
+                      textAlign: "left",
+                      border: "1px solid #f0f2f5",
+                      paddingLeft: "5px",
+                    }}
+                  >
+                    Status
+                  </td>
+                  <td
+                    style={{
+                      fontSize: "15px",
+                      textAlign: "left",
+                      border: "1px solid #f0f2f5",
+                      paddingLeft: "5px",
+                    }}
+                  >
+                    Action
+                  </td>
                 </tr>
               </thead>
+
+              <tbody>
+                {manageData.map((tableData: any, index: any) => (
+                  <tr key={index}>
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                        border: "1px solid #f0f2f5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      {tableData.admission_no}
+                    </td>
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                        border: "1px solid #f0f2f5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      {tableData.first_name} {tableData.middle_name} {tableData.last_name}
+                    </td>
+
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                        border: "1px solid #f0f2f5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      {feesArray[index]}
+                    </td>
+
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                        border: "1px solid #f0f2f5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      {tableData.discount}
+                    </td>
+
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                        border: "1px solid #f0f2f5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      {" "}
+                      {tableData.status}
+                    </td>
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                        border: "1px solid #f0f2f5",
+                        paddingLeft: "5px",
+                      }}
+                    ></td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </MDBox>
           <Grid p={2} sx={{ display: "flex", justifyContent: "flex-end" }}>

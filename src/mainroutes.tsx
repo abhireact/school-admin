@@ -49,6 +49,9 @@ import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_payme
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import Admin from "layouts/pages/school/create";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
+import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
+import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
+import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
 
 const routes = [
   {
@@ -386,9 +389,28 @@ const routes = [
     icon: <Icon fontSize="medium">dashboard</Icon>,
     collapse: [
       {
-        // type: "collapse",
-        name: "Manage Fees",
-        key: "managefees",
+        name: "Manage Fee",
+        key: "manage_fee",
+        collapse: [
+          {
+            name: "Fee Category",
+            key: "fee_category",
+            route: "fee/fee_category",
+            component: <FeeCategory />,
+          },
+          {
+            name: "Fee Concession",
+            key: "fee_concession",
+            route: "fee/fee_concession",
+            component: <FeeConcession />,
+          },
+        ],
+      },
+      {
+        name: "Late Fee",
+        key: "latefee",
+        route: "pages/fee/latefee",
+        component: <LateFee />,
 
         collapse: [
           {
@@ -439,12 +461,6 @@ const routes = [
 
         collapse: [
           {
-            name: "Fee Receipt",
-            key: "feereceipt",
-            route: "pages/fee/feereceipt",
-            component: <FeeReceipt />,
-          },
-          {
             name: "Fee Register without Payment Mode",
             key: "feeregister",
             route: "pages/fee/feeregister",
@@ -461,6 +477,18 @@ const routes = [
             key: "studentcertificate",
             route: "pages/fee/studentcertificate",
             component: <StudentCertificate />,
+          },
+          {
+            name: "Fee Receipt Report",
+            key: "feereceiptreport",
+            route: "pages/fee/feereceiptreport",
+            component: <FeeReceiptReport />,
+          },
+          {
+            name: "Fee Concession Report",
+            key: "feeconcessionreport",
+            route: "pages/fee/feeconcessionreport",
+            component: <FeeConcessionReport />,
           },
         ],
       },
