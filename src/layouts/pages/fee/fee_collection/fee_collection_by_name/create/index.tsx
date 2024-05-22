@@ -258,7 +258,7 @@ const Create = (props: any) => {
               </Grid>
               <Grid item ml={2} mt={4}>
                 <MDButton color="info" variant="contained" type="submit">
-                  Filter
+                  Submit
                 </MDButton>
               </Grid>
             </Grid>

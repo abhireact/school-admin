@@ -11,6 +11,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import { Checkbox, FormControl, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required *"),
 });
@@ -23,20 +24,35 @@ const Create = (props: any) => {
     setOpen(false);
   };
 
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
+  const {
+    values,
+    touched,
+    errors,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setValues,
+    setFieldValue,
+  } = useFormik({
     initialValues: {
       name: "",
       description: "",
+      is_active: true,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post(`${process.env.REACT_APP_BASE_URL}/mg_castes`, values, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .post(
+          `http://10.0.20.200:8000/mg_models
+        `,
+          values,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then(() => {
           message.success("Created successfully!");
           fetchData();
@@ -55,7 +71,7 @@ const Create = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              CASTE
+              Module Name
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -94,7 +110,12 @@ const Create = (props: any) => {
               helperText={touched.description && errors.description}
             />
           </Grid>
-
+          <Grid item xs={6} sm={2.5} mt={4}>
+            <MDTypography variant="body2">Is Active ?</MDTypography>
+          </Grid>
+          <Grid item xs={6} sm={1.5} mt={3}>
+            <Checkbox checked={values.is_active} onChange={handleChange} name="is_active" />
+          </Grid>
           <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item mt={2}>
               <MDButton

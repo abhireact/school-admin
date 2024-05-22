@@ -24,15 +24,16 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import { useNavigate } from "react-router-dom";
 const token = Cookies.get("token");
 
-const Module = () => {
+const SchoolCreation = () => {
   const rbacData = useSelector((state: any) => state?.rbacData);
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
   //Start
 
-  const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -44,8 +45,13 @@ const Module = () => {
 
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
-  const [openupdate, setOpenupdate] = useState(false);
+  const [open, setOpen] = useState(false);
 
+  const [openupdate, setOpenupdate] = useState(false);
+  const handleUpdate = async (data: any) => {
+    console.log(data);
+    navigate("/school/edit_school", { state: data });
+  };
   const handleOpenupdate = (index: number) => {
     setOpenupdate(true);
     const main_data = data[index];
@@ -60,12 +66,16 @@ const Module = () => {
   }; //End
   const FetchModule = () => {
     axios
-      .get(`http://10.0.20.200:8000/mg_models`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        `http://10.0.20.200:8000/mg_school/all_school
+      `,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         setData(response.data);
 
@@ -101,16 +111,25 @@ const Module = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Caste", accessor: "name" },
+      { Header: "Name", accessor: "school_name" },
 
-      { Header: "Description", accessor: "description" },
+      { Header: "School Code", accessor: "school_code" },
+      { Header: "Reg.No", accessor: "reg_num" },
+      { Header: "City ", accessor: "city" },
+      { Header: "State", accessor: "state" },
+
       { Header: "Status", accessor: "is_active" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      name: <MDTypography variant="p">{row.name}</MDTypography>,
+      school_name: <MDTypography variant="p">{row.school_name}</MDTypography>,
+
+      reg_num: <MDTypography variant="p">{row.reg_num}</MDTypography>,
+      city: <MDTypography variant="p">{row.city}</MDTypography>,
+      state: <MDTypography variant="p">{row.state}</MDTypography>,
+
       is_active: (
         <MDTypography variant="p">
           {row.is_active === true ? (
@@ -132,7 +151,7 @@ const Module = () => {
         </MDTypography>
       ),
 
-      description: <MDTypography variant="p">{row.description}</MDTypography>,
+      school_code: <MDTypography variant="p">{row.school_code}</MDTypography>,
     })),
   };
   return (
@@ -142,12 +161,18 @@ const Module = () => {
         <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
           <Grid item pt={2} pl={2}>
             <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Module
+              School
             </MDTypography>
           </Grid>
           <Grid item pt={2} pr={2}>
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-              + Add Module
+            <MDButton
+              variant="outlined"
+              color="info"
+              type="submit"
+            //   onClick={handleClickOpen}
+              onClick={() => navigate("/school/create_school")}
+            >
+              + Add School
             </MDButton>
           </Grid>
         </Grid>
@@ -156,11 +181,12 @@ const Module = () => {
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={FetchModule} />
       </Dialog>
+     
       <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchModule} />
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchModule}  />
       </Dialog>
     </DashboardLayout>
   );
 };
 
-export default Module;
+export default SchoolCreation;
