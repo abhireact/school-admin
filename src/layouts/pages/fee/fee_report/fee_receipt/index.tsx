@@ -256,7 +256,11 @@ export default function FeeReceiptReport() {
                           name="student"
                           onChange={handleChange}
                           value={values.student}
-                          label="Student"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Student
+                            </MDTypography>
+                          }
                           {...params}
                           variant="standard"
                         />
