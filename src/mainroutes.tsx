@@ -49,8 +49,8 @@ import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
 import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
 import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
-import FeeCollection from "layouts/pages/fee/fee_collection";
 import EmailSetting from "layouts/pages/notifications/email";
+import FeeCollection from "layouts/pages/fee/fee_collection";
 
 const routes = [
   {
