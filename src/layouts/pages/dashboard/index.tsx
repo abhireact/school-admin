@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import CollTable from "./test";
-import ExpandableTable from "./test2";
 // import Table from "./component/Table";
 
 const MyDashboard = () => {
