@@ -1,12 +1,23 @@
+<<<<<<< HEAD
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import { useFormik } from "formik";
 
+=======
+import MDBox from "components/MDBox";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import { useFormik } from "formik";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+import MDInput from "components/MDInput";
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
 import { message } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
+<<<<<<< HEAD
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
 
 import { useSelector } from "react-redux";
@@ -29,6 +40,13 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDBox from "components/MDBox";
+=======
+import { useSelector } from "react-redux";
+import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox, FormLabel } from "@mui/material";
+import * as Yup from "yup";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   subject_name: Yup.string().required("Required *"),
@@ -42,6 +60,7 @@ const FeeCollection = (props: any) => {
   const token = Cookies.get("token");
 
   const { handleShowPage, setData } = props;
+<<<<<<< HEAD
   const [showadvanceSearch, setShowadvanceSearch] = useState(false);
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
@@ -69,6 +88,13 @@ const FeeCollection = (props: any) => {
     fetchData();
   }, []);
   //  const {wings,academicyear,classes}=useSelector
+=======
+
+  const [academicdata, setAcademicdata] = useState([]);
+  const [classdata, setClassdata] = useState([]);
+  const [filteredClass, setFilteredClass] = useState([]);
+
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
   function filterClassData(data: any, academic_year: any) {
     let filtereddata = data
       .filter((item: any) => item.academic_year === academic_year)
@@ -143,6 +169,7 @@ const FeeCollection = (props: any) => {
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       class_name: "",
+<<<<<<< HEAD
       wing_name: "",
       academic_year: "",
       admission_number: "",
@@ -156,6 +183,16 @@ const FeeCollection = (props: any) => {
     onSubmit: (values, action) => {
       console.log(values, "values");
 
+=======
+
+      academic_year: "",
+      admission_number: "",
+      section_name: "",
+      collection_date: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values, action) => {
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
       axios
         .post("http://10.0.20.200:8000/fee_collection", values, {
           headers: {
@@ -174,6 +211,7 @@ const FeeCollection = (props: any) => {
         });
     },
   });
+<<<<<<< HEAD
   const handleAdvanceSearch = () => {
     setShowadvanceSearch(true);
   };
@@ -307,6 +345,8 @@ const FeeCollection = (props: any) => {
       })
     ),
   };
+=======
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -315,6 +355,7 @@ const FeeCollection = (props: any) => {
           {" "}
           <MDBox p={4}>
             <Grid container>
+<<<<<<< HEAD
               <Grid item xs={12} sm={6}>
                 <MDTypography variant="h5" fontWeight="bold" color="secondary">
                   Fee Collection
@@ -338,13 +379,40 @@ const FeeCollection = (props: any) => {
                       name="academic_year"
                       onChange={handleChange}
                       value={values.academic_year}
+=======
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.academic_year}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "academic_year", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.academic_year)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="academic_year"
+                      placeholder="2022-23"
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Academic Year
                         </MDTypography>
                       }
+<<<<<<< HEAD
                       {...params}
                       variant="standard"
+=======
+                      onChange={handleChange}
+                      value={values.academic_year}
+                      {...params}
+                      variant="standard"
+                      error={touched.academic_year && Boolean(errors.academic_year)}
+                      helperText={touched.academic_year && errors.academic_year}
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
                     />
                   )}
                 />
@@ -370,11 +438,16 @@ const FeeCollection = (props: any) => {
                 />
               </Grid>
               <Grid item xs={12} sm={4} py={1} display="flex" justifyContent="flex-end">
+<<<<<<< HEAD
                 <MDButton color="info" variant="contained" type="submit" onClick={fetchData}>
+=======
+                <MDButton color="info" variant="contained" type="submit">
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
                   Submit
                 </MDButton>
               </Grid>
               <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
+<<<<<<< HEAD
                 {showadvanceSearch ? (
                   <MDButton
                     color="info"
@@ -630,6 +703,169 @@ const FeeCollection = (props: any) => {
                     />
                   </Card>
                 ) : null}
+=======
+                <MDButton color="info" variant="text" type="submit">
+                  Advance Search
+                </MDButton>
+              </Grid>
+              <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
+              <FormControl>
+                <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel value="female" control={<Radio />} label="Female" />
+                  <FormControlLabel value="male" control={<Radio />} label="Male" />
+                  <FormControlLabel value="other" control={<Radio />} label="Other" />
+                  <FormControlLabel value="disabled" disabled control={<Radio />} label="other" />
+                </RadioGroup>
+              </FormControl>
+              </Grid>
+
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Class{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.section_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "section_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.section_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="section_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Section{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.section_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.section_name && Boolean(errors.section_name)}
+                      helperText={touched.section_name && errors.section_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Wing Name{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Admission Number/Fee Code
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={4} py={1}>
+                <MDInput
+                  sx={{ width: "80%" }}
+                  name="admission_number"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Admission Number
+                    </MDTypography>
+                  }
+                  onChange={handleChange}
+                  value={values.admission_number}
+                  variant="standard"
+                  onBlur={handleBlur}
+                  error={touched.admission_number && Boolean(errors.admission_number)}
+                  success={values.admission_number.length && !errors.admission_number}
+                  helperText={touched.admission_number && errors.admission_number}
+                />
+>>>>>>> ce50f211b6dd54beb68d279dd396ae54c18c4736
               </Grid>
             </Grid>
           </MDBox>

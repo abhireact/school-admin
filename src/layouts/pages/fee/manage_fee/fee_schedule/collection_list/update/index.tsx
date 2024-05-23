@@ -14,26 +14,31 @@ import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   start_date: Yup.date().required("Required *"),
   end_date: Yup.date().required("Required *"),
-  due_date: Yup.date().required("Required *"),
 });
 
-const NewFeeSchedule = (props: any) => {
+const Update = (props: any) => {
   const token = Cookies.get("token");
 
-  const { handleClose } = props;
+  const { handleClose, editData, fetchData } = props;
+  let fetchdata = {
+    academic_year: editData.academic_year,
+    class_name: editData.class_name,
+    section_name: editData.section_name,
+  };
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      name: "",
-      start_date: Date(),
-      end_date: Date(),
-      category_name: "",
-      fine_name: "",
-      due_date: Date(),
-      fee_particular_name: "",
-      academic_year: "",
-      class_name: "",
-      section_name: "",
+      name: editData.name,
+      start_date: editData.start_date,
+      end_date: editData.end_date,
+      category_name: editData.category_name,
+      fine_name: editData.fine_name,
+      due_date: editData.due_date,
+      fee_particular_name: editData.fee_particular_name,
+      academic_year: editData.academic_year,
+      class_name: editData.class_name,
+      section_name: editData.section_name,
+      old_name: editData.name,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -45,7 +50,8 @@ const NewFeeSchedule = (props: any) => {
           },
         })
         .then(() => {
-          message.success("Created Successfully!");
+          message.success("Updated Successfully!");
+          fetchData(fetchdata);
 
           handleClose();
         })
@@ -135,6 +141,7 @@ const NewFeeSchedule = (props: any) => {
               onBlur={handleBlur}
               error={touched.start_date && Boolean(errors.start_date)}
               helperText={touched.start_date && errors.start_date}
+              success={values.start_date.length && !errors.start_date}
             />
           </Grid>
 
@@ -152,6 +159,7 @@ const NewFeeSchedule = (props: any) => {
               }
               onChange={handleChange}
               onBlur={handleBlur}
+              success={values.end_date.length && !errors.end_date}
               error={touched.end_date && Boolean(errors.end_date)}
               helperText={touched.end_date && errors.end_date}
             />
@@ -172,6 +180,7 @@ const NewFeeSchedule = (props: any) => {
               onBlur={handleBlur}
               error={touched.end_date && Boolean(errors.end_date)}
               helperText={touched.end_date && errors.end_date}
+              success={values.end_date.length && !errors.end_date}
             />
           </Grid>
 
@@ -199,4 +208,4 @@ const NewFeeSchedule = (props: any) => {
   );
 };
 
-export default NewFeeSchedule;
+export default Update;
