@@ -39,8 +39,6 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import SchoolAccount from "layouts/pages/school/school_account";
 import ExcessFee from "layouts/pages/fee/manage_fee/excess_fee";
 import LateFee from "layouts/pages/fee/manage_fee/late_fee";
-import FineParticular from "layouts/pages/fee/manage_fee/fine";
-import FeeCollectionByAdmission from "layouts/pages/fee/fee_collection/fee_collection _by_admission";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
@@ -52,6 +50,7 @@ import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
 import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
 import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
 import FeeCollection from "layouts/pages/fee/fee_collection";
+import EmailSetting from "layouts/pages/notifications/email";
 
 const routes = [
   {
@@ -310,6 +309,31 @@ const routes = [
       },
     ],
   },
+  {
+    type: "collapse",
+    name: "Notification",
+    key: "Notification",
+    icon: (
+      <Icon fontSize="medium">
+        <PortraitIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Email",
+        key: "email",
+        route: "pages/notification/email",
+        component: <EmailSetting />,
+      },
+      {
+        name: "SMS",
+        key: "sms",
+        route: "pages/notification/sms",
+        component: <FeeCertificate />,
+      },
+    ],
+  },
+
   // {
   //   type: "collapse",
   //   name: "Fee",
@@ -495,6 +519,7 @@ const routes = [
       },
     ],
   },
+  
 ];
 
 export default routes;
