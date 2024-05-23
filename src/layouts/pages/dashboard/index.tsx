@@ -11,6 +11,11 @@ import {
 
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import CollTable from "./test";
+import ExpandableTable from "./test2";
+// import Table from "./component/Table";
 
 const MyDashboard = () => {
   const data = useSelector((state: any) => state);
@@ -30,9 +35,13 @@ const MyDashboard = () => {
   }, [dispatch]);
 
   return (
-    <Grid container spacing={2} display={"flex"} justifyContent="center">
-      <h1>My Dashboard</h1>
-    </Grid>
+    <DashboardLayout>
+      <DashboardNavbar />
+      <Grid container spacing={2} display={"flex"} justifyContent="center">
+        <h1>My Dashboard</h1>
+        <CollTable />
+      </Grid>
+    </DashboardLayout>
   );
 };
 
