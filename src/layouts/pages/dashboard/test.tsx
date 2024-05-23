@@ -446,14 +446,6 @@ export default function CollTable() {
               expandedRowRender: (KeyData, index: number) => (
                 <Card>
                   <Grid container px={3}>
-                    {/* <Grid item xs={12} sm={6} mt={2}>
-                      <Link href="create_fee_amount_perticular" variant="body2">
-                        <MDTypography variant="h6" fontWeight="bold" color="secondary">
-                          Particular
-                        </MDTypography>
-                      </Link>
-                    </Grid> */}
-
                     <Grid item xs={12} sm={12} mt={2}>
                       <MDTypography variant="h6" fontWeight="bold" color="secondary">
                         Particular
