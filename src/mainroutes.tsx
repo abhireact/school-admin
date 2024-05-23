@@ -39,9 +39,6 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import SchoolAccount from "layouts/pages/school/school_account";
 import ExcessFee from "layouts/pages/fee/manage_fee/excess_fee";
 import LateFee from "layouts/pages/fee/manage_fee/late_fee";
-import FineParticular from "layouts/pages/fee/manage_fee/fine";
-import FeeCollection from "layouts/pages/fee/fee_collection/fee_collection_by_name";
-import FeeCollectionByAdmission from "layouts/pages/fee/fee_collection/fee_collection _by_admission";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
@@ -52,6 +49,8 @@ import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
 import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
 import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
+import EmailSetting from "layouts/pages/notifications/email";
+import FeeCollection from "layouts/pages/fee/fee_collection";
 
 const routes = [
   {
@@ -310,6 +309,31 @@ const routes = [
       },
     ],
   },
+  {
+    type: "collapse",
+    name: "Notification",
+    key: "Notification",
+    icon: (
+      <Icon fontSize="medium">
+        <PortraitIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Email",
+        key: "email",
+        route: "pages/notification/email",
+        component: <EmailSetting />,
+      },
+      {
+        name: "SMS",
+        key: "sms",
+        route: "pages/notification/sms",
+        component: <FeeCertificate />,
+      },
+    ],
+  },
+
   // {
   //   type: "collapse",
   //   name: "Fee",
@@ -404,15 +428,6 @@ const routes = [
             route: "fee/fee_concession",
             component: <FeeConcession />,
           },
-        ],
-      },
-      {
-        name: "Late Fee",
-        key: "latefee",
-        route: "pages/fee/latefee",
-        component: <LateFee />,
-
-        collapse: [
           {
             name: "Late Fee",
             key: "latefee",
@@ -431,28 +446,38 @@ const routes = [
             route: "pages/fee/excessfee",
             component: <ExcessFee />,
           },
+    
+          // {
+          //   name: "Fee By Admission No",
+          //   key: "feecollectionbyadmission",
+          //   route: "pages/fee/feecollectionbyadmission",
+          //   component: <FeeCollectionByAdmission />,
+          // },
+
+          // {
+          //   name: "Fine Particular",
+          //   key: "fineparticular",
+          //   route: "pages/fee/fineparticular",
+          //   component: <FineParticular />,
+          // },
+        ],
+      },
+      // Fee Collection
+      {
+        // type: "collapse",
+        name: "Fee Collection",
+        icon: <Icon fontSize="medium">F</Icon>,
+        key: "feecollection",
+
+        collapse: [
           {
             name: "Fee Collection",
             key: "feecollection",
             route: "pages/fee/feecollection",
             component: <FeeCollection />,
           },
-          {
-            name: "Fee By Admission No",
-            key: "feecollectionbyadmission",
-            route: "pages/fee/feecollectionbyadmission",
-            component: <FeeCollectionByAdmission />,
-          },
-
-          {
-            name: "Fine Particular",
-            key: "fineparticular",
-            route: "pages/fee/fineparticular",
-            component: <FineParticular />,
-          },
         ],
       },
-
       {
         // type: "collapse",
         name: "Fee Reports",
@@ -494,6 +519,7 @@ const routes = [
       },
     ],
   },
+  
 ];
 
 export default routes;

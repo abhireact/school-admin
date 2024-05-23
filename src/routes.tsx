@@ -53,6 +53,7 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
+
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import SendMail from "layouts/pages/Notification_deb/email/send_mail";
 let route2 = mainroutes;
@@ -92,6 +93,7 @@ try {
   console.error(error);
 }
 let routes = [
+  // pages not to show in left navbar
   {
     type: "collapse",
     name: "Dashboards",
@@ -162,6 +164,7 @@ let routes = [
     route: "/fee/fee_category/manage_fee_amount_perticular",
     component: <ManageFeeAmountPerticular />,
   },
+
   {
     name: "create conssion",
     key: "createconcession",
