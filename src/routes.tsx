@@ -54,6 +54,7 @@ import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
+import SendMail from "layouts/pages/Notification_deb/email/send_mail";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -166,6 +167,12 @@ let routes = [
     key: "createconcession",
     route: "/fee/create_concession",
     component: <CreateConcession />,
+  },
+  {
+    name: "mail send",
+    key: "mailsend",
+    route: "/notification/send_mail",
+    component: <SendMail />,
   },
 ];
 
