@@ -169,7 +169,7 @@ const SchoolCreation = () => {
               variant="outlined"
               color="info"
               type="submit"
-            //   onClick={handleClickOpen}
+              //   onClick={handleClickOpen}
               onClick={() => navigate("/school/create_school")}
             >
               + Add School
@@ -181,9 +181,8 @@ const SchoolCreation = () => {
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={FetchModule} />
       </Dialog>
-     
       <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchModule}  />
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchModule} />
       </Dialog>
     </DashboardLayout>
   );

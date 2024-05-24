@@ -92,7 +92,7 @@ try {
   console.error(error);
 }
 let routes = [
-    // pages not to show in left navbar
+  // pages not to show in left navbar
   {
     type: "collapse",
     name: "Dashboards",
@@ -164,8 +164,17 @@ let routes = [
     component: <ManageFeeAmountPerticular />,
   },
 
+<<<<<<< HEAD
+  {
+    name: "create conssion",
+    key: "createconcession",
+    route: "/fee/create_concession",
+    component: <CreateConcession />,
+  },
+=======
 
 
+>>>>>>> main
   {
     name: "create conssion",
     key: "createconcession",
