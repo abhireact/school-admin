@@ -179,7 +179,7 @@ const ExcessFee = () => {
 
       <>
         {updatepage && (
-          <Update setOpenupdate={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
+          <Update handleClose={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
         )}
       </>
     </DashboardLayout>
