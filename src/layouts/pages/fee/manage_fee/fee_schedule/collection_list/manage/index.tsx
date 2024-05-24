@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import Update from "./upate";
+import { table } from "console";
 function categoryKey(data: any) {
   const categoryKeys = Object.keys(data[0].category); // Get all keys of the 'category' object
 
@@ -65,103 +66,59 @@ const ManageSchedule = (props: any) => {
   const { handleClose, manageData, sendData } = props;
   const monthFeeKey = categoryKey(manageData);
   const monthFeeValues = categoryValue(manageData);
-  const [data, setData] = useState([]);
-  const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
+  const [feesArray, setFeesArray] = useState(getMonthFee(manageData));
 
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.class_name);
-    setFilteredClass(filtereddata);
-  }
-  const [sectiondata, setsectiondata] = useState([]);
-  const [filteredSection, setFilteredSection] = useState([]);
-
-  function filterSectionData(data: any, class_name: any) {
-    console.log(classdata, "class data");
-    let filtereddata = classdata
-      .filter(
-        (item: any) => item.class_name === class_name && item.academic_year === values.academic_year
-      )
-      .map((item: any) => item.section_data);
-
-    console.log(filtereddata, "filter section Data");
-    setFilteredSection(filtereddata);
-  }
-
-  console.log(filteredSection, "section name");
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setAcademicdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
-    useFormik({
-      initialValues: {
-        academic_year: "",
-        class_name: "",
-        section_name: "",
-      },
-      validationSchema: validationSchema,
-      onSubmit: (values, action) => {
-        axios
-          .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/search`, values, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setData(response.data);
-            console.log("may 20", response.data);
-          })
-          .catch((error: any) => {
-            message.error(error.response.data.detail);
-          });
-      },
-    });
   const [editData, setEditData] = useState(null);
   const [updatepage, setUpdatepage] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    const main_data = data[index];
-    console.log(main_data, "maindata");
-    setEditData(main_data);
+    const main_data = sendData;
+    const UpdateData = {
+      name: main_data.name,
+      particular_id: main_data.particular_id,
+      academic_year: main_data.academic_year,
+      class_name: main_data.class_name,
+      section_name: main_data.section_name,
+      user_name: manageData[index].user_name,
+      amount: feesArray[index],
+    };
+    console.log(UpdateData, "update data info");
+    setEditData(UpdateData);
     setUpdatepage(true);
   };
-  const feesArray = getMonthFee(manageData);
+
+  const handleDelete = async (index: number) => {
+    const main_data = sendData;
+
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/students`,
+        {
+          data: {
+            name: main_data.name,
+            particular_id: main_data.particular_id,
+            academic_year: main_data.academic_year,
+            class_name: main_data.class_name,
+            section_name: main_data.section_name,
+            user_name: manageData[index].user_name,
+            amount: feesArray[index],
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        message.success("Deleted successFully");
+        // Filter out the deleted user from the data
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      const myError = error as Error;
+      message.error(error.response.data.detail);
+    }
+  };
   console.log(feesArray, "fee amount");
   return (
     <>
@@ -309,13 +266,47 @@ const ManageSchedule = (props: any) => {
                         border: "1px solid #f0f2f5",
                         paddingLeft: "5px",
                       }}
-                    ></td>
+                    >
+                      {" "}
+                      <>
+                        <Tooltip title=" Edit " placement="top">
+                          {tableData.update ? (
+                            <IconButton
+                              onClick={() => {
+                                handleOpenupdate(index);
+                              }}
+                            >
+                              <CreateRoundedIcon />
+                            </IconButton>
+                          ) : (
+                            <IconButton disabled>
+                              <CreateRoundedIcon />
+                            </IconButton>
+                          )}
+                        </Tooltip>
+                        <Tooltip title=" Delete " placement="top">
+                          {tableData.delete ? (
+                            <IconButton
+                              onClick={() => {
+                                handleDelete(index);
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          ) : (
+                            <IconButton disabled>
+                              <DeleteIcon />
+                            </IconButton>
+                          )}
+                        </Tooltip>
+                      </>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </MDBox>
-          <Grid p={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Grid mx={5} mb={2} sx={{ display: "flex" }}>
             <MDButton
               variant="contained"
               color="dark"

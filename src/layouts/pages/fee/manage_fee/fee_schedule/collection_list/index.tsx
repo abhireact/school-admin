@@ -148,21 +148,27 @@ const CollectionList = () => {
   const handleOpenManage = (index: number) => {
     const main_data = data[index];
     console.log(main_data, "maindata");
-    setSendData({
-      name: main_data.name,
-      academic_year: main_data.academic_year,
-      class_name: main_data.class_name,
-      section_name: main_data.section_name,
-    });
+
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/students`, sendData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      .post(
+        `${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/students`,
+        {
+          name: main_data.name,
+          academic_year: main_data.academic_year,
+          class_name: main_data.class_name,
+          section_name: main_data.section_name,
+          particular_id: main_data.particular_id,
         },
-      })
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         setManageData(response.data);
+        setSendData(main_data);
         setManagepage(true);
         console.log("manage schedule data", response.data);
       })
@@ -190,7 +196,7 @@ const CollectionList = () => {
       due_date: row.due_date,
       action: (
         <>
-          <Tooltip title="Edit Class" placement="top">
+          <Tooltip title="Edit" placement="top">
             <IconButton
               onClick={() => {
                 handleOpenupdate(index);
@@ -200,7 +206,7 @@ const CollectionList = () => {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Delete Class" placement="top">
+          <Tooltip title="Delete" placement="top">
             <IconButton>
               <DeleteIcon />
             </IconButton>

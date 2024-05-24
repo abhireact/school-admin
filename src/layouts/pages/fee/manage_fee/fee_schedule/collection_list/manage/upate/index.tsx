@@ -11,47 +11,33 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
-const validationSchema = Yup.object().shape({
-  start_date: Yup.date().required("Required *"),
-  end_date: Yup.date().required("Required *"),
-});
-
 const Update = (props: any) => {
   const token = Cookies.get("token");
 
-  const { handleClose, editData, fetchData } = props;
-  let fetchdata = {
-    academic_year: editData.academic_year,
-    class_name: editData.class_name,
-    section_name: editData.section_name,
-  };
+  const { handleClose, editData } = props;
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       name: editData.name,
-      start_date: editData.start_date,
-      end_date: editData.end_date,
-      category_name: editData.category_name,
-      fine_name: editData.fine_name,
-      due_date: editData.due_date,
-      fee_particular_name: editData.fee_particular_name,
+      particular_id: editData.particular_id,
       academic_year: editData.academic_year,
       class_name: editData.class_name,
       section_name: editData.section_name,
-      old_name: editData.name,
+      user_name: editData.user_name,
+      amount: editData.amount,
     },
-    validationSchema: validationSchema,
+
     onSubmit: (values, action) => {
       axios
-        .put(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule`, values, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/students`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
+          window.location.reload();
           message.success("Updated Successfully!");
-          fetchData(fetchdata);
 
           handleClose();
         })
@@ -71,116 +57,37 @@ const Update = (props: any) => {
             <MDInput
               sx={{ width: "80%" }}
               variant="standard"
-              name="category_name"
+              name="academic_year"
+              value={values.academic_year}
               label={
                 <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Fee Category
-                </MDTypography>
-              }
-              value={values.category_name}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="class_name"
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Class Name
-                </MDTypography>
-              }
-              value={values.class_name}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="section_name"
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Section Name
-                </MDTypography>
-              }
-              value={values.section_name}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="name"
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Fee Collection Name
-                </MDTypography>
-              }
-              value={values.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.name && Boolean(errors.name)}
-              success={values.name.length && !errors.name}
-              helperText={touched.name && errors.name}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              type="date"
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="start_date"
-              value={values.start_date}
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Start Date
+                  Academic Year
                 </MDTypography>
               }
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.start_date && Boolean(errors.start_date)}
-              helperText={touched.start_date && errors.start_date}
-              success={values.start_date.length && !errors.start_date}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              type="date"
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="end_date"
-              value={values.end_date}
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  End Date
-                </MDTypography>
-              }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              success={values.end_date.length && !errors.end_date}
-              error={touched.end_date && Boolean(errors.end_date)}
-              helperText={touched.end_date && errors.end_date}
+              error={touched.academic_year && Boolean(errors.academic_year)}
+              helperText={touched.academic_year && errors.academic_year}
+              success={values.academic_year.length && !errors.academic_year}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDInput
-              type="date"
               sx={{ width: "80%" }}
               variant="standard"
-              name="end_date"
-              value={values.end_date}
+              name="amount"
+              type="number"
+              value={values.amount}
               label={
                 <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Due Date
+                  Amount
                 </MDTypography>
               }
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.end_date && Boolean(errors.end_date)}
-              helperText={touched.end_date && errors.end_date}
-              success={values.end_date.length && !errors.end_date}
+              error={touched.amount && Boolean(errors.amount)}
+              helperText={touched.amount && errors.amount}
+              success={values.amount.length && !errors.amount}
             />
           </Grid>
 

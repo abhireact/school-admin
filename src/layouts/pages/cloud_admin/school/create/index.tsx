@@ -1,5 +1,5 @@
 import MDInput from "components/MDInput";
-import { useFormik } from "formik";
+import { Field, useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import Card from "@mui/material/Card";
@@ -23,6 +23,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { message } from "antd";
 interface FormValues {
   school_name: string;
+  subdomain: "hhckvv";
   school_code: string;
   start_time: string;
   end_time: string;
@@ -43,40 +44,12 @@ interface FormValues {
   timezone: string;
   currency_type: string;
   grading_system: string;
-  logo: File | null; // Adjust the type according to your requirement
+  school_logo: File | null; // Adjust the type according to your requirement
   check1: boolean;
   check2: boolean;
   check3: boolean;
   check4: boolean;
 }
-const initialValues: FormValues = {
-  school_name: "",
-  school_code: "",
-  start_time: "",
-  end_time: "",
-  affiliated_to: "",
-  reg_num: "",
-  mg_leave_calendar_start_date: "",
-  address_line1: "",
-  address_line2: "",
-  street: "",
-  landmark: "",
-  city: "",
-  state: "",
-  pin_code: "",
-  country: "",
-  mobile_number: "",
-  fax_number: "000000000000",
-  email_id: "",
-  timezone: "IST",
-  currency_type: "INR",
-  grading_system: "CGPA",
-  logo: null,
-  check1: false,
-  check2: false,
-  check3: false,
-  check4: false,
-};
 
 const states = [
   "Andhra Pradesh",
@@ -117,11 +90,54 @@ const states = [
   "Lakshadweep",
 ];
 
-const Create = () => {
+const Create = (props: any) => {
   const arrayOfObjects = [{ key1: "value1" }, { key2: "value2" }];
 
   const xytz = JSON.stringify(arrayOfObjects);
-
+  const { setOpen, fetchData } = props;
+  useEffect(() => {
+    FetchModule();
+  }, []);
+  const [moduleData, setModuleData] = useState([]);
+  const initialValues: FormValues = {
+    school_name: "",
+    school_code: "",
+    start_time: "",
+    end_time: "",
+    affiliated_to: "",
+    reg_num: "",
+    mg_leave_calendar_start_date: "",
+    address_line1: "",
+    address_line2: "",
+    street: "",
+    landmark: "",
+    city: "",
+    state: "",
+    pin_code: "",
+    country: "",
+    mobile_number: "",
+    fax_number: "000000000000",
+    email_id: "",
+    timezone: "IST",
+    currency_type: "INR",
+    grading_system: "CGPA",
+    school_logo: null,
+    check1: false,
+    check2: false,
+    check3: false,
+    check4: false,
+    // Dynamically initialize check properties based on moduleData
+    moduleAccess: moduleData.map((module) => ({
+      module_name: module.name,
+      start_date: "",
+      end_date: "",
+      checked: false,
+    })),
+    ...moduleData.reduce((acc, module) => {
+      acc[module.name] = false;
+      return acc;
+    }, {}),
+  };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
@@ -129,9 +145,11 @@ const Create = () => {
       enableReinitialize: true,
       onSubmit: async (values: any, action) => {
         try {
+          const models = JSON.stringify(values.moduleAccess);
           const sendData = {
             ...values,
             xytz,
+            models,
           };
           const response = await axios.post("http://10.0.20.200:8000/mg_school", sendData, {
             headers: {
@@ -160,12 +178,30 @@ const Create = () => {
 
       // Check file type
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("logo", e.target.files[0]);
+        setFieldValue("school_logo", e.target.files[0]);
       } else {
         message.error("Please select a valid PNG, JPEG, or HEIC image.");
       }
     }
   };
+  const FetchModule = () => {
+    axios
+      .get(`http://10.0.20.200:8000/mg_models`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setModuleData(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -198,7 +234,7 @@ const Create = () => {
                 <MDInput
                   type="file"
                   accept="image/*"
-                  name="logo"
+                  name="school_logo"
                   onChange={handleImage}
                   sx={{ width: "84%" }}
                   variant="standard"
@@ -214,6 +250,19 @@ const Create = () => {
                   name="school_code"
                   label="School Code"
                   value={values.school_code}
+                  onChange={handleChange}
+                  sx={{ width: "70%" }}
+                  mb={10}
+                />
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <MDInput
+                  required
+                  autoComplete="off"
+                  variant="standard"
+                  name="subdomain"
+                  label="School Subdomain"
+                  value={values.subdomain}
                   onChange={handleChange}
                   sx={{ width: "70%" }}
                   mb={10}
@@ -350,6 +399,8 @@ const Create = () => {
               </Grid>
               <Grid item sm={3} xs={12}>
                 <MDInput
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
                   placeholder="eg. 2018-19"
                   autoComplete="off"
                   variant="standard"
@@ -475,70 +526,138 @@ const Create = () => {
                   Give Permission
                 </MDTypography>
               </Grid>
-              <Grid item xs={12} pt={2} sm={3}>
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    row
-                    name="radio-buttons-group"
-                  >
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={values.check1} name={`check1`} onChange={handleChange} />
-                      }
-                      label={<MDTypography variant="button">RBAC</MDTypography>}
-                    />
-                  </RadioGroup>
-                </FormControl>
+              {/* {moduleData.map((module, index) => (
+              <Grid item sm={12} xs={12} container>
+                <Grid key={index} item xs={12} pt={2} sm={3}>
+                  <FormControl>
+                    <RadioGroup
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      row
+                      name={`radio-buttons-group-${module && module.name}`} // Using module.name as the name
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={values && values[module && module.name]} // Assuming values is an object with keys corresponding to module names
+                            name={module && module.name}
+                            onChange={handleChange}
+                          />
+                        }
+                        label={
+                          <MDTypography variant="button">{module && module.name}</MDTypography>
+                        }
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+                <Grid>
+                  {" "}
+                  <MDInput
+                    required
+                    variant="standard"
+                    name="start_date"
+                    label="Start Date"
+                    value={values.start_date}
+                    onChange={handleChange}
+                    mb={10}
+                    sx={{ width: "70%" }}
+                  />
+                </Grid>
+                <Grid>
+                  {" "}
+                  <MDInput
+                    required
+                    variant="standard"
+                    name="end_date"
+                    label="End Date"
+                    value={values.end_date}
+                    onChange={handleChange}
+                    mb={10}
+                    sx={{ width: "70%" }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} pt={2} sm={3}>
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    row
-                    name="radio-buttons-group"
-                  >
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={values.check3} name={`check3`} onChange={handleChange} />
-                      }
-                      label={<MDTypography variant="button">Exam</MDTypography>}
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} pt={2} sm={3}>
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    row
-                    name="radio-buttons-group"
-                  >
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={values.check2} name={`check2`} onChange={handleChange} />
-                      }
-                      label={<MDTypography variant="button">Fee</MDTypography>}
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} pt={2} sm={3}>
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    row
-                    name="radio-buttons-group"
-                  >
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={values.check4} name={`check4`} onChange={handleChange} />
-                      }
-                      label={<MDTypography variant="button">Employee</MDTypography>}
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
+            ))} */}
+              {moduleData.map((module, index) => (
+                <Grid key={index} item sm={12} xs={12} container>
+                  <Grid item xs={12} sm={3}>
+                    <FormControl>
+                      <Checkbox
+                        checked={values.moduleAccess.some(
+                          (access: { module_name: any }) => access.module_name === module.name
+                        )} // Check if module is in moduleAccess array
+                        onChange={(event) => {
+                          const isChecked = event.target.checked;
+                          if (isChecked) {
+                            // Add module access object if checked
+                            setFieldValue("moduleAccess", [
+                              ...values.moduleAccess,
+                              { module_name: module.name, start_date: "", end_date: "" },
+                            ]);
+                          } else {
+                            // Remove module access object if unchecked
+                            setFieldValue(
+                              "moduleAccess",
+                              values.moduleAccess.filter(
+                                (access: { module_name: any }) => access.module_name !== module.name
+                              )
+                            );
+                          }
+                        }}
+                      />
+                      <label>{module.name}</label>
+                    </FormControl>
+                  </Grid>
+                  {values.moduleAccess.some(
+                    (access: { module_name: any }) => access.module_name === module.name
+                  ) && ( // Only render start and end date fields if the module is checked
+                    <>
+                      <Grid>
+                        <MDInput
+                          type="date"
+                          InputLabelProps={{ shrink: true }}
+                          required
+                          variant="standard"
+                          name={`moduleAccess[${index}].start_date`}
+                          label="Start Date"
+                          value={
+                            values.moduleAccess.find(
+                              (access: { module_name: any }) => access.module_name === module.name
+                            )?.start_date || ""
+                          }
+                          onChange={(event: { target: { value: any } }) => {
+                            const { value } = event.target;
+                            setFieldValue(`moduleAccess[${index}].start_date`, value);
+                          }}
+                          mb={10}
+                          sx={{ width: "70%" }}
+                        />
+                      </Grid>
+                      <Grid>
+                        <MDInput
+                          required
+                          type="date"
+                          InputLabelProps={{ shrink: true }}
+                          variant="standard"
+                          name={`moduleAccess[${index}].end_date`}
+                          label="End Date"
+                          value={
+                            values.moduleAccess.find(
+                              (access: { module_name: any }) => access.module_name === module.name
+                            )?.end_date || ""
+                          }
+                          onChange={(event: { target: { value: any } }) => {
+                            const { value } = event.target;
+                            setFieldValue(`moduleAccess[${index}].end_date`, value);
+                          }}
+                          mb={10}
+                          sx={{ width: "70%" }}
+                        />
+                      </Grid>
+                    </>
+                  )}
+                </Grid>
+              ))}
               <Grid
                 sm={3}
                 xs={12}

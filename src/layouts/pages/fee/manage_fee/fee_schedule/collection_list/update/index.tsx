@@ -39,6 +39,7 @@ const Update = (props: any) => {
       class_name: editData.class_name,
       section_name: editData.section_name,
       old_name: editData.name,
+      particular_id: editData.particular_id,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
