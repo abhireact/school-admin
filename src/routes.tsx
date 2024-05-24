@@ -123,7 +123,6 @@ let routes = [
     route: "/fee/fee_category/manage_fee_amount_perticular",
     component: <ManageFeeAmountPerticular />,
   },
-
   {
     name: "create conssion",
     key: "createconcession",

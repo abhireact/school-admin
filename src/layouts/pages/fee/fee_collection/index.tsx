@@ -883,6 +883,154 @@ const FeeCollection = (props: any) => {
                   </MDButton>
                 )}
               </Grid>
+<<<<<<< HEAD
+              <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel value="female" control={<Radio />} label="Female" />
+                    <FormControlLabel value="male" control={<Radio />} label="Male" />
+                    <FormControlLabel value="other" control={<Radio />} label="Other" />
+                    <FormControlLabel value="disabled" disabled control={<Radio />} label="other" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Class{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.section_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "section_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.section_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="section_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Section{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.section_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.section_name && Boolean(errors.section_name)}
+                      helperText={touched.section_name && errors.section_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Wing Name{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Admission Number/Fee Code
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={4} py={1}>
+                <MDInput
+                  sx={{ width: "80%" }}
+                  name="admission_number"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Admission Number
+=======
               {showadvanceSearch ? (
                 <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
                   <FormControl>
@@ -893,6 +1041,7 @@ const FeeCollection = (props: any) => {
                       sx={{ marginLeft: "20px" }}
                     >
                       Search By:
+>>>>>>> main
                     </MDTypography>
 
                     <RadioGroup
