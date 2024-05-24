@@ -12,19 +12,30 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
-function extractNumberFromString(str: string) {
-  const regex = /[\d]/;
-  let number = "";
-  for (const char of str) {
-    if (regex.test(char)) {
-      number += char;
-    }
+function extractIdFromString(str: string) {
+  // Regular expression to match the ID pattern "(id-XXXXX)"
+  const idRegex = /\(id-(\d+)\)/;
+
+  // Match the regular expression against the input string
+  const match = str.match(idRegex);
+
+  // If a match is found, return the captured ID (group 1)
+  if (match && match.length > 1) {
+    return parseInt(match[1], 10);
   }
-  return number;
+
+  // If no match is found, return null or throw an error
+  return null;
 }
 function fetchObjectById(id: any, data: any) {
   const result = data.find((item: any) => item.id === id);
   return result;
+}
+function removeProperty(data: any) {
+  return data.map((obj: any) => {
+    const { showValue, select, ...rest } = obj;
+    return rest;
+  });
 }
 const validationSchema = Yup.object().shape({
   start_date: Yup.date().required("Required *"),
@@ -113,12 +124,22 @@ const NewFeeSchedule = (props: any) => {
         fee_particular_name: "",
         academic_year: "",
         is_applicable: true,
-        fee_particulars: [],
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
+        if (particularInfo.length < 1) {
+          message.error("Particular Types for Class-Section is required");
+          return;
+        }
+        let selectedParticular = particularInfo.filter((acd) => acd.select == true);
+        if (selectedParticular.length < 1) {
+          message.error("Particular Types for Class-Section is required");
+          return;
+        }
+        let particularData = removeProperty(selectedParticular);
+        const sendData = { ...values, fee_particulars: particularData };
         axios
-          .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule`, values, {
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule`, sendData, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -148,15 +169,40 @@ const NewFeeSchedule = (props: any) => {
         },
       })
       .then((response) => {
-        setParticularInfo(response.data);
-        setFieldValue("fee_particulars", response.data);
         if (response.data.length < 1) {
           message.error("No Data Available");
         }
+        let responseinfo = response.data;
+        let responseData = responseinfo.map((abc: any) => ({ ...abc, select: true }));
+        console.log(responseData, "response info data ");
+        setParticularInfo(responseData);
       })
       .catch((error: any) => {
         message.error(error.response.data.detail);
       });
+  };
+  const [allCheck, setAllCheck] = useState(false);
+  const [noneCheck, setNoneCheck] = useState(false);
+  const handleCheckboxChange = (index: number) => {
+    setParticularInfo((prevSelections: any) =>
+      prevSelections.map((selection: any, i: number) =>
+        i === index ? { ...selection, select: !selection.select } : selection
+      )
+    );
+    console.log(particularInfo, "change checkbox");
+  };
+  const handleSelectAll = () => {
+    setParticularInfo((prevData: any) => prevData.map((item: any) => ({ ...item, select: true })));
+    console.log(particularInfo, "all checkbox");
+    setAllCheck(true);
+    setNoneCheck(false);
+  };
+
+  const handleSelectNone = () => {
+    setParticularInfo((prevData: any) => prevData.map((item: any) => ({ ...item, select: false })));
+    console.log(particularInfo, "none checkbox");
+    setAllCheck(false);
+    setNoneCheck(true);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -408,77 +454,136 @@ const NewFeeSchedule = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={12}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr>
-                  <td
-                    style={{
-                      fontSize: "15px",
-                      textAlign: "left",
-                    }}
-                  >
-                    {" "}
-                    <b>Course Batch Name</b>
-                  </td>
-
-                  <td
-                    style={{
-                      fontSize: "15px",
-                      textAlign: "left",
-                    }}
-                  >
-                    <b>Particular</b>
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                {particularInfo?.map((item: any, index: any) => (
-                  <tr key={index + item.class_name}>
-                    <td style={{ textAlign: "left" }}>
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        {item.class_name} - {item.section_name}
-                      </MDTypography>
+              {particularInfo?.length > 0 && (
+                <thead>
+                  <tr>
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                      }}
+                    >
+                      {" "}
+                      <b>Course Batch Name</b>
                     </td>
-                    <td style={{ textAlign: "left" }}>
-                      <Autocomplete
-                        disableClearable
-                        sx={{ width: "100%" }}
-                        value={item.showValue || "All"}
-                        onChange={(event, value) => {
-                          let changeParticulars = "";
-                          let desiredValue =
-                            value == "All" ? "All" : Number(extractNumberFromString(value));
-                          let changeObject = particularInfo[index];
-                          console.log("show particulars change", changeObject.particulars);
-                          if (typeof desiredValue === "number") {
-                            console.log("show object");
-                            changeParticulars = fetchObjectById(value, changeObject.particulars);
-                          } else {
-                            console.log("show all particulars change", changeObject.particulars);
-                            changeParticulars = changeObject.particulars;
-                          }
-                          setParticularInfo((prev) =>
-                            prev.map((prevItem, idx) =>
-                              idx === index ? { ...prevItem, showValue: value } : prevItem
-                            )
-                          );
-                          console.log(particularInfo, "info ");
-                        }}
-                        options={[
-                          "All",
-                          ...item.particulars.map(
-                            (particular: any) =>
-                              `${particular.particular_type}  ${
-                                particular.user_id || particular.student_category
-                                  ? particular.user_id || particular.student_category
-                                  : ""
-                              } (id-${particular.id})`
-                          ),
-                        ]}
-                        renderInput={(params) => <MDInput {...params} variant="standard" />}
-                      />
+
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                      }}
+                    >
+                      <b>Particular Types</b>
+                    </td>
+                    <td
+                      style={{
+                        fontSize: "15px",
+                        textAlign: "left",
+                      }}
+                    >
+                      <b>Select</b>: &nbsp;All
+                      <Checkbox checked={allCheck} onChange={() => handleSelectAll()} />
+                      &nbsp; None
+                      <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
                     </td>
                   </tr>
-                ))}
+                </thead>
+              )}
+              <tbody>
+                {particularInfo?.length > 0 ? (
+                  particularInfo?.map((item: any, index: any) => (
+                    <tr key={index + item.class_name}>
+                      <td style={{ textAlign: "left" }}>
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          {item.class_name} - {item.section_name}
+                        </MDTypography>
+                      </td>
+                      <td style={{ textAlign: "left" }}>
+                        <Autocomplete
+                          disableClearable
+                          sx={{ width: "70%" }}
+                          value={item.showValue || "All"}
+                          onChange={(event, value) => {
+                            let changeParticulars: any = null;
+                            let desiredValue = value === "All" ? "All" : value;
+                            let changeObject = particularInfo[index];
+
+                            if (desiredValue === "All") {
+                              console.log("show All particulars change");
+                              changeParticulars = changeObject.particulars;
+                            } else {
+                              let objectid = extractIdFromString(desiredValue);
+                              let desiredObject = fetchObjectById(
+                                objectid,
+                                changeObject.particulars
+                              );
+                              console.log("show one  particulars change", desiredObject);
+                              changeParticulars = [desiredObject];
+                            }
+
+                            setParticularInfo((prev) =>
+                              prev.map((prevItem: any, idx) =>
+                                idx === index
+                                  ? {
+                                      ...prevItem,
+                                      showValue: desiredValue,
+                                      particulars: changeParticulars,
+                                    }
+                                  : prevItem
+                              )
+                            );
+                            console.log(particularInfo, "info ");
+                          }}
+                          options={[
+                            "All",
+                            ...item.particulars.map(
+                              (particular: any) =>
+                                `${particular.particular_type}  ${
+                                  particular.user_id || particular.student_category
+                                    ? particular.user_id || particular.student_category
+                                    : ""
+                                } (id-${particular.id})`
+                            ),
+                          ]}
+                          renderInput={(params) => <MDInput {...params} variant="standard" />}
+                        />
+                      </td>
+
+                      <td>
+                        <Checkbox
+                          checked={item.select}
+                          onChange={() => handleCheckboxChange(index)}
+                        />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <>
+                    <tr>
+                      <td
+                        colSpan={2}
+                        style={{
+                          fontSize: "15px",
+                          textAlign: "center",
+                        }}
+                      >
+                        No Data Available For Class-Section Particular
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        colSpan={2}
+                        style={{
+                          fontSize: "10px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {" "}
+                        Academic year* , Fee Category* , Fee Particular* are required to filter
+                      </td>
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
           </Grid>
@@ -494,7 +599,7 @@ const NewFeeSchedule = (props: any) => {
                 Back
               </MDButton>
             </Grid>
-            <Grid item mt={2} ml={2}>
+            <Grid item mt={2} ml={2} mr={4}>
               <MDButton color="info" variant="contained" type="submit">
                 Save
               </MDButton>

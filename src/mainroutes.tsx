@@ -422,7 +422,7 @@ const routes = [
             route: "pages/fee/excessfee",
             component: <ExcessFee />,
           },
-    
+
           // {
           //   name: "Fee By Admission No",
           //   key: "feecollectionbyadmission",
