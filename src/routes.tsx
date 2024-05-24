@@ -1,53 +1,12 @@
-// Material Dashboard 2 PRO React layouts
-import Analytics from "layouts/dashboards/analytics";
-import Sales from "layouts/dashboards/sales";
-import ProfileOverview from "layouts/pages/profile/profile-overview";
-import AllProjects from "layouts/pages/profile/all-projects";
-import NewUser from "layouts/pages/users/new-user";
-import Settings from "layouts/pages/account/settings";
-import Billing from "layouts/pages/account/billing";
-import Invoice from "layouts/pages/account/invoice";
-import Timeline from "layouts/pages/projects/timeline";
-import PricingPage from "layouts/pages/pricing-page";
-import Widgets from "layouts/pages/widgets";
-import RTL from "layouts/pages/rtl";
-
-import Notifications from "layouts/pages/notifications";
-import Kanban from "layouts/applications/kanban";
-import Wizard from "layouts/applications/wizard";
-import DataTables from "layouts/applications/data-tables";
-import Calendar from "layouts/applications/calendar";
-import NewProduct from "layouts/ecommerce/products/new-product";
-import EditProduct from "layouts/ecommerce/products/edit-product";
-import ProductPage from "layouts/ecommerce/products/product-page";
-import OrderList from "layouts/ecommerce/orders/order-list";
-import OrderDetails from "layouts/ecommerce/orders/order-details";
 import SignInCover from "layouts/pages/authentication/sign-in";
-import SignUpCover from "layouts/pages/authentication/sign-up";
 import ResetCover from "layouts/pages/authentication/reset-password";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import SchoolIcon from "@mui/icons-material/School";
-import MDAvatar from "components/MDAvatar";
 import Icon from "@mui/material/Icon";
-import profilePicture from "assets/images/team-3.jpg";
-import School from "layouts/pages/school/create";
-import Roles from "layouts/pages/rbac/roles";
-import SchoolInfo from "layouts/pages/school";
-import User from "layouts/pages/user";
-import Student from "layouts/pages/student";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import mainroutes from "mainroutes";
 import CloudAdminRouts from "cloud_admin_routs";
-import Academic from "layouts/pages/academic_year";
-import Section from "layouts/pages/section";
-import Class from "layouts/pages/class";
-import Wings from "layouts/pages/school/school_wings";
 import Cookies from "js-cookie";
 import axios from "axios";
-import BadgeIcon from "@mui/icons-material/Badge";
 import MYProfile from "layouts/pages/authentication/myprofile";
-import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
-import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
 import MyDashboard from "layouts/pages/dashboard";
 import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create";
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
@@ -55,6 +14,7 @@ import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fe
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
 
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
+import CreateTemplate from "layouts/pages/notifications/create_message_template";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -163,23 +123,17 @@ let routes = [
     route: "/fee/fee_category/manage_fee_amount_perticular",
     component: <ManageFeeAmountPerticular />,
   },
-
-<<<<<<< HEAD
   {
     name: "create conssion",
     key: "createconcession",
     route: "/fee/create_concession",
     component: <CreateConcession />,
   },
-=======
-
-
->>>>>>> main
   {
-    name: "create conssion",
-    key: "createconcession",
-    route: "/fee/create_concession",
-    component: <CreateConcession />,
+    name: "Create Template",
+    key: "create_template",
+    route: "/notification/create_template",
+    component: <CreateTemplate />,
   },
 ];
 

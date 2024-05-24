@@ -589,12 +589,9 @@ import {
   RadioGroup,
   Checkbox,
   FormLabel,
-<<<<<<< HEAD
-=======
   FormGroup,
   Tooltip,
   Icon,
->>>>>>> main
 } from "@mui/material";
 import * as Yup from "yup";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";

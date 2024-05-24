@@ -24,16 +24,19 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
-import MyAccount from "./MyAccount";
+
 // Material Dashboard 2 PRO React TS components
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDBadge from "components/MDBadge";
-
+import Dialog, { DialogProps } from "@mui/material/Dialog";
 // Material Dashboard 2 PRO React TS examples components
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
-
+import { Grid, Card, Autocomplete } from "@mui/material";
+import MDTypography from "components/MDTypography";
+import MarkChatReadIcon from "@mui/icons-material/MarkChatRead";
+import MarkChatUnreadIcon from "@mui/icons-material/MarkChatUnread";
 // Custom styles for DashboardNavbar
 import {
   navbar,
@@ -60,6 +63,9 @@ interface Props {
 }
 
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
+  const [message, setMessage] = useState([]);
+  const [editopen, setEditOpen] = useState(false);
+  const [editdata, setEditdata] = useState({});
   const [navbarType, setNavbarType] = useState<
     "fixed" | "absolute" | "relative" | "static" | "sticky"
   >();
@@ -68,6 +74,19 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [openMenu, setOpenMenu] = useState<any>(false);
   const route = useLocation().pathname.split("/").slice(1);
 
+  useEffect(() => {
+    console.log(1, "side nav refresh");
+    setMessage([
+      { message: "aaaaaaaaaaaaaaaasd", read: true },
+      { message: "fvgfds", read: true },
+      { message: "wewwer", read: false },
+      { message: "asss", read: true },
+
+      { message: "aaaaaaabhnjmnjaaaaaaaaasd", read: true },
+
+      { message: "mmm", read: false },
+    ]);
+  }, []);
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -98,7 +117,17 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event: any) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
+  const handleClickOpenEdit = (data: any) => {
+    setEditdata(data);
+    setEditOpen(true);
+  };
 
+  const handleClickCloseEdit = () => {
+    setEditOpen(false);
+  };
+  const handleEditSuccess = () => {
+    handleClickCloseEdit();
+  };
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -112,9 +141,20 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+      {message.map((data, index) => (
+        <NotificationItem
+          icon={
+            <Icon color={data.read ? "info" : "secondary"}>
+              {data.read ? <MarkChatReadIcon /> : <MarkChatUnreadIcon />}
+            </Icon>
+          }
+          title={`${data.message.substring(0, 10)}`}
+          onClick={() => handleClickOpenEdit(data)}
+        />
+      ))}
+
+      {/* <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
+      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" /> */}
     </Menu>
   );
 
@@ -143,9 +183,18 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       color="inherit"
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
+      <Dialog open={editopen} onClose={handleClickCloseEdit}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={12}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              mmmmmmmmmm
+            </MDTypography>
+          </Grid>
+        </Grid>
+      </Dialog>
       <Toolbar sx={navbarContainer}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
+          {/* <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} /> */}
           <IconButton sx={navbarDesktopMenu} onClick={handleMiniSidenav} size="small" disableRipple>
             <Icon fontSize="medium" sx={iconsStyle}>
               {miniSidenav ? "menu_open" : "menu"}
@@ -154,11 +203,15 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
+            <MDBox pr={1}>
+              <MDInput label="Search here" />
+            </MDBox>
             <MDBox color={light ? "white" : "inherit"}>
-              <IconButton sx={navbarIconButton} size="large" disableRipple>
-                <MyAccount />
-              </IconButton>
-
+              <Link to="/authentication/sign-in/basic">
+                <IconButton sx={navbarIconButton} size="small" disableRipple>
+                  <Icon sx={iconsStyle}>account_circle</Icon>
+                </IconButton>
+              </Link>
               <IconButton
                 size="small"
                 disableRipple
@@ -179,7 +232,16 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-
+              <IconButton
+                size="small"
+                color="inherit"
+                sx={navbarIconButton}
+                onClick={handleOpenMenu}
+              >
+                <MDBadge badgeContent={9} color="error" size="xs" circular>
+                  <Icon sx={iconsStyle}>notifications</Icon>
+                </MDBadge>
+              </IconButton>
               {renderMenu()}
             </MDBox>
           </MDBox>

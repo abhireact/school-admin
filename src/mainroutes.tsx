@@ -1,45 +1,27 @@
 // Material Dashboard 2 PRO React layouts
 import SchoolIcon from "@mui/icons-material/School";
 import Icon from "@mui/material/Icon";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import School from "layouts/pages/school/create";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
-import User from "layouts/pages/user";
 import StudentDetails from "layouts/pages/student";
 import EmployeeProfile from "layouts/pages/employee/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import EmployeeType from "layouts/pages/employee/employee_type";
-import EmployeeLeave from "layouts/pages/employee/leaves_types";
 import EmployeeInfo from "layouts/pages/employee/employee_details";
-import Subject from "layouts/pages/subject/subjectdetails";
 import Academic from "layouts/pages/academic_year";
-import Section from "layouts/pages/section";
 import Class from "layouts/pages/class";
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee/department";
-import SubSubject from "layouts/pages/subject/sub-subject";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import BadgeIcon from "@mui/icons-material/Badge";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmpGrade from "layouts/pages/employee/employee_grade";
-import AcademicGrade from "layouts/pages/exam/scholastic_grade";
-import NonAcademicGrade from "layouts/pages/exam/non_scholastic_grade";
-import ExamType from "layouts/pages/exam/exam_type";
-import Scholastic from "layouts/pages/exam/scholastic_particular";
-import ScholasticComponent from "layouts/pages/exam/scholastic_component";
-import OtherParticular from "layouts/pages/exam/other_particular";
-import OtherComponent from "layouts/pages/exam/other_component";
-import ExamSchedule from "layouts/pages/exam/exam_schedule";
 import Caste from "layouts/pages/student/caste";
 import CasteCategory from "layouts/pages/student/caste_category";
 import StudentCategory from "layouts/pages/student/student_category";
 import HouseDetails from "layouts/pages/student/house_details";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import SchoolAccount from "layouts/pages/school/school_account";
 import ExcessFee from "layouts/pages/fee/manage_fee/excess_fee";
 import LateFee from "layouts/pages/fee/manage_fee/late_fee";
-import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
@@ -49,11 +31,11 @@ import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
 import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
 import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
-<<<<<<< HEAD
-=======
 import EmailSetting from "layouts/pages/notifications/email";
->>>>>>> main
 import FeeCollection from "layouts/pages/fee/fee_collection";
+import SendNotification from "layouts/pages/notifications/email/send_mail";
+import SendInterportal from "layouts/pages/notifications/inter_portal/send_interportal";
+import MessageTemplate from "layouts/pages/notifications/message_template";
 
 const routes = [
   {
@@ -325,14 +307,33 @@ const routes = [
       {
         name: "Email",
         key: "email",
-        route: "pages/notification/email",
-        component: <EmailSetting />,
+        collapse: [
+          {
+            name: "Email Configuration",
+            key: "emailconfiguration",
+            route: "pages/notification/emailconfiguration",
+            component: <EmailSetting />,
+          },
+
+          // {
+          //   name: "SMS",
+          //   key: "sms",
+          //   route: "pages/notification/sms",
+          //   component: <FeeCertificate />,
+          // },
+        ],
       },
       {
-        name: "SMS",
-        key: "sms",
-        route: "pages/notification/sms",
-        component: <FeeCertificate />,
+        name: "Send Notification",
+        key: "send_notification",
+        route: "pages/notification/send_notification",
+        component: <SendNotification />,
+      },
+      {
+        name: "Message Template",
+        key: "message_template",
+        route: "pages/notification/message_template",
+        component: <MessageTemplate />,
       },
     ],
   },
@@ -522,7 +523,6 @@ const routes = [
       },
     ],
   },
-  
 ];
 
 export default routes;

@@ -451,7 +451,6 @@ const Rbac = (props: any) => {
             >
               {renderTreeNodes(treeData)}
               {/* {renderTreeNodes(treeData.filter(node => node.key !== "fee"))} */}
-
             </Tree>
           </MDBox>
         </Card>
