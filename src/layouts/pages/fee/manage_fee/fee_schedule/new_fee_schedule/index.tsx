@@ -1,5 +1,6 @@
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
 import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
@@ -7,10 +8,10 @@ import MDInput from "components/MDInput";
 import { message } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
 function extractIdFromString(str: string) {
   // Regular expression to match the ID pattern "(id-XXXXX)"
@@ -48,8 +49,7 @@ const validationSchema = Yup.object().shape({
   fee_particular_name: Yup.string().required("Required *"),
   name: Yup.string().required("Required *"),
 });
-
-const NewFeeSchedule = (props: any) => {
+const Create = (props: any) => {
   const token = Cookies.get("token");
   const [academicdata, setAcademicdata] = useState([]);
   const [categorydata, setCategorydata] = useState([]);
@@ -206,7 +206,7 @@ const NewFeeSchedule = (props: any) => {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
+      <Card>
         {" "}
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
@@ -606,9 +606,9 @@ const NewFeeSchedule = (props: any) => {
             </Grid>
           </Grid>
         </Grid>
-      </MDBox>
+      </Card>
     </form>
   );
 };
 
-export default NewFeeSchedule;
+export default Create;

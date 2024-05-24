@@ -164,12 +164,17 @@ let routes = [
     component: <ManageFeeAmountPerticular />,
   },
 
+<<<<<<< HEAD
   {
     name: "create conssion",
     key: "createconcession",
     route: "/fee/create_concession",
     component: <CreateConcession />,
   },
+=======
+
+
+>>>>>>> main
   {
     name: "create conssion",
     key: "createconcession",
