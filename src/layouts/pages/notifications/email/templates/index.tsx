@@ -188,8 +188,7 @@ const Templates = () => {
       `Dear ${name}, we wish you a very happy marriage anniversary and a great year ahead!`,
     "Invoice Generated": (name: any, amount: any) =>
       `Dear ${name}, Invoice of ${amount} is generated successfully. Please pay the due amount. If already paid, ignore this message.`,
-    "Delivery Note Generated": (name: any) =>
-      `Dear ${name}, Delivery note has been generated.`,
+    "Delivery Note Generated": (name: any) => `Dear ${name}, Delivery note has been generated.`,
     "Proforma Generated": (name: any, amount: any) =>
       `Dear ${name}, Proforma of ${amount} is generated successfully for your reference.`,
     "Quotation Generated": (name: any, amount: any, validityPeriod: any) =>

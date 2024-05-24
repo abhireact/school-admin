@@ -42,8 +42,6 @@ export default function FeeConcessionReport() {
     rows: [],
   });
 
-  const fetchData = async () => {};
-
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,

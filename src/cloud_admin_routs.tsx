@@ -54,6 +54,7 @@ const CloudAdminRouts = [
     ],
   },
   {
+    type: "collapse",
     name: "School",
     key: "school",
     icon: (

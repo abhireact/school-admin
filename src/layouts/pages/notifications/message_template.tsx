@@ -12,12 +12,12 @@ import { Table } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
 import DataTable from "examples/Tables/DataTable";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
-// import EditMessageTemplate from "./template_form";
+import EditMessageTemplate from "./template_form";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 const token = Cookies.get("token");
-export default function SmsConfiguration() {
+export default function MessageTemplate() {
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
   const [templateData, setTemplateData] = useState([]);
@@ -26,7 +26,7 @@ export default function SmsConfiguration() {
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_sms_configuration`, {
+      const response = await axios.get(`http://10.0.20.200:8000/mg_templates/school_incharge`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -53,19 +53,17 @@ export default function SmsConfiguration() {
   };
   const feeCategory = {
     columns: [
-      { Header: "URL", accessor: "url" },
-      { Header: "SUPPORT MULTIPLE SMS", accessor: "support_multi_sms" },
-      { Header: "MAXIMUM SMS SUPPORT", accessor: "max_sms_support" },
-      { Header: "MOBILE NUMBER ATTRIBUTE", accessor: "mobile_no_attribute" },
-      { Header: "MSG", accessor: "msg" },
+      { Header: "MODULE NAME", accessor: "modulename" },
+      { Header: "ACTIVITY", accessor: "activity" },
+      { Header: "VENDOR NAME", accessor: "vendername" },
+      { Header: "MESSAGE", accessor: "message", Width: "40%" },
       { Header: "ACTIONS", accessor: "action" },
     ],
     rows: templateData.map((data, index) => ({
-      url: data.url,
-      support_multi_sms: data.support_multiple_sms,
-      max_sms_support: data.maximum_sms_Support,
-      mobile_no_attribute: data.mobile_number_attribute,
-      msg: data.msg_attribute,
+      modulename: data.module_name,
+      activity: data.sms_activity,
+      vendername: data.vendor,
+      message: data.message,
       action: (
         <Grid container spacing={1}>
           <Grid item>
@@ -90,7 +88,7 @@ export default function SmsConfiguration() {
       <DashboardNavbar />
       <Card>
         <Dialog open={editopen} onClose={handleClickCloseEdit}>
-          {/* <EditMessageTemplate data={editdata} onSuccess={handleEditSuccess} /> */}
+          <EditMessageTemplate data={editdata} onSuccess={handleEditSuccess} />
         </Dialog>
         <Grid container p={3}>
           <Grid item xs={12} sm={6} mt={2}>
