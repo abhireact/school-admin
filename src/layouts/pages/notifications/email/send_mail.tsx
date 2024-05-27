@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import FormField from "layouts/pages/account/components/FormField";
 import { useFormik } from "formik";
-import { Grid, Card, Link, Autocomplete } from "@mui/material";
+import { Grid, Card, Autocomplete } from "@mui/material";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
-import Icon from "@mui/material/Icon";
 import MDInput from "components/MDInput";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { Table } from "antd";
 import { useSelector } from "react-redux";
+import { Divider } from "antd";
+
 const token = Cookies.get("token");
+
+interface DataType {
+  key: React.Key;
+  name: string;
+  userid: string;
+}
+
 const initialValues = {
   message_type: "",
   subject: "",
@@ -24,9 +31,13 @@ const initialValues = {
   schedule: "",
   department: "",
 };
+
 export default function SendMail() {
   const [department, setDepartmentData] = useState([]);
+  const [receiverData, setReceiverData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const { classes, account, studentcategory, student } = useSelector((state: any) => state);
+
   useEffect(() => {
     axios
       .get(`http://10.0.20.200:8000/employee_department`, {
@@ -41,17 +52,93 @@ export default function SendMail() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  });
+  }, []);
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
       //   validationSchema: createschema,
       enableReinitialize: true,
-      onSubmit: async (values, action) => {},
+      onSubmit: async (values, action) => {
+        const submitValue = {
+          to_user: receiverData.map((item: any) => item.user_id),
+          subject: values.subject,
+          description: values.message,
+          status: "",
+          notification_type: values.message_type,
+        };
+        axios
+          .post(`http://10.0.20.200:8000/internal_portal/`, submitValue, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      },
     });
+  const getFilteredInterportalData = () => {
+    console.log(values, "filtered post value");
+    const postvalue = {
+      user_type: values.send_to,
+      class_name: [values.class_name],
+      filter: values.filter,
+      section_name: [values.section_name],
+      academic_year: values.academic_year,
+      schedule: values.schedule,
+      department: values.department,
+    };
+
+    axios
+      .post(`http://10.0.20.200:8000/mg_sms_notifications/filter_by`, postvalue, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setReceiverData(response.data);
+        console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      render: (text: string) => <a>{text}</a>,
+    },
+    {
+      title: "User Id",
+      dataIndex: "userid",
+    },
+  ];
+
+  const data: DataType[] = receiverData.map((dataItem: any, index: number) => ({
+    key: values.send_to === "Parent" ? dataItem.guardian_user_id : dataItem.user_id,
+    name:
+      values.send_to === "Parent"
+        ? dataItem.guardian_name
+        : `${dataItem.first_name} ${dataItem.middle_name} ${dataItem.last_name}`, // Example name, replace with actual data
+    userid: values.send_to === "Parent" ? dataItem.guardian_user_id : dataItem.user_id,
+  }));
+
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`);
+      setSelectedRowKeys(selectedRowKeys);
+    },
+  };
+
   return (
     <DashboardLayout>
-      {/* <DashboardNavbar /> */}
       <form onSubmit={handleSubmit}>
         <Card>
           <Grid xs={12} sm={12} p={2}>
@@ -154,7 +241,7 @@ export default function SendMail() {
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "send_to", value } });
                       }}
-                      options={["All", "Student", "Parent", "Employee", "Teacher"]}
+                      options={["All", "Student", "Parent", "Employee"]}
                       renderInput={(params) => (
                         <MDInput
                           required
@@ -243,7 +330,7 @@ export default function SendMail() {
                           onChange={(_event, value) => {
                             handleChange({ target: { name: "filter", value } });
                           }}
-                          options={["All Student", "Absent Today", "Defaulter", "Birthday Today"]}
+                          options={["All", "Absent Today", "Defaulter", "Birthday Today"]}
                           renderInput={(params) => (
                             <MDInput
                               required
@@ -323,13 +410,32 @@ export default function SendMail() {
 
             <Grid container px={3} pb={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Grid item ml={2}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Send
+                <MDButton color="info" variant="contained" onClick={getFilteredInterportalData}>
+                  SHOW RECEIVERS
                 </MDButton>
               </Grid>
             </Grid>
           </Grid>
         </Card>
+        {receiverData.length > 0 ? (
+          <Card>
+            <Table
+              rowSelection={{
+                type: "checkbox",
+                ...rowSelection,
+              }}
+              columns={columns}
+              dataSource={data}
+            />
+            <Grid container px={3} pb={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid item ml={2}>
+                <MDButton color="info" variant="contained" type="submit">
+                  SEND
+                </MDButton>
+              </Grid>
+            </Grid>
+          </Card>
+        ) : null}
       </form>
     </DashboardLayout>
   );

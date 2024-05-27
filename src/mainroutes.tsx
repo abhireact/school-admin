@@ -34,7 +34,6 @@ import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_rep
 import EmailSetting from "layouts/pages/notifications/email";
 import FeeCollection from "layouts/pages/fee/fee_collection";
 import SendNotification from "layouts/pages/notifications/email/send_mail";
-import SendInterportal from "layouts/pages/notifications/inter_portal/send_interportal";
 import MessageTemplate from "layouts/pages/notifications/message_template";
 
 const routes = [

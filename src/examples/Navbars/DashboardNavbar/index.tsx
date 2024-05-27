@@ -38,6 +38,10 @@ import MDTypography from "components/MDTypography";
 import MarkChatReadIcon from "@mui/icons-material/MarkChatRead";
 import MarkChatUnreadIcon from "@mui/icons-material/MarkChatUnread";
 // Custom styles for DashboardNavbar
+import axios from "axios";
+import Cookies from "js-cookie";
+const token = Cookies.get("token");
+
 import {
   navbar,
   navbarContainer,
@@ -75,17 +79,31 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const route = useLocation().pathname.split("/").slice(1);
 
   useEffect(() => {
-    console.log(1, "side nav refresh");
-    setMessage([
-      { message: "aaaaaaaaaaaaaaaasd", read: true },
-      { message: "fvgfds", read: true },
-      { message: "wewwer", read: false },
-      { message: "asss", read: true },
+    axios
+      .get("http://10.0.20.200:8000/mg_users_name/", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setMessage(response.data);
 
-      { message: "aaaaaaabhnjmnjaaaaaaaaasd", read: true },
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    // setMessage([
+    //   { message: "aaaaaaaaaaaaaaaasd", read: true },
+    //   { message: "fvgfds", read: true },
+    //   { message: "wewwer", read: false },
+    //   { message: "asss", read: true },
 
-      { message: "mmm", read: false },
-    ]);
+    //   { message: "aaaaaaabhnjmnjaaaaaaaaasd", read: true },
+
+    //   { message: "mmm", read: false },
+    // ]);
   }, []);
   useEffect(() => {
     // Setting the navbar type
@@ -141,18 +159,20 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      {message.map((data, index) => (
-        <NotificationItem
-          key={index}
-          icon={
-            <Icon color={data.read ? "info" : "secondary"}>
-              {data.read ? <MarkChatReadIcon /> : <MarkChatUnreadIcon />}
-            </Icon>
-          }
-          title={`${data.message.substring(0, 10)}`}
-          onClick={() => handleClickOpenEdit(data)}
-        />
-      ))}
+      {message
+        ? message.map((data, index) => (
+            <NotificationItem
+              key={index}
+              icon={
+                <Icon color={data.read ? "info" : "secondary"}>
+                  {data.read ? <MarkChatReadIcon /> : <MarkChatUnreadIcon />}
+                </Icon>
+              }
+              title={`${data.message.substring(0, 10)}`}
+              onClick={() => handleClickOpenEdit(data)}
+            />
+          ))
+        : []}
 
       {/* <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
       <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" /> */}
