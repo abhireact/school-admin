@@ -230,7 +230,7 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        {" "}
+         <MDBox p={4}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <Autocomplete
@@ -629,6 +629,7 @@ const Create = (props: any) => {
             </Grid>
           </Grid>
         </Grid>
+        </MDBox>
       </Card>
     </form>
   );
