@@ -143,6 +143,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
     >
       {message.map((data, index) => (
         <NotificationItem
+          key={index}
           icon={
             <Icon color={data.read ? "info" : "secondary"}>
               {data.read ? <MarkChatReadIcon /> : <MarkChatUnreadIcon />}
