@@ -43,7 +43,7 @@ const validationSchema = Yup.object().shape({
     .required("Required *")
     .test(
       "endDateGreaterThanOrEqualToStartDate",
-      "End date must be greater than or equal to start date",
+      "End date should  be greater than or equal to start date",
       function (value) {
         const { start_date } = this.parent;
         return !start_date || value.getTime() >= start_date.getTime();
@@ -53,7 +53,7 @@ const validationSchema = Yup.object().shape({
     .required("Required *")
     .test(
       "dueDateValidation",
-      "Due date must be equal to start date or end date, or between start date and end date",
+      "Due date should be equal to or between start date and end date",
       function (value) {
         const { start_date, end_date } = this.parent;
         return (

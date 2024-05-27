@@ -14,96 +14,44 @@ import * as Yup from "yup";
 import Cookies from "js-cookie";
 
 const token = Cookies.get("token");
-const validationSchema = Yup.object().shape({
-  academic_year: Yup.string().required("Required *"),
-  class_name: Yup.string().required("Required *"),
-  section_name: Yup.string().required("Required *"),
-});
 
 const Update = (props: any) => {
   const { editData, handleClose, fetchingData } = props;
 
-  const [data, setData] = useState([]);
-  const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
-
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.class_name);
-    setFilteredClass(filtereddata);
-  }
-  const [sectiondata, setsectiondata] = useState([]);
-  const [filteredSection, setFilteredSection] = useState([]);
-
-  function filterSectionData(data: any, class_name: any) {
-    console.log(classdata, "class data");
-    let filtereddata = classdata
-      .filter(
-        (item: any) => item.class_name === class_name && item.academic_year === values.academic_year
-      )
-      .map((item: any) => item.section_data);
-
-    console.log(filtereddata, "filter section Data");
-    setFilteredSection(filtereddata);
-  }
-
-  console.log(filteredSection, "section name");
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setAcademicdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
-        academic_year: "",
-        class_name: "",
-        section_name: "",
-        fine_name: editData.fine_name,
+        id: editData.id,
+        name: editData.name,
+        description: editData.description || "",
+        academic_year: editData.academic_year,
+        account_name: editData.account_name,
+        class_name: editData.class_name,
+        section_name: editData.section_name,
+        user_name: editData.user_name,
+        first_name: editData.first_name,
+        middle_name: editData.middle_name,
+        last_name: editData.last_name,
+        excess_amount: editData.excess_amount,
+        payment_status: editData.payment_status,
+        collection_date: editData.collection_date,
+        add_amount: 0,
+        total_amount: editData.excess_amount,
       },
-      validationSchema: validationSchema,
       onSubmit: (values, action) => {
+        const sendData = {
+          ...editData,
+          excess_amount: values.total_amount,
+          payment_status: values.payment_status,
+        };
         axios
-          .post(`${process.env.REACT_APP_BASE_URL}/late_fee/collection`, values, {
+          .put(`${process.env.REACT_APP_BASE_URL}/excess_fee`, sendData, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           })
           .then((response) => {
-            setData(response.data);
-
             handleClose();
             fetchingData();
             console.log("submit data", response.data);
@@ -114,122 +62,194 @@ const Update = (props: any) => {
       },
     });
   // console.log(editData.fine_name, "fine name");
-
+  const handleAmount = (e: any) => {
+    setFieldValue("add_amount", e.target.value);
+    setFieldValue("total_amount", Number(e.target.value) + Number(values.excess_amount));
+  };
   return (
     <>
       <Card>
         <form onSubmit={handleSubmit}>
           <MDBox p={4}>
             <Grid container>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="name"
                   sx={{ width: "80%" }}
-                  disableClearable
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Name
+                    </MDTypography>
+                  }
+                  disabled
+                  value={values.name}
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="description"
+                  sx={{ width: "80%" }}
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Description
+                    </MDTypography>
+                  }
+                  value={values.description}
+                  variant="standard"
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="academic_year"
+                  sx={{ width: "80%" }}
+                  placeholder="eg. 2022-2023"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Academic Year
+                    </MDTypography>
+                  }
                   value={values.academic_year}
+                  variant="standard"
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="account_name"
+                  sx={{ width: "80%" }}
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Account Name
+                    </MDTypography>
+                  }
+                  value={values.account_name}
+                  variant="standard"
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="class_name"
+                  sx={{ width: "80%" }}
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Class and Section
+                    </MDTypography>
+                  }
+                  value={`${values.class_name} ${values.section_name}`}
+                  variant="standard"
+                  disabled
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="section_name"
+                  sx={{ width: "80%" }}
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Student
+                    </MDTypography>
+                  }
+                  value={`${values.user_name}-${values.first_name} ${values.middle_name} ${values.last_name}`}
+                  variant="standard"
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="excess_amount"
+                  sx={{ width: "80%" }}
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Excess Amount
+                    </MDTypography>
+                  }
+                  value={`${values.excess_amount}`}
+                  variant="standard"
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="collection_date"
+                  sx={{ width: "80%" }}
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Date
+                    </MDTypography>
+                  }
+                  value={`${values.collection_date}`}
+                  variant="standard"
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={6} sm={4} mt={2}>
+                <Autocomplete
+                  disableClearable
+                  sx={{ width: "80%" }}
+                  value={values.payment_status}
                   onChange={(event, value) => {
                     handleChange({
-                      target: { name: "academic_year", value },
+                      target: { name: "payment_status", value },
                     });
-                    filterDataByAcdName(classdata, value);
                   }}
-                  options={academicdata.map((acd) => acd.academic_year)}
+                  options={["adjust", "refund"]}
                   renderInput={(params: any) => (
                     <MDInput
                       InputLabelProps={{ shrink: true }}
-                      name="academic_year"
-                      placeholder="eg. 2022-2023"
+                      name="payment_status"
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Academic Year
+                          Select Payment Status
                         </MDTypography>
                       }
-                      onChange={handleChange}
-                      value={values.academic_year}
+                      value={values.payment_status}
                       {...params}
                       variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.academic_year && Boolean(errors.academic_year)}
-                      success={values.academic_year.length && !errors.academic_year}
-                      helperText={touched.academic_year && errors.academic_year}
+                      error={touched.payment_status && Boolean(errors.payment_status)}
+                      helperText={touched.payment_status && errors.payment_status}
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="add_amount"
                   sx={{ width: "80%" }}
-                  disableClearable
-                  value={values.class_name}
-                  onChange={
-                    filteredClass.length >= 1
-                      ? (event, value) => {
-                          handleChange({
-                            target: { name: "class_name", value },
-                          });
-                          filterSectionData(sectiondata, value);
-                        }
-                      : undefined
+                  type="number"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Add Amount
+                    </MDTypography>
                   }
-                  options={filteredClass}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="class_name"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Class Name
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.class_name}
-                      {...params}
-                      variant="standard"
-                      error={touched.class_name && Boolean(errors.class_name)}
-                      success={values.class_name.length && !errors.class_name}
-                      helperText={touched.class_name && errors.class_name}
-                    />
-                  )}
+                  onChange={handleAmount}
+                  value={`${values.add_amount}`}
+                  variant="standard"
+                  onBlur={handleBlur}
+                  error={touched.add_amount && Boolean(errors.add_amount)}
+                  success={values.add_amount && !errors.add_amount}
+                  helperText={touched.add_amount && errors.add_amount}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
+              <Grid item xs={12} sm={4} mt={2}>
+                <MDInput
+                  name="total_amount"
                   sx={{ width: "80%" }}
-                  disableClearable
-                  value={values.section_name}
-                  onChange={
-                    filteredSection.length >= 1
-                      ? (event, value) => {
-                          handleChange({
-                            target: { name: "section_name", value },
-                          });
-                        }
-                      : undefined
+                  type="number"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Total Amount
+                    </MDTypography>
                   }
-                  options={
-                    filteredSection[0]
-                      ? filteredSection[0].map((sectiondata: any) => sectiondata.section_name)
-                      : []
-                  }
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="section_name"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Section Name
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.section_name}
-                      {...params}
-                      variant="standard"
-                      error={touched.section_name && Boolean(errors.section_name)}
-                      success={values.section_name.length && !errors.section_name}
-                      helperText={touched.section_name && errors.section_name}
-                    />
-                  )}
+                  value={`${values.total_amount}`}
+                  variant="standard"
+                  disabled
                 />
               </Grid>
+
               <Grid
                 item
                 container
