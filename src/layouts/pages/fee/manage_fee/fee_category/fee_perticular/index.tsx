@@ -107,13 +107,13 @@ export default function ManageFeeAmountPerticular() {
         <Grid container p={3}>
           <Grid item xs={12} sm={6} mt={2}>
             <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Fee Amount Perticular
+              Fee Amount Particular
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Link href="/fee/create_fee_amount_perticular" variant="body2">
               <MDButton variant="outlined" color="info">
-                + Create Fee Amount Perticular
+                + Create Fee Amount Particular
               </MDButton>
             </Link>
           </Grid>

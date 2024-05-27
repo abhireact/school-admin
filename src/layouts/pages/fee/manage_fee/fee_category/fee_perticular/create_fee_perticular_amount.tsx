@@ -254,7 +254,7 @@ export default function CreateFeeParicularAmount() {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Create Fee Amount Perticular
+                  Create Fee Amount Particular
                 </MDTypography>
               </Grid>
             </Grid>
@@ -302,7 +302,7 @@ export default function CreateFeeParicularAmount() {
                       value={values.fee_perticular}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Fee Perticular
+                          Fee Particular
                         </MDTypography>
                       }
                       {...params}

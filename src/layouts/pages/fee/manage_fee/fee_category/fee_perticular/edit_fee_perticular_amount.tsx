@@ -60,7 +60,7 @@ export default function EditFeeParicularAmount(props: any) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Edit Fee Amount Perticular
+                Edit Fee Amount Particular
               </MDTypography>
             </Grid>
           </Grid>
