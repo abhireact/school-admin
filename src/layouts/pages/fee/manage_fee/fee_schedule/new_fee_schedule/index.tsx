@@ -40,8 +40,31 @@ function removeProperty(data: any) {
 }
 const validationSchema = Yup.object().shape({
   start_date: Yup.date().required("Required *"),
-  end_date: Yup.date().required("Required *"),
-  due_date: Yup.date().required("Required *"),
+  end_date: Yup.date()
+    .required("Required *")
+    .test(
+      "endDateGreaterThanOrEqualToStartDate",
+      "End date should  be greater than or equal to start date",
+      function (value) {
+        const { start_date } = this.parent;
+        return !start_date || value.getTime() >= start_date.getTime();
+      }
+    ),
+  due_date: Yup.date()
+    .required("Required *")
+    .test(
+      "dueDateValidation",
+      "Due date should be equal to or between start date and end date",
+      function (value) {
+        const { start_date, end_date } = this.parent;
+        return (
+          start_date &&
+          value.getTime() >= start_date.getTime() &&
+          end_date &&
+          value.getTime() <= end_date.getTime()
+        );
+      }
+    ),
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
@@ -207,7 +230,7 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        {" "}
+         <MDBox p={4}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <Autocomplete
@@ -606,6 +629,7 @@ const Create = (props: any) => {
             </Grid>
           </Grid>
         </Grid>
+        </MDBox>
       </Card>
     </form>
   );
