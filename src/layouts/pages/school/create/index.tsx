@@ -15,7 +15,7 @@ import MDTypography from "components/MDTypography";
 import MDDropzone from "components/MDDropzone";
 import Radio from "@mui/material/Radio";
 import FormControl from "@mui/material/FormControl";
-import { FormControlLabel, FormLabel, RadioGroup } from "@mui/material";
+import { FormControlLabel, FormLabel, RadioGroup, Checkbox } from "@mui/material";
 import { useState, useEffect } from "react";
 import MDAvatar from "components/MDAvatar";
 const token = Cookies.get("token");
@@ -44,6 +44,10 @@ interface FormValues {
   currency_type: string;
   grading_system: string;
   logo: File | null; // Adjust the type according to your requirement
+  check1: boolean;
+  check2: boolean;
+  check3: boolean;
+  check4: boolean;
 }
 const initialValues: FormValues = {
   school_name: "",
@@ -68,6 +72,10 @@ const initialValues: FormValues = {
   currency_type: "INR",
   grading_system: "CGPA",
   logo: null,
+  check1: false,
+  check2: false,
+  check3: false,
+  check4: false,
 };
 
 const states = [
@@ -110,6 +118,10 @@ const states = [
 ];
 
 const Create = () => {
+  const arrayOfObjects = [{ key1: "value1" }, { key2: "value2" }];
+
+  const xytz = JSON.stringify(arrayOfObjects);
+
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
@@ -119,8 +131,9 @@ const Create = () => {
         try {
           const sendData = {
             ...values,
+            xytz,
           };
-          const response = await axios.post("http://10.0.20.121:8000/mg_school", sendData, {
+          const response = await axios.post("http://10.0.20.200:8000/mg_school", sendData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -179,7 +192,7 @@ const Create = () => {
                 />
               </Grid>
               <Grid item sm={3} xs={12} mt={2}>
-                <MDTypography variant="body2"> School Logo .:</MDTypography>
+                <MDTypography variant="body2"> School Logo </MDTypography>
               </Grid>
               <Grid item sm={6} xs={12} mt={2}>
                 <MDInput
@@ -457,7 +470,75 @@ const Create = () => {
                   sx={{ width: "70%" }}
                 />
               </Grid>
-
+              <Grid item sm={12} sx={{ display: "flex", justifyContent: "flex-start" }}>
+                <MDTypography variant="h5" pt={2}>
+                  Give Permission
+                </MDTypography>
+              </Grid>
+              <Grid item xs={12} pt={2} sm={3}>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    row
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={values.check1} name={`check1`} onChange={handleChange} />
+                      }
+                      label={<MDTypography variant="button">RBAC</MDTypography>}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} pt={2} sm={3}>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    row
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={values.check3} name={`check3`} onChange={handleChange} />
+                      }
+                      label={<MDTypography variant="button">Exam</MDTypography>}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} pt={2} sm={3}>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    row
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={values.check2} name={`check2`} onChange={handleChange} />
+                      }
+                      label={<MDTypography variant="button">Fee</MDTypography>}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} pt={2} sm={3}>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    row
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={values.check4} name={`check4`} onChange={handleChange} />
+                      }
+                      label={<MDTypography variant="button">Employee</MDTypography>}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
               <Grid
                 sm={3}
                 xs={12}

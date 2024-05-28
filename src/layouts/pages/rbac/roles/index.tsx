@@ -66,7 +66,7 @@ const Showrole = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.121:8000/mg_role", {
+      .get("http://10.0.20.200:8000/mg_role", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,14 +96,14 @@ const Showrole = () => {
 
       action: (
         <MDTypography variant="p">
-          <IconButton
+          {/* <IconButton
             onClick={() => {
               handleOpenupdate(index);
               console.log(index, "update index");
             }}
           >
             <CreateRoundedIcon />
-          </IconButton>
+          </IconButton> */}
           <IconButton
             onClick={() => {
               handleOpenupdate2(index);

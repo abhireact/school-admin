@@ -1,0 +1,21 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npx prettier --write .
+    - npm run build
+  artifacts:
+    paths:
+      - ./build
+
+deploy:
+  stage: deploy
+  script:
+    - cp -rf ./build/* /usr/share/nginx/school/
+
+  only:
+    - main

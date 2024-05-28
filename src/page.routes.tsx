@@ -1,4 +1,3 @@
-
 import Icon from "@mui/material/Icon";
 
 const pageRoutes = [
@@ -138,6 +137,7 @@ const pageRoutes = [
       },
     ],
   },
+
   {
     name: "application",
     collapse: [

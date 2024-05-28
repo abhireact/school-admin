@@ -17,9 +17,6 @@ import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 const validationSchema = Yup.object().shape({
-  academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
-    .required("Academic year is required"),
   start_date: Yup.date().required("Start date is required"),
   end_date: Yup.date().required("End date is required"),
 });
@@ -34,21 +31,19 @@ const Update = (props: any) => {
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       academic_year: editData.academic_year,
-
       start_date: editData.start_date,
       end_date: editData.end_date,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       let sendData = {
-        old_academic_year: editData.academic_year,
         academic_year: values.academic_year,
-
+        old_academic_year: editData.academic_year,
         start_date: values.start_date,
         end_date: values.end_date,
       };
       axios
-        .put("http://10.0.20.121:8000/mg_accademic_update", sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -59,8 +54,8 @@ const Update = (props: any) => {
           fetchData();
           handleCloseupdate();
         })
-        .catch(() => {
-          message.error("Error on updating !");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
 
       action.resetForm();
@@ -69,54 +64,53 @@ const Update = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
-          <Grid item xs={12} sm={5} mb={2}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Academic Year
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={5}>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              ACADEMIC YEAR
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
+              placeholder="eg. 2023-2024"
               sx={{ width: "65%" }}
               variant="standard"
               name="academic_year"
               value={values.academic_year}
+              onChange={handleChange}
               onBlur={handleBlur}
               error={touched.academic_year && Boolean(errors.academic_year)}
+              success={values.academic_year.length && !errors.academic_year}
               helperText={touched.academic_year && errors.academic_year}
             />
           </Grid>
-
           <Grid item xs={12} sm={5}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Start Date
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              START DATE
             </MDTypography>
           </Grid>
-
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               type="date"
               sx={{ width: "65%" }}
               variant="standard"
               name="start_date"
               value={values.start_date}
               onChange={handleChange}
-              onBlur={handleBlur}
               error={touched.start_date && Boolean(errors.start_date)}
               helperText={touched.start_date && errors.start_date}
+              onBlur={handleBlur}
             />
           </Grid>
+
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              End Date
+              END DATE
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               type="date"
               sx={{ width: "65%" }}
               variant="standard"
@@ -128,6 +122,7 @@ const Update = (props: any) => {
               helperText={touched.end_date && errors.end_date}
             />
           </Grid>
+
           <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item mt={2}>
               <MDButton

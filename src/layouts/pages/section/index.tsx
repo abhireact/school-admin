@@ -31,7 +31,7 @@ const Section = () => {
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.121:8000/mg_rbac_current_user`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ const Section = () => {
   }, [token]);
   //End
   const [data, setData] = useState([]);
-
+  console.log(data, "dataaaaaaaaaaaaaaa");
   //Start
 
   const [open, setOpen] = useState(false);
@@ -74,6 +74,7 @@ const Section = () => {
 
     setOpenupdate(true);
     setEditData(main_data);
+    console.log(main_data, "update dataaaaaaaaaaaa");
   };
 
   const handleCloseupdate = () => {
@@ -81,7 +82,7 @@ const Section = () => {
   }; //End
   const fetchSection = () => {
     axios
-      .get("http://10.0.20.121:8000/mg_section", {
+      .get("http://10.0.20.200:8000/mg_batches", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -101,7 +102,7 @@ const Section = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.121:8000/mg_section", {
+      const response = await axios.delete("http://10.0.20.200:8000/mg_batches", {
         data: {
           sec_name: name.sec_name,
           class_name: name.class_name,
@@ -118,10 +119,10 @@ const Section = () => {
         const updatedData = data.filter((row) => row.username !== name);
         setData(updatedData); // Update the state with the new data
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error deleting task:", error);
       const myError = error as Error;
-      message.error("An unexpected error occurred");
+      message.error(error.response.data.detail);
     }
   };
   const dataTableData = {
@@ -179,7 +180,7 @@ const Section = () => {
     <DashboardLayout>
       <DashboardNavbar />
       <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MDTypography variant="h4" fontWeight="bold" color="secondary">
+        <MDTypography variant="h5" fontWeight="bold" color="secondary">
           Section
         </MDTypography>
         {rbacData ? (

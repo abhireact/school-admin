@@ -16,7 +16,6 @@ function Sidenav(): JSX.Element {
   const sidenavItems = [
     { icon: "person", label: "Student Info", href: "student-info" },
     { icon: "family_restroom", label: "Guardian Info", href: "guardian-info" },
-
     { icon: "sports_martial_arts", label: "Activities", href: "activities" },
   ];
 

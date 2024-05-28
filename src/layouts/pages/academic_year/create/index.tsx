@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
   start_date: Yup.date().required("Required *"),
   end_date: Yup.date().required("Required *"),
@@ -36,7 +36,7 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.121:8000/mg_accademic_year", values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -48,8 +48,8 @@ const Create = (props: any) => {
           fetchData();
           handleClose();
         })
-        .catch(() => {
-          message.error("Error on creating  !");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
 
       action.resetForm();
@@ -58,16 +58,16 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <MDBox p={4}>
-        <Grid container>
-          <Grid item xs={12} sm={5} mb={2}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Academic Year
+        {" "}
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={5}>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              ACADEMIC YEAR
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
-              placeholder="eg. 2023-24"
+              placeholder="eg. 2023-2024"
               sx={{ width: "65%" }}
               variant="standard"
               name="academic_year"
@@ -75,17 +75,17 @@ const Create = (props: any) => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.academic_year && Boolean(errors.academic_year)}
+              success={values.academic_year.length && !errors.academic_year}
               helperText={touched.academic_year && errors.academic_year}
             />
           </Grid>
-          <Grid item xs={12} sm={5} mb={2}>
-            <MDTypography mb={2} variant="button" fontWeight="bold" color="secondary">
-              Start Date
+          <Grid item xs={12} sm={5}>
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
+              START DATE
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               type="date"
               sx={{ width: "65%" }}
               variant="standard"
@@ -98,15 +98,14 @@ const Create = (props: any) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={5} mb={2}>
+          <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              End Date
+              END DATE
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7} mb={2}>
+          <Grid item xs={12} sm={7}>
             <MDInput
-              mb={2}
               type="date"
               sx={{ width: "65%" }}
               variant="standard"

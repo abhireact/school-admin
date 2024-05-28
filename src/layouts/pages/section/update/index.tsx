@@ -35,12 +35,16 @@ const Update = (props: any) => {
       academic_year: editData.academic_year,
       class_name: editData.class_name,
       section_name: editData.section_name,
+      start_date: editData.start_date.substring(0, 10),
+      end_date: editData.end_date.substring(0, 10),
+      is_active: editData.is_active,
+      old_section_name: editData.section_name,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
-      const sendValues = { ...values, old_section_name: editData.section_name };
+      // const sendValues = { ...values, old_section_name: editData.section_name };
       axios
-        .put("http://10.0.20.121:8000/mg_update_section", sendValues, {
+        .put("http://10.0.20.200:8000/mg_batches", values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
