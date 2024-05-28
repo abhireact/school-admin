@@ -17,12 +17,7 @@ import SwipeableViews from "react-swipeable-views";
 import Templates from "./templates";
 import Gateway from "./gateway";
 import SentEmail from "./sentemail";
-function TabPanel(props: {
-  [x: string]: any;
-  children: any;
-  value: any;
-  index: any;
-}) {
+function TabPanel(props: { [x: string]: any; children: any; value: any; index: any }) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -88,8 +83,7 @@ const EmailSetting = () => {
           </Grid>
           <Grid p={2} sm={12}>
             <MDTypography variant="caption" fontWeight={"bold"}>
-              This tool allow you to configure email gateway and enable
-              application to send email. |
+              This tool allow you to configure email gateway and enable application to send email. |
             </MDTypography>
           </Grid>
           <Grid px={2} sm={12}>
@@ -98,19 +92,13 @@ const EmailSetting = () => {
             </MDTypography>
           </Grid>
           <Grid px={2} sm={12}>
-            <MDTypography variant="caption">
-              1. Configure email gateway
-            </MDTypography>
+            <MDTypography variant="caption">1. Configure email gateway</MDTypography>
           </Grid>
           <Grid px={2} sm={12}>
-            <MDTypography variant="caption">
-              2. Set email templates
-            </MDTypography>
+            <MDTypography variant="caption">2. Set email templates</MDTypography>
           </Grid>{" "}
           <Grid px={2} sm={12}>
-            <MDTypography variant="caption">
-              3. check sent email log
-            </MDTypography>
+            <MDTypography variant="caption">3. check sent email log</MDTypography>
           </Grid>
           <Grid p={2} sm={12}>
             <MDButton
@@ -156,10 +144,7 @@ const EmailSetting = () => {
                 <Tab label="Sent Email" {...a11yProps(2)} />
               </Tabs>
             </AppBar>
-            <SwipeableViews
-              axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-              index={value}
-            >
+            <SwipeableViews axis={theme.direction === "rtl" ? "x-reverse" : "x"} index={value}>
               <TabPanel value={value} index={0} dir={theme.direction}>
                 <Gateway />
               </TabPanel>

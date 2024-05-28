@@ -35,6 +35,7 @@ import EmailSetting from "layouts/pages/notifications/email";
 import FeeCollection from "layouts/pages/fee/fee_collection";
 import SendNotification from "layouts/pages/notifications/email/send_mail";
 import MessageTemplate from "layouts/pages/notifications/message_template";
+import FineParticular from "layouts/pages/fee/manage_fee/fine";
 
 const routes = [
   {
@@ -389,15 +390,12 @@ const routes = [
   //       route: "pages/fee/feeschedule",
   //       component: <FeeSchedule />,
   //     },
-  //     {
-  //       name: "Fee Certificate",
-  //       key: "feecertificate",
-  //       route: "pages/fee/feecertificate",
-  //       component: <FeeCertificate />,
-  //     },
-  //     {
-  //       name: "Fee Register without Payment Mode",
-  //       key: "feeregister",
+  {
+    name: "Fine",
+    key: "fineparticular",
+    route: "pages/fee/fineparticular",
+    component: <FineParticular />,
+  },
   //       route: "pages/fee/feeregister",
   //       component: <FeeRegister />,
   //     },
@@ -457,12 +455,12 @@ const routes = [
           //   component: <FeeCollectionByAdmission />,
           // },
 
-          // {
-          //   name: "Fine Particular",
-          //   key: "fineparticular",
-          //   route: "pages/fee/fineparticular",
-          //   component: <FineParticular />,
-          // },
+          {
+            name: "Fine Particular",
+            key: "fineparticular",
+            route: "pages/fee/fineparticular",
+            component: <FineParticular />,
+          },
         ],
       },
       // Fee Collection
