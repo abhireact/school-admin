@@ -230,405 +230,411 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-         <MDBox p={4}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <Autocomplete
-              disableClearable
-              sx={{ width: "80%" }}
-              value={values.category_name}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "category_name", value },
-                });
+        <MDBox p={4}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={4}>
+              <Autocomplete
+                disableClearable
+                sx={{ width: "80%" }}
+                value={values.category_name}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "category_name", value },
+                  });
 
-                const particularArray = filterParticularData(value);
-                setParticulardata(particularArray);
+                  const particularArray = filterParticularData(value);
+                  setParticulardata(particularArray);
 
-                setFieldValue("fee_particular_name", "");
-              }}
-              options={categorydata.map((cd) => cd.name)}
-              renderInput={(params: any) => (
-                <MDInput
-                  InputLabelProps={{ shrink: true }}
-                  name="category_name"
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Fee Category
-                    </MDTypography>
-                  }
-                  value={values.category_name}
-                  {...params}
-                  variant="standard"
-                  error={touched.category_name && Boolean(errors.category_name)}
-                  helperText={touched.category_name && errors.category_name}
-                  success={values.category_name.length && !errors.category_name}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Autocomplete
-              disableClearable
-              sx={{ width: "80%" }}
-              value={values.fee_particular_name}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "fee_particular_name", value },
-                });
-              }}
-              options={particulardata.map((info) => info.particular_name)}
-              renderInput={(params: any) => (
-                <MDInput
-                  InputLabelProps={{ shrink: true }}
-                  name="fee_particular_name"
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Fee Particular
-                    </MDTypography>
-                  }
-                  value={values.fee_particular_name}
-                  {...params}
-                  variant="standard"
-                  error={touched.fee_particular_name && Boolean(errors.fee_particular_name)}
-                  helperText={touched.fee_particular_name && errors.fee_particular_name}
-                  success={values.fee_particular_name.length && !errors.fee_particular_name}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="name"
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Fee Collection Name
-                </MDTypography>
-              }
-              value={values.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.name && Boolean(errors.name)}
-              success={values.name.length && !errors.name}
-              helperText={touched.name && errors.name}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="start_date"
-              value={values.start_date}
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Start Date
-                </MDTypography>
-              }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.start_date && Boolean(errors.start_date)}
-              helperText={touched.start_date && errors.start_date}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="end_date"
-              value={values.end_date}
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  End Date
-                </MDTypography>
-              }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.end_date && Boolean(errors.end_date)}
-              helperText={touched.end_date && errors.end_date}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDInput
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: "80%" }}
-              variant="standard"
-              name="due_date"
-              value={values.due_date}
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Due Date
-                </MDTypography>
-              }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.due_date && Boolean(errors.due_date)}
-              helperText={touched.due_date && errors.due_date}
-            />
-          </Grid>
-          <Grid item xs={6} sm={4}>
-            <Autocomplete
-              disableClearable
-              sx={{ width: "80%" }}
-              value={values.academic_year}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "academic_year", value },
-                });
-              }}
-              options={academicdata.map((acd) => acd.academic_year)}
-              renderInput={(params: any) => (
-                <MDInput
-                  InputLabelProps={{ shrink: true }}
-                  name="academic_year"
-                  placeholder="eg. 2022-2023"
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Academic Year
-                    </MDTypography>
-                  }
-                  value={values.academic_year}
-                  {...params}
-                  variant="standard"
-                  error={touched.academic_year && Boolean(errors.academic_year)}
-                  helperText={touched.academic_year && errors.academic_year}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={6} sm={4}>
-            <Autocomplete
-              disableClearable
-              sx={{ width: "80%" }}
-              value={values.fine_name}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "fine_name", value },
-                });
-              }}
-              options={fineInfo.map((acd) => acd.fine_name)}
-              renderInput={(params: any) => (
-                <MDInput
-                  InputLabelProps={{ shrink: true }}
-                  name="fine_name"
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Late Fine
-                    </MDTypography>
-                  }
-                  onChange={handleChange}
-                  value={values.fine_name}
-                  {...params}
-                  variant="standard"
-                  error={touched.fine_name && Boolean(errors.fine_name)}
-                  helperText={touched.fine_name && errors.fine_name}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} style={{ display: "flex", flexDirection: "column" }} mt={2}>
-            <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                row
-                name="radio-buttons-group"
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name="is_applicable"
-                      checked={values.is_applicable}
-                      onChange={handleChange}
-                    />
-                  }
-                  label={
-                    <MDTypography variant="caption" fontWeight="bold">
-                      Is Applicable
-                    </MDTypography>
-                  }
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>{" "}
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-start" }}
-          >
-            <Grid item>
-              <MDButton
-                color="dark"
-                variant="contained"
-                onClick={() => {
-                  fetchParticularsInfo();
+                  setFieldValue("fee_particular_name", "");
                 }}
-              >
-                filter
-              </MDButton>
+                options={categorydata.map((cd) => cd.name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="category_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Fee Category
+                      </MDTypography>
+                    }
+                    value={values.category_name}
+                    {...params}
+                    variant="standard"
+                    error={touched.category_name && Boolean(errors.category_name)}
+                    helperText={touched.category_name && errors.category_name}
+                    success={values.category_name.length && !errors.category_name}
+                  />
+                )}
+              />
             </Grid>
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              {particularInfo?.length > 0 && (
-                <thead>
-                  <tr>
-                    <td
-                      style={{
-                        fontSize: "15px",
-                        textAlign: "left",
-                      }}
-                    >
-                      {" "}
-                      <b>Course Batch Name</b>
-                    </td>
-
-                    <td
-                      style={{
-                        fontSize: "15px",
-                        textAlign: "left",
-                      }}
-                    >
-                      <b>Particular Types</b>
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "15px",
-                        textAlign: "left",
-                      }}
-                    >
-                      <b>Select</b>: &nbsp;All
-                      <Checkbox checked={allCheck} onChange={() => handleSelectAll()} />
-                      &nbsp; None
-                      <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
-                    </td>
-                  </tr>
-                </thead>
-              )}
-              <tbody>
-                {particularInfo?.length > 0 ? (
-                  particularInfo?.map((item: any, index: any) => (
-                    <tr key={index + item.class_name}>
-                      <td style={{ textAlign: "left" }}>
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          {item.class_name} - {item.section_name}
-                        </MDTypography>
-                      </td>
-                      <td style={{ textAlign: "left" }}>
-                        <Autocomplete
-                          disableClearable
-                          sx={{ width: "70%" }}
-                          value={item.showValue || "All"}
-                          onChange={(event, value) => {
-                            let changeParticulars: any = null;
-                            let desiredValue = value === "All" ? "All" : value;
-                            let changeObject = particularInfo[index];
-
-                            if (desiredValue === "All") {
-                              console.log("show All particulars change");
-                              changeParticulars = changeObject.particulars;
-                            } else {
-                              let objectid = extractIdFromString(desiredValue);
-                              let desiredObject = fetchObjectById(
-                                objectid,
-                                changeObject.particulars
-                              );
-                              console.log("show one  particulars change", desiredObject);
-                              changeParticulars = [desiredObject];
-                            }
-
-                            setParticularInfo((prev) =>
-                              prev.map((prevItem: any, idx) =>
-                                idx === index
-                                  ? {
-                                      ...prevItem,
-                                      showValue: desiredValue,
-                                      particulars: changeParticulars,
-                                    }
-                                  : prevItem
-                              )
-                            );
-                            console.log(particularInfo, "info ");
-                          }}
-                          options={[
-                            "All",
-                            ...item.particulars.map(
-                              (particular: any) =>
-                                `${particular.particular_type}  ${
-                                  particular.user_id || particular.student_category
-                                    ? particular.user_id || particular.student_category
-                                    : ""
-                                } (id-${particular.id})`
-                            ),
-                          ]}
-                          renderInput={(params) => <MDInput {...params} variant="standard" />}
-                        />
-                      </td>
-
-                      <td>
-                        <Checkbox
-                          checked={item.select}
-                          onChange={() => handleCheckboxChange(index)}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <>
+            <Grid item xs={12} sm={4}>
+              <Autocomplete
+                disableClearable
+                sx={{ width: "80%" }}
+                value={values.fee_particular_name}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "fee_particular_name", value },
+                  });
+                }}
+                options={particulardata.map((info) => info.particular_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="fee_particular_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Fee Particular
+                      </MDTypography>
+                    }
+                    value={values.fee_particular_name}
+                    {...params}
+                    variant="standard"
+                    error={touched.fee_particular_name && Boolean(errors.fee_particular_name)}
+                    helperText={touched.fee_particular_name && errors.fee_particular_name}
+                    success={values.fee_particular_name.length && !errors.fee_particular_name}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                sx={{ width: "80%" }}
+                variant="standard"
+                name="name"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Fee Collection Name
+                  </MDTypography>
+                }
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.name && Boolean(errors.name)}
+                success={values.name.length && !errors.name}
+                helperText={touched.name && errors.name}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: "80%" }}
+                variant="standard"
+                name="start_date"
+                value={values.start_date}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Start Date
+                  </MDTypography>
+                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.start_date && Boolean(errors.start_date)}
+                helperText={touched.start_date && errors.start_date}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: "80%" }}
+                variant="standard"
+                name="end_date"
+                value={values.end_date}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    End Date
+                  </MDTypography>
+                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.end_date && Boolean(errors.end_date)}
+                helperText={touched.end_date && errors.end_date}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: "80%" }}
+                variant="standard"
+                name="due_date"
+                value={values.due_date}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Due Date
+                  </MDTypography>
+                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.due_date && Boolean(errors.due_date)}
+                helperText={touched.due_date && errors.due_date}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                disableClearable
+                sx={{ width: "80%" }}
+                value={values.academic_year}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "academic_year", value },
+                  });
+                }}
+                options={academicdata.map((acd) => acd.academic_year)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="academic_year"
+                    placeholder="eg. 2022-2023"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
+                    value={values.academic_year}
+                    {...params}
+                    variant="standard"
+                    error={touched.academic_year && Boolean(errors.academic_year)}
+                    helperText={touched.academic_year && errors.academic_year}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                disableClearable
+                sx={{ width: "80%" }}
+                value={values.fine_name}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "fine_name", value },
+                  });
+                }}
+                options={fineInfo.map((acd) => acd.fine_name)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="fine_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Late Fine
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.fine_name}
+                    {...params}
+                    variant="standard"
+                    error={touched.fine_name && Boolean(errors.fine_name)}
+                    helperText={touched.fine_name && errors.fine_name}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} style={{ display: "flex", flexDirection: "column" }} mt={2}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  row
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="is_applicable"
+                        checked={values.is_applicable}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={
+                      <MDTypography variant="caption" fontWeight="bold">
+                        Is Applicable
+                      </MDTypography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>{" "}
+            <Grid
+              item
+              container
+              xs={12}
+              sm={12}
+              sx={{ display: "flex", justifyContent: "flex-start" }}
+            >
+              <Grid item>
+                <MDButton
+                  color="dark"
+                  variant="contained"
+                  onClick={() => {
+                    fetchParticularsInfo();
+                  }}
+                >
+                  filter
+                </MDButton>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                {particularInfo?.length > 0 && (
+                  <thead>
                     <tr>
                       <td
-                        colSpan={2}
                         style={{
                           fontSize: "15px",
-                          textAlign: "center",
-                        }}
-                      >
-                        No Data Available For Class-Section Particular
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        colSpan={2}
-                        style={{
-                          fontSize: "10px",
-                          textAlign: "center",
+                          textAlign: "left",
                         }}
                       >
                         {" "}
-                        Academic year* , Fee Category* , Fee Particular* are required to filter
+                        <b>Course Batch Name</b>
+                      </td>
+
+                      <td
+                        style={{
+                          fontSize: "15px",
+                          textAlign: "left",
+                        }}
+                      >
+                        <b>Particular Types</b>
+                      </td>
+                      <td
+                        style={{
+                          fontSize: "15px",
+                          textAlign: "left",
+                        }}
+                      >
+                        <b>Select</b>: &nbsp;All
+                        <Checkbox checked={allCheck} onChange={() => handleSelectAll()} />
+                        &nbsp; None
+                        <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
                       </td>
                     </tr>
-                  </>
+                  </thead>
                 )}
-              </tbody>
-            </table>
-          </Grid>
-          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Grid item mt={2}>
-              <MDButton
-                color="dark"
-                variant="contained"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Back
-              </MDButton>
+                <tbody>
+                  {particularInfo?.length > 0 ? (
+                    particularInfo?.map((item: any, index: any) => (
+                      <tr key={index + item.class_name}>
+                        <td style={{ textAlign: "left" }}>
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {item.class_name} - {item.section_name}
+                          </MDTypography>
+                        </td>
+                        <td style={{ textAlign: "left" }}>
+                          <Autocomplete
+                            disableClearable
+                            sx={{ width: "70%" }}
+                            value={item.showValue || "All"}
+                            onChange={(event, value) => {
+                              let changeParticulars: any = null;
+                              let desiredValue = value === "All" ? "All" : value;
+                              let changeObject = particularInfo[index];
+
+                              if (desiredValue === "All") {
+                                console.log("show All particulars change");
+                                changeParticulars = changeObject.particulars;
+                              } else {
+                                let objectid = extractIdFromString(desiredValue);
+                                let desiredObject = fetchObjectById(
+                                  objectid,
+                                  changeObject.particulars
+                                );
+                                console.log("show one  particulars change", desiredObject);
+                                changeParticulars = [desiredObject];
+                              }
+
+                              setParticularInfo((prev) =>
+                                prev.map((prevItem: any, idx) =>
+                                  idx === index
+                                    ? {
+                                        ...prevItem,
+                                        showValue: desiredValue,
+                                        particulars: changeParticulars,
+                                      }
+                                    : prevItem
+                                )
+                              );
+                              console.log(particularInfo, "info ");
+                            }}
+                            options={[
+                              "All",
+                              ...item.particulars.map(
+                                (particular: any) =>
+                                  `${particular.particular_type}  ${
+                                    particular.user_id || particular.student_category
+                                      ? particular.user_id || particular.student_category
+                                      : ""
+                                  } (id-${particular.id})`
+                              ),
+                            ]}
+                            renderInput={(params) => <MDInput {...params} variant="standard" />}
+                          />
+                        </td>
+
+                        <td>
+                          <Checkbox
+                            checked={item.select}
+                            onChange={() => handleCheckboxChange(index)}
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <>
+                      <tr>
+                        <td
+                          colSpan={2}
+                          style={{
+                            fontSize: "15px",
+                            textAlign: "center",
+                          }}
+                        >
+                          No Data Available For Class-Section Particular
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          colSpan={2}
+                          style={{
+                            fontSize: "10px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {" "}
+                          Academic year* , Fee Category* , Fee Particular* are required to filter
+                        </td>
+                      </tr>
+                    </>
+                  )}
+                </tbody>
+              </table>
             </Grid>
-            <Grid item mt={2} ml={2} mr={4}>
-              <MDButton color="info" variant="contained" type="submit">
-                Save
-              </MDButton>
+            <Grid
+              item
+              container
+              xs={12}
+              sm={12}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <Grid item mt={2}>
+                <MDButton
+                  color="dark"
+                  variant="contained"
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
+                  Back
+                </MDButton>
+              </Grid>
+              <Grid item mt={2} ml={2} mr={4}>
+                <MDButton color="info" variant="contained" type="submit">
+                  Save
+                </MDButton>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
         </MDBox>
       </Card>
     </form>
