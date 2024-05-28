@@ -35,7 +35,7 @@ const initialValues = {
 export default function SendMail() {
   const [department, setDepartmentData] = useState([]);
   const [receiverData, setReceiverData] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const { classes, account, studentcategory, student } = useSelector((state: any) => state);
 
   useEffect(() => {
@@ -59,26 +59,50 @@ export default function SendMail() {
       //   validationSchema: createschema,
       enableReinitialize: true,
       onSubmit: async (values, action) => {
+        console.log(selectedRowKeys, "lllllllllll");
         const submitValue = {
-          to_user: receiverData.map((item: any) => item.user_id),
+          to_user: selectedRowKeys,
           subject: values.subject,
           description: values.message,
-          status: "",
-          notification_type: values.message_type,
+          status: false,
+          notification_type: "",
         };
-        axios
-          .post(`http://10.0.20.200:8000/internal_portal/`, submitValue, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
+        const emailsubmitvalue = {
+          to: selectedRowKeys.map((item: any) => item.guardian_email),
+          subject: values.subject,
+          body: values.message,
+          cc: "",
+        };
+
+        if (values.message_type === "Email") {
+          axios
+            .post("http://10.0.20.200:8000/email_service/send_mail", emailsubmitvalue, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+        } else if (values.message_type === "Inter-Portal") {
+          axios
+            .post(`http://10.0.20.200:8000/internal_portal/`, submitValue, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+        }
       },
     });
   const getFilteredInterportalData = () => {
@@ -145,7 +169,7 @@ export default function SendMail() {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Create Fee Category
+                  Send Notification
                 </MDTypography>
               </Grid>
             </Grid>
@@ -241,7 +265,11 @@ export default function SendMail() {
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "send_to", value } });
                       }}
-                      options={["All", "Student", "Parent", "Employee"]}
+                      options={
+                        values.message_type == "Email"
+                          ? ["Parent", "Employee"]
+                          : ["All", "Student", "Parent", "Employee"]
+                      }
                       renderInput={(params) => (
                         <MDInput
                           required
