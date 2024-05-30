@@ -5,6 +5,10 @@ import Icon from "@mui/material/Icon";
 import { Grid, Link, Tooltip } from "@mui/material";
 import Card from "@mui/material/Card";
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import DataTable from "examples/Tables/DataTable";
@@ -19,6 +23,8 @@ export default function ManageFeeAmountPerticular() {
   const category_data = location.state || {};
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
+  const [deletedata, setDeletedata] = useState({});
+  const [deleteopen, setDeleteOpen] = useState(false);
   const [perticulardata, setPerticulardata] = useState([]);
   useEffect(() => {
     fetchData();
@@ -79,7 +85,9 @@ export default function ManageFeeAmountPerticular() {
           </Grid>
           <Grid item>
             <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
+              <Icon fontSize="small" onClick={() => handleClickOpenDelete(row)}>
+                delete
+              </Icon>
             </Tooltip>
           </Grid>
         </Grid>
@@ -87,12 +95,53 @@ export default function ManageFeeAmountPerticular() {
     })),
   };
 
+  const handleClickOpenDelete = (data: any) => {
+    setDeletedata(data);
+    setDeleteOpen(true);
+  };
+  const handleClickCloseDelete = () => {
+    setDeleteOpen(false);
+  };
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`http://10.0.20.200:8000/fee_particular`, {
+        data: deletedata,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success(response.data.message);
+        setDeleteOpen(false);
+        fetchData();
+      }
+    } catch (error: any) {
+      message.error(error.response.data.detail);
+    }
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
         <Dialog open={editopen} onClose={handleClickCloseEdit}>
           <EditFeePerticularAmount data={editdata} onSuccess={handleEditSuccess} />
+        </Dialog>
+        <Dialog open={deleteopen} onClose={handleClickCloseDelete}>
+          <DialogTitle>{"Delete Confirmation"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              {`Are you sure want to delete this perticular`}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <MDButton color="info" variant="text" onClick={handleClickCloseDelete}>
+              Cancel
+            </MDButton>
+            <MDButton color="error" variant="text" onClick={handleDelete}>
+              Delete
+            </MDButton>
+          </DialogActions>
         </Dialog>
         <Grid container p={3}>
           <Grid item xs={12} sm={6} mt={2}>
@@ -101,6 +150,11 @@ export default function ManageFeeAmountPerticular() {
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Link href="/fee/fee_category" variant="body2" pr={2}>
+              <MDButton variant="outlined" color="error">
+                {`<-- Back `}
+              </MDButton>
+            </Link>
             <Link href="/fee/create_fee_amount_perticular" variant="body2">
               <MDButton variant="outlined" color="info">
                 + Create Fee Amount Particular
@@ -108,7 +162,7 @@ export default function ManageFeeAmountPerticular() {
             </Link>
           </Grid>
         </Grid>
-        <DataTable table={feeConcessionData} isSorted={false} />
+        <DataTable table={feeConcessionData} canSearch={true} />
       </Card>
     </DashboardLayout>
   );

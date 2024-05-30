@@ -1,85 +1,3 @@
-// import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-// import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-// import DataTable from "examples/Tables/DataTable";
-// import Icon from "@mui/material/Icon";
-// import { Grid } from "@mui/material";
-// import Card from "@mui/material/Card";
-// import Dialog, { DialogProps } from "@mui/material/Dialog";
-// import MDTypography from "components/MDTypography";
-// import MDButton from "components/MDButton";
-// import FormField from "layouts/pages/account/components/FormField";
-// import { useFormik } from "formik";
-// import { createschema } from "./createschema";
-// export default function CreateFeeCategory() {
-//   const initialValues = {
-//     fee_category_name: "",
-//     description: "",
-//     particulars: [] as string[],
-//   };
-//   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
-//     useFormik({
-//       initialValues,
-//       validationSchema: createschema,
-//       enableReinitialize: true,
-//       onSubmit: async (values, action) => {},
-//     });
-//   return (
-//     <DashboardLayout>
-//       {/* <DashboardNavbar /> */}
-//       <form onSubmit={handleSubmit}>
-//         <Card>
-//           <Grid xs={12} sm={12} p={2}>
-//             <Grid container spacing={3}>
-//               <Grid item xs={12} sm={12}>
-//                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-//                   Create Fee Category
-//                 </MDTypography>
-//               </Grid>
-//             </Grid>
-//             <Grid container spacing={3}>
-//               <Grid item xs={12} sm={6}>
-//                 <FormField
-//                   label="Name "
-//                   name="fee_category_name"
-//                   value={values.fee_category_name}
-//                   placeholder="Enter Fee Category Name"
-//                   variant="standard"
-//                   onChange={handleChange}
-//                   onBlur={handleBlur}
-//                   error={touched.fee_category_name && Boolean(errors.fee_category_name)}
-//                   success={values.fee_category_name.length && !errors.fee_category_name}
-//                 />
-//               </Grid>
-//               <Grid item xs={12} sm={6}>
-//                 <FormField
-//                   label="Description"
-//                   name="description"
-//                   value={values.description}
-//                   variant="standard"
-//                   onChange={handleChange}
-//                 />
-//               </Grid>
-//             </Grid>
-//             <Grid container spacing={3}>
-//               <Grid item xs={12} sm={6}>
-//                 <FormField
-//                   label="Particulars"
-//                   name="particulars"
-//                   value={values.particulars}
-//                   variant="standard"
-//                   onChange={handleChange}
-//                 />
-//               </Grid>
-//             </Grid>
-//             <MDButton variant="gradient" color="info" type="submit" pl={2}>
-//               {"Save"}
-//             </MDButton>
-//           </Grid>
-//         </Card>
-//       </form>
-//     </DashboardLayout>
-//   );
-// }
 import React, { useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import FormField from "layouts/pages/account/components/FormField";
@@ -93,6 +11,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import MDInput from "components/MDInput";
 const token = Cookies.get("token");
 export default function CreateFeeCategory() {
   const initialValues = {
@@ -166,8 +85,13 @@ export default function CreateFeeCategory() {
             </Grid>
             <Grid container spacing={3} p={2}>
               <Grid item xs={12} sm={6}>
-                <FormField
-                  label="Name "
+                <MDInput
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Name
+                    </MDTypography>
+                  }
+                  sx={{ width: "100%" }}
                   name="fee_category_name"
                   value={values.fee_category_name}
                   placeholder="Enter Fee Category Name"
@@ -179,8 +103,13 @@ export default function CreateFeeCategory() {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <FormField
-                  label="Description"
+                <MDInput
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Description
+                    </MDTypography>
+                  }
+                  sx={{ width: "100%" }}
                   name="description"
                   value={values.description}
                   variant="standard"
@@ -188,8 +117,13 @@ export default function CreateFeeCategory() {
                 />
               </Grid>
               <Grid item xs={10} sm={6}>
-                <FormField
-                  label={`Particular`}
+                <MDInput
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Particular
+                    </MDTypography>
+                  }
+                  sx={{ width: "100%" }}
                   name={`first_perticular`}
                   value={values.first_perticular}
                   variant="standard"
@@ -213,8 +147,13 @@ export default function CreateFeeCategory() {
             {particularFields.map((particular, index) => (
               <Grid container spacing={3} key={index} p={2}>
                 <Grid item xs={10} sm={6}>
-                  <FormField
-                    label={`Particular ${index + 2}`}
+                  <MDInput
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        {`Particular ${index + 2}`}
+                      </MDTypography>
+                    }
+                    sx={{ width: "100%" }}
                     name={`particulars.${index}`}
                     value={particular}
                     variant="standard"
