@@ -54,16 +54,6 @@ export default function ManageFeeAmountPerticular() {
     fetchData();
     handleClickCloseEdit();
   };
-  const data = {
-    concession_type: "aa",
-    concession_name: "ccc",
-    class_section: "ccc",
-    fee_category: "dwxdw",
-    student_category: "wdexwe",
-    admission_number: 0,
-    concession_amount: 0,
-    account: "kotak",
-  };
   const feeConcessionData = {
     //
     columns: [
