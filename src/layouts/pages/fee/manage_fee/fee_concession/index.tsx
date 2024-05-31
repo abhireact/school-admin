@@ -323,12 +323,7 @@ export default function FeeConcession() {
           <Grid item xs={12} sm={12}>
             {concessiondata.length > 0 ? (
               <Card>
-                <DataTable
-                  table={feeConcessionData}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                />
+                <DataTable table={feeConcessionData} isSorted={false} canSearch={true} />
               </Card>
             ) : null}
           </Grid>
