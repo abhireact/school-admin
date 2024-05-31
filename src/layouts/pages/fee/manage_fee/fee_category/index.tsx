@@ -63,10 +63,6 @@ export default function FeeConcession() {
   const handleClickCloseDelete = () => {
     setDeleteOpen(false);
   };
-  const handleEditSuccess = () => {
-    fetchData();
-    handleClickCloseEdit();
-  };
   const handleDelete = async () => {
     try {
       const response = await axios.delete(`http://10.0.20.200:8000/fee_category`, {
@@ -84,6 +80,10 @@ export default function FeeConcession() {
     } catch (error: any) {
       message.error(error.response.data.detail);
     }
+  };
+  const handleEditSuccess = () => {
+    fetchData();
+    handleClickCloseEdit();
   };
 
   const feeCategory = {
@@ -134,7 +134,7 @@ export default function FeeConcession() {
           <DialogTitle>{"Delete Confirmation"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              {`Are you sure want to delete this perticular`}
+              {`Are you sure want to delete this Fee Category?`}
             </DialogContentText>
           </DialogContent>
           <DialogActions>

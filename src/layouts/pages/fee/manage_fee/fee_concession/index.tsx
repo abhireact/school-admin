@@ -6,6 +6,10 @@ import { Grid, Link, Tooltip, Autocomplete, Card } from "@mui/material";
 import MDInput from "components/MDInput";
 import MDBox from "components/MDBox";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import { Table } from "antd";
@@ -33,6 +37,8 @@ export default function FeeConcession() {
   const [managedata, setManagedata] = useState({});
   const [manageopen, setManageOpen] = useState(false);
   const [concessiondata, setConcessiondata] = useState([]);
+  const [deletedata, setDeletedata] = useState({});
+  const [deleteopen, setDeleteOpen] = useState(false);
   const fetchData = async () => {
     try {
       const response = await axios.post(`http://10.0.20.200:8000/fee_concession/search`, values, {
@@ -84,6 +90,33 @@ export default function FeeConcession() {
     fetchData();
     handleClickCloseManage();
   };
+
+  const handleClickOpenDelete = (data: any) => {
+    setDeletedata(data);
+    setDeleteOpen(true);
+  };
+
+  const handleClickCloseDelete = () => {
+    setDeleteOpen(false);
+  };
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`http://10.0.20.200:8000/fee_concession`, {
+        data: deletedata,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success(response.data.message);
+        setDeleteOpen(false);
+        fetchData();
+      }
+    } catch (error: any) {
+      message.error(error.response.data.detail);
+    }
+  };
   const feeConcessionData = {
     columns: [
       { Header: "CONCESSION TYPE", accessor: "type" },
@@ -116,7 +149,9 @@ export default function FeeConcession() {
           </Grid>
           <Grid item>
             <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
+              <Icon fontSize="small" onClick={() => handleClickOpenDelete(data)}>
+                delete
+              </Icon>
             </Tooltip>
           </Grid>
           <Grid item>
@@ -136,12 +171,28 @@ export default function FeeConcession() {
     <DashboardLayout>
       <form onSubmit={handleSubmit}>
         <DashboardNavbar />
+        <Dialog open={editopen} onClose={handleClickCloseEdit}>
+          <EditConcession data={editdata} onSuccess={handleEditSuccess} />
+        </Dialog>
+        <Dialog open={deleteopen} onClose={handleClickCloseDelete}>
+          <DialogTitle>{"Delete Confirmation"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              {`Are you sure want to delete this Fee Concession ?`}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <MDButton color="info" variant="text" onClick={handleClickCloseDelete}>
+              Cancel
+            </MDButton>
+            <MDButton color="error" variant="text" onClick={handleDelete}>
+              Delete
+            </MDButton>
+          </DialogActions>
+        </Dialog>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12}>
             <Card>
-              <Dialog open={editopen} onClose={handleClickCloseEdit}>
-                <EditConcession data={editdata} onSuccess={handleEditSuccess} />
-              </Dialog>
               <Dialog open={manageopen} onClose={handleClickCloseManage}>
                 <ManageConcession data={managedata} onSuccess={handleManageSuccess} />
               </Dialog>

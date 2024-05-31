@@ -67,6 +67,8 @@ export default function ManageFeeAmountPerticular() {
       { Header: "FEE PARTICULAR", accessor: "fee_perticular" },
       { Header: "CLASS-SECTION", accessor: "section" },
       { Header: "AMOUNT", accessor: "amount" },
+      { Header: "	USER ID", accessor: "user_id" },
+      { Header: "STUDENT CATEGORY", accessor: "student_category" },
       { Header: "ACtion", accessor: "action" },
     ],
     rows: perticulardata.map((row, index) => ({
@@ -74,6 +76,8 @@ export default function ManageFeeAmountPerticular() {
       fee_perticular: row.fee_particular,
       section: `${row.class_name} - ${row.section_name}`,
       amount: row.amount,
+      user_id: row.user_id,
+      student_category: row.student_category,
       action: (
         <Grid container spacing={1}>
           <Grid item>
@@ -131,7 +135,7 @@ export default function ManageFeeAmountPerticular() {
           <DialogTitle>{"Delete Confirmation"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              {`Are you sure want to delete this perticular`}
+              Are you sure want to delete this perticular ?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
