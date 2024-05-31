@@ -6,8 +6,13 @@ import { Grid, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
+import Button from "@mui/material/Button";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
 import DataTable from "examples/Tables/DataTable";
@@ -20,6 +25,8 @@ const token = Cookies.get("token");
 export default function FeeConcession() {
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
+  const [deletedata, setDeletedata] = useState({});
+  const [deleteopen, setDeleteOpen] = useState(false);
   const [feecategoryData, setFeecategoryData] = useState([]);
   useEffect(() => {
     fetchData();
@@ -47,10 +54,38 @@ export default function FeeConcession() {
   const handleClickCloseEdit = () => {
     setEditOpen(false);
   };
+
+  const handleClickOpenDelete = (data: any) => {
+    setDeletedata(data);
+    setDeleteOpen(true);
+  };
+
+  const handleClickCloseDelete = () => {
+    setDeleteOpen(false);
+  };
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`http://10.0.20.200:8000/fee_category`, {
+        data: deletedata,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success(response.data.message);
+        setDeleteOpen(false);
+        fetchData();
+      }
+    } catch (error: any) {
+      message.error(error.response.data.detail);
+    }
+  };
   const handleEditSuccess = () => {
     fetchData();
     handleClickCloseEdit();
   };
+
   const feeCategory = {
     columns: [
       { Header: "NAME", accessor: "name" },
@@ -71,11 +106,13 @@ export default function FeeConcession() {
           </Grid>
           <Grid item>
             <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
+              <Icon fontSize="small" onClick={() => handleClickOpenDelete(data)}>
+                delete
+              </Icon>
             </Tooltip>
           </Grid>
           <Grid item>
-            <Tooltip title="Manage Fee Amount Perticular" placement="top">
+            <Tooltip title="Manage Fee Amount Particular" placement="top">
               <Link to="/fee/fee_category/manage_fee_amount_perticular" state={data}>
                 <FormatListBulletedTwoToneIcon fontSize="small" color="secondary" />
               </Link>
@@ -93,6 +130,22 @@ export default function FeeConcession() {
         <Dialog open={editopen} onClose={handleClickCloseEdit}>
           <EditFeeCategory data={editdata} onSuccess={handleEditSuccess} />
         </Dialog>
+        <Dialog open={deleteopen} onClose={handleClickCloseDelete}>
+          <DialogTitle>{"Delete Confirmation"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              {`Are you sure want to delete this Fee Category?`}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <MDButton color="info" variant="text" onClick={handleClickCloseDelete}>
+              Cancel
+            </MDButton>
+            <MDButton color="error" variant="text" onClick={handleDelete}>
+              Delete
+            </MDButton>
+          </DialogActions>
+        </Dialog>
         <Grid container p={3}>
           <Grid item xs={12} sm={6} mt={2}>
             <MDTypography variant="h4" fontWeight="bold" color="secondary">
@@ -107,12 +160,7 @@ export default function FeeConcession() {
             </Link>
           </Grid>
         </Grid>
-        <DataTable
-          table={feeCategory}
-          isSorted={false}
-          entriesPerPage={false}
-          showTotalEntries={false}
-        />
+        <DataTable table={feeCategory} isSorted={false} canSearch={true} />
       </Card>
     </DashboardLayout>
   );
