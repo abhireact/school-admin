@@ -77,7 +77,7 @@ function NewProduct(): JSX.Element {
                   Add New Product
                 </MDTypography>
               </MDBox>
-              <MDTypography variant="h5" fontWeight="regular" color="secondary">
+              <MDTypography variant="h4" fontWeight="regular" color="secondary">
                 This information will describe more about the product.
               </MDTypography>
             </MDBox>

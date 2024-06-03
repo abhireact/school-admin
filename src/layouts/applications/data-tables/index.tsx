@@ -37,7 +37,7 @@ function DataTables(): JSX.Element {
         <MDBox mb={3}>
           <Card>
             <MDBox p={3} lineHeight={1}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Datatable Simple
               </MDTypography>
               <MDTypography variant="button" color="text">
@@ -49,7 +49,7 @@ function DataTables(): JSX.Element {
         </MDBox>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            <MDTypography variant="h4" fontWeight="medium">
               Datatable Search
             </MDTypography>
             <MDTypography variant="button" color="text">

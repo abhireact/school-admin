@@ -39,7 +39,7 @@ function Sessions(): JSX.Element {
     <Card id="sessions">
       <MDBox p={3} lineHeight={1}>
         <MDBox mb={1}>
-          <MDTypography variant="h5">Sessions</MDTypography>
+          <MDTypography variant="h4">Sessions</MDTypography>
         </MDBox>
         <MDTypography variant="button" color="text" fontWeight="regular">
           This is a list of devices that have logged into your account. Remove those that you do not

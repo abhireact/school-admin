@@ -220,7 +220,7 @@ const ManageSection = (props: any) => {
             </Grid>
             <Grid container spacing={3} px={2}>
               <Grid item xs={12} sm={12}>
-                <MDTypography variant="h5" fontWeight="bold" color="secondary">
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
                   Manage Sections
                 </MDTypography>
               </Grid>

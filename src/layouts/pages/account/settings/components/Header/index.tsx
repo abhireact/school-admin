@@ -42,7 +42,7 @@ function Header(): JSX.Element {
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Alex Thompson
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="medium">

@@ -32,7 +32,7 @@ function Address({ formData }: any): JSX.Element {
 
   return (
     <MDBox>
-      <MDTypography variant="h5" fontWeight="bold">
+      <MDTypography variant="h4" fontWeight="bold">
         Address
       </MDTypography>
       <MDBox mt={1.625}>

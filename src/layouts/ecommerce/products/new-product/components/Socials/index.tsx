@@ -26,7 +26,7 @@ import FormField from "layouts/ecommerce/products/new-product/components/FormFie
 function Socials(): JSX.Element {
   return (
     <MDBox>
-      <MDTypography variant="h5" fontWeight="bold">
+      <MDTypography variant="h4" fontWeight="bold">
         Socials
       </MDTypography>
       <MDBox mt={2}>

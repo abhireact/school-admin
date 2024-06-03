@@ -28,7 +28,7 @@ function Address(): JSX.Element {
     <MDBox>
       <MDBox width="80%" textAlign="center" mx="auto" my={4}>
         <MDBox mb={1}>
-          <MDTypography variant="h5" fontWeight="regular">
+          <MDTypography variant="h4" fontWeight="regular">
             Are you living in a nice area?
           </MDTypography>
         </MDBox>

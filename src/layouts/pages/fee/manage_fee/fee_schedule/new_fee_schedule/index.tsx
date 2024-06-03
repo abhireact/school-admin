@@ -465,13 +465,13 @@ const Create = (props: any) => {
             >
               <Grid item>
                 <MDButton
-                  color="dark"
+                  color="info"
                   variant="contained"
                   onClick={() => {
                     fetchParticularsInfo();
                   }}
                 >
-                  filter
+                  Show Data
                 </MDButton>
               </Grid>
             </Grid>
@@ -581,31 +581,7 @@ const Create = (props: any) => {
                       </tr>
                     ))
                   ) : (
-                    <>
-                      <tr>
-                        <td
-                          colSpan={2}
-                          style={{
-                            fontSize: "15px",
-                            textAlign: "center",
-                          }}
-                        >
-                          No Data Available For Class-Section Particular
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          colSpan={2}
-                          style={{
-                            fontSize: "10px",
-                            textAlign: "center",
-                          }}
-                        >
-                          {" "}
-                          Academic year* , Fee Category* , Fee Particular* are required to filter
-                        </td>
-                      </tr>
-                    </>
+                    <></>
                   )}
                 </tbody>
               </table>

@@ -180,7 +180,7 @@ const ClassTeacher = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Class Teacher</MDTypography>
+            <MDTypography variant="h4">Class Teacher</MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "subjectcreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>

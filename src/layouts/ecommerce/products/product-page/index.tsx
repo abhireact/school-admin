@@ -42,7 +42,7 @@ function ProductPage(): JSX.Element {
         <Card sx={{ overflow: "visible" }}>
           <MDBox p={3}>
             <MDBox mb={3}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Product Details
               </MDTypography>
             </MDBox>
@@ -58,7 +58,7 @@ function ProductPage(): JSX.Element {
 
             <MDBox mt={8} mb={2}>
               <MDBox mb={1} ml={2}>
-                <MDTypography variant="h5" fontWeight="medium">
+                <MDTypography variant="h4" fontWeight="medium">
                   Other Products
                 </MDTypography>
               </MDBox>

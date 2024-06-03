@@ -33,7 +33,7 @@ function DeleteAccount(): JSX.Element {
       >
         <MDBox p={3} lineHeight={1}>
           <MDBox mb={1}>
-            <MDTypography variant="h5">Delete Account</MDTypography>
+            <MDTypography variant="h4">Delete Account</MDTypography>
           </MDBox>
           <MDTypography variant="button" color="text">
             Once you delete your account, there is no going back. Please be certain.

@@ -140,7 +140,7 @@ const OtherParticular = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Other Particulars</MDTypography>
+            <MDTypography variant="h4">Other Particulars</MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "other_particularcreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>

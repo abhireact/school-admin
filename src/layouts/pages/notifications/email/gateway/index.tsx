@@ -40,7 +40,7 @@
 //           }}
 //         >
 //           <Grid item xs={12} sm={9} display="flex" justifyContent="flex-start">
-//             <MDTypography variant="h5" color="info" px={2}>
+//             <MDTypography variant="h4" color="info" px={2}>
 //               Email Gateway Details
 //             </MDTypography>
 //           </Grid>
@@ -263,7 +263,7 @@ const Gateway = () => {
             }}
           >
             <Grid item xs={12} sm={9} display="flex" justifyContent="flex-start">
-              <MDTypography variant="h5" color="info" px={2}>
+              <MDTypography variant="h4" color="info" px={2}>
                 Email Gateway Details
               </MDTypography>
             </Grid>

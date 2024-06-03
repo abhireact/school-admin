@@ -66,7 +66,7 @@ function Account(): JSX.Element {
     <MDBox>
       <MDBox width="80%" textAlign="center" mx="auto" my={4}>
         <MDBox mb={1}>
-          <MDTypography variant="h5" fontWeight="regular">
+          <MDTypography variant="h4" fontWeight="regular">
             What are you doing? (checkboxes)
           </MDTypography>
         </MDBox>

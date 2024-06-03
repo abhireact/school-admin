@@ -41,7 +41,7 @@ const TransferCertificate = (props: any) => {
     <MDBox p={4}>
       <Grid container ref={targetRef} style={{ border: "1px solid #ffff" }}>
         <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-          <MDTypography variant="h5">Transfer Certificate</MDTypography>
+          <MDTypography variant="h4">Transfer Certificate</MDTypography>
         </Grid>
         <Grid item xs={12} sm={4}>
           <MDInput

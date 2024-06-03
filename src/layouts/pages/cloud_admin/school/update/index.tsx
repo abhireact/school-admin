@@ -216,7 +216,7 @@ const Update = (props: any) => {
         <MDBox>
           <Grid container p={4} spacing={2}>
             <Grid item sm={12} sx={{ display: "flex", justifyContent: "flex-start" }}>
-              <MDTypography color="secondary" fontWeight="bold" variant="h5" py={2}>
+              <MDTypography color="secondary" fontWeight="bold" variant="h4" py={2}>
                 Update School Info
               </MDTypography>
             </Grid>

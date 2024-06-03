@@ -72,7 +72,7 @@ function ProductImage(): JSX.Element {
             remove
           </MDButton>
         </MDBox>
-        <MDTypography variant="h5" fontWeight="regular" sx={{ mt: 4 }}>
+        <MDTypography variant="h4" fontWeight="regular" sx={{ mt: 4 }}>
           Product Image
         </MDTypography>
         <MDTypography variant="body2" color="text" sx={{ mt: 1.5, mb: 1 }}>

@@ -28,7 +28,7 @@ import FormField from "layouts/ecommerce/products/new-product/components/FormFie
 function Pricing(): JSX.Element {
   return (
     <MDBox>
-      <MDTypography variant="h5">Pricing</MDTypography>
+      <MDTypography variant="h4">Pricing</MDTypography>
       <MDBox mt={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={3}>

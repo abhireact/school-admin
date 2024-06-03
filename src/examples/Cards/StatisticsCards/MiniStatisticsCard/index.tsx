@@ -105,7 +105,7 @@ function MiniStatisticsCard({
                   {title.text}
                 </MDTypography>
                 <MDTypography
-                  variant="h5"
+                  variant="h4"
                   fontWeight="bold"
                   color={bgColor === "white" ? "dark" : "white"}
                 >

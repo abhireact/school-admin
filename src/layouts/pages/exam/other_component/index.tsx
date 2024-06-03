@@ -161,7 +161,7 @@ const OtherComponent = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Other Component</MDTypography>
+            <MDTypography variant="h4">Other Component</MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "scholastic_componentcreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
