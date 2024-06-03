@@ -36,6 +36,8 @@ import FeeCollection from "layouts/pages/fee/fee_collection";
 import SendNotification from "layouts/pages/notifications/email/send_mail";
 import MessageTemplate from "layouts/pages/notifications/message_template";
 import FineParticular from "layouts/pages/fee/manage_fee/fine";
+import ExportStudentPage from "layouts/pages/student/export_student_data";
+import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 
 const routes = [
   {
@@ -132,6 +134,12 @@ const routes = [
         key: "studentdetails",
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,
+      },
+      {
+        name: "Export Student Page",
+        key: "export_student_data",
+        route: "/pages/school/export_student_data",
+        component: <ExportStudentPage />,
       },
       // {
       //   name: "Scholastic Grade",
@@ -378,12 +386,7 @@ const routes = [
   //       route: "pages/fee/feecollectionbyadmission",
   //       component: <FeeCollectionByAdmission />,
   //     },
-  //     {
-  //       name: "Generate Fee Slip",
-  //       key: "feereceipt",
-  //       route: "pages/fee/feereceipt",
-  //       component: <FeeReceipt />,
-  //     },
+
   //     {
   //       name: "Fee Schedule",
   //       key: "feeschedule",
@@ -395,6 +398,12 @@ const routes = [
     key: "fineparticular",
     route: "pages/fee/fineparticular",
     component: <FineParticular />,
+  },
+  {
+    name: "Generate Fee Slip",
+    key: "feereceipt",
+    route: "pages/fee/feereceipt",
+    component: <FeeReceipt />,
   },
   //       route: "pages/fee/feeregister",
   //       component: <FeeRegister />,
@@ -456,7 +465,7 @@ const routes = [
           // },
 
           {
-            name: "Fine Particular",
+            name: "Fine",
             key: "fineparticular",
             route: "pages/fee/fineparticular",
             component: <FineParticular />,

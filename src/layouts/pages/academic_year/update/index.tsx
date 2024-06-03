@@ -17,7 +17,7 @@ import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 const validationSchema = Yup.object().shape({
-  start_date: Yup.date().required("Start date is required"),
+  start_date: Yup.date().required(),
   end_date: Yup.date().required("End date is required"),
 });
 const Update = (props: any) => {

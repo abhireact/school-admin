@@ -28,28 +28,6 @@ const Create = (props: any) => {
           </Grid>
         </Grid>
       </Grid>
-
-      <MDBox mt={4}>
-        <Grid
-          container
-          sx={{ display: "flex", justifyContent: "space-between" }}
-          pr={8}
-          pb={2}
-          mt={-2}
-        >
-          <MDButton
-            color="error"
-            variant="text"
-            onClick={() => setShowpage(false)}
-            style={{ fontSize: "16px" }}
-          >
-            &lt;- back
-          </MDButton>
-          {/* <MDButton color="info" variant="contained">
-            finish &nbsp; <AssignmentTurnedInIcon />
-          </MDButton> */}
-        </Grid>
-      </MDBox>
     </MDBox>
   );
 };
