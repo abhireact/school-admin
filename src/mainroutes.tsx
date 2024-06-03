@@ -36,6 +36,10 @@ import FeeCollection from "layouts/pages/fee/fee_collection";
 import SendNotification from "layouts/pages/notifications/email/send_mail";
 import MessageTemplate from "layouts/pages/notifications/message_template";
 import FineParticular from "layouts/pages/fee/manage_fee/fine";
+import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
+import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
+import StudentPromotion from "layouts/pages/student/student_promotion";
+import ExportStudentPage from "layouts/pages/student/export_student_data";
 
 const routes = [
   {
