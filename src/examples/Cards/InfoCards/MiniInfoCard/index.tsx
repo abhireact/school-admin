@@ -50,7 +50,7 @@ function MiniInfoCard({ color, icon, title, description }: Props): JSX.Element {
           <Icon>{icon}</Icon>
         </MDBox>
         <MDBox mt={2.625}>
-          <MDTypography variant="h5" fontWeight="medium" textTransform="capitalize">
+          <MDTypography variant="h4" fontWeight="medium" textTransform="capitalize">
             {title}
           </MDTypography>
           <MDTypography variant="body2" color="text" fontWeight="regular">

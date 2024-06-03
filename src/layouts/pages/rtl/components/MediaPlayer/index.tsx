@@ -47,7 +47,7 @@ function MediaPlayer(): JSX.Element {
       })}
     >
       <MDBox p={3} position="relative" lineHeight={0}>
-        <MDTypography variant="h5" color="white" fontWeight="medium">
+        <MDTypography variant="h4" color="white" fontWeight="medium">
           نوع من البلوز
         </MDTypography>
         <MDTypography variant="button" color="white">

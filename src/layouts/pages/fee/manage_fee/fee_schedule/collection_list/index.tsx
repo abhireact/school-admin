@@ -129,6 +129,7 @@ const CollectionList = () => {
             console.log("may 20", response.data);
           })
           .catch((error: any) => {
+            setData([]);
             message.error(error.response.data.detail);
           });
       },
@@ -176,6 +177,45 @@ const CollectionList = () => {
         message.error(error.response.data.detail);
       });
   };
+
+  const handleDelete = (row: any) => {
+    console.log(row, "delete schedule");
+    axios
+      .delete(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule`, {
+        data: {
+          name: row.name,
+          particular_id: row.particular_id,
+          academic_year: row.academic_year,
+          class_name: row.class_name,
+          section_name: row.section_name,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        message.success("Deleted Successfully");
+        axios
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/search`, values, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setData(response.data);
+            console.log("may 20", response.data);
+          })
+          .catch((error: any) => {
+            setData([]);
+            message.error(error.response.data.detail);
+          });
+      })
+      .catch((error: any) => {
+        message.error(error.response.data.detail);
+      });
+  };
   const dataTableData = {
     columns: [
       { Header: "Index ", accessor: "index", width: "10%" },
@@ -208,7 +248,11 @@ const CollectionList = () => {
 
           <Tooltip title="Delete" placement="top">
             <IconButton>
-              <DeleteIcon />
+              <DeleteIcon
+                onClick={() => {
+                  handleDelete(row);
+                }}
+              />
             </IconButton>
           </Tooltip>
           <Tooltip title="Manage Schedule" placement="top">
@@ -288,7 +332,6 @@ const CollectionList = () => {
                                     Academic Year
                                   </MDTypography>
                                 }
-                                onChange={handleChange}
                                 value={values.academic_year}
                                 {...params}
                                 variant="standard"
@@ -329,7 +372,6 @@ const CollectionList = () => {
                                     Class Name
                                   </MDTypography>
                                 }
-                                onChange={handleChange}
                                 value={values.class_name}
                                 {...params}
                                 variant="standard"
@@ -374,7 +416,6 @@ const CollectionList = () => {
                                     Section Name
                                   </MDTypography>
                                 }
-                                onChange={handleChange}
                                 value={values.section_name}
                                 {...params}
                                 variant="standard"

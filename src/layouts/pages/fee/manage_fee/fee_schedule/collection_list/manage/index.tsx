@@ -18,7 +18,8 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import Update from "./upate";
+import AddIcon from "@mui/icons-material/Add";
+import Update from "./update";
 import { table } from "console";
 function categoryKey(data: any) {
   const categoryKeys = Object.keys(data[0].category); // Get all keys of the 'category' object
@@ -86,6 +87,38 @@ const ManageSchedule = (props: any) => {
     setEditData(UpdateData);
     setUpdatepage(true);
   };
+  const handleGenerateSchedule = async (index: number) => {
+    const main_data = sendData;
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/schedule_student`,
+        {
+          name: main_data.name,
+          particular_id: main_data.particular_id,
+          academic_year: main_data.academic_year,
+          class_name: main_data.class_name,
+          section_name: main_data.section_name,
+          user_name: manageData[index].user_name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        window.location.reload();
+        message.success("Generated SuccessFully");
+        // Filter out the deleted user from the data
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      const myError = error as Error;
+      message.error(error.response.data.detail);
+    }
+  };
 
   const handleDelete = async (index: number) => {
     const main_data = sendData;
@@ -110,6 +143,7 @@ const ManageSchedule = (props: any) => {
         }
       );
       if (response.status === 200) {
+        window.location.reload();
         message.success("Deleted successFully");
         // Filter out the deleted user from the data
       }
@@ -127,7 +161,7 @@ const ManageSchedule = (props: any) => {
       ) : (
         <>
           <MDBox p={4}>
-            <MDTypography variant="h5" color="secondary" fontWeight="bold">
+            <MDTypography variant="h4" color="secondary" fontWeight="bold">
               {sendData.name} &nbsp;For&nbsp;
               {sendData.class_name} - {sendData.section_name}
             </MDTypography>
@@ -269,36 +303,51 @@ const ManageSchedule = (props: any) => {
                     >
                       {" "}
                       <>
-                        <Tooltip title=" Edit " placement="top">
-                          {tableData.update ? (
+                        {tableData.status === "UnScheduled" ? (
+                          <Tooltip title="Generate Schedule" placement="top">
                             <IconButton
                               onClick={() => {
-                                handleOpenupdate(index);
+                                handleGenerateSchedule(index);
                               }}
                             >
-                              <CreateRoundedIcon />
+                              <AddIcon />
                             </IconButton>
-                          ) : (
-                            <IconButton disabled>
-                              <CreateRoundedIcon />
-                            </IconButton>
-                          )}
-                        </Tooltip>
-                        <Tooltip title=" Delete " placement="top">
-                          {tableData.delete ? (
-                            <IconButton
-                              onClick={() => {
-                                handleDelete(index);
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          ) : (
-                            <IconButton disabled>
-                              <DeleteIcon />
-                            </IconButton>
-                          )}
-                        </Tooltip>
+                          </Tooltip>
+                        ) : (
+                          <>
+                            {" "}
+                            <Tooltip title=" Edit " placement="top">
+                              {tableData.update ? (
+                                <IconButton
+                                  onClick={() => {
+                                    handleOpenupdate(index);
+                                  }}
+                                >
+                                  <CreateRoundedIcon />
+                                </IconButton>
+                              ) : (
+                                <IconButton disabled>
+                                  <CreateRoundedIcon />
+                                </IconButton>
+                              )}
+                            </Tooltip>
+                            <Tooltip title=" Delete " placement="top">
+                              {tableData.delete ? (
+                                <IconButton
+                                  onClick={() => {
+                                    handleDelete(index);
+                                  }}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              ) : (
+                                <IconButton disabled>
+                                  <DeleteIcon />
+                                </IconButton>
+                              )}
+                            </Tooltip>
+                          </>
+                        )}
                       </>
                     </td>
                   </tr>

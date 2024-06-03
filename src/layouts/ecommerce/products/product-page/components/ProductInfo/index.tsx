@@ -46,7 +46,7 @@ function ProductInfo(): JSX.Element {
         </MDTypography>
       </MDBox>
       <MDBox mb={1}>
-        <MDTypography variant="h5" fontWeight="medium">
+        <MDTypography variant="h4" fontWeight="medium">
           $1,419
         </MDTypography>
       </MDBox>

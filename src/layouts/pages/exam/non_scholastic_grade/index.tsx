@@ -177,7 +177,7 @@ const NonAcademicGrade = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5" fontWeight="bold" color="secondary">
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
               Non-Scholastic Grades
             </MDTypography>
             {rbacData ? (

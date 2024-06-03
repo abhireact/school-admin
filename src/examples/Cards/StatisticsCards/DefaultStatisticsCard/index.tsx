@@ -64,7 +64,7 @@ function DefaultStatisticsCard({ title, count, percentage, dropdown }: Props): J
               </MDTypography>
             </MDBox>
             <MDBox lineHeight={1}>
-              <MDTypography variant="h5" fontWeight="bold">
+              <MDTypography variant="h4" fontWeight="bold">
                 {count}
               </MDTypography>
               <MDTypography variant="button" fontWeight="bold" color={percentage.color}>

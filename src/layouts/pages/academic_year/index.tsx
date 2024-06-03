@@ -179,7 +179,7 @@ const Academic = () => {
       <Card>
         <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
           <Grid item pt={2} pl={2}>
-            <MDTypography variant="h5" fontWeight="bold" color="secondary">
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
               Academic Year
             </MDTypography>
           </Grid>

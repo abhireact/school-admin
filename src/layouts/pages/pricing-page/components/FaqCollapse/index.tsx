@@ -48,7 +48,7 @@ function FaqCollapse({ title, open, children, ...rest }: Props): JSX.Element {
         borderBottom={`${borderWidth[1]} solid ${borderColor}`}
         sx={{ cursor: "pointer" }}
       >
-        <MDTypography variant="h5" color={open ? "dark" : "text"} sx={{ userSelect: "none" }}>
+        <MDTypography variant="h4" color={open ? "dark" : "text"} sx={{ userSelect: "none" }}>
           {title}
         </MDTypography>
         <MDBox color={open ? "dark" : "text"}>

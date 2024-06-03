@@ -118,7 +118,7 @@ function Notifications(): JSX.Element {
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={2}>
-                <MDTypography variant="h5">Alerts</MDTypography>
+                <MDTypography variant="h4">Alerts</MDTypography>
               </MDBox>
               <MDBox pt={2} px={2}>
                 <MDAlert color="primary" dismissible>
@@ -152,7 +152,7 @@ function Notifications(): JSX.Element {
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={2} lineHeight={0}>
-                <MDTypography variant="h5">Notifications</MDTypography>
+                <MDTypography variant="h4">Notifications</MDTypography>
                 <MDTypography variant="button" color="text" fontWeight="regular">
                   Notifications on this page use Toasts from Bootstrap. Read more details here.
                 </MDTypography>

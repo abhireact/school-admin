@@ -239,7 +239,7 @@
 //           <MDBox p={4}>
 //             <Grid container>
 //               <Grid item xs={12} sm={6}>
-//                 <MDTypography variant="h5" fontWeight="bold" color="secondary">
+//                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
 //                   Fee Collection
 //                 </MDTypography>
 //               </Grid>
@@ -805,7 +805,7 @@ const FeeCollection = (props: any) => {
         <MDBox p={4}>
           {/* <Grid container>
               <Grid item xs={12} sm={6}>
-                <MDTypography variant="h5" fontWeight="bold" color="secondary">
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
                   Fee Collection
                 </MDTypography>
               </Grid>

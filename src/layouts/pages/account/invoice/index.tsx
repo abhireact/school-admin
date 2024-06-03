@@ -104,7 +104,7 @@ function Invoice(): JSX.Element {
                       >
                         Invoice no
                       </MDTypography>
-                      <MDTypography variant="h5" fontWeight="medium">
+                      <MDTypography variant="h4" fontWeight="medium">
                         #0453119
                       </MDTypography>
                     </Grid>
@@ -342,7 +342,7 @@ function Invoice(): JSX.Element {
                           pl={3}
                           sx={borderBottom}
                         >
-                          <MDTypography variant="h5">Total</MDTypography>
+                          <MDTypography variant="h4">Total</MDTypography>
                         </MDBox>
                         <MDBox
                           component="td"
@@ -352,7 +352,7 @@ function Invoice(): JSX.Element {
                           pl={3}
                           sx={borderBottom}
                         >
-                          <MDTypography variant="h5">$ 698</MDTypography>
+                          <MDTypography variant="h4">$ 698</MDTypography>
                         </MDBox>
                       </TableRow>
                     </TableBody>
@@ -364,7 +364,7 @@ function Invoice(): JSX.Element {
               <MDBox p={3} mt={7}>
                 <Grid container>
                   <Grid item xs={12} lg={5}>
-                    <MDTypography variant="h5" fontWeight="medium">
+                    <MDTypography variant="h4" fontWeight="medium">
                       Thank you!
                     </MDTypography>
                     <MDBox mt={1} mb={2} lineHeight={0}>

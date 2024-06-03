@@ -94,7 +94,7 @@ function AllProjects(): JSX.Element {
         <Grid container alignItems="center">
           <Grid item xs={12} md={7}>
             <MDBox mb={1}>
-              <MDTypography variant="h5">Some of Our Awesome Projects</MDTypography>
+              <MDTypography variant="h4">Some of Our Awesome Projects</MDTypography>
             </MDBox>
             <MDBox mb={2}>
               <MDTypography variant="body2" color="text">

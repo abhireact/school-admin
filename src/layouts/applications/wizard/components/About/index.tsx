@@ -35,7 +35,7 @@ function About(): JSX.Element {
     <MDBox>
       <MDBox width="82%" textAlign="center" mx="auto" my={4}>
         <MDBox mb={1}>
-          <MDTypography variant="h5" fontWeight="regular">
+          <MDTypography variant="h4" fontWeight="regular">
             Let&apos;s start with the basic information
           </MDTypography>
         </MDBox>

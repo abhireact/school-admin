@@ -116,7 +116,7 @@ function DefaultProjectCard({
             <MDTypography
               component={Link}
               to={action.route}
-              variant="h5"
+              variant="h4"
               textTransform="capitalize"
             >
               {title}
@@ -127,7 +127,7 @@ function DefaultProjectCard({
               href={action.route}
               target="_blank"
               rel="noreferrer"
-              variant="h5"
+              variant="h4"
               textTransform="capitalize"
             >
               {title}

@@ -83,7 +83,7 @@ function BookingCard({ image, title, description, price, location, action }: Pro
         <MDBox display="flex" justifyContent="center" alignItems="center" mt={action ? -8 : -4.25}>
           {action}
         </MDBox>
-        <MDTypography variant="h5" fontWeight="regular" sx={{ mt: 4 }}>
+        <MDTypography variant="h4" fontWeight="regular" sx={{ mt: 4 }}>
           {title}
         </MDTypography>
         <MDTypography variant="body2" color="text" sx={{ mt: 1.5, mb: 1 }}>

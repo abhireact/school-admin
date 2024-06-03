@@ -19,7 +19,7 @@ const BonafideCertificate = (props: any) => {
     <MDBox p={4}>
       <Grid container ref={targetRef} style={{ border: "1px solid #ffff" }}>
         <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-          <MDTypography style={{ textDecoration: "underline" }} variant="h5">
+          <MDTypography style={{ textDecoration: "underline" }} variant="h4">
             TO WHOMSOEVER IT MAY CONCERN
           </MDTypography>
         </Grid>

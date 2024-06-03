@@ -56,7 +56,7 @@ function Accounts(): JSX.Element {
     <Card id="accounts">
       <MDBox p={3} lineHeight={1}>
         <MDBox mb={1}>
-          <MDTypography variant="h5">Accounts</MDTypography>
+          <MDTypography variant="h4">Accounts</MDTypography>
         </MDBox>
         <MDTypography variant="button" color="text">
           Here you can setup and manage your integration settings.
@@ -72,7 +72,7 @@ function Accounts(): JSX.Element {
           <MDBox display="flex" alignItems="center">
             <MDAvatar src={logoSlack} alt="Slack logo" variant="rounded" />
             <MDBox ml={2}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Slack
               </MDTypography>
               <MDBox display="flex" alignItems="flex-end">
@@ -170,7 +170,7 @@ function Accounts(): JSX.Element {
           <MDBox display="flex" alignItems="center">
             <MDAvatar src={logoSpotify} alt="Slack logo" variant="rounded" />
             <MDBox ml={2} lineHeight={0}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Spotify
               </MDTypography>
               <MDTypography variant="button" color="text">
@@ -205,7 +205,7 @@ function Accounts(): JSX.Element {
           <MDBox display="flex" alignItems="center">
             <MDAvatar src={logoAtlassian} alt="Slack logo" variant="rounded" />
             <MDBox ml={2} lineHeight={0}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Atlassian
               </MDTypography>
               <MDTypography variant="button" color="text">
@@ -240,7 +240,7 @@ function Accounts(): JSX.Element {
           <MDBox display="flex" alignItems="center">
             <MDAvatar src={logoAsana} alt="Slack logo" variant="rounded" />
             <MDBox ml={2} lineHeight={0}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Asana
               </MDTypography>
               <MDTypography variant="button" color="text">

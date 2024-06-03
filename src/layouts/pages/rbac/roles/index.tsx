@@ -130,7 +130,7 @@ const Showrole = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">ROLES</MDTypography>
+      <MDTypography variant="h4">ROLES</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
         <MDButton variant="outlined" color="info" onClick={() => handleClickOpen()}>
           + Add Role

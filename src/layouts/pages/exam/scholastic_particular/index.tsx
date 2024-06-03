@@ -142,7 +142,7 @@ const ScholasticParticular = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Scholastic Particulars</MDTypography>
+            <MDTypography variant="h4">Scholastic Particulars</MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "scholastic_particularcreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
