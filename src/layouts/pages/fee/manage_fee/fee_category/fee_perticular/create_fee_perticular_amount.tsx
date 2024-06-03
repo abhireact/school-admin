@@ -20,14 +20,15 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { Tree } from "antd";
+import type { TreeDataNode, TreeProps } from "antd";
 import MDBox from "components/MDBox";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import type { TreeDataNode, TreeProps } from "antd";
+import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
-
+import { useLocation } from "react-router-dom";
 const token = Cookies.get("token");
 
 function not(a: readonly string[], b: readonly string[]) {
@@ -51,7 +52,21 @@ interface TreeNode {
   children?: TreeNode[];
 }
 
+const validationSchema = Yup.object().shape({
+  fee_category: Yup.string().required("Required *"),
+  fee_perticular: Yup.string().required("Required *"),
+  account: Yup.string().required("Required *"),
+  amount: Yup.number().required("Required *"),
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
+    .required("Required *"),
+});
 export default function CreateFeeParicularAmount() {
+  const location = useLocation();
+
+  const goBack = () => {
+    window.history.back();
+  };
   let initialValues = {
     fee_category: "",
     fee_perticular: "",
@@ -65,12 +80,12 @@ export default function CreateFeeParicularAmount() {
     students: [] as string[],
   };
 
-  const { values, handleChange, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleSubmit } = useFormik({
     initialValues,
     // Uncomment and ensure createschema is correctly defined
-    // validationSchema: createschema,
+    validationSchema: validationSchema,
     enableReinitialize: true,
-    onSubmit: async (values) => {
+    onSubmit: async (values, action) => {
       console.log(values, "on submit");
       if (selectedTab === 0) {
         const checkedSectionKeys = checkedKeys
@@ -86,7 +101,7 @@ export default function CreateFeeParicularAmount() {
           fee_category: values.fee_category,
           fee_particular: values.fee_perticular,
           user_id: [] as any[],
-          classes: checked,
+          classes: checkedSectionKeys,
           academic_year: values.academic_year,
           amount: values.amount,
           student_category: values.student_category,
@@ -102,6 +117,7 @@ export default function CreateFeeParicularAmount() {
           })
           .then((response) => {
             message.success(response.data.message);
+            action.resetForm();
           })
           .catch((error) => {
             console.error("Error fetching data:", error);
@@ -267,7 +283,6 @@ export default function CreateFeeParicularAmount() {
                   options={feeCategory ? feeCategory.map((item) => item.name) : []}
                   renderInput={(params) => (
                     <MDInput
-                      required
                       name="fee_category"
                       value={values.fee_category}
                       label={
@@ -278,6 +293,9 @@ export default function CreateFeeParicularAmount() {
                       onChange={handleChange}
                       {...params}
                       variant="standard"
+                      error={touched.fee_category && Boolean(errors.fee_category)}
+                      helperText={touched.fee_category && errors.fee_category}
+                      success={values.fee_category && !errors.fee_category}
                     />
                   )}
                 />
@@ -296,7 +314,6 @@ export default function CreateFeeParicularAmount() {
                   }
                   renderInput={(params) => (
                     <MDInput
-                      required
                       name="fee_perticular"
                       onChange={handleChange}
                       value={values.fee_perticular}
@@ -307,6 +324,9 @@ export default function CreateFeeParicularAmount() {
                       }
                       {...params}
                       variant="standard"
+                      error={touched.fee_perticular && Boolean(errors.fee_perticular)}
+                      helperText={touched.fee_perticular && errors.fee_perticular}
+                      success={values.fee_perticular && !errors.fee_perticular}
                     />
                   )}
                 />
@@ -323,7 +343,6 @@ export default function CreateFeeParicularAmount() {
                   }
                   renderInput={(params) => (
                     <MDInput
-                      required
                       name="academic_year"
                       onChange={handleChange}
                       value={values.academic_year}
@@ -334,6 +353,9 @@ export default function CreateFeeParicularAmount() {
                       }
                       {...params}
                       variant="standard"
+                      error={touched.academic_year && Boolean(errors.academic_year)}
+                      helperText={touched.academic_year && errors.academic_year}
+                      success={values.academic_year && !errors.academic_year}
                     />
                   )}
                 />
@@ -346,7 +368,6 @@ export default function CreateFeeParicularAmount() {
                   options={account ? account.map((item: any) => item.account_name) : []}
                   renderInput={(params) => (
                     <MDInput
-                      required
                       name="account"
                       onChange={handleChange}
                       value={values.account}
@@ -357,6 +378,9 @@ export default function CreateFeeParicularAmount() {
                       }
                       {...params}
                       variant="standard"
+                      error={touched.account && Boolean(errors.account)}
+                      helperText={touched.account && errors.account}
+                      success={values.account.length && !errors.account}
                     />
                   )}
                 />
@@ -374,6 +398,9 @@ export default function CreateFeeParicularAmount() {
                   placeholder="Enter Amount"
                   variant="standard"
                   onChange={handleChange}
+                  error={touched.amount && Boolean(errors.amount)}
+                  helperText={touched.amount && errors.amount}
+                  success={values.amount.length && !errors.amount}
                 />
               </Grid>
             </Grid>
@@ -533,11 +560,9 @@ export default function CreateFeeParicularAmount() {
             </Grid>
             <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={1}>
               <Grid item>
-                <Link href="fee_category" variant="body2">
-                  <MDButton color="dark" variant="contained">
-                    Back
-                  </MDButton>
-                </Link>
+                <MDButton color="dark" variant="contained" onClick={goBack}>
+                  Back
+                </MDButton>
               </Grid>
               <Grid item ml={2}>
                 <MDButton color="info" variant="contained" type="submit">

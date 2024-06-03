@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 const token = Cookies.get("token");
 export default function EditFeeParicularAmount(props: any) {
+  console.log(props, "kkkkllllll");
   const initialValues = {
     fee_category: props.data.fee_category,
     fee_perticular: props.data.fee_particular,
@@ -66,35 +67,98 @@ export default function EditFeeParicularAmount(props: any) {
           </Grid>
           <Grid container spacing={3} p={2}>
             <Grid item xs={12} sm={4}>
-              <FormField
+              <MDInput
                 disabled
-                label="Fee Category"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Fee Category
+                  </MDTypography>
+                }
+                sx={{ width: "100%" }}
                 name="fee_category"
                 value={values.fee_category}
                 variant="standard"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField
+              <MDInput
                 disabled
-                label="Fee Perticular"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Fee Particular
+                  </MDTypography>
+                }
+                sx={{ width: "100%" }}
                 name="fee_perticular"
                 value={values.fee_perticular}
                 variant="standard"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField
+              <MDInput
                 disabled
-                label="Account"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Class & Section
+                  </MDTypography>
+                }
+                sx={{ width: "100%" }}
+                value={`${props.data.class_name}-${props.data.section_name}`}
+                variant="standard"
+              />
+            </Grid>
+            {props.data.user_id ? (
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  disabled
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      User ID
+                    </MDTypography>
+                  }
+                  sx={{ width: "100%" }}
+                  value={props.data.user_id}
+                  variant="standard"
+                />
+              </Grid>
+            ) : null}
+            {props.data.student_category ? (
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  disabled
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Student Category
+                    </MDTypography>
+                  }
+                  sx={{ width: "100%" }}
+                  value={props.data.student_category}
+                  variant="standard"
+                />
+              </Grid>
+            ) : null}
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                disabled
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Account
+                  </MDTypography>
+                }
+                sx={{ width: "100%" }}
                 name="account"
                 value={values.account}
                 variant="standard"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField
-                label="Amount"
+              <MDInput
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Amount
+                  </MDTypography>
+                }
+                sx={{ width: "100%" }}
                 name="amount"
                 value={values.amount}
                 placeholder="Enter Amount"

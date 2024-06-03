@@ -36,8 +36,6 @@ import FeeCollection from "layouts/pages/fee/fee_collection";
 import SendNotification from "layouts/pages/notifications/email/send_mail";
 import MessageTemplate from "layouts/pages/notifications/message_template";
 import FineParticular from "layouts/pages/fee/manage_fee/fine";
-import ExportStudentPage from "layouts/pages/student/export_student_data";
-import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 
 const routes = [
   {
@@ -176,6 +174,12 @@ const routes = [
         key: "housedetails",
         route: "/pages/school/housedetails",
         component: <HouseDetails />,
+      },
+      {
+        name: "Student Promotion",
+        key: "studentpromotion",
+        route: "/student/student_promoton",
+        component: <StudentPromotion />,
       },
     ],
   },
@@ -516,14 +520,20 @@ const routes = [
           {
             name: "Fee Receipt Report",
             key: "feereceiptreport",
-            route: "pages/fee/feereceiptreport",
+            route: "/fee/reports/feereceiptreport",
             component: <FeeReceiptReport />,
           },
           {
             name: "Fee Concession Report",
             key: "feeconcessionreport",
-            route: "pages/fee/feeconcessionreport",
+            route: "/fee/reports/feeconcessionreport",
             component: <FeeConcessionReport />,
+          },
+          {
+            name: "Fee Defaulter Report",
+            key: "feedefaulterreport",
+            route: "/fee/reports/feedefaulterreport",
+            component: <FeeDefaulterReport />,
           },
         ],
       },
