@@ -317,12 +317,12 @@ const Create = (props: any) => {
                 setLoading(false);
                 handleClose();
               })
-              .catch(() => {
-                console.error("Error on creating Guardian !");
+              .catch((error: any) => {
+                message.error(error.response.data.detail);
               });
           })
-          .catch((error) => {
-            message.error("Error on creating Student !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
       },
     });
