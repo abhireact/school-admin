@@ -393,7 +393,6 @@ function App() {
             type="button"
             className="receipt-modal-download-button btn btn-outline-primary"
             onClick={downloadPDF}
-            disabled={loader}
           >
             {loader ? "Downloading" : "Download"}
           </MDButton>
