@@ -224,6 +224,8 @@ const Create = (props: any) => {
         city: "",
         state: "",
         country: "",
+        student_notification: false,
+        student_subscription: false,
 
         pr_address_line1: "",
         pr_address_line2: "",
@@ -526,7 +528,7 @@ const Create = (props: any) => {
     <Card id="student-info">
       <form onSubmit={handleSubmit}>
         <MDBox pt={4} px={4}>
-          <Grid container>
+          <Grid container spacing={3}>
             <Grid item xs={12} sm={12} mt={2}>
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
                 Student Details
@@ -534,10 +536,9 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                mb={2}
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -554,8 +555,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -572,8 +572,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -595,8 +594,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -617,8 +615,7 @@ const Create = (props: any) => {
             </Grid>{" "}
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -639,8 +636,7 @@ const Create = (props: any) => {
             </Grid>{" "}
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -661,7 +657,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <Autocomplete
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {
                   handleChange({
@@ -692,7 +688,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <Autocomplete
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.class_name}
                 onChange={
                   filteredClass.length >= 1
@@ -726,7 +722,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <Autocomplete
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 // value={values.section_name}
                 onChange={
                   filteredSection.length >= 1
@@ -763,10 +759,9 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -783,8 +778,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -801,8 +795,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -819,8 +812,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -837,8 +829,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -855,8 +846,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -873,8 +863,7 @@ const Create = (props: any) => {
             </Grid>{" "}
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -891,7 +880,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <Autocomplete
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.caste}
                 onChange={(event, value) => {
                   handleChange({
@@ -921,7 +910,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <Autocomplete
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.caste_category}
                 onChange={(event, value) => {
                   handleChange({
@@ -951,7 +940,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <Autocomplete
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.student_category}
                 onChange={(event, value) => {
                   handleChange({
@@ -981,7 +970,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <Autocomplete
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.house_details}
                 onChange={(event, value) => {
                   handleChange({
@@ -1011,8 +1000,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1027,51 +1015,35 @@ const Create = (props: any) => {
                 helperText={touched.pen_number && errors.pen_number}
               />
             </Grid>
-            <Grid item xs={6} sm={2} mt={3}>
-              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Gender
-              </MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={4} mt={2}>
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  row
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        checked={values.gender.includes("Male")}
-                        onChange={handleChange}
-                        name="gender"
-                        value="Male"
-                      />
-                    }
+            <Grid item xs={6} sm={4}>
+              <Autocomplete
+                sx={{ width: "100%" }}
+                value={values.gender}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "gender", value },
+                  });
+                }}
+                options={["Male", "Female"]}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="gender"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Male
+                        Gender
                       </MDTypography>
                     }
+                    value={values.gender}
+                    {...params}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.gender && Boolean(errors.gender)}
+                    success={values.gender.length && !errors.gender}
+                    helperText={touched.gender && errors.gender}
                   />
-                  <FormControlLabel
-                    // value="male"
-                    control={
-                      <Radio
-                        checked={values.gender.includes("Female")}
-                        onChange={handleChange}
-                        name="gender"
-                        value="Female"
-                      />
-                    }
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Female
-                      </MDTypography>
-                    }
-                  />
-                </RadioGroup>
-              </FormControl>
+                )}
+              />
             </Grid>
             <Grid item xs={6} sm={2} mt={2}>
               <MDTypography variant="body2" fontWeight="bold">
@@ -1080,7 +1052,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4} mt={2}>
               <MDInput
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 type="file"
                 accept="image/*"
                 name="stud_img"
@@ -1102,8 +1074,7 @@ const Create = (props: any) => {
                 {" "}
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1118,7 +1089,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <Autocomplete
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     value={values.sibling_class}
                     onChange={
                       filteredClass.length >= 1
@@ -1152,7 +1123,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <Autocomplete
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     value={values.sibling_section}
                     onChange={
                       filteredSection.length >= 1
@@ -1189,8 +1160,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1205,8 +1175,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1221,9 +1190,8 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
                     type="date"
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     label={
@@ -1239,8 +1207,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1262,8 +1229,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1280,8 +1246,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1298,8 +1263,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1323,9 +1287,8 @@ const Create = (props: any) => {
               <>
                 <Grid item xs={12} sm={4} key={index + "first_name"}>
                   <MDInput
-                    mb={2}
                     required
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].first_name`}
                     label={
@@ -1340,8 +1303,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "middle_name"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].middle_name`}
                     label={
@@ -1356,8 +1318,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "last_name"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].last_name`}
                     label={
@@ -1372,8 +1333,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "relation"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].relation`}
                     label={
@@ -1388,8 +1348,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "email_id"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].email_id`}
                     label={
@@ -1404,8 +1363,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "date_of_birth"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     type="date"
                     InputLabelProps={{ shrink: true }}
                     variant="standard"
@@ -1422,8 +1380,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "qualification"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].qualification`}
                     label={
@@ -1438,8 +1395,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "occupation"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].occupation`}
                     label={
@@ -1454,8 +1410,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "designation"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].designation`}
                     label={
@@ -1470,8 +1425,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "income"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].income`}
                     label={
@@ -1486,8 +1440,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "education"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].education`}
                     label={
@@ -1502,8 +1455,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "aadhar_number"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].aadhar_number`}
                     label={
@@ -1518,8 +1470,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} key={index + "mobile_number"}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     name={`guardian_info[${index}].mobile_number`}
                     required
@@ -1615,8 +1566,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1633,8 +1583,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1651,9 +1600,8 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 type="number"
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1670,8 +1618,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1688,8 +1635,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1706,8 +1652,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1737,8 +1682,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1753,8 +1697,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1769,8 +1712,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1785,8 +1727,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1801,8 +1742,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1817,8 +1757,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1831,7 +1770,7 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4.1} mt={2} mb={2}>
+            <Grid item xs={6} sm={4.1} mt={2}>
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
                 Previous Education
               </MDTypography>
@@ -1846,8 +1785,7 @@ const Create = (props: any) => {
               <>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1862,8 +1800,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1879,8 +1816,7 @@ const Create = (props: any) => {
 
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1895,8 +1831,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1911,8 +1846,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1927,8 +1861,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={6} sm={4}>
                   <MDInput
-                    mb={2}
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     type="number"
                     variant="standard"
                     label={
@@ -1975,7 +1908,7 @@ const Create = (props: any) => {
                     </RadioGroup>
                     {transferCertificate && (
                       <MDInput
-                        sx={{ width: "80%" }}
+                        sx={{ width: "100%" }}
                         type="file"
                         accept="image/*"
                         name="transfer_certificate"
@@ -2018,7 +1951,7 @@ const Create = (props: any) => {
                     </RadioGroup>
                     {characterCertificate && (
                       <MDInput
-                        sx={{ width: "80%" }}
+                        sx={{ width: "100%" }}
                         type="file"
                         accept="image/*"
                         name="character_certificate"
@@ -2061,7 +1994,7 @@ const Create = (props: any) => {
                     </RadioGroup>
                     {birthCertificate && (
                       <MDInput
-                        sx={{ width: "80%" }}
+                        sx={{ width: "100%" }}
                         type="file"
                         accept="image/*"
                         name="birth_certificate"
@@ -2074,7 +2007,7 @@ const Create = (props: any) => {
                 </Grid>
               </>
             )}{" "}
-            <Grid item xs={12} sm={4.1} mt={2} mb={2} id="activities">
+            <Grid item xs={12} sm={4.1} mt={2} id="activities">
               <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
                 Activities
               </MDTypography>
@@ -2095,9 +2028,8 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
-                    mb={2}
                     autoComplete="off"
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -2112,7 +2044,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     type="file"
                     accept="image/*"
                     name="sport_activity_files"
@@ -2128,9 +2060,8 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
-                    mb={2}
                     autoComplete="off"
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -2145,7 +2076,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     type="file"
                     accept="image/*"
                     name="extra_curricular_files"
@@ -2161,9 +2092,8 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
-                    mb={2}
                     autoComplete="off"
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -2178,7 +2108,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     type="file"
                     accept="image/*"
                     name="class_record_files"
@@ -2194,9 +2124,8 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
-                    mb={2}
                     autoComplete="off"
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -2211,7 +2140,7 @@ const Create = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
-                    sx={{ width: "80%" }}
+                    sx={{ width: "100%" }}
                     type="file"
                     accept="image/*"
                     name="health_record_files"

@@ -6,6 +6,7 @@ import SchoolInfo from "layouts/pages/school";
 import StudentDetails from "layouts/pages/student";
 import EmployeeProfile from "layouts/pages/employee/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmployeeType from "layouts/pages/employee/employee_type";
 import EmployeeInfo from "layouts/pages/employee/employee_details";
 import Academic from "layouts/pages/academic_year";
@@ -40,6 +41,9 @@ import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import StudentPromotion from "layouts/pages/student/student_promotion";
 import ExportStudentPage from "layouts/pages/student/export_student_data";
+import Subject from "layouts/pages/subject/subjectdetails";
+import SectionSubject from "layouts/pages/subject/section_subject";
+import EmployeeSubject from "layouts/pages/subject/employee_subject";
 
 const routes = [
   {
@@ -188,30 +192,36 @@ const routes = [
     ],
   },
 
-  // {
-  //   type: "collapse",
-  //   name: "Subject",
-  //   key: "subject",
-  //   icon: (
-  //     <Icon fontSize="medium">
-  //       <LocalLibraryIcon />
-  //     </Icon>
-  //   ),
-  //   collapse: [
-  //     {
-  //       name: "Subject Info",
-  //       key: "subjectinfo",
-  //       route: "pages/subject/subjectinfo",
-  //       component: <Subject />,
-  //     },
-  //     {
-  //       name: "Sub-Subject",
-  //       key: "subsubject",
-  //       route: "pages/subject/subsubject",
-  //       component: <SubSubject />,
-  //     },
-  //   ],
-  // },
+  {
+    type: "collapse",
+    name: "Subject",
+    key: "subject",
+    icon: (
+      <Icon fontSize="medium">
+        <LocalLibraryIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Subject Details",
+        key: "subjectdetails",
+        route: "pages/subject/subjectdetails",
+        component: <Subject />,
+      },
+      {
+        name: "Section Subject",
+        key: "sectionsubject",
+        route: "pages/subject/sectionsubject",
+        component: <SectionSubject />,
+      },
+      {
+        name: "Employee Subject",
+        key: "employeesubject",
+        route: "pages/subject/employeesubject",
+        component: <EmployeeSubject />,
+      },
+    ],
+  },
   // {
   //   type: "collapse",
   //   name: "Exam Setting",
