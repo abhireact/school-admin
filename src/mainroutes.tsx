@@ -39,7 +39,6 @@ import FineParticular from "layouts/pages/fee/manage_fee/fine";
 import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import StudentPromotion from "layouts/pages/student/student_promotion";
-import ExportStudentPage from "layouts/pages/student/export_student_data";
 
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
@@ -140,12 +139,6 @@ const routes = [
         key: "studentdetails",
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,
-      },
-      {
-        name: "Export Student Page",
-        key: "export_student_data",
-        route: "/pages/school/export_student_data",
-        component: <ExportStudentPage />,
       },
       // {
       //   name: "Scholastic Grade",
