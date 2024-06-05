@@ -20,7 +20,7 @@ import DataTable from "examples/Tables/DataTable";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import IconButton from "@mui/material/IconButton";
 import StudentInfo from "./student_info";
-import ExportExcel from "layouts/pages/student/export_student_data/export_excel";
+
 
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),

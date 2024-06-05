@@ -43,6 +43,7 @@ import StudentPromotion from "layouts/pages/student/student_promotion";
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
+import WeekDays from "layouts/pages/employee/week_days";
 
 const routes = [
   {
@@ -310,6 +311,12 @@ const routes = [
         key: "assignclassteacher",
         route: "employee/assignclassteacher",
         component: <AssignClassTeacher />,
+      },
+      {
+        name: "Week Days",
+        key: "weekdays",
+        route: "employee/week_days",
+        component: <WeekDays />,
       },
     ],
   },
