@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tree, message } from "antd";
 import type { DataNode, Key } from "rc-tree-select/es/interface";
-import { route2 } from "routes";
+import route2 from "routes";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
@@ -451,7 +451,6 @@ const Rbac = (props: any) => {
             >
               {renderTreeNodes(treeData)}
               {/* {renderTreeNodes(treeData.filter(node => node.key !== "fee"))} */}
-
             </Tree>
           </MDBox>
         </Card>

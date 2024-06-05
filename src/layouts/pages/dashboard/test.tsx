@@ -15,21 +15,25 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 export default function CollTable() {
   const [showpage, setShowpage] = useState(false);
-  const [datainfo, setDatainfo] = useState([]);
+  const [data, setData] = useState([]);
 
   const handleShowPage = () => {
     setShowpage(!showpage);
   };
   const fetchLateFees = () => {
     axios
-      .get("http://10.0.20.200:8000/fee_fine", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .post(
+        "http://10.0.20.200:8000/fee_collections",
+        { user_name: "", academic_year: "", collection_date: "" },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
-        setDatainfo(response.data);
+        setData(response.data);
 
         console.log(response.data);
       })
@@ -72,270 +76,228 @@ export default function CollTable() {
     });
   }
 
-  //   const data = [
-  //     {
-  //       collection_name: "May Month Fee",
-  //       due_date: "10-05-2024",
-  //       fee_fine_dues: [
-  //         {
-  //           days_after_due_date: "6",
-  //           amount: 988,
-  //           is_percent: false,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       collection_name: "June Month Fee",
-  //       due_date: "10-06-2024",
-  //       fee_fine_dues: [
-  //         {
-  //           days_after_due_date: "7",
-  //           amount: 700,
-  //           is_percent: false,
-  //         },
-  //       ],
-  //     },
-
-  //     {
-  //       collection_name: "July Month Fee",
-  //       due_date: "10-07-2024",
-  //       fee_fine_dues: [
-  //         {
-  //           days_after_due_date: "8",
-  //           amount: 560,
-  //           is_percent: false,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       collection_name: "August Month Fee",
-  //       due_date: "10-08-2024",
-  //       fee_fine_dues: [
-  //         {
-  //           days_after_due_date: "4",
-  //           amount: 600,
-  //           is_percent: false,
-  //         },
-  //       ],
-  //     },
-  //   ];
   const data2 = [
     {
-      collection_name: "May Month Fee",
-      due_date: "2024-05-10",
-      particular: [
+      collections: [
         {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Month Fee 2024-25",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
+          collection_name: "May Month Fee",
+          due_date: "2024-05-10",
+          particular: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Month Fee 2024-25",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          discount: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          late_fine: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
         },
-      ],
-      discount: [
         {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
+          collection_name: "May Month Fee",
+          due_date: "2024-05-10",
+          particular: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Month Fee 2024-25",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          discount: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          late_fine: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
         },
-      ],
-      late_fine: [
         {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
+          collection_name: "May Month Fee",
+          due_date: "2024-05-10",
+          particular: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Month Fee 2024-25",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          discount: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          late_fine: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
         },
-      ],
-    },
-    {
-      collection_name: "May Month Fee",
-      due_date: "2024-05-10",
-      particular: [
         {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Month Fee 2024-25",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
+          collection_name: "May Month Fee",
+          due_date: "2024-05-10",
+          particular: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Month Fee 2024-25",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          discount: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          late_fine: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
         },
-      ],
-      discount: [
         {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-      late_fine: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-    },
-    {
-      collection_name: "May Month Fee",
-      due_date: "2024-05-10",
-      particular: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Month Fee 2024-25",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-      discount: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-      late_fine: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-    },
-    {
-      collection_name: "May Month Fee",
-      due_date: "2024-05-10",
-      particular: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Month Fee 2024-25",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-      discount: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-      late_fine: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-    },
-    {
-      collection_name: "May Month Fee",
-      due_date: "2024-05-10",
-      particular: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Month Fee 2024-25",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-      discount: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
-        },
-      ],
-      late_fine: [
-        {
-          type: "particular",
-          id: 1433514,
-          particular_name: "Discount",
-          amount: 4850,
-          previous_paid: 0,
-          balance: 4850,
-          discount: 0,
-          amount_paying: 4850,
-          excess_amount: 0,
+          collection_name: "May Month Fee",
+          due_date: "2024-05-10",
+          particular: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Month Fee 2024-25",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          discount: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
+          late_fine: [
+            {
+              type: "particular",
+              id: 1433514,
+              particular_name: "Discount",
+              amount: 4850,
+              previous_paid: 0,
+              balance: 4850,
+              discount: 0,
+              amount_paying: 4850,
+              excess_amount: 0,
+            },
+          ],
         },
       ],
     },
   ];
+
   const KeyData = KeyDataProps(data2);
   function Particular(index: any) {
     console.log(KeyData[index].particular, "keyData index");
@@ -415,6 +377,46 @@ export default function CollTable() {
       })),
     };
   }
+  const flattenedData = data2.flatMap(({ collections }) =>
+    collections.flatMap((collection) =>
+      collection.particular.map((particular) => ({
+        collection_name: collection.collection_name,
+        due_date: collection.due_date,
+        particular_name: particular.particular_name,
+        amount: particular.amount,
+        previous_paid: particular.previous_paid,
+        balance: particular.balance,
+        discount: particular.discount,
+        amount_paying: particular.amount_paying,
+        excess_amount: particular.excess_amount,
+      }))
+    )
+  );
+  const dataTableData = {
+    columns: [
+      { Header: "COLLECTION NAME", accessor: "collection_name" },
+      { Header: "DUE DATE", accessor: "due_date" },
+      { Header: "PARTICULAR NAME", accessor: "particular_name" },
+      { Header: "AMOUNT", accessor: "amount" },
+      { Header: "PREVIOUS PAID", accessor: "previous_paid" },
+      { Header: "BALANCE", accessor: "balance" },
+      { Header: "DISCOUNT", accessor: "discount" },
+      { Header: "AMOUNT PAYING", accessor: "amount_paying" },
+      { Header: "EXCESS AMOUNT", accessor: "excess_amount" },
+    ],
+    rows: flattenedData.map((row) => ({
+      collection_name: <MDTypography variant="p">{row.collection_name}</MDTypography>,
+      due_date: <MDTypography variant="p">{row.due_date}</MDTypography>,
+      particular_name: <MDTypography variant="p">{row.particular_name}</MDTypography>,
+      amount: <MDTypography variant="p">{row.amount}</MDTypography>,
+      previous_paid: <MDTypography variant="p">{row.previous_paid}</MDTypography>,
+      balance: <MDTypography variant="p">{row.balance}</MDTypography>,
+      discount: <MDTypography variant="p">{row.discount}</MDTypography>,
+      amount_paying: <MDTypography variant="p">{row.amount_paying}</MDTypography>,
+      excess_amount: <MDTypography variant="p">{row.excess_amount}</MDTypography>,
+    })),
+  };
+
   return (
     <>
       {/* <DashboardNavbar /> */}
@@ -425,22 +427,9 @@ export default function CollTable() {
               Fee Collection{" "}
             </MDTypography>
           </Grid>
-          {/* <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-              + New Late Fee
-            </MDButton>
-          </Grid> */}
-
-          {/* <Dialog open={open} onClose={handleClose}>
-            <Create setOpen={setOpen} fetchData={fetchSection} />
-          </Dialog> */}
-
-          {/* <Dialog open={openupdate} onClose={handleCloseupdate}>
-            <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchSection} />
-          </Dialog> */}
         </Grid>
         <Grid xs={12} sm={12} py={2}>
-          <Table
+          {/* <Table
             columns={columns}
             expandable={{
               expandedRowRender: (KeyData, index: number) => (
@@ -488,7 +477,8 @@ export default function CollTable() {
             scroll={{ y: "100%" }}
             bordered
             expandRowByClick
-          />
+          /> */}
+          <DataTable table={dataTableData} />
         </Grid>
       </Card>
     </>

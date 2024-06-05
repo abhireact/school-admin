@@ -96,19 +96,14 @@ const Showrole = () => {
 
       action: (
         <MDTypography variant="p">
-          {/* <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-              console.log(index, "update index");
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton> */}
           <IconButton
             onClick={() => {
-              handleOpenupdate2(index);
-              console.log(index, "update index");
+              if (index !== 0) {
+                handleOpenupdate2(index);
+                console.log(index, "update index");
+              }
             }}
+            disabled={index === 0}
           >
             <ManageAccountsIcon />
           </IconButton>

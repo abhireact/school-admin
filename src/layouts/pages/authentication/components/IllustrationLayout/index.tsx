@@ -62,7 +62,6 @@ function IllustrationLayout({
           <MDBox display="flex" flexDirection="column" justifyContent="center" height="100vh">
             <MDBox py={2} px={2} textAlign="center">
               <MDBox textAlign="center">
-
                 <img src={logo} alt="logo" width={"75%"} />
                 <MDTypography variant="h4" fontWeight="bold">
                   {title}

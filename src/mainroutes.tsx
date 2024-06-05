@@ -51,6 +51,7 @@ import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
 import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
 import EmailSetting from "layouts/pages/notifications/email";
 import FeeCollection from "layouts/pages/fee/fee_collection";
+import CreateStudentID from "layouts/pages/student/studentID_card/create";
 
 const routes = [
   {
@@ -131,7 +132,7 @@ const routes = [
       // },
     ],
   },
-
+  // Student
   {
     type: "collapse",
     name: "Student",
@@ -177,6 +178,12 @@ const routes = [
         key: "studentcategory",
         route: "/pages/school/studentcategory",
         component: <StudentCategory />,
+      },
+      {
+        name: "Student ID Card",
+        key: "student_id",
+        route: "/pages/school/student_id",
+        component: <CreateStudentID />,
       },
       {
         name: "House Details",
@@ -446,7 +453,7 @@ const routes = [
             route: "pages/fee/excessfee",
             component: <ExcessFee />,
           },
-    
+
           // {
           //   name: "Fee By Admission No",
           //   key: "feecollectionbyadmission",
@@ -519,7 +526,6 @@ const routes = [
       },
     ],
   },
-  
 ];
 
 export default routes;

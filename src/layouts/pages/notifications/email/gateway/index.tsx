@@ -185,27 +185,23 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 const Gateway = () => {
   const gatewayOption = ["Gmail", "Yahoo", "Other"];
-  const { values, handleBlur, handleChange, errors, touched, handleSubmit } =
-    useFormik({
-      initialValues: {
-        email_gateway: "Other",
-        email_address: "",
-        outgoing_smtp: "",
-        server_port: 587,
-        username: "",
-        password: "",
-        active: false,
-        ssl_tls: false,
-      },
-      enableReinitialize: true,
-      onSubmit: (values: any, action: { resetForm: () => void }) => {
-        console.log(
-          " ~ file: Registration.jsx ~ line 11 ~ Registration ~ values",
-          values
-        );
-        action.resetForm();
-      },
-    });
+  const { values, handleBlur, handleChange, errors, touched, handleSubmit } = useFormik({
+    initialValues: {
+      email_gateway: "Other",
+      email_address: "",
+      outgoing_smtp: "",
+      server_port: 587,
+      username: "",
+      password: "",
+      active: false,
+      ssl_tls: false,
+    },
+    enableReinitialize: true,
+    onSubmit: (values: any, action: { resetForm: () => void }) => {
+      console.log(" ~ file: Registration.jsx ~ line 11 ~ Registration ~ values", values);
+      action.resetForm();
+    },
+  });
 
   const handleGatewayChange = (event: any, value: any) => {
     handleChange({ target: { name: "email_gateway", value } });
@@ -232,16 +228,12 @@ const Gateway = () => {
     try {
       console.log(values, "formdata");
 
-      const response = await axios.post(
-        "http://10.0.20.121:8000/email_service ",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post("http://10.0.20.121:8000/email_service ", values, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       // console.log(response);
 
@@ -270,13 +262,7 @@ const Gateway = () => {
               borderBottom: "2px solid #3873E8",
             }}
           >
-            <Grid
-              item
-              xs={12}
-              sm={9}
-              display="flex"
-              justifyContent="flex-start"
-            >
+            <Grid item xs={12} sm={9} display="flex" justifyContent="flex-start">
               <MDTypography variant="h5" color="info" px={2}>
                 Email Gateway Details
               </MDTypography>
@@ -288,7 +274,8 @@ const Gateway = () => {
                 type="submit"
                 onClick={() => {
                   handleFormSubmit();
-                }}              >
+                }}
+              >
                 Submit
               </MDButton>
             </Grid>
@@ -391,13 +378,7 @@ const Gateway = () => {
           <Grid sm={4} px={4} display="flex" justifyContent="flex-start">
             <FormControlLabel
               value="end"
-              control={
-                <Checkbox
-                  checked={values.ssl_tls}
-                  onChange={handleChange}
-                  name="ssl_tls"
-                />
-              }
+              control={<Checkbox checked={values.ssl_tls} onChange={handleChange} name="ssl_tls" />}
               label={<MDTypography variant="caption">Use SSL/TLS</MDTypography>}
               labelPlacement="end"
             />
@@ -405,13 +386,7 @@ const Gateway = () => {
           <Grid sm={4} px={2} display="flex" justifyContent="flex-end">
             <FormControlLabel
               value="end"
-              control={
-                <Checkbox
-                  checked={values.active}
-                  onChange={handleChange}
-                  name="active"
-                />
-              }
+              control={<Checkbox checked={values.active} onChange={handleChange} name="active" />}
               label={<MDTypography variant="caption">Active</MDTypography>}
               labelPlacement="end"
             />

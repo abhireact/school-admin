@@ -638,7 +638,6 @@ const Create = (props: any) => {
                           required
                           type="date"
                           InputLabelProps={{ shrink: true }}
-
                           variant="standard"
                           name={`moduleAccess[${index}].end_date`}
                           label="End Date"
