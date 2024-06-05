@@ -44,6 +44,7 @@ import ExportStudentPage from "layouts/pages/student/export_student_data";
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
+import CreateStudentID from "layouts/pages/student/studentID_card/create";
 
 const routes = [
   {
@@ -124,7 +125,7 @@ const routes = [
       // },
     ],
   },
-
+  // Student
   {
     type: "collapse",
     name: "Student",
@@ -176,6 +177,12 @@ const routes = [
         key: "studentcategory",
         route: "/pages/school/studentcategory",
         component: <StudentCategory />,
+      },
+      {
+        name: "Student ID Card",
+        key: "student_id",
+        route: "/pages/school/student_id",
+        component: <CreateStudentID />,
       },
       {
         name: "House Details",

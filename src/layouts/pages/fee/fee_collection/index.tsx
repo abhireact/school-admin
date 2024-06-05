@@ -140,24 +140,24 @@
 //     onSubmit: (values, action) => {
 //       console.log(values, "values");
 
-//       axios
-//         .post("http://10.0.20.200:8000/fee_collection", values, {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         })
-//         .then((response) => {
-//           message.success(" Fetched Data Successfully!");
-//           setData(response.data);
-//           action.resetForm();
-//           handleShowPage();
-//         })
-//         .catch(() => {
-//           message.error("Error on fetching data !");
-//         });
-//     },
-//   });
+//     axios
+//       .post("http://10.0.20.200:8000/fee_collection", values, {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       })
+//       .then((response) => {
+//         message.success(" Fetched Data Successfully!");
+//         setData(response.data);
+//         action.resetForm();
+//         handleShowPage();
+//       })
+//       .catch(() => {
+//         message.error("Error on fetching data !");
+//       });
+//   },
+// });
 //   const handleAdvanceSearch = () => {
 //     setShowadvanceSearch(true);
 //   };
@@ -294,9 +294,9 @@
 //                 />
 //               </Grid>
 //               <Grid item xs={12} sm={4} py={1} display="flex" justifyContent="flex-end">
-//                 <MDButton color="info" variant="contained" type="submit">
-//                   Submit
-//                 </MDButton>
+// <MDButton color="info" variant="contained" type="submit">
+//   Submit
+// </MDButton>
 //               </Grid>
 //               <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
 //                 {showadvanceSearch ? (
@@ -572,8 +572,8 @@ import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
-import { message } from "antd";
-import { useState, useEffect } from "react";
+import { Drawer, message } from "antd";
+import { useState, useEffect, useMemo, SetStateAction } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
@@ -590,11 +590,21 @@ import {
   FormGroup,
   Tooltip,
   Icon,
+  IconButton,
 } from "@mui/material";
 import * as Yup from "yup";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
+import PaidIcon from "@mui/icons-material/Paid";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import { useMaterialUIController } from "context";
+import PaidFees from "./paid_fee";
+import { MailOutlineOutlined } from "@mui/icons-material";
+import UnPaidFees from "./unpaid_fee";
+import PayFee from "./pay_fee/index";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   subject_name: Yup.string().required("Required *"),
@@ -605,8 +615,22 @@ const validationSchema = Yup.object().shape({
     .required("Required *"),
 });
 const FeeCollection = (props: any) => {
-  const token = Cookies.get("token");
+  const [controller] = useMaterialUIController();
+  const { darkMode } = controller;
+  const [mainData, setMainData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
 
+  const showDrawer = (titleData: SetStateAction<string>, index: any) => {
+    console.log(titleData, index, "drawer data");
+    setMainData(index);
+    setOpen(true);
+    setTitle(titleData);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+  const token = Cookies.get("token");
   const { handleShowPage, setData } = props;
   const [showadvanceSearch, setShowadvanceSearch] = useState(false);
   const [academicdata, setAcademicdata] = useState([]);
@@ -614,11 +638,14 @@ const FeeCollection = (props: any) => {
   const [filteredClass, setFilteredClass] = useState([]);
   const { wings, academicyear, classes, student } = useSelector((state: any) => state);
   console.log(wings, academicyear, student, "redux Data");
-  const [concessiondata, setConcessiondata] = useState([]);
+  const [concessiondata, setConcessiondata] = useState(student);
+  let today = new Date().toISOString().split("T")[0];
 
-  useEffect(() => {
-    setConcessiondata(student);
-  }, []);
+  // useEffect(() => {
+  //   setConcessiondata(student);
+  // }, []);
+  console.log(concessiondata, "collection datav ");
+
   //  const {wings,academicyear,classes}=useSelector
   function filterClassData(data: any, academic_year: any) {
     let filtereddata = data
@@ -627,79 +654,18 @@ const FeeCollection = (props: any) => {
     setFilteredClass(filtereddata);
   }
   const [sectiondata, setsectiondata] = useState([]);
-  const [filteredSection, setFilteredSection] = useState([]);
-  function filterSectionData(data: any, class_name: any) {
-    let filtereddata = data
-      .filter((item: any) => item.class_name === class_name)
-      .map((item: any) => item.section_name);
-    setFilteredSection(filtereddata);
-  }
-
-  const [filteredSubject, setFilteredSubject] = useState([]);
-  function filterSubjectData(data: any, class_name: any) {
-    let filtereddata = data
-      .filter((item: any) => item.class_name === class_name)
-      .map((item: any) => item.subject_name);
-    setFilteredSubject(filtereddata);
-  }
-  useEffect(() => {
-    axios
-      .get("http://10.0.20.200:8000/mg_section", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setsectiondata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-    axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setAcademicdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    axios
-      .get("http://10.0.20.200:8000/mg_class", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       class_name: "",
-      wing_name: "",
-      academic_year: "2024-25",
+      wing_name: "All",
+      name: "",
+      father_name: "",
+      academic_year: "2024-2025",
       admission_number: "",
       fee_code: "",
       section_name: "",
-      collection_date: "",
+      collection_date: today,
       adm_no_or_fee_code: "",
       search_by: [] as string[],
     },
@@ -730,18 +696,19 @@ const FeeCollection = (props: any) => {
   };
   console.log(values, "values");
 
+ 
   const dataTableData = {
     columns: [
       { Header: "Student Name", accessor: "full_name" },
       { Header: "User ID", accessor: "user_id" },
       { Header: "Admission Number", accessor: "admission_number" },
-      { Header: "Class", accessor: "class_name" },
-      { Header: "Section", accessor: "section_name" },
+      { Header: "Class & Section", accessor: "class_name" },
+      // { Header: "Section", accessor: "section_name" },
       { Header: "FATHER NAME", accessor: "father_name" },
       { Header: "Action", accessor: "action" },
     ],
 
-    rows: student?.map(
+    rows: concessiondata?.map(
       (
         row: {
           father_name: any;
@@ -760,59 +727,60 @@ const FeeCollection = (props: any) => {
         admission_number: row.admission_number,
         user_id: row.user_id,
 
-        // action: (
-        //   <MDTypography variant="p">
-        //     {rbacData ? (
-        //       rbacData?.find((element: string) => element === "studentdetailsupdate") ? (
-        //         <IconButton
-        //           onClick={() => {
-        //             handleOpenupdate(index);
-        //           }}
-        //         >
-        //           <CreateRoundedIcon />
-        //         </IconButton>
-        //       ) : (
-        //         ""
-        //       )
-        //     ) : (
-        //       ""
-        //     )}
+        action: (
+          <MDTypography variant="p">
+            <IconButton onClick={() => showDrawer("Paid Fees", row)}>
+              <PaidIcon />
+            </IconButton>
 
-        //     <IconButton
-        //       onClick={() => {
-        //         handleDelete(row.user_id);
-        //       }}
-        //     >
-        //       <DeleteIcon />
-        //     </IconButton>
-        //   </MDTypography>
-        // ),
+            <IconButton
+              onClick={() => showDrawer("Unpaid Fees", row)}
+              // onClick={() => {
+              //   handleDelete(row.user_id);
+              // }}
+            >
+              <RequestQuoteIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => showDrawer("Pay Fee", row)}
+
+              // onClick={() => {
+              //   handleDelete(row.user_id);
+              // }}
+            >
+              <PaymentsIcon />
+            </IconButton>
+          </MDTypography>
+        ),
 
         full_name: `${row.first_name} ${row.middle_name == null ? "" : row.middle_name} ${
           row.last_name
         }`,
-        class_name: row.class_name,
-        section_name: row.section_name,
+        class_name: `${row.class_name} - ${row.section_name}`,
+        // section_name: row.section_name,
         father_name: row.father_name,
       })
     ),
   };
+  console.log(mainData, "mainData");
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <form onSubmit={handleSubmit}>
-        {" "}
-        <MDBox p={4}>
-          {/* <Grid container>
+          {" "}
+          <MDBox p={4}>
+            {/* <Grid container>
               <Grid item xs={12} sm={6}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
                   Fee Collection
                 </MDTypography>
               </Grid>
             </Grid>
+
             <Grid container>
               <Grid item xs={12} sm={4} py={1}>
                 <Autocomplete
+                  value={values.academic_year || "2024-2025"}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "academic_year", value } });
                   }}
@@ -827,7 +795,7 @@ const FeeCollection = (props: any) => {
                       defaultValue="2024-2025"
                       name="academic_year"
                       onChange={handleChange}
-                      value={values.academic_year}
+                      value={values.academic_year || "2024-2025"}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Academic Year
@@ -858,11 +826,6 @@ const FeeCollection = (props: any) => {
                   success={values.collection_date.length && !errors.collection_date}
                   helperText={touched.collection_date && errors.collection_date}
                 />
-              </Grid>
-              <Grid item xs={12} sm={4} py={1} display="flex" justifyContent="flex-end">
-                <MDButton color="info" variant="contained" type="submit">
-                  Submit
-                </MDButton>
               </Grid>
               <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
                 {showadvanceSearch ? (
@@ -1070,12 +1033,28 @@ const FeeCollection = (props: any) => {
                             // checked={values.search_by.includes("Addmission No")}
                             onChange={handleChange}
                             name="search_by"
-                            value="Addmission No"
+                            value="Admission No"
                           />
                         }
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Addmission No{" "}
+                            Admission No{" "}
+                          </MDTypography>
+                        }
+                      />
+                      <FormControlLabel
+                        // value="male"
+                        control={
+                          <Radio
+                            // checked={values.search_by.includes("Addmission No")}
+                            onChange={handleChange}
+                            name="search_by"
+                            value="Name"
+                          />
+                        }
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Name
                           </MDTypography>
                         }
                       />
@@ -1091,6 +1070,12 @@ const FeeCollection = (props: any) => {
                   <Grid item xs={12} sm={4} py={1}>
                     <Autocomplete
                       onChange={(_event, value) => {
+                        setConcessiondata(
+                          concessiondata.filter(
+                            (item: any) => item.academic_year === values.academic_year
+                            // item.class_name === values.class_name
+                          )
+                        );
                         handleChange({ target: { name: "class_name", value } });
                       }}
                       options={
@@ -1121,6 +1106,12 @@ const FeeCollection = (props: any) => {
                     <Autocomplete
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "section_name", value } });
+                        setConcessiondata(
+                          concessiondata.filter(
+                            (item: any) => item.class_name === values.class_name
+                            // item.section_name === values.section_name
+                          )
+                        );
                       }}
                       options={
                         values.class_name !== ""
@@ -1158,14 +1149,13 @@ const FeeCollection = (props: any) => {
                   <Grid item xs={12} sm={4} py={1}>
                     <Autocomplete
                       sx={{ width: "70%" }}
-                      value={values.wing_name}
+                      value={values.wing_name || "All"}
                       onChange={(event, value) => {
                         handleChange({
                           target: { name: "wing_name", value },
                         });
-                        // filterClassData(classdata, value);
                       }}
-                      options={wings?.map((acd: { wing_name: any }) => acd?.wing_name)}
+                      options={["All", ...wings?.map((acd: { wing_name: any }) => acd?.wing_name)]}
                       renderInput={(params: any) => (
                         <MDInput
                           InputLabelProps={{ shrink: true }}
@@ -1177,7 +1167,7 @@ const FeeCollection = (props: any) => {
                             </MDTypography>
                           }
                           onChange={handleChange}
-                          value={values.wing_name}
+                          value={values.wing_name || "All"}
                           {...params}
                           variant="standard"
                           error={touched.wing_name && Boolean(errors.wing_name)}
@@ -1189,7 +1179,7 @@ const FeeCollection = (props: any) => {
                   <Grid item xs={12} sm={4} py={1}>
                     <Autocomplete
                       sx={{ width: "70%" }}
-                      value={values.adm_no_or_fee_code}
+                      value={values.adm_no_or_fee_code || "Admission Number"}
                       onChange={(event, value) => {
                         handleChange({
                           target: { name: "adm_no_or_fee_code", value },
@@ -1201,7 +1191,7 @@ const FeeCollection = (props: any) => {
                         <MDInput
                           InputLabelProps={{ shrink: true }}
                           name="adm_no_or_fee_code"
-                          placeholder="2022-23"
+                          placeholder="Admission Number/Fee Code"
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
                               Admission Number/Fee Code
@@ -1257,8 +1247,91 @@ const FeeCollection = (props: any) => {
                     </Grid>
                   )}
                 </>
-              ) : null}
-              <Grid item xs={12} sm={12}>
+              ) : showadvanceSearch && values.search_by && values.search_by[0] === "N" ? (
+                // Render the second set of components
+                <>
+                  {" "}
+                  <Grid item xs={12} sm={4} py={1}>
+                    <Autocomplete
+                      sx={{ width: "70%" }}
+                      value={values.name}
+                      onChange={(event, value) => {
+                        handleChange({
+                          target: { name: "name", value },
+                        });
+                      }}
+                      options={student.map(
+                        (item: any) => `${item.first_name} ${item.middle_name} ${item.last_name}`
+                      )}
+                      renderInput={(params: any) => (
+                        <MDInput
+                          InputLabelProps={{ shrink: true }}
+                          name="name"
+                          placeholder="2022-23"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Name{" "}
+                            </MDTypography>
+                          }
+                          onChange={handleChange}
+                          value={values.name}
+                          {...params}
+                          variant="standard"
+                          error={touched.name && Boolean(errors.name)}
+                          helperText={touched.name && errors.name}
+                        />
+                      )}
+                    />
+                  </Grid>{" "}
+                  <Grid item xs={12} sm={4} py={1}>
+                    <Autocomplete
+                      sx={{ width: "70%" }}
+                      value={values.father_name}
+                      onChange={(event, value) => {
+                        handleChange({
+                          target: { name: "father_name", value },
+                        });
+                        setConcessiondata(
+                          concessiondata.filter(
+                            (item: any) =>
+                              `${item.first_name} ${item.middle_name} ${item.last_name}` ==
+                              values.name
+                            // item.section_name === values.section_name
+                          )
+                        );
+                      }}
+                      options={student
+                        .filter(
+                          (item: any) =>
+                            `${item.first_name} ${item.middle_name} ${item.last_name}` ==
+                            values.name
+                        )
+                        .map((fitem: any) => fitem.father_name)}
+                      // options={["ddfd"]}
+                      renderInput={(params: any) => (
+                        <MDInput
+                          InputLabelProps={{ shrink: true }}
+                          name="father_name"
+                          placeholder="2022-23"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Father Name{" "}
+                            </MDTypography>
+                          }
+                          onChange={handleChange}
+                          value={values.father_name}
+                          {...params}
+                          variant="standard"
+                          error={touched.father_name && Boolean(errors.father_name)}
+                          helperText={touched.father_name && errors.father_name}
+                        />
+                      )}
+                    />
+                  </Card>
+                ) : null}
+              </Grid>
+            </Grid> */}
+                 <Grid item xs={12} sm={12}>
                 {student ? (
                   <Card>
                     <DataTable
@@ -1270,20 +1343,7 @@ const FeeCollection = (props: any) => {
                   </Card>
                 ) : null}
               </Grid>
-            </Grid> */}
-          <Grid item xs={12} sm={12}>
-            {student ? (
-              <Card>
-                <DataTable
-                  table={dataTableData}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                />
-              </Card>
-            ) : null}
-          </Grid>
-        </MDBox>
+          </MDBox>
       </form>
     </DashboardLayout>
   );
