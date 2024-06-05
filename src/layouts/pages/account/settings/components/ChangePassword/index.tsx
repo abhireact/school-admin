@@ -46,7 +46,7 @@ function ChangePassword(): JSX.Element {
   return (
     <Card id="change-password">
       <MDBox p={3}>
-        <MDTypography variant="h5">Change Password</MDTypography>
+        <MDTypography variant="h4">Change Password</MDTypography>
       </MDBox>
       <MDBox component="form" pb={3} px={3}>
         <Grid container spacing={3}>
@@ -73,7 +73,7 @@ function ChangePassword(): JSX.Element {
           </Grid>
         </Grid>
         <MDBox mt={6} mb={1}>
-          <MDTypography variant="h5">Password requirements</MDTypography>
+          <MDTypography variant="h4">Password requirements</MDTypography>
         </MDBox>
         <MDBox mb={1}>
           <MDTypography variant="body2" color="text">

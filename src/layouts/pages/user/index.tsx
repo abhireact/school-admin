@@ -134,7 +134,7 @@ const User = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDTypography variant="h5">User</MDTypography>
+      <MDTypography variant="h4">User</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
         {rbacData ? (
           rbacData?.find((element: string) => element === "usercreate") ? (

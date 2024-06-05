@@ -174,7 +174,7 @@ const Create = () => {
           <MDBox>
             <Grid container p={4}>
               <Grid item sm={12} sx={{ display: "flex", justifyContent: "flex-start" }}>
-                <MDTypography variant="h5" pt={2}>
+                <MDTypography variant="h4" pt={2}>
                   Create School
                 </MDTypography>
               </Grid>
@@ -471,7 +471,7 @@ const Create = () => {
                 />
               </Grid>
               <Grid item sm={12} sx={{ display: "flex", justifyContent: "flex-start" }}>
-                <MDTypography variant="h5" pt={2}>
+                <MDTypography variant="h4" pt={2}>
                   Give Permission
                 </MDTypography>
               </Grid>

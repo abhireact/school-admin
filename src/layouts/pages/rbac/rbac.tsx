@@ -409,7 +409,7 @@ const Rbac = (props: any) => {
         <MDBox p={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={9} mb={2}>
-              <MDTypography variant="h5">Give Permission To Roles</MDTypography>
+              <MDTypography variant="h4">Give Permission To Roles</MDTypography>
             </Grid>
           </Grid>
           <Grid container spacing={3}>

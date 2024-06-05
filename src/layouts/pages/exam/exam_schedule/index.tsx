@@ -177,7 +177,7 @@ const ExamSchedule = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Exam Schedule</MDTypography>
+            <MDTypography variant="h4">Exam Schedule</MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "nonacademicgradecreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>

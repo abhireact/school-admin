@@ -60,7 +60,7 @@ export default function EditFeeParicularAmount(props: any) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Edit Fee Amount Perticular
+                Edit Fee Amount Particular
               </MDTypography>
             </Grid>
           </Grid>
@@ -105,11 +105,9 @@ export default function EditFeeParicularAmount(props: any) {
           </Grid>
           <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
             <Grid item>
-              <Link href="fee_category" variant="body2">
-                <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
-                  Back
-                </MDButton>
-              </Link>
+              <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
+                Back
+              </MDButton>
             </Grid>
             <Grid item ml={2}>
               <MDButton color="info" variant="contained" type="submit">

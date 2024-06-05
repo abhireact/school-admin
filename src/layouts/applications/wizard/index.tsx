@@ -74,7 +74,7 @@ function Wizard(): JSX.Element {
                   Build Your Profile
                 </MDTypography>
               </MDBox>
-              <MDTypography variant="h5" fontWeight="regular" color="secondary">
+              <MDTypography variant="h4" fontWeight="regular" color="secondary">
                 This information will let us know more about you.
               </MDTypography>
             </MDBox>

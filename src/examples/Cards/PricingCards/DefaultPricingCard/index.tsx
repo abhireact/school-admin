@@ -130,14 +130,14 @@ function DefaultPricingCard({
               <MDTypography
                 display="inline"
                 component="small"
-                variant="h5"
+                variant="h4"
                 color="inherit"
                 verticalAlign="top"
               >
                 {price.currency}
               </MDTypography>
               {price.value}
-              <MDTypography display="inline" component="small" variant="h5" color="inherit">
+              <MDTypography display="inline" component="small" variant="h4" color="inherit">
                 /{price.type}
               </MDTypography>
             </MDTypography>

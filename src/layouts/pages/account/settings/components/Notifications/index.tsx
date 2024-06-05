@@ -32,7 +32,7 @@ function Notifications(): JSX.Element {
     <Card id="notifications">
       <MDBox p={3} lineHeight={1}>
         <MDBox mb={1}>
-          <MDTypography variant="h5">Notifications</MDTypography>
+          <MDTypography variant="h4">Notifications</MDTypography>
         </MDBox>
         <MDTypography variant="button" color="text">
           Choose how you receive notifications. These notification settings apply to the things

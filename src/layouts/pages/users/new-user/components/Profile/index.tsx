@@ -30,7 +30,7 @@ function Profile({ formData }: any): JSX.Element {
 
   return (
     <MDBox>
-      <MDTypography variant="h5" fontWeight="bold">
+      <MDTypography variant="h4" fontWeight="bold">
         Profile
       </MDTypography>
       <MDBox mt={1.625}>

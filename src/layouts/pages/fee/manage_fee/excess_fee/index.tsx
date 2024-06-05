@@ -14,7 +14,7 @@ import axios from "axios";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -69,7 +69,7 @@ const ExcessFee = () => {
   }; //End
   const fetchLateFees = () => {
     axios
-      .get("http://10.0.20.200:8000/fee_fine", {
+      .get(`${process.env.REACT_APP_BASE_URL}/excess_fee`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -90,12 +90,8 @@ const ExcessFee = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_subject", {
-        data: {
-          class_code: name.class_code,
-          subject_code: name.subject_code,
-          subject_name: name.subject_name,
-        },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/excess_fee`, {
+        data: name,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -113,10 +109,16 @@ const ExcessFee = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Fine ", accessor: "fine_name" },
-      { Header: "Account ", accessor: "account_name" },
-      { Header: "Late Fee Calculation Type", accessor: "late_fee_calculation_type" },
-      { Header: "Description", accessor: "description" },
+      { Header: "Excess Fee Name ", accessor: "name" },
+
+      { Header: "Academic Year", accessor: "academic_year" },
+
+      { Header: "Class & Section ", accessor: "class_section" },
+
+      { Header: "Student Name ", accessor: "student_name" },
+      { Header: "Excess Amount", accessor: "excess_amount" },
+      { Header: " Status", accessor: "payment_status" },
+      { Header: "Collection Date", accessor: "collection_date" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -124,45 +126,33 @@ const ExcessFee = () => {
     rows: data.map((row, index) => ({
       action: (
         <MDTypography variant="p">
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectinfoupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+          <IconButton
+            onClick={() => {
+              handleOpenupdate(index);
+            }}
+          >
+            <CreateRoundedIcon />
+          </IconButton>
 
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectinfodelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+          <IconButton
+            onClick={() => {
+              handleDelete(row);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
         </MDTypography>
       ),
-      account_name: <MDTypography variant="p">{row.account_name}</MDTypography>,
-      fine_name: <MDTypography variant="p">{row.fine_name}</MDTypography>,
-      description: <MDTypography variant="p">{row.description}</MDTypography>,
-      late_fee_calculation_type: (
-        <MDTypography variant="p">{row.late_fee_calculation_type}</MDTypography>
-      ),
+      student_name: `${row.first_name} ${row.middle_name} ${row.last_name}`,
+      name: row.name,
+
+      academic_year: row.academic_year,
+
+      class_section: `${row.class_name} ${row.section_name}`,
+
+      excess_amount: row.excess_amount,
+      payment_status: row.payment_status,
+      collection_date: row.collection_date,
     })),
   };
 
@@ -172,14 +162,22 @@ const ExcessFee = () => {
 
       {!updatepage && (
         <>
-          {" "}
-          <DataTable table={dataTableData} />
+          <Card>
+            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Grid item pt={2} pl={2}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  Excess Fee
+                </MDTypography>
+              </Grid>
+            </Grid>
+            <DataTable table={dataTableData} isSorted={false} />
+          </Card>
         </>
       )}
 
       <>
         {updatepage && (
-          <Update setOpenupdate={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
+          <Update handleClose={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
         )}
       </>
     </DashboardLayout>

@@ -30,13 +30,17 @@ import * as Yup from "yup";
 import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 const validationSchema = Yup.object().shape({
-  class_name: Yup.string().required("Enter Class Name"),
-  section_name: Yup.string().required("Enter Section Name"),
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
+    .required("Required"),
+  class_name: Yup.string().required("Required"),
+  section_name: Yup.string().required("Required"),
 });
 
 const Student = () => {
   const [rbacData, setRbacData] = useState([]);
   const [classdata, setClassdata] = useState([]);
+  const [academicdata, setAcademicdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
   function filterDataByAcdName(data: any, acdName: any) {
     let filtereddata = data
@@ -74,7 +78,21 @@ const Student = () => {
   };
   useEffect(() => {
     fetchRbac();
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setAcademicdata(response.data);
 
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         headers: {
@@ -206,7 +224,7 @@ const Student = () => {
   const { values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
-        academic_year: "2024-2025",
+        academic_year: "",
         class_name: "",
         section_name: "",
       },
@@ -282,97 +300,134 @@ const Student = () => {
                   </Grid>
                 </Grid>{" "}
                 <form onSubmit={handleSubmit}>
-                  <Grid container m={2}>
-                    <Grid item xs={12} sm={4}>
-                      <Autocomplete
-                        sx={{ width: "80%" }}
-                        value={values.class_name}
-                        disableClearable
-                        onChange={
-                          filteredClass.length >= 1
-                            ? (event, value) => {
-                                handleChange({
-                                  target: { name: "class_name", value },
-                                });
-                                filterSectionData(value);
+                  <MDBox p={4}>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} sm={4}>
+                        <Autocomplete
+                          sx={{ width: "100%" }}
+                          disableClearable
+                          value={values.academic_year}
+                          onChange={(event, value) => {
+                            handleChange({
+                              target: { name: "academic_year", value },
+                            });
+                            filterDataByAcdName(classdata, value);
+                          }}
+                          options={academicdata.map((acd) => acd.academic_year)}
+                          renderInput={(params: any) => (
+                            <MDInput
+                              InputLabelProps={{ shrink: true }}
+                              name="academic_year"
+                              placeholder="eg. 2022-2023"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Academic Year *
+                                </MDTypography>
                               }
-                            : undefined
-                        }
-                        options={filteredClass}
-                        renderInput={(params: any) => (
-                          <MDInput
-                            InputLabelProps={{ shrink: true }}
-                            name="class_name"
-                            label={
-                              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                Class Name
-                              </MDTypography>
-                            }
-                            onChange={handleChange}
-                            value={values.class_name}
-                            {...params}
-                            variant="standard"
-                            error={touched.class_name && Boolean(errors.class_name)}
-                            success={values.class_name.length && !errors.class_name}
-                            helperText={touched.class_name && errors.class_name}
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Autocomplete
-                        sx={{ width: "80%" }}
-                        value={values.section_name}
-                        disableClearable
-                        onChange={
-                          filteredSection.length >= 1
-                            ? (event, value) => {
-                                handleChange({
-                                  target: { name: "section_name", value },
-                                });
+                              onChange={handleChange}
+                              value={values.academic_year}
+                              {...params}
+                              variant="standard"
+                              onBlur={handleBlur}
+                              error={touched.academic_year && Boolean(errors.academic_year)}
+                              success={values.academic_year.length && !errors.academic_year}
+                              helperText={touched.academic_year && errors.academic_year}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Autocomplete
+                          sx={{ width: "100%" }}
+                          disableClearable
+                          value={values.class_name}
+                          onChange={
+                            filteredClass.length >= 1
+                              ? (event, value) => {
+                                  handleChange({
+                                    target: { name: "class_name", value },
+                                  });
+                                  filterSectionData(value);
+                                }
+                              : undefined
+                          }
+                          options={filteredClass}
+                          renderInput={(params: any) => (
+                            <MDInput
+                              InputLabelProps={{ shrink: true }}
+                              name="class_name"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Class Name *
+                                </MDTypography>
                               }
-                            : undefined
-                        }
-                        options={
-                          filteredSection[0]
-                            ? filteredSection[0].map((sectiondata: any) => sectiondata.section_name)
-                            : ""
-                        }
-                        renderInput={(params: any) => (
-                          <MDInput
-                            InputLabelProps={{ shrink: true }}
-                            name="section_name"
-                            label={
-                              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                Section Name
-                              </MDTypography>
-                            }
-                            onChange={handleChange}
-                            value={values.section_name}
-                            {...params}
-                            variant="standard"
-                            error={touched.section_name && Boolean(errors.section_name)}
-                            helperText={touched.section_name && errors.section_name}
-                            success={values.section_name.length && !errors.section_name}
-                          />
-                        )}
-                      />
+                              onChange={handleChange}
+                              value={values.class_name}
+                              {...params}
+                              variant="standard"
+                              error={touched.class_name && Boolean(errors.class_name)}
+                              success={values.class_name.length && !errors.class_name}
+                              helperText={touched.class_name && errors.class_name}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Autocomplete
+                          sx={{ width: "100%" }}
+                          disableClearable
+                          value={values.section_name}
+                          onChange={
+                            filteredSection.length >= 1
+                              ? (event, value) => {
+                                  handleChange({
+                                    target: { name: "section_name", value },
+                                  });
+                                }
+                              : undefined
+                          }
+                          options={
+                            filteredSection[0]
+                              ? filteredSection[0].map(
+                                  (sectiondata: any) => sectiondata.section_name
+                                )
+                              : []
+                          }
+                          renderInput={(params: any) => (
+                            <MDInput
+                              InputLabelProps={{ shrink: true }}
+                              name="section_name"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Section Name *
+                                </MDTypography>
+                              }
+                              onChange={handleChange}
+                              value={values.section_name}
+                              {...params}
+                              variant="standard"
+                              error={touched.section_name && Boolean(errors.section_name)}
+                              success={values.section_name.length && !errors.section_name}
+                              helperText={touched.section_name && errors.section_name}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        ml={2}
+                        sx={{ display: "flex", justifyContent: "flex-end" }}
+                      >
+                        <MDButton color="info" variant="contained" type="submit">
+                          Show Data
+                        </MDButton>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <MDButton color="dark" variant="contained" type="submit">
-                        filter
-                      </MDButton>
-                    </Grid>
-                  </Grid>{" "}
+                    {data.length > 1 && <DataTable canSearch={true} table={dataTableData} />}
+                  </MDBox>
                 </form>
-                {data.length > 1 && (
-                  <DataTable
-                    canSearch={true}
-                    table={dataTableData}
-                    entriesPerPage={false}
-                    showTotalEntries={false}
-                  />
-                )}
               </Card>
             </>
           )}

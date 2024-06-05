@@ -139,7 +139,7 @@ const Update = (props: any) => {
         <MDBox p={4}>
           <Grid container>
             <Grid item xs={12} sm={12} py={2}>
-              <MDTypography variant="h5">Update Guardian Information</MDTypography>
+              <MDTypography variant="h4">Update Guardian Information</MDTypography>
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput

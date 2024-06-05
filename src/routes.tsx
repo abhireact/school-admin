@@ -1,5 +1,3 @@
-// Material Dashboard 2 PRO React layouts
-
 import SignInCover from "layouts/pages/authentication/sign-in";
 import ResetCover from "layouts/pages/authentication/reset-password";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
@@ -16,6 +14,7 @@ import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fe
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
 
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
+import CreateTemplate from "layouts/pages/notifications/create_message_template";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -124,12 +123,17 @@ let routes = [
     route: "/fee/fee_category/manage_fee_amount_perticular",
     component: <ManageFeeAmountPerticular />,
   },
-
   {
     name: "create conssion",
     key: "createconcession",
     route: "/fee/create_concession",
     component: <CreateConcession />,
+  },
+  {
+    name: "Create Template",
+    key: "create_template",
+    route: "/notification/create_template",
+    component: <CreateTemplate />,
   },
 ];
 

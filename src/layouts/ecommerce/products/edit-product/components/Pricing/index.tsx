@@ -30,7 +30,7 @@ function Pricing(): JSX.Element {
   return (
     <Card sx={{ overflow: "visible" }}>
       <MDBox p={3}>
-        <MDTypography variant="h5" fontWeight="bold">
+        <MDTypography variant="h4" fontWeight="bold">
           Pricing
         </MDTypography>
         <MDBox mt={1}>

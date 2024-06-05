@@ -28,7 +28,7 @@ function Socials(): JSX.Element {
   return (
     <Card>
       <MDBox p={3}>
-        <MDTypography variant="h5" fontWeight="bold">
+        <MDTypography variant="h4" fontWeight="bold">
           Socials
         </MDTypography>
         <MDBox mt={1}>

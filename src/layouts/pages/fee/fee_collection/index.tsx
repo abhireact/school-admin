@@ -239,7 +239,7 @@
 //           <MDBox p={4}>
 //             <Grid container>
 //               <Grid item xs={12} sm={6}>
-//                 <MDTypography variant="h5" fontWeight="bold" color="secondary">
+//                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
 //                   Fee Collection
 //                 </MDTypography>
 //               </Grid>
@@ -695,35 +695,8 @@ const FeeCollection = (props: any) => {
     setShowadvanceSearch(true);
   };
   console.log(values, "values");
-  const filteredStudentData = useMemo(() => {
-    if (values.academic_year && values.class_name && values.section_name) {
-      return student.filter(
-        (item: any) =>
-          item.academic_year === values.academic_year &&
-          item.class_name === values.class_name &&
-          item.section_name === values.section_name
-      );
-    }
-    return [];
-  }, [values.academic_year, values.class_name, values.section_name, student]);
-  const filteredStudentDataByAdm = useMemo(() => {
-    if (values.academic_year && values.admission_number) {
-      return student.filter(
-        (item: any) =>
-          item.academic_year === values.academic_year &&
-          item.admission_number === values.admission_number
-      );
-    }
-    return [];
-  }, [values.academic_year, values.admission_number, student]);
-  useEffect(() => {
-    setConcessiondata(filteredStudentData);
-    console.log(filteredStudentData, "Filtered student data by adm");
-  }, [filteredStudentData]);
-  useEffect(() => {
-    setConcessiondata(filteredStudentDataByAdm);
-    console.log(filteredStudentDataByAdm, "Filtered student data by adm");
-  }, [filteredStudentDataByAdm]);
+
+ 
   const dataTableData = {
     columns: [
       { Header: "Student Name", accessor: "full_name" },
@@ -793,13 +766,12 @@ const FeeCollection = (props: any) => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
           {" "}
           <MDBox p={4}>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs={12} sm={6}>
-                <MDTypography variant="h5" fontWeight="bold" color="secondary">
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
                   Fee Collection
                 </MDTypography>
               </Grid>
@@ -871,6 +843,154 @@ const FeeCollection = (props: any) => {
                   </MDButton>
                 )}
               </Grid>
+<<<<<<< HEAD
+              <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel value="female" control={<Radio />} label="Female" />
+                    <FormControlLabel value="male" control={<Radio />} label="Male" />
+                    <FormControlLabel value="other" control={<Radio />} label="Other" />
+                    <FormControlLabel value="disabled" disabled control={<Radio />} label="other" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Class{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.section_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "section_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.section_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="section_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Section{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.section_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.section_name && Boolean(errors.section_name)}
+                      helperText={touched.section_name && errors.section_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Wing Name{" "}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  value={values.class_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "class_name", value },
+                    });
+                    filterClassData(classdata, value);
+                  }}
+                  options={academicdata.map((acd) => acd.class_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="class_name"
+                      placeholder="2022-23"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Admission Number/Fee Code
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.class_name}
+                      {...params}
+                      variant="standard"
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      helperText={touched.class_name && errors.class_name}
+                    />
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={4} py={1}>
+                <MDInput
+                  sx={{ width: "80%" }}
+                  name="admission_number"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Admission Number
+=======
               {showadvanceSearch ? (
                 <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
                   <FormControl>
@@ -881,6 +1001,7 @@ const FeeCollection = (props: any) => {
                       sx={{ marginLeft: "20px" }}
                     >
                       Search By:
+>>>>>>> main
                     </MDTypography>
 
                     <RadioGroup
@@ -1206,61 +1327,24 @@ const FeeCollection = (props: any) => {
                         />
                       )}
                     />
-                  </Grid>{" "}
-                </>
-              ) : null}
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              {concessiondata ? (
-                <Card>
-                  <DataTable
-                    table={dataTableData}
-                    // isSorted={false}
-                    // entriesPerPage={false}
-                    // showTotalEntries={false}
-                  />
-                </Card>
-              ) : null}
-            </Grid>
+                  </Card>
+                ) : null}
+              </Grid>
+            </Grid> */}
+                 <Grid item xs={12} sm={12}>
+                {student ? (
+                  <Card>
+                    <DataTable
+                      table={dataTableData}
+                      isSorted={false}
+                      entriesPerPage={false}
+                      showTotalEntries={false}
+                    />
+                  </Card>
+                ) : null}
+              </Grid>
           </MDBox>
-        </form>
-      </Card>
-      <Drawer
-        //   zIndex={5}
-        title={title}
-        placement="right"
-        onClose={onClose}
-        open={open}
-        width={1100}
-        style={{
-          background: darkMode ? "#202940" : "white",
-          paddingTop: "10%",
-        }}
-      >
-        {/* verticle table bar  */}
-        <MDBox
-          sx={{
-            bgcolor: "background.paper",
-            // width: 500,
-            position: "relative",
-            minHeight: 200,
-          }}
-        >
-          {(() => {
-            switch (title) {
-              case "Paid Fees":
-                return <PaidFees mainData={mainData} collection_date={values.collection_date} />;
-              case "Unpaid Fees":
-                return <UnPaidFees mainData={mainData} collection_date={values.collection_date} />;
-              case "Pay Fee":
-                return <PayFee mainData={mainData} collection_date={values.collection_date} />;
-
-              default:
-                return null;
-            }
-          })()}
-        </MDBox>
-      </Drawer>
+      </form>
     </DashboardLayout>
   );
 };

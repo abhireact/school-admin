@@ -64,21 +64,14 @@ const Update = (props: any) => {
     fetchGuardian();
   }, []);
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={12} sm={3}>
-        <Sidenav />
-      </Grid>
-      <Grid item xs={12} sm={9}>
-        <Student
-          editData={studentInfo}
-          username={editData}
-          setOpenupdate={setOpenupdate}
-          fetchData={fetchData}
-          guardianInfo={guardianInfo}
-          fetchGuardian={fetchGuardian}
-        />
-      </Grid>
-    </Grid>
+    <Student
+      editData={studentInfo}
+      username={editData}
+      setOpenupdate={setOpenupdate}
+      fetchData={fetchData}
+      guardianInfo={guardianInfo}
+      fetchGuardian={fetchGuardian}
+    />
   );
 };
 

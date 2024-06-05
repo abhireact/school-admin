@@ -20,9 +20,10 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { Tree } from "antd";
+import type { TreeDataNode, TreeProps } from "antd";
 import MDBox from "components/MDBox";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import type { TreeDataNode, TreeProps } from "antd";
+
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
@@ -70,7 +71,7 @@ export default function CreateFeeParicularAmount() {
     // Uncomment and ensure createschema is correctly defined
     // validationSchema: createschema,
     enableReinitialize: true,
-    onSubmit: async (values) => {
+    onSubmit: async (values, action) => {
       console.log(values, "on submit");
       if (selectedTab === 0) {
         const checkedSectionKeys = checkedKeys
@@ -86,7 +87,7 @@ export default function CreateFeeParicularAmount() {
           fee_category: values.fee_category,
           fee_particular: values.fee_perticular,
           user_id: [] as any[],
-          classes: checked,
+          classes: checkedSectionKeys,
           academic_year: values.academic_year,
           amount: values.amount,
           student_category: values.student_category,
@@ -102,6 +103,7 @@ export default function CreateFeeParicularAmount() {
           })
           .then((response) => {
             message.success(response.data.message);
+            action.resetForm();
           })
           .catch((error) => {
             console.error("Error fetching data:", error);
@@ -254,7 +256,7 @@ export default function CreateFeeParicularAmount() {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Create Fee Amount Perticular
+                  Create Fee Amount Particular
                 </MDTypography>
               </Grid>
             </Grid>
@@ -302,7 +304,7 @@ export default function CreateFeeParicularAmount() {
                       value={values.fee_perticular}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Fee Perticular
+                          Fee Particular
                         </MDTypography>
                       }
                       {...params}

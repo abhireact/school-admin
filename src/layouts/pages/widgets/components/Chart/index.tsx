@@ -82,7 +82,7 @@ function Chart({ title, count, percentage, chart }: Props): JSX.Element {
         <MDTypography variant="button" textTransform="capitalize" fontWeight="medium" color="text">
           {title}
         </MDTypography>
-        <MDTypography variant="h5" fontWeight="bold" color="dark">
+        <MDTypography variant="h4" fontWeight="bold" color="dark">
           {count}&nbsp;
           <MDTypography variant="button" fontWeight="bold" color={percentage.color}>
             {percentage.label}
