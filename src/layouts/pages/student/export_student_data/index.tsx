@@ -16,22 +16,9 @@ import ExportExcel from "layouts/pages/student/export_student_data/export_excel"
 import * as Yup from "yup";
 
 import Cookies from "js-cookie";
-import { Document, Page, Image, Text, View, StyleSheet } from "@react-pdf/renderer";
-import { pdf } from "@react-pdf/renderer";
 
-const styles = StyleSheet.create({
-  page: {
-    padding: 20,
-  },
-  schoolLogo: {
-    width: "50%",
-    alignSelf: "flex-end",
-  },
-  content: {
-    marginTop: 20,
-    fontSize: 14,
-  },
-});
+
+
 const token = Cookies.get("token");
 
 const validationSchema = Yup.object().shape({
