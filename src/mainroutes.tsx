@@ -39,6 +39,10 @@ import FineParticular from "layouts/pages/fee/manage_fee/fine";
 import StudentPromotion from "layouts/pages/student/student_promotion";
 import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
 
+//EXAMINATION module
+import Examtype from "layouts/pages/exam/exam_type";
+import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
+
 const routes = [
   {
     type: "collapse",
@@ -204,54 +208,54 @@ const routes = [
   //     },
   //   ],
   // },
-  // {
-  //   type: "collapse",
-  //   name: "Exam Setting",
-  //   key: "exam",
-  //   icon: (
-  //     <Icon fontSize="medium">
-  //       <EditNoteIcon />
-  //     </Icon>
-  //   ),
-  //   collapse: [
-  //     {
-  //       name: "Exam Type",
-  //       key: "examtype",
-  //       route: "pages/exam/examtype",
-  //       component: <ExamType />,
-  //     },
-  //     {
-  //       name: "Scholastic Particular",
-  //       key: "scholastic_particular",
-  //       route: "/pages/exam/scholastic_particular",
-  //       component: <Scholastic />,
-  //     },
-  //     {
-  //       name: "Scholastic Component",
-  //       key: "scholastic_component",
-  //       route: "/pages/exam/scholastic_component",
-  //       component: <ScholasticComponent />,
-  //     },
-  //     {
-  //       name: "Other Particular",
-  //       key: "other_particular",
-  //       route: "/pages/exam/other_particular",
-  //       component: <OtherParticular />,
-  //     },
-  //     {
-  //       name: "Other Component",
-  //       key: "other_component",
-  //       route: "/pages/exam/other_component",
-  //       component: <OtherComponent />,
-  //     },
-  //     {
-  //       name: "Exam Schedule",
-  //       key: "exam_schedule",
-  //       route: "/pages/exam/exam_schedule",
-  //       component: <ExamSchedule />,
-  //     },
-  //   ],
-  // },
+  {
+    type: "collapse",
+    name: "Exam Setting",
+    key: "exam",
+    // icon: (
+    //   <Icon fontSize="medium">
+    //     <EditNoteIcon />
+    //   </Icon>
+    // ),
+    collapse: [
+      {
+        name: "Exam Type",
+        key: "examtype",
+        route: "pages/exam/examtype",
+        component: <Examtype />,
+      },
+      // {
+      //   name: "Scholastic Particular",
+      //   key: "scholastic_particular",
+      //   route: "/pages/exam/scholastic_particular",
+      //   component: <Scholastic />,
+      // },
+      // {
+      //   name: "Scholastic Component",
+      //   key: "scholastic_component",
+      //   route: "/pages/exam/scholastic_component",
+      //   component: <ScholasticComponent />,
+      // },
+      // {
+      //   name: "Other Particular",
+      //   key: "other_particular",
+      //   route: "/pages/exam/other_particular",
+      //   component: <OtherParticular />,
+      // },
+      // {
+      //   name: "Other Component",
+      //   key: "other_component",
+      //   route: "/pages/exam/other_component",
+      //   component: <OtherComponent />,
+      // },
+      // {
+      //   name: "Exam Schedule",
+      //   key: "exam_schedule",
+      //   route: "/pages/exam/exam_schedule",
+      //   component: <ExamSchedule />,
+      // },
+    ],
+  },
   {
     type: "collapse",
     name: "Employee",
@@ -299,6 +303,12 @@ const routes = [
         key: "department",
         route: "pages/employee/department",
         component: <Department />,
+      },
+      {
+        name: "Assign Class Teacher",
+        key: "assignclassteacher",
+        route: "employee/assignclassteacher",
+        component: <AssignClassTeacher />,
       },
     ],
   },

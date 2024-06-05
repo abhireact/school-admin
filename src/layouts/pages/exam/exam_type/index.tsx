@@ -5,7 +5,8 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
-import Grid from "@mui/material/Grid";
+import { Grid, Card, Link, Autocomplete, Tooltip } from "@mui/material";
+import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
@@ -18,10 +19,11 @@ import { useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
+import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const NonAcademicGrade = () => {
+const Examtype = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -57,10 +59,8 @@ const NonAcademicGrade = () => {
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
     const main_data = data[index];
     console.log(main_data, "maindata");
-
     setOpenupdate(true);
     setEditData(main_data);
   };
@@ -121,47 +121,83 @@ const NonAcademicGrade = () => {
       { Header: "Action", accessor: "action" },
     ],
 
-    rows: data.map((row, index) => ({
-      action: (
-        <MDTypography variant="p">
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "nonacademicgradeupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+    // rows: data.map((row, index) => ({
+    //   action: (
+    //     <MDTypography variant="p">
+    //       {rbacData ? (
+    //         rbacData?.find((element: string) => element === "nonacademicgradeupdate") ? (
+    //           <IconButton
+    //             onClick={() => {
+    //               handleOpenupdate(index);
+    //             }}
+    //           >
+    //             <CreateRoundedIcon />
+    //           </IconButton>
+    //         ) : (
+    //           ""
+    //         )
+    //       ) : (
+    //         ""
+    //       )}
 
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "nonacademicgradedelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-        </MDTypography>
-      ),
-      exam_type: <MDTypography variant="p">{row.exam_type}</MDTypography>,
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
-    })),
+    //       {rbacData ? (
+    //         rbacData?.find((element: string) => element === "nonacademicgradedelete") ? (
+    //           <IconButton
+    //             onClick={() => {
+    //               handleDelete(row);
+    //             }}
+    //           >
+    //             <DeleteIcon />
+    //           </IconButton>
+    //         ) : (
+    //           ""
+    //         )
+    //       ) : (
+    //         ""
+    //       )}
+    //     </MDTypography>
+    //   ),
+    //   exam_type: <MDTypography variant="p">{row.exam_type}</MDTypography>,
+    //   class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
+    //   section_name: <MDTypography variant="p">{row.section_name}</MDTypography>,
+    //   academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+    // })),
+    rows: [
+      {
+        exam_type: "Term I",
+        class_name: "I",
+        section_name: "A",
+        academic_year: "2024-2025",
+        action: (
+          <Grid container spacing={1}>
+            <Grid item>
+              <Tooltip title="Edit" placement="top">
+                <Icon
+                  fontSize="small"
+                  onClick={() => {
+                    handleOpenupdate(0);
+                  }}
+                >
+                  edit
+                </Icon>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Delete" placement="top">
+                <Icon
+                  fontSize="small"
+                  // onClick={() => {
+                  //   handleDelete(row);
+                  // }}
+                >
+                  delete
+                </Icon>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        ),
+      },
+    ],
   };
   const [showpage, setShowpage] = useState(false);
   const handleShowPage = () => {
@@ -170,39 +206,28 @@ const NonAcademicGrade = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showpage ? (
-        <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchExamtypes} />
-        </>
-      ) : (
-        <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Exam Type</MDTypography>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "nonacademicgradecreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + New Exam Type
-                </MDButton>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-
-            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update
-                setOpenupdate={setOpenupdate}
-                editData={editData}
-                fetchingData={fetchExamtypes}
-              />
-            </Dialog>
+      <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Dialog open={openupdate} onClose={handleCloseupdate}>
+          <Update setOpenupdate={setOpenupdate} editData={editData} fetchingData={fetchExamtypes} />
+        </Dialog>
+      </Grid>
+      <Card>
+        <Grid container px={3} pt={3}>
+          <Grid item xs={12} sm={6}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Exam Type
+            </MDTypography>
           </Grid>
-          <DataTable table={dataTableData} />
-        </>
-      )}
+          <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+              + New Exam Type
+            </MDButton>
+          </Grid>
+          <DataTable table={dataTableData} canSearch={true} />
+        </Grid>
+      </Card>
     </DashboardLayout>
   );
 };
 
-export default NonAcademicGrade;
+export default Examtype;

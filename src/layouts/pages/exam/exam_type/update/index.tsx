@@ -66,13 +66,21 @@ const Update = (props: any) => {
   }, []);
 
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
-    initialValues: {
-      class_name: editData.class_name,
-      section_name: editData.section_name,
-      exam_type: editData.exam_type,
-      academic_year: editData.academic_year,
+    // initialValues: {
+    //   class_name: editData.class_name,
+    //   section_name: editData.section_name,
+    //   exam_type: editData.exam_type,
+    //   academic_year: editData.academic_year,
 
-      description: editData.description,
+    //   description: editData.description,
+    // },
+    initialValues: {
+      class_name: "I",
+      section_name: "A",
+      exam_type: "Term I",
+      academic_year: "2024-2025",
+
+      description: "Half yearley exam",
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -98,14 +106,25 @@ const Update = (props: any) => {
     <form onSubmit={handleSubmit}>
       <Card>
         {" "}
-        <MDBox p={4}>
-          <Grid container>
-            <Grid item xs={12} sm={4} py={1}>
+        <MDBox p={2}>
+          <Grid container px={2}>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Edit Exam Type
+              </MDTypography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3} p={2}>
+            <Grid item xs={12} sm={4}>
               <MDInput
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="exam_type"
-                label={<MDTypography variant="body2">Exam Type Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Exam Type Name
+                  </MDTypography>
+                }
                 value={values.exam_type}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -113,10 +132,14 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="section_name"
-                label={<MDTypography variant="body2">Section Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Section Name
+                  </MDTypography>
+                }
                 value={values.section_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -125,10 +148,14 @@ const Update = (props: any) => {
 
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="description"
-                label={<MDTypography variant="body2">Description</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Description
+                  </MDTypography>
+                }
                 value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -136,7 +163,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
-                sx={{ width: "70%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {
                   handleChange({
@@ -150,7 +176,11 @@ const Update = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
                     placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.academic_year}
                     {...params}
@@ -161,7 +191,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
-                sx={{ width: "70%" }}
                 value={values.class_name}
                 onChange={
                   filteredClass.length >= 1
@@ -177,7 +206,11 @@ const Update = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.class_name}
                     {...params}
@@ -193,21 +226,23 @@ const Update = (props: any) => {
               sm={12}
               sx={{ display: "flex", justifyContent: "flex-start" }}
             >
-              <Grid item mt={4}>
-                <MDButton
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  Back
-                </MDButton>
-              </Grid>
-              <Grid item ml={2} mt={4}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Save
-                </MDButton>
+              <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} spacing={2}>
+                <Grid item>
+                  <MDButton
+                    color="dark"
+                    variant="contained"
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    Back
+                  </MDButton>
+                </Grid>
+                <Grid item>
+                  <MDButton color="info" variant="contained" type="submit">
+                    Save
+                  </MDButton>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
