@@ -83,7 +83,7 @@ function ProgressLineChart({
             {title}
           </MDTypography>
           {count ? (
-            <MDTypography variant="h5" fontWeight="bold">
+            <MDTypography variant="h4" fontWeight="bold">
               {count}
             </MDTypography>
           ) : null}

@@ -77,7 +77,7 @@ const EmailSetting = () => {
               borderBottom: "2px solid #3873E8",
             }}
           >
-            <MDTypography variant="h5" color="info" px={2}>
+            <MDTypography variant="h4" color="info" px={2}>
               Email Management Tool{" "}
             </MDTypography>
           </Grid>

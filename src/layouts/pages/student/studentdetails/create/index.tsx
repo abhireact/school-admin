@@ -40,7 +40,7 @@ const validationSchema = Yup.object().shape({
   alt_phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format *"),
   pen_number: Yup.string().matches(/^\d+$/, "Incorrect Format *"),
   aadhaar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format *"),
-  email: Yup.string().email("Incorrect Format *").required("Required *"),
+  email: Yup.string().email("Incorrect Format *"),
 });
 
 const Create = (props: any) => {
@@ -317,12 +317,12 @@ const Create = (props: any) => {
                 setLoading(false);
                 handleClose();
               })
-              .catch(() => {
-                console.error("Error on creating Guardian !");
+              .catch((error: any) => {
+                message.error(error.response.data.detail);
               });
           })
-          .catch(() => {
-            message.error("Error on creating Student !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
       },
     });
@@ -1303,7 +1303,7 @@ const Create = (props: any) => {
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Email ID *
+                    Email ID
                   </MDTypography>
                 }
                 name="email"
@@ -2229,9 +2229,18 @@ const Create = (props: any) => {
               xs={12}
               sm={12}
               py={2}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
+              sx={{ display: "flex", justifyContent: "space-between" }}
               mr={5}
             >
+              <MDButton
+                color="dark"
+                variant="contained"
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Back
+              </MDButton>
               {loading ? (
                 <MDButton color="info" variant="contained" type="submit">
                   Loading ...

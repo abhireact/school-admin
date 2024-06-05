@@ -32,7 +32,7 @@ function BasicInfo(): JSX.Element {
   return (
     <Card id="basic-info" sx={{ overflow: "visible" }}>
       <MDBox p={3}>
-        <MDTypography variant="h5">Basic Info</MDTypography>
+        <MDTypography variant="h4">Basic Info</MDTypography>
       </MDBox>
       <MDBox component="form" pb={3} px={3}>
         <Grid container spacing={3}>

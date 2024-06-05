@@ -53,8 +53,8 @@ const Update = (props: any) => {
           fetchData();
           handleCloseupdate();
         })
-        .catch(() => {
-          message.error("Error on updating !");
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
         });
 
       action.resetForm();

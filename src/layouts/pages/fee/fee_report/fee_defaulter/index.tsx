@@ -19,22 +19,6 @@ import { useSelector } from "react-redux";
 
 import { Tree } from "antd";
 import type { TreeDataNode, TreeProps } from "antd";
-import { Checkbox, Divider, Table } from "antd";
-import type { CheckboxOptionType, TableColumnsType } from "antd";
-
-interface DataType {
-  key: React.Key;
-  sl_no: string;
-  admission_no: string;
-  class_section: string;
-  student_name: string;
-  collection_name: string;
-  guardian_name: string;
-  g_contact_no: string;
-  total_amount: number;
-  paid_amount: number;
-  remaining_amount: number;
-}
 
 const token = Cookies.get("token");
 
@@ -62,44 +46,6 @@ export default function FeeDefaulterReport() {
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
-
-  const columns: TableColumnsType<DataType> = [
-    { title: "SL.NO", key: "1", dataIndex: "sl_no" },
-    { title: "ADMISSION NO.", key: "2", dataIndex: "admission_no" },
-    { title: "CLASS-SECTION", key: "3", dataIndex: "class_section" },
-    { title: "STUDENT NAME", key: "4", dataIndex: "student_name" },
-    { title: "COLLECTION NAME", key: "5", dataIndex: "collection_name" },
-    { title: "GUARDIAN NAME", key: "6", dataIndex: "guardian_name" },
-    { title: "GUARDIAN CONTACT NO", key: "7", dataIndex: "g_contact_no" },
-    { title: "TOTAL AMOUNT", key: "8", dataIndex: "total_amount" },
-    { title: "PAID AMOUNT", key: "9", dataIndex: "paid_amount" },
-    { title: "REMAINING AMOUNT", key: "10", dataIndex: "remaining_amount" },
-  ];
-
-  const data: DataType[] = defaultData.map((row: any, index: any) => ({
-    key: index,
-    sl_no: index,
-    admission_no: row.admission_number,
-    class_section: `${row.class_name} ${row.section_name}`,
-    student_name: row.student_name,
-    collection_name: row.collection_name,
-    guardian_name: row.guardian_name,
-    g_contact_no: row.guardian_phone,
-    total_amount: row.total_amount,
-    paid_amount: row.paid_amount,
-    remaining_amount: row.amount_paying,
-  }));
-  const defaultCheckedList = columns.map((item) => item.key as string);
-  const [checkedList, setCheckedList] = useState(["3", "4"]);
-  const options = columns.map(({ key, title }) => ({
-    label: title,
-    value: key,
-  }));
-
-  const newColumns = columns.map((item) => ({
-    ...item,
-    hidden: !checkedList.includes(item.key as string),
-  }));
   let initialValues = {
     academic_year: "",
     start_date: Date,
@@ -198,6 +144,22 @@ export default function FeeDefaulterReport() {
   const onSelect: TreeProps["onSelect"] = (selectedKeysValue, info) => {
     setSelectedKeys(selectedKeysValue);
   };
+
+  // {
+  //       "user_name": "THSKRBS1292",
+  //       "admission_number": "THS/2425/1813",
+  //       "student_name": "DRISHTI SINGH",
+  //       "class_name": "I",
+  //       "section_name": "B",
+  //       "collection_name": "May Month Fee",
+  //       "guardian_name": "DURGENDRA  PRATAP  SINGH",
+  //       "guardian_phone": "9451175081",
+  //       "total_amount": 4122.0,
+  //       "paid_amount": 0.0,
+  //       "fine_amount": 200.0,
+  //       "amount_paying": 4122.0,
+  //       "is_archive": false
+  //   },
   const feeDefaulter = {
     columns: [
       { Header: "SL.NO", accessor: "sl_no" },
@@ -333,27 +295,11 @@ export default function FeeDefaulterReport() {
               </Grid>
             </Card>
           </Grid>
-          {defaultData.length > 0 ? (
-            <Grid item xs={12} sm={12}>
-              <Card>
-                <Checkbox.Group
-                  value={checkedList}
-                  options={options as CheckboxOptionType[]}
-                  onChange={(value) => {
-                    setCheckedList(value as string[]);
-                  }}
-                  style={{ paddingTop: 24, paddingLeft: 24 }}
-                />
-
-                <Table
-                  columns={newColumns}
-                  dataSource={data}
-                  style={{ marginTop: 24 }}
-                  scroll={{ x: true }}
-                />
-              </Card>
-            </Grid>
-          ) : null}
+          <Grid item xs={12} sm={12}>
+            <Card>
+              <DataTable table={feeDefaulter} />
+            </Card>
+          </Grid>
         </Grid>
       </form>
     </DashboardLayout>

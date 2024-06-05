@@ -30,7 +30,7 @@ function Socials({ formData }: any): JSX.Element {
 
   return (
     <MDBox>
-      <MDTypography variant="h5" fontWeight="bold">
+      <MDTypography variant="h4" fontWeight="bold">
         Socials
       </MDTypography>
       <MDBox mt={1.625}>

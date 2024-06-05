@@ -95,7 +95,7 @@ function Header({ children }: { children?: ReactNode }): JSX.Element {
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
-              <MDTypography variant="h5" fontWeight="medium">
+              <MDTypography variant="h4" fontWeight="medium">
                 Richard Davis
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="regular">

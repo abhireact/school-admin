@@ -175,7 +175,7 @@ const LeaveType = () => {
       ) : (
         <>
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h5">Leave Type</MDTypography>
+            <MDTypography variant="h4">Leave Type</MDTypography>
             {rbacData ? (
               rbacData?.find((element: string) => element === "employee_leavecreate") ? (
                 <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>

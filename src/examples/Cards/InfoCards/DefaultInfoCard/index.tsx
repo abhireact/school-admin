@@ -64,7 +64,7 @@ function DefaultInfoCard({ color, icon, title, description, value }: Props): JSX
         )}
         {description && !value ? null : <Divider />}
         {value && (
-          <MDTypography variant="h5" fontWeight="medium">
+          <MDTypography variant="h4" fontWeight="medium">
             {value}
           </MDTypography>
         )}

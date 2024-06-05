@@ -14,7 +14,7 @@ import axios from "axios";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -162,7 +162,16 @@ const ExcessFee = () => {
 
       {!updatepage && (
         <>
-          <DataTable table={dataTableData} isSorted={false} />
+          <Card>
+            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Grid item pt={2} pl={2}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  Excess Fee
+                </MDTypography>
+              </Grid>
+            </Grid>
+            <DataTable table={dataTableData} isSorted={false} />
+          </Card>
         </>
       )}
 

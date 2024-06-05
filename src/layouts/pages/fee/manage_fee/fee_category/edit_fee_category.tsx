@@ -8,7 +8,6 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import Icon from "@mui/material/Icon";
-import MDBox from "components/MDBox";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
@@ -93,131 +92,99 @@ export default function EditFeeCategory(props: any) {
               </MDTypography>
             </Grid>
           </Grid>
-          <MDBox p={2}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <MDInput
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Name
-                    </MDTypography>
-                  }
-                  sx={{ width: "100%" }}
-                  name="name"
-                  value={values.name}
-                  placeholder="Enter Fee Category Name"
-                  variant="standard"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <MDInput
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Description
-                    </MDTypography>
-                  }
-                  sx={{ width: "100%" }}
-                  name="description"
-                  value={values.description}
-                  variant="standard"
-                  onChange={handleChange}
-                />
-              </Grid>
+          <Grid container spacing={3} p={2}>
+            <Grid item xs={12} sm={6}>
+              <FormField
+                label="Name "
+                name="name"
+                value={values.name}
+                placeholder="Enter Fee Category Name"
+                variant="standard"
+                onChange={handleChange}
+              />
             </Grid>
-            <MDTypography variant="h6" fontWeight="bold" color="secondary" pt={2}>
-              Existing Particulars
-            </MDTypography>
-            <Grid container spacing={3}>
-              {values.existing_perticular.map((particular: any, index: number) => (
-                <Grid item xs={10} sm={6} key={index}>
-                  <MDInput
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        {`Particular ${index + 1}`}
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    disabled
-                    value={particular.particular_name}
-                    variant="standard"
-                  />
-                </Grid>
-              ))}
+            <Grid item xs={12} sm={6}>
+              <FormField
+                label="Description"
+                name="description"
+                value={values.description}
+                variant="standard"
+                onChange={handleChange}
+              />
             </Grid>
-            <MDTypography variant="h6" fontWeight="bold" color="secondary" pt={2}>
-              Add New Particulars
-            </MDTypography>
-            <Grid container spacing={3}>
-              <Grid item xs={10} sm={6}>
-                <MDInput
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Particular
-                    </MDTypography>
-                  }
-                  sx={{ width: "100%" }}
-                  name={`first_perticular`}
-                  // value={values.first_perticular}
-                  variant="standard"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <MDButton
-                  color="info"
-                  variant="text"
-                  style={{ fontSize: "16px" }}
-                  onClick={addParticularField}
-                  pl={2}
-                >
-                  {"ADD +"}
-                </MDButton>
-              </Grid>
-            </Grid>
-
-            {particularFields.map((particular, index) => (
-              <Grid container spacing={3} key={index}>
-                <Grid item xs={10} sm={6}>
-                  <MDInput
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        {`Particular ${index + 2}`}
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    name={`particulars.${index}`}
-                    value={particular}
-                    variant="standard"
-                    onChange={(e: any) => {
-                      const updatedFields = [...particularFields];
-                      updatedFields[index] = e.target.value;
-                      setParticularFields(updatedFields);
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2} sm={6}>
-                  <Icon color="secondary" onClick={() => removeParticularField(index)}>
-                    delete
-                  </Icon>
-                </Grid>
+          </Grid>
+          <MDTypography variant="h6" fontWeight="bold" color="secondary">
+            Existing Perticulars
+          </MDTypography>
+          <Grid container spacing={3}>
+            {values.existing_perticular.map((particular: any, index: React.Key) => (
+              <Grid item xs={10} sm={6} key={index}>
+                <FormField disabled value={particular.particular_name} variant="standard" />
               </Grid>
             ))}
-            <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
-              <Grid item>
-                <Link href="fee_category" variant="body2">
-                  <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
-                    Back
-                  </MDButton>
-                </Link>
+          </Grid>
+          <MDTypography variant="h6" fontWeight="bold" color="secondary">
+            Add New Perticulars
+          </MDTypography>
+          <Grid container spacing={3} p={2}>
+            <Grid item xs={10} sm={6}>
+              <FormField
+                label={`Particular`}
+                name={`first_perticular`}
+                // value={values.first_perticular}
+                variant="standard"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <MDButton
+                color="info"
+                variant="text"
+                style={{ fontSize: "16px" }}
+                onClick={addParticularField}
+                pl={2}
+              >
+                {"ADD +"}
+              </MDButton>
+            </Grid>
+          </Grid>
+
+          {particularFields.map((particular, index) => (
+            <Grid container spacing={3} key={index} p={2}>
+              <Grid item xs={10} sm={6}>
+                <FormField
+                  label={`Particular ${index + 2}`}
+                  name={`particulars.${index}`}
+                  value={particular}
+                  variant="standard"
+                  onChange={(e: any) => {
+                    const updatedFields = [...particularFields];
+                    updatedFields[index] = e.target.value;
+                    setParticularFields(updatedFields);
+                  }}
+                />
               </Grid>
-              <Grid item ml={2}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Save
-                </MDButton>
+              <Grid item xs={2} sm={6}>
+                <Icon color="secondary" onClick={() => removeParticularField(index)}>
+                  delete
+                </Icon>
               </Grid>
             </Grid>
-          </MDBox>
+          ))}
+          <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
+            <Grid item>
+              <Link href="fee_category" variant="body2">
+                <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
+                  Back
+                </MDButton>
+              </Link>
+            </Grid>
+            <Grid item ml={2}>
+              <MDButton color="info" variant="contained" type="submit">
+                Save
+              </MDButton>
+            </Grid>
+          </Grid>
         </Grid>
       </Card>
     </form>
