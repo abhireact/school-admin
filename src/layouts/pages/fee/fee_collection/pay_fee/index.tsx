@@ -187,7 +187,7 @@ const PayFee = (props: any) => {
         })
       )
     );
-  }, [data]);
+  }, [data, refundcheck]);
   // useEffect(() => {
   //   if (flattenedData && flattenedData.length > 0) {
   //     setSelectedRows(flattenedData.map((_, index) => index)); // Set selectedRows to include all indices
