@@ -130,6 +130,18 @@ const Create = (props: any) => {
     );
     console.log(data, "change checkbox");
   };
+  const handleSelectAll = () => {
+    setData((prevSelections: any) =>
+      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: true }))
+    );
+    console.log(data, "change checkbox");
+  };
+  const handleSelectNone = () => {
+    setData((prevSelections: any) =>
+      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: false }))
+    );
+    console.log(data, "change checkbox");
+  };
   return (
     <form onSubmit={handleSubmit}>
       <Card>
@@ -224,69 +236,78 @@ const Create = (props: any) => {
               </Grid>
             </Grid>
           </Grid>{" "}
-          <Grid item xs={12} sm={12}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr>
-                  <td>
-                    <MDTypography variant="h5" color="secondary">
-                      Available Subjects
-                    </MDTypography>
-                  </td>
-                  <td>
-                    <MDTypography variant="h5" color="secondary">
-                      Selected Subjects
-                    </MDTypography>
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.length > 0
-                  ? data?.map((item: any, index: any) => (
-                      <tr key={index + item.subject_name}>
-                        <td style={{ textAlign: "left" }}>
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            {item.subject_name}
-                          </MDTypography>
-                        </td>
+          <Grid item xs={12} sm={12} m={4}>
+            {data.length > 0 && (
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr>
+                    <td
+                      style={{
+                        fontSize: "18px",
+                        textAlign: "left",
+                      }}
+                    >
+                      <b>Available Subjects</b>
+                    </td>
+                    <td
+                      style={{
+                        fontSize: "18px",
+                        textAlign: "left",
+                      }}
+                    >
+                      <b>Select</b>:
+                      <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
+                        All
+                      </MDButton>
+                      <MDButton color="info" variant="text" onClick={() => handleSelectNone()}>
+                        None
+                      </MDButton>
+                    </td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.length > 0
+                    ? data?.map((item: any, index: any) => (
+                        <tr key={index + item.subject_name}>
+                          <td style={{ textAlign: "left" }}>
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              {item.subject_name}
+                            </MDTypography>
+                          </td>
 
-                        <td>
-                          <Checkbox
-                            checked={item.is_selected}
-                            onChange={() => handleCheckboxChange(index)}
-                          />
-                        </td>
-                      </tr>
-                    ))
-                  : ""}
-              </tbody>
-            </table>
+                          <td>
+                            <Checkbox
+                              checked={item.is_selected}
+                              onChange={() => handleCheckboxChange(index)}
+                            />
+                          </td>
+                        </tr>
+                      ))
+                    : ""}
+                </tbody>
+              </table>
+            )}
           </Grid>
-          {data.length > 0 && (
-            <Grid
-              container
-              xs={12}
-              sm={12}
-              sx={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Grid item mt={4}>
-                <MDButton
-                  color="dark"
-                  variant="contained"
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  Back
-                </MDButton>
-              </Grid>
-              <Grid item ml={2} mt={4}>
+          <Grid container xs={12} sm={12} sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Grid item mt={4}>
+              <MDButton
+                color="dark"
+                variant="contained"
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Back
+              </MDButton>
+            </Grid>{" "}
+            {data.length > 0 && (
+              <Grid item mr={8} mt={4}>
                 <MDButton color="info" variant="contained" type="submit">
                   Save
                 </MDButton>
               </Grid>
-            </Grid>
-          )}
+            )}
+          </Grid>
         </MDBox>
       </Card>
     </form>
