@@ -7,6 +7,7 @@ build:
   script:
     - npm install
     - npx prettier --write .
+    - npm install ajv --save-dev
     - npm run build
   artifacts:
     paths:

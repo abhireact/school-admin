@@ -115,22 +115,32 @@ const Create = (props: any) => {
     <form onSubmit={handleSubmit}>
       <Card>
         {" "}
-        <MDBox p={4}>
-          <Grid container>
-            <Grid item xs={12} sm={4} py={1}>
+        <MDBox p={2}>
+          <Grid container px={2}>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Create Exam Type
+              </MDTypography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3} p={2}>
+            <Grid item xs={12} sm={4}>
               <MDInput
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="exam_type"
-                label={<MDTypography variant="body2">Exam Type Name</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Exam Type Name
+                  </MDTypography>
+                }
                 value={values.exam_type}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
-                sx={{ width: "70%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {
                   handleChange({
@@ -144,7 +154,11 @@ const Create = (props: any) => {
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
                     placeholder="2022-23"
-                    label={<MDTypography variant="body2">Academic Year</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.academic_year}
                     {...params}
@@ -153,9 +167,8 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
-                sx={{ width: "70%" }}
                 value={values.class_name}
                 onChange={
                   filteredClass.length > 1
@@ -172,7 +185,11 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="class_name"
-                    label={<MDTypography variant="body2">Class Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.class_name}
                     {...params}
@@ -181,9 +198,8 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
-                sx={{ width: "70%" }}
                 value={values.section_name}
                 onChange={
                   filteredSection.length >= 1
@@ -199,7 +215,11 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="section_name"
-                    label={<MDTypography variant="body2">Section Name</MDTypography>}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Section Name
+                      </MDTypography>
+                    }
                     onChange={handleChange}
                     value={values.section_name}
                     {...params}
@@ -209,12 +229,16 @@ const Create = (props: any) => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <MDInput
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="description"
-                label={<MDTypography variant="body2">Description</MDTypography>}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Description
+                  </MDTypography>
+                }
                 value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -227,21 +251,23 @@ const Create = (props: any) => {
               sm={12}
               sx={{ display: "flex", justifyContent: "flex-start" }}
             >
-              <Grid item mt={4}>
-                <MDButton
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => {
-                    handleShowPage();
-                  }}
-                >
-                  Back
-                </MDButton>
-              </Grid>
-              <Grid item ml={2} mt={4}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Save
-                </MDButton>
+              <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
+                <Grid item>
+                  <MDButton
+                    color="dark"
+                    variant="contained"
+                    onClick={() => {
+                      handleShowPage();
+                    }}
+                  >
+                    Back
+                  </MDButton>
+                </Grid>
+                <Grid item ml={2}>
+                  <MDButton color="info" variant="contained" type="submit">
+                    Save
+                  </MDButton>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

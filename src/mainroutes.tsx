@@ -45,6 +45,11 @@ import Subject from "layouts/pages/subject/subjectdetails";
 import SectionSubject from "layouts/pages/subject/section_subject";
 import EmployeeSubject from "layouts/pages/subject/employee_subject";
 
+//EXAMINATION module
+import Examtype from "layouts/pages/exam/exam_type";
+import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
+import CreateStudentID from "layouts/pages/student/studentID_card/create";
+
 const routes = [
   {
     type: "collapse",
@@ -124,7 +129,7 @@ const routes = [
       // },
     ],
   },
-
+  // Student
   {
     type: "collapse",
     name: "Student",
@@ -176,6 +181,12 @@ const routes = [
         key: "studentcategory",
         route: "/pages/school/studentcategory",
         component: <StudentCategory />,
+      },
+      {
+        name: "Student ID Card",
+        key: "student_id",
+        route: "/pages/school/student_id",
+        component: <CreateStudentID />,
       },
       {
         name: "House Details",
@@ -233,43 +244,67 @@ const routes = [
   //   ),
   //   collapse: [
   //     {
-  //       name: "Exam Type",
-  //       key: "examtype",
-  //       route: "pages/exam/examtype",
-  //       component: <ExamType />,
+  //       name: "Subject Info",
+  //       key: "subjectinfo",
+  //       route: "pages/subject/subjectinfo",
+  //       component: <Subject />,
   //     },
   //     {
-  //       name: "Scholastic Particular",
-  //       key: "scholastic_particular",
-  //       route: "/pages/exam/scholastic_particular",
-  //       component: <Scholastic />,
-  //     },
-  //     {
-  //       name: "Scholastic Component",
-  //       key: "scholastic_component",
-  //       route: "/pages/exam/scholastic_component",
-  //       component: <ScholasticComponent />,
-  //     },
-  //     {
-  //       name: "Other Particular",
-  //       key: "other_particular",
-  //       route: "/pages/exam/other_particular",
-  //       component: <OtherParticular />,
-  //     },
-  //     {
-  //       name: "Other Component",
-  //       key: "other_component",
-  //       route: "/pages/exam/other_component",
-  //       component: <OtherComponent />,
-  //     },
-  //     {
-  //       name: "Exam Schedule",
-  //       key: "exam_schedule",
-  //       route: "/pages/exam/exam_schedule",
-  //       component: <ExamSchedule />,
+  //       name: "Sub-Subject",
+  //       key: "subsubject",
+  //       route: "pages/subject/subsubject",
+  //       component: <SubSubject />,
   //     },
   //   ],
   // },
+  {
+    type: "collapse",
+    name: "Exam Setting",
+    key: "exam",
+    // icon: (
+    //   <Icon fontSize="medium">
+    //     <EditNoteIcon />
+    //   </Icon>
+    // ),
+    collapse: [
+      {
+        name: "Exam Type",
+        key: "examtype",
+        route: "pages/exam/examtype",
+        component: <Examtype />,
+      },
+      // {
+      //   name: "Scholastic Particular",
+      //   key: "scholastic_particular",
+      //   route: "/pages/exam/scholastic_particular",
+      //   component: <Scholastic />,
+      // },
+      // {
+      //   name: "Scholastic Component",
+      //   key: "scholastic_component",
+      //   route: "/pages/exam/scholastic_component",
+      //   component: <ScholasticComponent />,
+      // },
+      // {
+      //   name: "Other Particular",
+      //   key: "other_particular",
+      //   route: "/pages/exam/other_particular",
+      //   component: <OtherParticular />,
+      // },
+      // {
+      //   name: "Other Component",
+      //   key: "other_component",
+      //   route: "/pages/exam/other_component",
+      //   component: <OtherComponent />,
+      // },
+      // {
+      //   name: "Exam Schedule",
+      //   key: "exam_schedule",
+      //   route: "/pages/exam/exam_schedule",
+      //   component: <ExamSchedule />,
+      // },
+    ],
+  },
   {
     type: "collapse",
     name: "Employee",
@@ -317,6 +352,12 @@ const routes = [
         key: "department",
         route: "pages/employee/department",
         component: <Department />,
+      },
+      {
+        name: "Assign Class Teacher",
+        key: "assignclassteacher",
+        route: "employee/assignclassteacher",
+        component: <AssignClassTeacher />,
       },
     ],
   },
