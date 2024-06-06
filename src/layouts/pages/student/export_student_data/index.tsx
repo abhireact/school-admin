@@ -13,7 +13,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import ExportExcel from "layouts/pages/student/export_student_data/export_excel";
-import ExportPDFList from "./export_pdf";
+// import ExportPDFList from "./export_pdf";
 import * as Yup from "yup";
 
 import Cookies from "js-cookie";
@@ -135,7 +135,8 @@ const CollectionList = () => {
     <DashboardLayout>
       <DashboardNavbar />
       {pdfpage ? (
-        <ExportPDFList pdfdata={values} pdftype={pdftype} handleClose={handleClosepdf} />
+        // <ExportPDFList pdfdata={values} pdftype={pdftype} handleClose={handleClosepdf} />
+        f
       ) : (
         <Card>
           <form onSubmit={handleSubmit}>
