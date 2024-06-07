@@ -15,6 +15,10 @@ import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category
 
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/create_message_template";
+import Subject from "layouts/pages/subject/subjectdetails";
+import SectionSubject from "layouts/pages/subject/section_subject";
+import EmployeeSubject from "layouts/pages/subject/employee_subject";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -64,6 +68,36 @@ let routes = [
         key: "analytics",
         route: "/dashboards/analytics",
         component: <MyDashboard />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Subject",
+    key: "subject",
+    icon: (
+      <Icon fontSize="medium">
+        <LocalLibraryIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Subject Details",
+        key: "subjectdetails",
+        route: "pages/subject/subjectdetails",
+        component: <Subject />,
+      },
+      {
+        name: "Section Subject",
+        key: "sectionsubject",
+        route: "pages/subject/sectionsubject",
+        component: <SectionSubject />,
+      },
+      {
+        name: "Employee Subject",
+        key: "employeesubject",
+        route: "pages/subject/employeesubject",
+        component: <EmployeeSubject />,
       },
     ],
   },

@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
   admission_number: Yup.string(),
   fee_code: Yup.string(),
   first_name: Yup.string().required("Required *"),
-  last_name: Yup.string().required("Required *"),
+  last_name: Yup.string(),
   mobile_number: Yup.string()
     .matches(/^[0-9]{10}$/, "Incorrect Format *")
     .required("Required *"),
