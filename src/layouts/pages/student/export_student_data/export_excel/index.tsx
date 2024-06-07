@@ -44,13 +44,7 @@ const ExportExcel: React.FC<ExportExcelProps> = ({ exceldata, fileName }) => {
   };
 
   return (
-    <MDButton
-      variant="contained"
-      
-      color="info"
-      type="submit"
-     onClick={handleExport} 
-    >
+    <MDButton variant="contained" color="info" type="submit" onClick={handleExport}>
       {isExporting ? "Exporting..." : "Export to Excel"}
     </MDButton>
   );
