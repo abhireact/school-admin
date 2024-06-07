@@ -73,6 +73,7 @@ const EmployeeSubject = () => {
   useEffect(() => {
     fetchEmployeeList();
   }, []);
+
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete("${process.env.REACT_APP_BASE_URL}/mg_subject", {
