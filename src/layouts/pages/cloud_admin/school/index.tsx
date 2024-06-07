@@ -64,7 +64,7 @@ const SchoolCreation = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const FetchModule = () => {
+  const FetchAllSchool = () => {
     axios
       .get(
         `http://10.0.20.200:8000/mg_school/all_school
@@ -87,28 +87,9 @@ const SchoolCreation = () => {
   };
 
   useEffect(() => {
-    FetchModule();
+    FetchAllSchool();
   }, []);
-  const handleDelete = async (name: any) => {
-    try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_castes`, {
-        data: { caste_name: name },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        FetchModule();
-      }
-    } catch (error: unknown) {
-      console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error("An unexpected error occurred");
-    }
-  };
+
   const dataTableData = {
     columns: [
       { Header: "Name", accessor: "school_name" },
@@ -124,7 +105,7 @@ const SchoolCreation = () => {
     ],
 
     rows: data.map((row, index) => ({
-      school_name: <MDTypography variant="p">{row.school_name}</MDTypography>,
+      school_name: row.school_name,
 
       reg_num: <MDTypography variant="p">{row.reg_num}</MDTypography>,
       city: <MDTypography variant="p">{row.city}</MDTypography>,
@@ -176,13 +157,13 @@ const SchoolCreation = () => {
             </MDButton>
           </Grid>
         </Grid>
-        <DataTable table={dataTableData} />
+        <DataTable table={dataTableData} canSearch />
       </Card>
       <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={FetchModule} />
+        <Create setOpen={setOpen} fetchData={FetchAllSchool} />
       </Dialog>
       <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchModule} />
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={FetchAllSchool} />
       </Dialog>
     </DashboardLayout>
   );

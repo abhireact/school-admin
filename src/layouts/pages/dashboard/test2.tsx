@@ -951,6 +951,7 @@ const MyDataTableComponent = () => {
       isSorted={false}
       entriesPerPage={false}
       showTotalEntries={false}
+      importbtn
     />
   );
 };

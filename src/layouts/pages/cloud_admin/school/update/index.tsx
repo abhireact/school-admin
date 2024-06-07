@@ -21,11 +21,13 @@ import MDAvatar from "components/MDAvatar";
 const token = Cookies.get("token");
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { message } from "antd";
+import CloudAdminRbac from "../../rbac";
 interface FormValues {
   school_name: string;
   school_code: string;
   start_time: string;
   end_time: string;
+  subdomain: string;
   affiliated_to: string;
   reg_num: string;
   mg_leave_calendar_start_date: string;
@@ -144,6 +146,7 @@ const Update = (props: any) => {
     school_code: editData.school_code || "",
     start_time: editData.start_time || "",
     end_time: editData.end_time || "",
+    subdomain: editData.subdomain || "",
     // affilicated_to: editData.affilicated_to || "",
     reg_num: editData.reg_num || "",
     mg_leave_calendar_start_date: editData.mg_leave_calendar_start_date || "",
@@ -210,6 +213,7 @@ const Update = (props: any) => {
       }
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <Card>
@@ -569,6 +573,7 @@ const Update = (props: any) => {
                   Save
                 </MDButton>
               </Grid>
+              <CloudAdminRbac school_code={values.subdomain} school_name={values.school_name} />
             </Grid>
           </Grid>
         </MDBox>

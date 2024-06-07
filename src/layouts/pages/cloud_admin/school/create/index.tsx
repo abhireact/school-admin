@@ -21,9 +21,11 @@ import MDAvatar from "components/MDAvatar";
 const token = Cookies.get("token");
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { message } from "antd";
+import Rbac from "layouts/pages/rbac/rbac";
+import CloudAdminRbac from "../../rbac";
 interface FormValues {
   school_name: string;
-  subdomain: "hhckvv";
+  subdomain: "";
   school_code: string;
   start_time: string;
   end_time: string;
@@ -578,7 +580,7 @@ const Create = (props: any) => {
                 </Grid>
               </Grid>
             ))} */}
-              {moduleData.map((module, index) => (
+              {/* {moduleData.map((module, index) => (
                 <Grid key={index} item sm={12} xs={12} container>
                   <Grid item xs={12} sm={3}>
                     <FormControl>
@@ -657,7 +659,7 @@ const Create = (props: any) => {
                     </>
                   )}
                 </Grid>
-              ))}
+              ))} */}
               <Grid
                 sm={3}
                 xs={12}
@@ -670,6 +672,7 @@ const Create = (props: any) => {
                 </MDButton>
               </Grid>
             </Grid>
+            <CloudAdminRbac school_code={values.subdomain} school_name={values.school_name} />
           </MDBox>
         </Card>
       </form>

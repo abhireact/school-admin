@@ -127,12 +127,12 @@ const Showrole = () => {
       <DashboardNavbar />
       <MDTypography variant="h4">ROLES</MDTypography>
       <Grid container sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <MDButton variant="outlined" color="info" onClick={() => handleClickOpen()}>
+        {/* <MDButton variant="outlined" color="info" onClick={() => handleClickOpen()}>
           + Add Role
         </MDButton>
         <Dialog open={open} onClose={handleClose}>
           <Addrole setOpen={setOpen} />
-        </Dialog>
+        </Dialog> */}
         <Dialog open={openupdate} onClose={handleCloseupdate}>
           <Editrole setOpenupdate={setOpenupdate} editData={editData} />
         </Dialog>

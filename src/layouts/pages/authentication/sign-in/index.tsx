@@ -435,7 +435,7 @@ function CoverLogin(): JSX.Element {
         const token = res.data.access_token;
         Cookies.set("token", token, { expires: 7 });
         navigate("/dashboards/analytics");
-        window.location.reload();
+        // window.location.reload();
         message.success("Login Successful");
       } else {
         message.error("Invalid email or password");
