@@ -142,7 +142,7 @@ export default function SmsSetting() {
       <Dialog open={managelimitopen} onClose={handleManageLimit}>
         <ManageLimit data={popupdata[0]} sc_name={schoolName} onSuccess={handleEditSuccess} />
       </Dialog>
-      <Dialog open={prioritypopup} onClose={handlePriorityClose}>
+      <Dialog open={prioritypopup} onClose={handlePriorityClose} maxWidth="lg">
         <Priority data={popupdata} sc_name={schoolName} onSuccess={handleEditSuccess} />
       </Dialog>
       <Card>

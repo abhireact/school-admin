@@ -15,6 +15,10 @@ import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category
 
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/create_message_template";
+import ClassTiming from "layouts/pages/employee/class_timing";
+import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
+import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
+import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -134,6 +138,30 @@ let routes = [
     key: "create_template",
     route: "/notification/create_template",
     component: <CreateTemplate />,
+  },
+  {
+    name: "Class Timing",
+    key: "classtiming",
+    route: "attendance/class_timing",
+    component: <ClassTiming />,
+  },
+  {
+    name: " create Class Timing",
+    key: "createclasstiming",
+    route: "attendance/create_class_timing",
+    component: <ClassTimingCreate />,
+  },
+  {
+    name: "Sms Configuration",
+    key: "sms_configuration",
+    route: "notification/sms_configuration",
+    component: <SMSConfiguration />,
+  },
+  {
+    name: "Sms Configuration show",
+    key: "sms_configurationshow",
+    route: "notification/sms_configuration_show",
+    component: <SmsConfiguration />,
   },
 ];
 

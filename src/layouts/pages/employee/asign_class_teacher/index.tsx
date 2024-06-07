@@ -169,7 +169,14 @@ export default function AssignClassTeacher() {
           <Grid container spacing={1}>
             <Grid item>
               <Tooltip title="Edit" placement="top">
-                <Icon fontSize="small">edit</Icon>
+                <Icon
+                  fontSize="small"
+                  onClick={() => {
+                    handleClickOpenEdit(data);
+                  }}
+                >
+                  edit
+                </Icon>
               </Tooltip>
             </Grid>
           </Grid>
@@ -222,15 +229,15 @@ export default function AssignClassTeacher() {
                   dataSource={data}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
                 <Grid item>
                   <MDButton color="dark" variant="contained" onClick={handleClickCloseEdit}>
-                    Back
+                    Cancel
                   </MDButton>
                 </Grid>
                 <Grid item ml={2}>
                   <MDButton color="info" variant="contained" type="submit" onClick={onsubmitt}>
-                    Save
+                    Assign
                   </MDButton>
                 </Grid>
               </Grid>
@@ -243,7 +250,7 @@ export default function AssignClassTeacher() {
               <Grid container px={3} pt={3}>
                 <Grid item xs={12} sm={6} mt={2}>
                   <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                    Asign Class Teacher
+                    Assign Class Teacher
                   </MDTypography>
                 </Grid>
               </Grid>
@@ -301,6 +308,7 @@ export default function AssignClassTeacher() {
               </Grid>
             </Card>
           </Grid>
+
           <Grid item xs={12} sm={12}>
             <Card>
               <DataTable table={feeConcessionData} isSorted={false} canSearch={true} />

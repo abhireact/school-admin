@@ -7,10 +7,10 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Table } from "antd";
+import { Table, message } from "antd";
 import { useSelector } from "react-redux";
 import { Divider } from "antd";
-
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
 const token = Cookies.get("token");
 
 interface DataType {
@@ -19,7 +19,7 @@ interface DataType {
   userid: string;
 }
 
-const initialValues = {
+let initialValues = {
   message_type: "",
   subject: "",
   message: "",
@@ -83,10 +83,11 @@ export default function SendMail() {
               },
             })
             .then((response) => {
-              console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+              message.success(response.data.message);
+              action.resetForm();
             })
             .catch((error) => {
-              console.error("Error fetching data:", error);
+              message.error(error.response.data.detail);
             });
         } else if (values.message_type === "Inter-Portal") {
           axios
@@ -97,10 +98,11 @@ export default function SendMail() {
               },
             })
             .then((response) => {
-              console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+              message.success(response.data.message);
+              action.resetForm();
             })
             .catch((error) => {
-              console.error("Error fetching data:", error);
+              message.error(error.response.data.detail);
             });
         }
       },
@@ -109,9 +111,9 @@ export default function SendMail() {
     console.log(values, "filtered post value");
     const postvalue = {
       user_type: values.send_to,
-      class_name: [values.class_name],
+      class_name: values.class_name != "" ? [values.class_name] : [],
       filter: values.filter,
-      section_name: [values.section_name],
+      section_name: values.section_name != "" ? [values.section_name] : [],
       academic_year: values.academic_year,
       schedule: values.schedule,
       department: values.department,
@@ -144,14 +146,32 @@ export default function SendMail() {
       dataIndex: "userid",
     },
   ];
-
+  console.log(receiverData, "receivers data");
   const data: DataType[] = receiverData.map((dataItem: any, index: number) => ({
-    key: values.send_to === "Parent" ? dataItem.guardian_user_id : dataItem.user_id,
+    key:
+      values.send_to === "Parent"
+        ? dataItem.guardian_user_id
+        : values.send_to === "Student"
+        ? dataItem.user_id
+        : values.send_to === "Employee"
+        ? dataItem.employee_user_id
+        : null,
     name:
       values.send_to === "Parent"
         ? dataItem.guardian_name
-        : `${dataItem.first_name} ${dataItem.middle_name} ${dataItem.last_name}`, // Example name, replace with actual data
-    userid: values.send_to === "Parent" ? dataItem.guardian_user_id : dataItem.user_id,
+        : values.send_to === "Parent"
+        ? `${dataItem.first_name} ${dataItem.middle_name} ${dataItem.last_name}`
+        : values.send_to === "Employee"
+        ? dataItem.employee_name
+        : null,
+    userid:
+      values.send_to === "Parent"
+        ? dataItem.guardian_user_id
+        : values.send_to === "Student"
+        ? dataItem.user_id
+        : values.send_to === "Employee"
+        ? dataItem.employee_user_id
+        : null,
   }));
 
   const rowSelection = {
@@ -159,6 +179,20 @@ export default function SendMail() {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
       setSelectedRowKeys(selectedRowKeys);
     },
+  };
+  const handleReset = () => {
+    initialValues = {
+      message_type: "",
+      subject: "",
+      message: "",
+      academic_year: "",
+      send_to: "",
+      class_name: "",
+      section_name: "",
+      filter: "",
+      schedule: "",
+      department: "",
+    };
   };
 
   return (
@@ -176,7 +210,8 @@ export default function SendMail() {
             <Grid container spacing={3} p={2}>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
-                  onChange={(_event, value) => {
+                  onChange={(e, value) => {
+                    handleReset();
                     handleChange({ target: { name: "message_type", value } });
                   }}
                   options={["SMS", "Inter-Portal", "Email"]}
@@ -184,7 +219,6 @@ export default function SendMail() {
                     <MDInput
                       required
                       name="message_type"
-                      onChange={handleChange}
                       value={values.message_type}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">

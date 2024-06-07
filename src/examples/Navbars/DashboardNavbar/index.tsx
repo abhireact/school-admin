@@ -33,7 +33,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 // Material Dashboard 2 PRO React TS examples components
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
-import { Grid, Card, Autocomplete } from "@mui/material";
+import { Grid, Card, Autocomplete, Divider } from "@mui/material";
 import MDTypography from "components/MDTypography";
 import MarkChatReadIcon from "@mui/icons-material/MarkChatRead";
 import MarkChatUnreadIcon from "@mui/icons-material/MarkChatUnread";
@@ -65,11 +65,27 @@ interface Props {
   light?: boolean;
   isMini?: boolean;
 }
+interface Notification {
+  id: number;
+  from_user_id: string;
+  subject: string;
+  description: string;
+  status: boolean;
+  notification_type: string;
+}
 
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [message, setMessage] = useState([]);
   const [editopen, setEditOpen] = useState(false);
-  const [editdata, setEditdata] = useState({});
+  const [unread, setUnread] = useState(0);
+  const [editdata, setEditdata] = useState<Notification>({
+    id: 0,
+    from_user_id: "",
+    subject: "",
+    description: "",
+    status: false,
+    notification_type: "",
+  });
   const [navbarType, setNavbarType] = useState<
     "fixed" | "absolute" | "relative" | "static" | "sticky"
   >();
@@ -77,10 +93,9 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState<any>(false);
   const route = useLocation().pathname.split("/").slice(1);
-
-  useEffect(() => {
+  const fetchNotification = async () => {
     axios
-      .get("http://10.0.20.200:8000/mg_users_name/", {
+      .get("http://10.0.20.200:8000/internal_portal/notifications", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -88,22 +103,23 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       })
       .then((response) => {
         setMessage(response.data);
-
-        console.log(response.data);
+        //
+        const countOddNumbers: number = response.data.reduce((count: any, data: any) => {
+          if (!data.status) {
+            return count + 1; // Increment count if the number is odd
+          } else {
+            return count; // Otherwise, return count unchanged
+          }
+        }, 0);
+        setUnread(countOddNumbers);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    // setMessage([
-    //   { message: "aaaaaaaaaaaaaaaasd", read: true },
-    //   { message: "fvgfds", read: true },
-    //   { message: "wewwer", read: false },
-    //   { message: "asss", read: true },
+  };
 
-    //   { message: "aaaaaaabhnjmnjaaaaaaaaasd", read: true },
-
-    //   { message: "mmm", read: false },
-    // ]);
+  useEffect(() => {
+    fetchNotification();
   }, []);
   useEffect(() => {
     // Setting the navbar type
@@ -136,8 +152,31 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const handleOpenMenu = (event: any) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
   const handleClickOpenEdit = (data: any) => {
+    console.log(data, "dddddddddddddddd");
     setEditdata(data);
     setEditOpen(true);
+    if (data.status) {
+    } else {
+      axios
+        .put(
+          `http://10.0.20.200:8000/internal_portal/notifications/${data.id}`,
+          {
+            status: true,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          fetchNotification();
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
   };
 
   const handleClickCloseEdit = () => {
@@ -164,11 +203,11 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
             <NotificationItem
               key={index}
               icon={
-                <Icon color={data.read ? "info" : "secondary"}>
-                  {data.read ? <MarkChatReadIcon /> : <MarkChatUnreadIcon />}
+                <Icon color={data.status ? "secondary" : "info"}>
+                  {data.status ? <MarkChatReadIcon /> : <MarkChatUnreadIcon />}
                 </Icon>
               }
-              title={`${data.message.substring(0, 10)}`}
+              title={`${data.subject}`}
               onClick={() => handleClickOpenEdit(data)}
             />
           ))
@@ -206,10 +245,10 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
     >
       <Dialog open={editopen} onClose={handleClickCloseEdit}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={12}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              mmmmmmmmmm
-            </MDTypography>
+          <Grid item xs={12} sm={12} m={4}>
+            <MDTypography variant="h6">{editdata.subject}</MDTypography>
+            <Divider />
+            <MDTypography variant="button">{editdata.description}</MDTypography>
           </Grid>
         </Grid>
       </Dialog>
@@ -259,7 +298,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                 sx={navbarIconButton}
                 onClick={handleOpenMenu}
               >
-                <MDBadge badgeContent={9} color="error" size="xs" circular>
+                <MDBadge badgeContent={unread} color="error" size="xs" circular>
                   <Icon sx={iconsStyle}>notifications</Icon>
                 </MDBadge>
               </IconButton>

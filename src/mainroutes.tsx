@@ -44,6 +44,7 @@ import StudentPromotion from "layouts/pages/student/student_promotion";
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
 import WeekDays from "layouts/pages/employee/week_days";
+import ClassTiming from "layouts/pages/employee/class_timing";
 
 const routes = [
   {
@@ -256,6 +257,19 @@ const routes = [
       //   route: "/pages/exam/exam_schedule",
       //   component: <ExamSchedule />,
       // },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Attendance",
+    key: "attendance",
+    collapse: [
+      {
+        name: "Class Timing",
+        key: "classtiming",
+        route: "attendance/class_timing",
+        component: <ClassTiming />,
+      },
     ],
   },
   {
