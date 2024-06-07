@@ -80,7 +80,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_users_name/", {
+      .get(" ", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

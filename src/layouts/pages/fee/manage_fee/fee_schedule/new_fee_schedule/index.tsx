@@ -504,10 +504,13 @@ const Create = (props: any) => {
                           textAlign: "left",
                         }}
                       >
-                        <b>Select</b>: &nbsp;All
-                        <Checkbox checked={allCheck} onChange={() => handleSelectAll()} />
-                        &nbsp; None
-                        <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
+                        <b>Select</b>:
+                        <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
+                          All
+                        </MDButton>
+                        <MDButton color="info" variant="text" onClick={() => handleSelectNone()}>
+                          None
+                        </MDButton>
                       </td>
                     </tr>
                   </thead>

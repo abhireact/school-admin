@@ -7,11 +7,11 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
+import BuildIcon from "@mui/icons-material/Build";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
-import Update from "./update";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
 import { Card, useMediaQuery } from "@mui/material";
@@ -21,7 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const Subject = () => {
+const EmployeeSubject = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -52,32 +52,16 @@ const Subject = () => {
   //End
   const [data, setData] = useState([]);
 
-  //Update Dialog Box Start
-  const [editData, setEditData] = useState(null);
-  const [openupdate, setOpenupdate] = useState(false);
-
-  const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
-    const main_data = data[index];
-    console.log(main_data, "maindata");
-
-    setOpenupdate(true);
-    setEditData(main_data);
-  };
-
-  const handleCloseupdate = () => {
-    setOpenupdate(false);
-  }; //End
-  const fetchSubjects = () => {
+  const fetchEmployeeList = () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_subject`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setData(response.data);
+        setData(response.data.filter((info: any) => info.employe_type == "Teaching Staff"));
 
         console.log(response.data);
       })
@@ -87,7 +71,7 @@ const Subject = () => {
   };
 
   useEffect(() => {
-    fetchSubjects();
+    fetchEmployeeList();
   }, []);
   const handleDelete = async (name: any) => {
     try {
@@ -104,7 +88,7 @@ const Subject = () => {
       });
       if (response.status === 200) {
         message.success("Deleted successFully");
-        fetchSubjects();
+        fetchEmployeeList();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
@@ -114,10 +98,10 @@ const Subject = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Subject", accessor: "subject_name", width: "20%" },
-      { Header: "Class Name", accessor: "class_name", width: "20%" },
-      { Header: "Max Weekly Class", accessor: "max_weekly_class", width: "20%" },
-      { Header: "No. of Class", accessor: "no_of_classes", width: "20%" },
+      { Header: "Employee No.", accessor: "user_id", width: "20%" },
+      { Header: "Employee Name", accessor: "employee_name", width: "20%" },
+      { Header: "Category Position", accessor: "category_position", width: "20%" },
+
       { Header: "Action", accessor: "action", width: "20%" },
     ],
 
@@ -126,69 +110,56 @@ const Subject = () => {
         <MDTypography variant="p">
           <IconButton
             onClick={() => {
-              handleOpenupdate(index);
+              handleSettings(row);
             }}
           >
-            <CreateRoundedIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={() => {
-              handleDelete(row);
-            }}
-          >
-            <DeleteIcon />
+            <BuildIcon />
           </IconButton>
         </MDTypography>
       ),
-      subject_code: row.subject_code,
-      subject_name: row.subject_name,
 
-      class_name: row.class_name,
-      max_weekly_class: row.max_weekly_class,
-      no_of_classes: row.no_of_classes,
+      user_id: row.user_id,
+
+      employee_name: row.employee_name,
+      category_position: row.employe_type,
     })),
   };
   const [showpage, setShowpage] = useState(false);
-  const handleShowPage = () => {
+  const [employeedata, setEmployeedata] = useState({});
+  const handleClose = () => {
     setShowpage(!showpage);
+  };
+  const handleSettings = (info: any) => {
+    setShowpage(!showpage);
+    setEmployeedata(info);
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
       {showpage ? (
         <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchSubjects} />
+          <Create
+            handleClose={handleClose}
+            fetchData={fetchEmployeeList}
+            employeedata={employeedata}
+          />
         </>
       ) : (
         <>
-          {" "}
           <Card>
             <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
               <Grid item pt={2} pl={2}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Subject
+                  Employee Subject List
                 </MDTypography>
-              </Grid>
-              <Grid item pt={2} pr={2}>
-                <MDButton variant="outlined" color="info" onClick={handleShowPage}>
-                  + New Subject
-                </MDButton>
               </Grid>
             </Grid>
             <DataTable table={dataTableData} canSearch />
           </Card>
-          <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-            <Update
-              setOpenupdate={setOpenupdate}
-              editData={editData}
-              fetchingData={fetchSubjects}
-            />
-          </Dialog>
         </>
       )}
     </DashboardLayout>
   );
 };
 
-export default Subject;
+export default EmployeeSubject;

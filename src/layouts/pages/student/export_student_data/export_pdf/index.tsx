@@ -9,12 +9,17 @@
 // import MDBox from "components/MDBox";
 // import Card from "@mui/material/Card";
 // import DataTable from "examples/Tables/DataTable";
+
 // import axios from "axios";
 // import Cookies from "js-cookie";
+// import Dialog from "@mui/material/Dialog";
+// import Grid from "@mui/material/Grid";
+// import { message } from "antd";
 // const token = Cookies.get("token");
 
-// function App() {
-//   const [loader, setLoader] = useState(false);
+// const ExportPDFList = (props: any) => {
+//   const { pdfdata, handleClose } = props;
+//   const [data, setData] = useState();
 //   const [selectedSize, setSelectedSize] = useState("A4");
 //   const [customWidth, setCustomWidth] = useState(210);
 //   const [customHeight, setCustomHeight] = useState(297);
@@ -65,12 +70,33 @@
 //     }
 //   };
 
+//   const fetchExportStudentData = () => {
+//     axios
+//       .post(
+//         `${process.env.REACT_APP_BASE_URL}/mg_student/student_report/export_student_data`,
+//         pdfdata,
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       )
+//       .then((response) => {
+//         setData(response.data);
+
+//         console.log("export student pdf data", response.data);
+//       })
+//       .catch((error: any) => {
+//         message.error(error.response.data.detail);
+//       });
+//   };
 //   useEffect(() => {
 //     fetchImages();
+//     fetchExportStudentData();
 //   }, []);
 
 //   const downloadPDF = () => {
-//     setLoader(true);
 //     const captureElement = captureRef.current;
 
 //     const ensureImagesLoaded = (element: HTMLDivElement) => {
@@ -102,26 +128,17 @@
 //         const width = doc.internal.pageSize.getWidth();
 //         const height = (canvas.height * width) / canvas.width;
 //         doc.addImage(imgData, "JPEG", 0, 0, width, height);
-//         setLoader(false);
+
 //         const compressedPdf = doc.output("blob");
 //         saveAs(compressedPdf, "pdf-editor.pdf");
 //       })
 //       .catch((error) => {
 //         console.error("Error capturing the canvas:", error);
-//         setLoader(false);
 //       });
 //   };
 
 //   return (
 //     <>
-//       <MDButton
-//         type="button"
-//         className="receipt-modal-download-button btn btn-outline-primary"
-//         onClick={downloadPDF}
-//       >
-//         {loader ? "Downloading" : "Download"}
-//       </MDButton>
-
 //       <Card sx={{ width: 794, height: 1123 }}>
 //         <MDBox className="container">
 //           <MDBox className="receipt-box" ref={captureRef}>
@@ -149,9 +166,42 @@
 //             </div>
 //           </MDBox>
 //         </MDBox>
-//       </Card>
+//       </Card>{" "}
+//       <Grid
+//         item
+//         container
+//         xs={12}
+//         sm={12}
+//         sx={{ display: "flex", justifyContent: "center" }}
+//         mr={2}
+//       >
+//         <Grid item mt={2} mr={2}>
+//           <MDButton
+//             type="button"
+//             color="info"
+//             variant="contained"
+//             onClick={() => {
+//               downloadPDF();
+//             }}
+//           >
+//             Download
+//           </MDButton>
+//         </Grid>
+//         <Grid item mt={2}>
+//           <MDButton
+//             type="button"
+//             color="dark"
+//             variant="contained"
+//             onClick={() => {
+//               handleClose();
+//             }}
+//           >
+//             back
+//           </MDButton>
+//         </Grid>
+//       </Grid>
 //     </>
 //   );
-// }
+// };
 
-// export default App;
+// export default ExportPDFList;

@@ -19,11 +19,11 @@ const validationSchema = Yup.object().shape({
   subject_code: Yup.string().required("Required *"),
   scoring_type: Yup.string().required("Required *"),
   academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
   max_weekly_class: Yup.number().required("Required *"),
-  index: Yup.number().required("Required *"),
-  no_of_classes: Yup.number().required("Required *"),
+  index: Yup.number(),
+  no_of_classes: Yup.number(),
 });
 const Update = (props: any) => {
   const token = Cookies.get("token");
@@ -46,7 +46,7 @@ const Update = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ const Update = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_class", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -87,9 +87,9 @@ const Update = (props: any) => {
       is_core_subject: editData.is_core_subject,
       is_lab: editData.is_lab,
       is_extra_curricular: editData.is_extra_curricular,
-      no_of_classes: editData.no_of_classes,
+      no_of_classes: editData.no_of_classes ? editData.no_of_classes : 0,
       scoring_type: editData.scoring_type,
-      index: editData.index,
+      index: editData.index ? editData.index : 0,
     },
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -99,7 +99,7 @@ const Update = (props: any) => {
         old_subject_code: editData.subject_code,
       };
       axios
-        .put("http://10.0.20.200:8000/mg_subject", sendValues, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_subject`, sendValues, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -111,16 +111,23 @@ const Update = (props: any) => {
           handleClose();
           action.resetForm();
         })
-        .catch(() => {
-          message.error("Error on Updating !");
+        .catch((error: any) => {
+          console.log(error, "school error");
+          message.error(error.response.data.detail);
         });
     },
   });
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        {" "}
         <MDBox p={4}>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Grid item>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Update Subject
+              </MDTypography>
+            </Grid>
+          </Grid>
           <Grid container>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
@@ -160,11 +167,11 @@ const Update = (props: any) => {
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.scoring_type}
-                //  onChange={(event, value) => {
-                //     handleChange({
-                //       target: { name: "scoring_type", value },
-                //     });
-                //   }}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "scoring_type", value },
+                  });
+                }}
                 options={score_categories}
                 renderInput={(params: any) => (
                   <MDInput
@@ -185,6 +192,38 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
+            <Grid item xs={6} sm={2.5} mt={4}>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Core Subject
+              </MDTypography>
+            </Grid>
+            <Grid item xs={6} sm={1.5} mt={3}>
+              <Checkbox
+                checked={values.is_core_subject}
+                onChange={handleChange}
+                name="is_core_subject"
+              />
+            </Grid>
+            <Grid item xs={6} sm={2.5} mt={4}>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Lab Subject
+              </MDTypography>
+            </Grid>
+            <Grid item xs={6} sm={1.5} mt={3}>
+              <Checkbox checked={values.is_lab} onChange={handleChange} name="is_lab" />
+            </Grid>
+            <Grid item xs={6} sm={2.5} mt={4}>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Extra-curricular Subject
+              </MDTypography>
+            </Grid>
+            <Grid item xs={6} sm={1.5} mt={3}>
+              <Checkbox
+                checked={values.is_extra_curricular}
+                onChange={handleChange}
+                name="is_extra_curricular"
+              />
+            </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
@@ -197,7 +236,7 @@ const Update = (props: any) => {
                   </MDTypography>
                 }
                 value={values.max_weekly_class}
-                //onChange={handleChange}
+                onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.max_weekly_class && Boolean(errors.max_weekly_class)}
                 helperText={touched.max_weekly_class && errors.max_weekly_class}
@@ -215,7 +254,7 @@ const Update = (props: any) => {
                   </MDTypography>
                 }
                 value={values.no_of_classes}
-                //onChange={handleChange}
+                onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.no_of_classes && Boolean(errors.no_of_classes)}
                 helperText={touched.no_of_classes && errors.no_of_classes}
@@ -239,52 +278,11 @@ const Update = (props: any) => {
                 helperText={touched.index && errors.index}
               />
             </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Core Subject
-              </MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
-                checked={values.is_core_subject}
-                //     onChange={handleChange}
-                name="is_core_subject"
-              />
-            </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Lab Subject
-              </MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
-                checked={values.is_lab}
-                // onChange={handleChange}
-                name="is_lab"
-              />
-            </Grid>{" "}
-            <Grid item xs={6} sm={2.5} mt={4}>
-              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Extra-curricular Subject
-              </MDTypography>
-            </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
-                checked={values.is_extra_curricular}
-                //onChange={handleChange}
-                name="is_extra_curricular"
-              />
-            </Grid>{" "}
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 sx={{ width: "70%" }}
                 value={values.academic_year}
-                // onChange={(event, value) => {
-                //   handleChange({
-                //     target: { name: "academic_year", value },
-                //   });
-                //   filterDataByAcdName(classdata, value);
-                // }}
+                disabled
                 options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
                   <MDInput
@@ -308,17 +306,18 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
+                disabled
                 sx={{ width: "70%" }}
                 value={values.class_name}
-                // onChange={
-                //   filteredClass.length >= 1
-                //     ? (event, value) => {
-                //         handleChange({
-                //           target: { name: "class_name", value },
-                //         });
-                //       }
-                //     : undefined
-                // }
+                onChange={
+                  filteredClass.length >= 1
+                    ? (event, value) => {
+                        handleChange({
+                          target: { name: "class_name", value },
+                        });
+                      }
+                    : undefined
+                }
                 options={filteredClass}
                 renderInput={(params: any) => (
                   <MDInput
@@ -344,12 +343,12 @@ const Update = (props: any) => {
               container
               xs={12}
               sm={12}
-              sx={{ display: "flex", justifyContent: "flex-start" }}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Grid item mt={4}>
                 <MDButton
-                  color="primary"
-                  variant="outlined"
+                  color="dark"
+                  variant="contained"
                   onClick={() => {
                     handleClose();
                   }}
