@@ -103,8 +103,7 @@ const PaidFees = (props: any) => {
           <StudentCard data={props.mainData} />
         </Grid>
       </Grid>
-      {/* <DataTable table={dataTableData} /> */}
-      <MyDataTableComponent />
+      <DataTable table={dataTableData} />
     </>
   );
 };
