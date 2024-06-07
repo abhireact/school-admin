@@ -696,7 +696,6 @@ const FeeCollection = (props: any) => {
   };
   console.log(values, "values");
 
- 
   const dataTableData = {
     columns: [
       { Header: "Student Name", accessor: "full_name" },
@@ -767,9 +766,9 @@ const FeeCollection = (props: any) => {
     <DashboardLayout>
       <DashboardNavbar />
       <form onSubmit={handleSubmit}>
-          {" "}
-          <MDBox p={4}>
-            {/* <Grid container>
+        {" "}
+        <MDBox p={4}>
+          {/* <Grid container>
               <Grid item xs={12} sm={6}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
                   Fee Collection
@@ -1331,19 +1330,19 @@ const FeeCollection = (props: any) => {
                 ) : null}
               </Grid>
             </Grid> */}
-                 <Grid item xs={12} sm={12}>
-                {student ? (
-                  <Card>
-                    <DataTable
-                      table={dataTableData}
-                      isSorted={false}
-                      entriesPerPage={false}
-                      showTotalEntries={false}
-                    />
-                  </Card>
-                ) : null}
-              </Grid>
-          </MDBox>
+          <Grid item xs={12} sm={12}>
+            {student ? (
+              <Card>
+                <DataTable
+                  table={dataTableData}
+                  isSorted={false}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                />
+              </Card>
+            ) : null}
+          </Grid>
+        </MDBox>
       </form>
     </DashboardLayout>
   );

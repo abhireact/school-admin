@@ -103,37 +103,6 @@ let routes = [
   },
 
   {
-    type: "collapse",
-    name: "Authentication",
-    key: "authentication",
-    icon: (
-      <Icon fontSize="medium">
-        <VpnKeyIcon />
-      </Icon>
-    ),
-    collapse: [
-      {
-        name: "Sign In",
-        key: "sign-in",
-        route: "/authentication/sign-in/cover",
-        component: <SignInCover />,
-      },
-
-      {
-        name: "Reset Password",
-        key: "reset-password",
-        route: "/authentication/reset-password/cover",
-        component: <ResetCover />,
-      },
-      {
-        name: "My Profile",
-        key: "myprofile",
-        route: "/pages/authentication/myprofile",
-        component: <MYProfile />,
-      },
-    ],
-  },
-  {
     name: "createfee category",
     key: "createfeecategory",
     route: "/fee/create_fee_category",

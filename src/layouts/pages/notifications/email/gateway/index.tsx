@@ -235,7 +235,6 @@ const Gateway = () => {
         },
       });
 
-
       // console.log(response);
 
       if (response.status === 200) {
