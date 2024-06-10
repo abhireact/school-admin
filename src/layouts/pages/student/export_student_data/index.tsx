@@ -13,7 +13,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import ExportExcel from "layouts/pages/student/export_student_data/export_excel";
-// import ExportPDFList from "./export_pdf";
+//import ExportPDFList from "./export_pdf";
 import * as Yup from "yup";
 
 import Cookies from "js-cookie";
@@ -135,7 +135,7 @@ const CollectionList = () => {
     <DashboardLayout>
       <DashboardNavbar />
       {pdfpage ? (
-        "  // <ExportPDFList pdfdata={values} pdftype={pdftype} handleClose={handleClosepdf} />"
+        "   <ExportPDFList pdfdata={values} pdftype={pdftype} handleClose={handleClosepdf} />"
       ) : (
         <Card>
           <form onSubmit={handleSubmit}>
@@ -264,6 +264,7 @@ const CollectionList = () => {
                     <MDButton
                       variant="contained"
                       color="info"
+                      disabled
                       onClick={() => {
                         handlePDFProfile();
                       }}
@@ -278,12 +279,19 @@ const CollectionList = () => {
                       onClick={() => {
                         handlePDFList();
                       }}
+                      disabled
                     >
                       Student List PDF
                     </MDButton>
                   </Grid>
                   <Grid item mt={2}>
-                    <ExportExcel exceldata={values} fileName={"student_data_report"} />
+                    {values.academic_year && values.class_name && values.section_name ? (
+                      <ExportExcel exceldata={values} fileName={"student_data_report"} />
+                    ) : (
+                      <MDButton color="info" variant="contained" disabled>
+                        Export to excel
+                      </MDButton>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
