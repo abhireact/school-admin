@@ -67,12 +67,12 @@ const routes = [
         route: "pages/rbac/roles",
         component: <Roles />,
       },
-      {
-        name: "Master Admin",
-        key: "master",
-        route: "pages/rbac/master",
-        component: <Admin />,
-      },
+      // {
+      //   name: "Master Admin",
+      //   key: "master",
+      //   route: "pages/rbac/master",
+      //   component: <Admin />,
+      // },
     ],
   },
   {

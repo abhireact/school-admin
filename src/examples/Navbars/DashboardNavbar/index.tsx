@@ -4,7 +4,7 @@
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-2-pro-react-ts
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Copyright 2023 Mindcom Group (https://www.creative-tim.com)
 
 Coded by www.creative-tim.com
 
@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 // @material-ui core components
 import AppBar from "@mui/material/AppBar";
@@ -29,19 +29,11 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDBadge from "components/MDBadge";
-import Dialog, { DialogProps } from "@mui/material/Dialog";
-// Material Dashboard 2 PRO React TS examples components
-import Breadcrumbs from "examples/Breadcrumbs";
-import NotificationItem from "examples/Items/NotificationItem";
-import { Grid, Card, Autocomplete } from "@mui/material";
-import MDTypography from "components/MDTypography";
-import MarkChatReadIcon from "@mui/icons-material/MarkChatRead";
-import MarkChatUnreadIcon from "@mui/icons-material/MarkChatUnread";
-// Custom styles for DashboardNavbar
-import axios from "axios";
-import Cookies from "js-cookie";
-const token = Cookies.get("token");
 
+// Material Dashboard 2 PRO React TS examples components
+import NotificationItem from "examples/Items/NotificationItem";
+
+// Custom styles for DashboardNavbar
 import {
   navbar,
   navbarContainer,
@@ -58,6 +50,14 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
+import MYAccount from "layouts/pages/authentication/myaccount";
+import { Autocomplete } from "@mui/material";
+import MDTypography from "components/MDTypography";
+import { useFormik } from "formik";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { item } from "examples/Sidenav/styles/sidenavItem";
+import { setSelectedAcademicYear } from "layouts/pages/redux/otherdataslice";
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -67,9 +67,15 @@ interface Props {
 }
 
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
-  const [message, setMessage] = useState([]);
-  const [editopen, setEditOpen] = useState(false);
-  const [editdata, setEditdata] = useState({});
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
+    initialValues: {
+      academic_year: "2024-2025",
+    },
+    // validationSchema: validationSchema,
+    onSubmit: (values, action) => {
+      console.log(values, "values");
+    },
+  });
   const [navbarType, setNavbarType] = useState<
     "fixed" | "absolute" | "relative" | "static" | "sticky"
   >();
@@ -77,34 +83,55 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState<any>(false);
   const route = useLocation().pathname.split("/").slice(1);
+  const [data, setData] = useState([]);
+  const token = Cookies.get("token");
 
-  useEffect(() => {
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const FetchAcademicYear = () => {
     axios
-      .get(" ", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setMessage(response.data);
+        setData(response.data);
 
         console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    // setMessage([
-    //   { message: "aaaaaaaaaaaaaaaasd", read: true },
-    //   { message: "fvgfds", read: true },
-    //   { message: "wewwer", read: false },
-    //   { message: "asss", read: true },
+  };
 
-    //   { message: "aaaaaaabhnjmnjaaaaaaaaasd", read: true },
-
-    //   { message: "mmm", read: false },
-    // ]);
+  useEffect(() => {
+    FetchAcademicYear();
   }, []);
+  let today = new Date().toISOString().split("T")[0];
+
+  const currentAcademic = data.find((item) => {
+    const startDate = new Date(item.start_date);
+    const endDate = new Date(item.end_date);
+    const currentDate = new Date(today);
+
+    return currentDate >= startDate && currentDate <= endDate;
+  });
+
+  if (currentAcademic) {
+    console.log("Current Academic Year:", currentAcademic.academic_year);
+  } else {
+    console.log("No matching academic year found for today's date.");
+  }
+
+  // set selectedAcademicYear in Redux
+  // const handleAcademicYearChange = (newAcademicYear: string) => {
+  //   dispatch(setSelectedAcademicYear(newAcademicYear));
+  // };
+
+  // useEffect(() => {
+  //   handleAcademicYearChange(values.academic_year);
+  // }, [values.academic_year]);
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -130,22 +157,12 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
     // Remove event listener on cleanup
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
-
+  /* eslint-disable react-hooks/exhaustive-deps */
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event: any) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-  const handleClickOpenEdit = (data: any) => {
-    setEditdata(data);
-    setEditOpen(true);
-  };
 
-  const handleClickCloseEdit = () => {
-    setEditOpen(false);
-  };
-  const handleEditSuccess = () => {
-    handleClickCloseEdit();
-  };
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -159,23 +176,9 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      {message
-        ? message.map((data, index) => (
-            <NotificationItem
-              key={index}
-              icon={
-                <Icon color={data.read ? "info" : "secondary"}>
-                  {data.read ? <MarkChatReadIcon /> : <MarkChatUnreadIcon />}
-                </Icon>
-              }
-              title={`${data.message.substring(0, 10)}`}
-              onClick={() => handleClickOpenEdit(data)}
-            />
-          ))
-        : []}
-
-      {/* <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" /> */}
+      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
+      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
+      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
     </Menu>
   );
 
@@ -197,25 +200,22 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       return colorValue;
     },
   });
-
+  // eslint-disable-next-line
+  const routees = { route };
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
       color="inherit"
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
-      <Dialog open={editopen} onClose={handleClickCloseEdit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={12}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              mmmmmmmmmm
-            </MDTypography>
-          </Grid>
-        </Grid>
-      </Dialog>
       <Toolbar sx={navbarContainer}>
-        <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          {/* <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} /> */}
+        <MDBox
+          ml={-5.3}
+          color="inherit"
+          mb={{ xs: 1, md: 0 }}
+          sx={(theme) => navbarRow(theme, { isMini })}
+        >
+          {/* <Breadcrumbs icon="home" title={routees[routees.length - 1]} route={""} light={light} /> */}
           <IconButton sx={navbarDesktopMenu} onClick={handleMiniSidenav} size="small" disableRipple>
             <Icon fontSize="medium" sx={iconsStyle}>
               {miniSidenav ? "menu_open" : "menu"}
@@ -225,15 +225,46 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox pr={1}>
-              <MDInput label="Search here" />
+              {/* <MDInput label="Search here" /> */}
+              <Autocomplete
+                sx={{ width: "100%" }}
+                value={values.academic_year || currentAcademic?.academic_year}
+                onChange={(_event, value) => {
+                  handleChange({ target: { name: "academic_year", value } });
+                }}
+                options={Array.from(
+                  new Set(
+                    data
+                      .filter((item) => item.academic_year)
+                      .map((item) => item.academic_year)
+                      .concat(currentAcademic ? [currentAcademic.academic_year] : [])
+                  )
+                ).filter((option) => option !== currentAcademic?.academic_year)}
+                renderInput={(params) => (
+                  <MDInput
+                    required
+                    defaultValue={currentAcademic?.academic_year}
+                    name="academic_year"
+                    onChange={handleChange}
+                    value={values.academic_year || currentAcademic?.academic_year}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Academic Year
+                      </MDTypography>
+                    }
+                    {...params}
+                    variant="standard"
+                  />
+                )}
+              />
             </MDBox>
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
-              <IconButton
+              <IconButton sx={navbarIconButton} size="medium" disableRipple>
+                {/* <Icon sx={iconsStyle}>account_circle</Icon> */}
+                <MYAccount />
+              </IconButton>
+
+              {/* <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -262,7 +293,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                 <MDBadge badgeContent={9} color="error" size="xs" circular>
                   <Icon sx={iconsStyle}>notifications</Icon>
                 </MDBadge>
-              </IconButton>
+              </IconButton> */}
               {renderMenu()}
             </MDBox>
           </MDBox>
