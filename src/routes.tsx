@@ -71,37 +71,38 @@ let routes = [
       },
     ],
   },
+
   {
     type: "collapse",
-    name: "Subject",
-    key: "subject",
+    name: "Authentication",
+    key: "authentication",
     icon: (
       <Icon fontSize="medium">
-        <LocalLibraryIcon />
+        <VpnKeyIcon />
       </Icon>
     ),
     collapse: [
       {
-        name: "Subject Details",
-        key: "subjectdetails",
-        route: "pages/subject/subjectdetails",
-        component: <Subject />,
+        name: "Sign In",
+        key: "sign-in",
+        route: "/authentication/sign-in/cover",
+        component: <SignInCover />,
+      },
+
+      {
+        name: "Reset Password",
+        key: "reset-password",
+        route: "/authentication/reset-password/cover",
+        component: <ResetCover />,
       },
       {
-        name: "Section Subject",
-        key: "sectionsubject",
-        route: "pages/subject/sectionsubject",
-        component: <SectionSubject />,
-      },
-      {
-        name: "Employee Subject",
-        key: "employeesubject",
-        route: "pages/subject/employeesubject",
-        component: <EmployeeSubject />,
+        name: "My Profile",
+        key: "myprofile",
+        route: "/pages/authentication/myprofile",
+        component: <MYProfile />,
       },
     ],
   },
-
   {
     name: "createfee category",
     key: "createfeecategory",

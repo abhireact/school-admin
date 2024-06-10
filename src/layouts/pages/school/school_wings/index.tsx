@@ -8,7 +8,8 @@ import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect, useContext } from "react";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import Create from "./create";
 import Update from "./update";
@@ -20,7 +21,10 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
-const Academic = () => {
+import * as XLSX from "xlsx";
+import MDInput from "components/MDInput";
+
+const Wing = () => {
   // To fetch rbac from redux:  Start
   const rbacData = useSelector((state: any) => state.rbac);
   console.log("rbac user wings", rbacData);
@@ -31,7 +35,7 @@ const Academic = () => {
   //Start
 
   const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -105,7 +109,7 @@ const Academic = () => {
     ],
 
     rows: data.map((row, index) => ({
-      wing_name: <MDTypography variant="p">{row.wing_name}</MDTypography>,
+      wing_name: row.wing_name,
 
       action: (
         <MDTypography variant="p">
@@ -143,6 +147,46 @@ const Academic = () => {
       ),
     })),
   };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const handleWingImport = (event: any) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, range: 1 });
+
+      // Transform the data to the desired format
+      const transformedData = jsonData.map((item: any) => ({ wing_name: item[0] }));
+
+      // Do something with the transformedData
+      console.log(transformedData);
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_wing`, transformedData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          message.success("Wings created successfully!");
+          fetchWings();
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -156,9 +200,22 @@ const Academic = () => {
           <Grid item pt={2} pr={2}>
             {rbacData ? (
               rbacData?.find((element: string) => element === "wingscreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-                  + New Wing
-                </MDButton>
+                <>
+                  <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
+                    Upload&nbsp;
+                    <FileUploadIcon />
+                  </MDButton>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleWingImport}
+                    style={{ display: "none" }}
+                  />
+                  &nbsp; &nbsp; &nbsp;
+                  <MDButton variant="outlined" color="info" type="submit" onClick={handleOpen}>
+                    + New Wing
+                  </MDButton>
+                </>
               ) : (
                 ""
               )
@@ -170,7 +227,7 @@ const Academic = () => {
         <DataTable table={dataTableData} canSearch />
       </Card>
       <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={fetchWings} />
+        <Create setOpen={setOpen} fetchData={fetchWings} maxWidth="sm" />
       </Dialog>
 
       <Dialog open={openupdate} onClose={handleCloseupdate}>
@@ -180,4 +237,4 @@ const Academic = () => {
   );
 };
 
-export default Academic;
+export default Wing;

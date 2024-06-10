@@ -183,17 +183,18 @@ const routes = [
         component: <StudentCategory />,
       },
       {
-        name: "Student ID Card",
-        key: "student_id",
-        route: "/pages/school/student_id",
-        component: <CreateStudentID />,
-      },
-      {
         name: "House Details",
         key: "housedetails",
         route: "/pages/school/housedetails",
         component: <HouseDetails />,
       },
+      {
+        name: "Student ID Card",
+        key: "student_id",
+        route: "/pages/school/student_id",
+        component: <CreateStudentID />,
+      },
+
       {
         name: "Student Promotion",
         key: "studentpromotion",

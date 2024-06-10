@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
+import { translate } from "google-translate-api-browser";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import FormField from "layouts/pages/account/components/FormField";
@@ -30,6 +31,66 @@ const Create = (props: any) => {
     start_date: Yup.date().required("Required *"),
     end_date: Yup.date().required("Required *"),
   });
+
+  type LanguageCode =
+    | "es"
+    | "fr"
+    | "de"
+    | "auto"
+    | "af"
+    | "sq"
+    | "am"
+    | "ar"
+    | "hy"
+    | "az"
+    | "eu"
+    | "be"
+    | "bn"
+    | "bs"
+    | "bg"
+    | "ca"
+    | "ceb"
+    | "ny"
+    | "zh"
+    | "zh-cn"
+    | "zh-tw"
+    | "co"
+    | "hr"
+    | "cs"
+    | "da"
+    | "nl";
+
+  interface LanguageOption {
+    value: LanguageCode;
+    label: string;
+  }
+
+  const languageOptions: LanguageOption[] = [
+    { value: "es", label: "Spanish" },
+    { value: "fr", label: "French" },
+    { value: "de", label: "German" },
+    // Add more language options as needed
+  ];
+  const [translatedText, setTranslatedText] = useState<string>("");
+  const [targetLanguage, setTargetLanguage] = useState<LanguageCode>("es");
+
+  useEffect(() => {
+    const translatePage = async () => {
+      try {
+        const pageContent = document.body.innerText; // Get the entire page content as text
+        const translation = await translate(pageContent, { to: targetLanguage });
+        setTranslatedText(translation.text);
+      } catch (error) {
+        console.error("Error translating page:", error);
+      }
+    };
+
+    translatePage();
+  }, [targetLanguage]);
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTargetLanguage(e.target.value as LanguageCode);
+  };
 
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
@@ -122,7 +183,6 @@ const Create = (props: any) => {
           console.log("create successfully");
           message.success(" Created successfully!");
           fetchData();
-          handleClose();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -159,7 +219,7 @@ const Create = (props: any) => {
                     <MDInput
                       InputLabelProps={{ shrink: true }}
                       name="academic_year"
-                      placeholder="2022-23"
+                      placeholder="2022-2023"
                       label={"Academic Year"}
                       onChange={handleChange}
                       value={values.academic_year}

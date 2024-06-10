@@ -101,7 +101,7 @@ const Create = (props: any) => {
         .then(() => {
           fetchingData();
           action.resetForm();
-          handleShowPage();
+          //handleShowPage();
         })
         .catch((error: any) => {
           console.log(error, " error");
