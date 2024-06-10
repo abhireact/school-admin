@@ -78,13 +78,13 @@ const MYProfile = () => {
               <MDTypography variant="body2">Email</MDTypography>
             </Grid>
             <Grid item sm={5}>
-              <MDTypography variant="h4" fontWeight="regular" marginBottom={0.5}>
+              <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}>
                 {data?.first_name.toUpperCase()} {data.middle_name?.toUpperCase()}{" "}
                 {data.last_name?.toUpperCase()}
               </MDTypography>
             </Grid>
             <Grid item sm={5}>
-              <MDTypography variant="h4" fontWeight="regular" marginBottom={0.5}>
+              <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}>
                 {data?.email}
               </MDTypography>
             </Grid>
@@ -96,10 +96,10 @@ const MYProfile = () => {
               <MDTypography variant="body2">School Name</MDTypography>
             </Grid>
             <Grid item sm={5}>
-              <MDTypography variant="h4" fontWeight="regular" marginBottom={0.5}></MDTypography>
+              <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}></MDTypography>
             </Grid>
             <Grid item sm={5}>
-              <MDTypography variant="h4" fontWeight="regular" marginBottom={0.5}>
+              <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}>
                 {schoolName}
               </MDTypography>
             </Grid>
