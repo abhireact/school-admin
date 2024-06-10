@@ -268,14 +268,13 @@ const Student = () => {
         </>
       ) : (
         <>
-          {openupdate ? (
+          {openupdate && username ? (
             <Update setOpenupdate={setOpenupdate} username={username} fetchData={fetchStudents} />
           ) : (
             <>
               <Card>
                 <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Grid item pt={2} pl={2}>
-                    {" "}
                     <MDTypography variant="h4" fontWeight="bold" color="secondary">
                       Student List
                     </MDTypography>

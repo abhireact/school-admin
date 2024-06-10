@@ -228,8 +228,8 @@ const Update = (props: any) => {
     useFormik({
       initialValues: {
         user_name: username,
-        admission_date: editData.admission_date,
-        admission_number: editData.admission_number,
+        admission_date: editData.admission_date || "",
+        admission_number: editData.admission_number || "",
         fee_code: editData.fee_code || "",
         first_name: editData.first_name,
         middle_name: editData.middle_name,

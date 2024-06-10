@@ -109,18 +109,18 @@ const ExcessFee = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Excess Fee Name ", accessor: "name", width: "10%" },
+      { Header: "Excess Fee Name ", accessor: "name" },
 
-      { Header: "Academic Year", accessor: "academic_year", width: "10%" },
+      { Header: "Academic Year", accessor: "academic_year" },
 
-      { Header: "Class & Section ", accessor: "class_section", width: "10%" },
+      { Header: "Class & Section ", accessor: "class_section" },
 
-      { Header: "Student Name ", accessor: "student_name", width: "30%" },
-      { Header: "Excess Amount", accessor: "excess_amount", width: "10%" },
-      { Header: " Status", accessor: "payment_status", width: "10%" },
-      { Header: "Collection Date", accessor: "collection_date", width: "10%" },
+      { Header: "Student Name ", accessor: "student_name" },
+      { Header: "Excess Amount", accessor: "excess_amount" },
+      { Header: " Status", accessor: "payment_status" },
+      { Header: "Collection Date", accessor: "collection_date" },
 
-      { Header: "Action", accessor: "action", width: "10%" },
+      { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
