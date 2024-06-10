@@ -116,7 +116,7 @@ const CollectionList = () => {
         section_name: "",
       },
       validationSchema: validationSchema,
-      onSubmit: (values, action) => { },
+      onSubmit: (values, action) => {},
     });
   const [pdfpage, setPdfpage] = useState(false);
   const [pdftype, setPdftype] = useState("");
@@ -135,8 +135,8 @@ const CollectionList = () => {
     <DashboardLayout>
       <DashboardNavbar />
       {pdfpage ? (
-
-        "  // <ExportPDFList pdfdata={values} pdftype={pdftype} handleClose={handleClosepdf} />") : (
+        "  // <ExportPDFList pdfdata={values} pdftype={pdftype} handleClose={handleClosepdf} />"
+      ) : (
         <Card>
           <form onSubmit={handleSubmit}>
             <MDBox p={4}>
@@ -183,11 +183,11 @@ const CollectionList = () => {
                     onChange={
                       filteredClass.length >= 1
                         ? (event, value) => {
-                          handleChange({
-                            target: { name: "class_name", value },
-                          });
-                          filterSectionData(sectiondata, value);
-                        }
+                            handleChange({
+                              target: { name: "class_name", value },
+                            });
+                            filterSectionData(sectiondata, value);
+                          }
                         : undefined
                     }
                     options={filteredClass}
@@ -219,10 +219,10 @@ const CollectionList = () => {
                     onChange={
                       filteredSection.length >= 1
                         ? (event, value) => {
-                          handleChange({
-                            target: { name: "section_name", value },
-                          });
-                        }
+                            handleChange({
+                              target: { name: "section_name", value },
+                            });
+                          }
                         : undefined
                     }
                     options={

@@ -13,6 +13,7 @@ import { message } from "antd";
 
 import axios from "axios";
 import Cookies from "js-cookie";
+import { FormControl, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 
@@ -31,19 +32,20 @@ const Editrole = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
       role_name: editData.role_name,
-      // role_short_code: editData.role_short_code,
+      role_display_name: editData.role_display_name,
       // role_access: editData.seeded,
-      // status: editData.status,
+      status: editData.status,
       // description: editData.description,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
       const sendData = {
-        old_role_name: editData.role_name,
+        old_role_display_name: editData.role_display_name,
+        role_display_name: values.role_display_name,
         role_name: values.role_name,
         role_short_code: editData.role_short_code,
         description: editData.description,
-        status: editData.status,
+        status: values.status,
         seeded: editData.seeded,
       };
 
@@ -79,11 +81,47 @@ const Editrole = (props: any) => {
               mb={2}
               sx={{ width: "65%" }}
               variant="standard"
-              name="role_name"
-              value={values.role_name}
+              name="role_display_name"
+              value={values.role_display_name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
+          </Grid>
+          <Grid item container>
+            <Grid item xs={12} sm={5}>
+              <MDTypography mb={2} variant="body2">
+                Status
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              <FormControl>
+                <RadioGroup aria-labelledby="demo-radio-buttons-group-label" row>
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        checked={values.status === "active"}
+                        onChange={handleChange}
+                        name="status"
+                        value="active"
+                      />
+                    }
+                    label={<MDTypography variant="body2">Active </MDTypography>}
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        checked={values.status === "inactive"}
+                        onChange={handleChange}
+                        name="status"
+                        value="inactive"
+                      />
+                    }
+                    label={<MDTypography variant="body2">Inactive </MDTypography>}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
           </Grid>
           <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item mt={2}>
