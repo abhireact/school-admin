@@ -170,71 +170,58 @@ const FeeCollection = (props: any) => {
     setConcessiondata(filteredStudentDataByName);
     console.log(filteredStudentDataByName, "Filtered student data by name");
   }, [filteredStudentDataByName]);
-  const dataTableData = {
-    columns: [
-      { Header: "Student Name", accessor: "full_name" },
-      { Header: "User ID", accessor: "user_id" },
-      { Header: "Admission Number", accessor: "admission_number" },
-      { Header: "Class & Section", accessor: "class_name" },
-      // { Header: "Section", accessor: "section_name" },
-      { Header: "FATHER NAME", accessor: "father_name" },
-      { Header: "Action", accessor: "action" },
-    ],
-
-    rows: concessiondata?.map(
-      (
-        row: {
-          father_name: any;
-          admission_number: any;
-          user_id: any;
-          first_name: any;
-          middle_name: null;
-          last_name: any;
-          class_name: any;
-          gender: any;
-          section_name: any;
-          mobile_number: any;
-        },
-        index: any
-      ) => ({
-        admission_number: row.admission_number,
-        user_id: row.user_id,
-
-        action: (
-          <MDTypography variant="p">
-            <IconButton onClick={() => showDrawer("Paid Fees", row)}>
-              <PaidIcon />
-            </IconButton>
-
-            <IconButton
-              onClick={() => showDrawer("Unpaid Fees", row)}
-              // onClick={() => {
-              //   handleDelete(row.user_id);
-              // }}
-            >
-              <RequestQuoteIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => showDrawer("Pay Fee", row)}
-
-              // onClick={() => {
-              //   handleDelete(row.user_id);
-              // }}
-            >
-              <PaymentsIcon />
-            </IconButton>
-          </MDTypography>
-        ),
-
-        full_name: `${row.first_name} ${row.middle_name == null ? "" : row.middle_name} ${
-          row.last_name
-        }`,
-        class_name: `${row.class_name} - ${row.section_name}`,
-        // section_name: row.section_name,
-        father_name: row.father_name,
-      })
-    ),
-  };
+  useEffect(() => {});
+  const dataTableData = useMemo(() => {
+    const origionalData = showadvanceSearch ? concessiondata : student;
+    return {
+      columns: [
+        { Header: "Student Name", accessor: "full_name" },
+        { Header: "User ID", accessor: "user_id" },
+        { Header: "Admission Number", accessor: "admission_number" },
+        { Header: "Class & Section", accessor: "class_name" },
+        { Header: "FATHER NAME", accessor: "father_name" },
+        { Header: "Action", accessor: "action" },
+      ],
+      rows: origionalData?.map(
+        (
+          row: {
+            father_name: any;
+            admission_number: any;
+            user_id: any;
+            first_name: any;
+            middle_name: null;
+            last_name: any;
+            class_name: any;
+            gender: any;
+            section_name: any;
+            mobile_number: any;
+          },
+          index: any
+        ) => ({
+          admission_number: row.admission_number,
+          user_id: row.user_id,
+          action: (
+            <MDTypography variant="p">
+              <IconButton onClick={() => showDrawer("Paid Fees", row)}>
+                <PaidIcon />
+              </IconButton>
+              <IconButton onClick={() => showDrawer("Unpaid Fees", row)}>
+                <RequestQuoteIcon />
+              </IconButton>
+              <IconButton onClick={() => showDrawer("Pay Fee", row)}>
+                <PaymentsIcon />
+              </IconButton>
+            </MDTypography>
+          ),
+          full_name: `${row.first_name} ${row.middle_name == null ? "" : row.middle_name} ${
+            row.last_name
+          }`,
+          class_name: `${row.class_name} - ${row.section_name}`,
+          father_name: row.father_name,
+        })
+      ),
+    };
+  }, [concessiondata, values.search_by, values]);
   console.log(mainData, "mainData");
   return (
     <DashboardLayout>
@@ -483,6 +470,7 @@ const FeeCollection = (props: any) => {
                       options={["All", ...wings?.map((acd: { wing_name: any }) => acd?.wing_name)]}
                       renderInput={(params: any) => (
                         <MDInput
+                          required
                           InputLabelProps={{ shrink: true }}
                           name="wing_name"
                           placeholder="2022-23"
@@ -514,6 +502,7 @@ const FeeCollection = (props: any) => {
                       options={["Admission Number", "Fee Code"]}
                       renderInput={(params: any) => (
                         <MDInput
+                          required
                           InputLabelProps={{ shrink: true }}
                           name="adm_no_or_fee_code"
                           placeholder="Admission Number/Fee Code"
@@ -535,6 +524,7 @@ const FeeCollection = (props: any) => {
                   {values.adm_no_or_fee_code == "Fee Code" ? (
                     <Grid item xs={12} sm={4} py={1}>
                       <MDInput
+                        required
                         sx={{ width: "80%" }}
                         name="fee_code"
                         label={
@@ -554,6 +544,7 @@ const FeeCollection = (props: any) => {
                   ) : (
                     <Grid item xs={12} sm={4} py={1}>
                       <MDInput
+                        required
                         sx={{ width: "80%" }}
                         name="admission_number"
                         label={
@@ -635,6 +626,7 @@ const FeeCollection = (props: any) => {
                       // options={["ddfd"]}
                       renderInput={(params: any) => (
                         <MDInput
+                          required
                           InputLabelProps={{ shrink: true }}
                           name="father_name"
                           placeholder="2022-23"
@@ -657,13 +649,14 @@ const FeeCollection = (props: any) => {
               ) : null}
             </Grid>
             <Grid item xs={12} sm={12}>
-              {isLoading ? (
+              {/* {isLoading ? (
                 "  <LoadingIndicator />"
               ) : concessiondata.length > 0 ? (
-                <DataTable table={dataTableData} />
+                <DataTable table={dataTableData} importbtn />
               ) : (
                 "     <NoDataMessage />"
-              )}
+              )} */}
+              <DataTable table={dataTableData} importbtn />
             </Grid>
           </MDBox>
         </form>

@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Tree, message } from "antd";
 import type { DataNode, Key } from "rc-tree-select/es/interface";
-import route2 from "routes";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import MDBox from "components/MDBox";
-import MDInput from "components/MDInput";
 import axios from "axios";
 import {
   Autocomplete,
@@ -27,16 +22,19 @@ import { CheckBox } from "@mui/icons-material";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import FormField from "../account/components/FormField";
 
 import Cookies from "js-cookie";
+import FormField from "layouts/pages/account/components/FormField";
+import CloudAdminRouts from "cloud_admin_routs";
+import { route2 } from "routes";
+import MDBox from "components/MDBox";
 const token = Cookies.get("token");
-const Rbac = (props: any) => {
-  const { setOpenupdate2, editData2 } = props;
+const CloudAdminRbac = (props: any) => {
+  const { setOpenupdate2 } = props;
 
   const initialValues = {
     sub_module_menu: [] as string[],
-    role_name: editData2?.role_name,
+    // role_name: editData2?.role_name,
     role_access: "",
     seeded: "",
     status: "",
@@ -94,66 +92,74 @@ const Rbac = (props: any) => {
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [rbacData, setRbacData] = useState([]);
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
-    useFormik({
-      initialValues,
-      enableReinitialize: true,
-      onSubmit: async (values, action) => {
-        console.log("valuess", values);
-        action.resetForm();
-        for (const key of checkedKeys) {
-          console.log(key, checkedKeys, "checkedkey");
-          // setCheckedKeystring(key.toString());
-          initialValues.sub_module_menu.push(key.toString());
+  const { handleSubmit } = useFormik({
+    initialValues,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      console.log("valuess", values);
+      action.resetForm();
+    },
+  });
+  useEffect(() => {
+    axios
+      .get(
+        `http://10.0.20.200:8000/mg_rbac/cloud_admin
+      `,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-        if (editorcreate === "create") {
-          try {
-            const response = await axios.put(
-              "http://10.0.20.200:8000/mg_rbac",
-              { ...values, sub_module_menu: allchecked },
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            if (response.status === 200) {
-              console.log("Created  Successfully");
-              message.success("Updated Successfully");
-              // window.location.reload();
-              setOpenupdate2(false);
-              // window.location.reload(); right now
-            }
-          } catch (error) {
-            console.error("Error saving data:", error);
-          }
-        }
-        if (editorcreate === "edit") {
-          try {
-            const response = await axios.put(
-              "http://10.0.20.200:8000/mg_rbac",
-              { ...values, sub_module_menu: allchecked },
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            if (response.status === 200) {
-              console.log("Update Successfully");
-              message.success("Updated Successfully");
-              setOpenupdate2(false);
-              // window.location.reload(); right now
-            }
-          } catch (error) {
-            console.error("Error saving data:", error);
-          }
-        }
-      },
-    });
+      )
+      .then((response) => {
+        console.log(response, "response");
+        const filteredData = response.data.filter(
+          (item: { school_code: any }) => item.school_code === props.school_code
+        );
+        const subModuleMenus = filteredData.map(
+          (item: { sub_module_menu: any }) => item.sub_module_menu
+        );
+        console.log(subModuleMenus, "subModuleMenus");
 
+        setCheckedKeys(subModuleMenus[0]);
+      })
+      .catch((error) => console.log(error));
+
+    // Fetch data from API on component mount
+  }, []);
+  console.log(allchecked, "allchecked");
+
+  const handleFormSubmit = async () => {
+    for (const key of checkedKeys) {
+      console.log(key, checkedKeys, "checkedkey");
+      initialValues.sub_module_menu.push(key.toString());
+    }
+    console.log(allchecked, "checked");
+    try {
+      const response = await axios.post(
+        "http://10.0.20.200:8000/mg_rbac/cloud_admin",
+        {
+          sub_module_menu: allchecked,
+          school_code: props.school_code,
+          school_name: props.school_name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log("Created  Successfully");
+        message.success("Updated Successfully");
+        setOpenupdate2(false);
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+    }
+  };
   const treeData: DataNode[] = [];
   let count = 0;
   if (count === 0) {
@@ -280,46 +286,7 @@ const Rbac = (props: any) => {
     setSelectedKeys(selectedKeysValue);
   };
 
-  const fetchRbac = async (roles_name: string) => {
-    try {
-      const response = await axios.post(
-        `http://10.0.20.200:8000/get_all_mg_rbac `,
-        { role_name: roles_name },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        console.log(response.data, "get_all_mg_rbac ");
-
-        setCheckedKeys(response.data);
-        setEditorcreate("edit");
-        setRbacData(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    axios
-      .get(`http://10.0.20.200:8000/mg_school`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        fetchRbac(editData2?.role_name);
-      })
-      .catch((error) => console.log(error));
-
-    // Fetch data from API on component mount
-  }, []);
   console.log("Tree Data", treeData);
-
   const renderTreeNodes = (data: DataNode[]): React.ReactNode => {
     console.log(data, "data");
 
@@ -340,10 +307,10 @@ const Rbac = (props: any) => {
         <MDBox p={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={9} mb={2}>
-              <MDTypography variant="h4">Give Permission To Roles</MDTypography>
+              <MDTypography variant="h4">Give Permission OF Modules</MDTypography>
             </Grid>
           </Grid>
-          <Grid container spacing={3}>
+          {/* <Grid container spacing={3}>
             <Grid item xs={12} sm={6} display="flex" justifyContent="center">
               <FormField
                 type="name"
@@ -364,30 +331,33 @@ const Rbac = (props: any) => {
                 {"Save"}
               </MDButton>
             </Grid>
-          </Grid>
+          </Grid> */}
         </MDBox>
       </Card>
-      {values.role_name != "" ? (
-        <Card sx={{ width: "80%", margin: "auto", mt: "2%" }}>
-          <MDBox p={3}>
-            <Tree
-              checkable
-              onExpand={onExpand}
-              expandedKeys={expandedKeys}
-              autoExpandParent={autoExpandParent}
-              onCheck={onCheck}
-              checkedKeys={checkedKeys}
-              onSelect={onSelect}
-              selectedKeys={selectedKeys}
-            >
-              {renderTreeNodes(treeData)}
-              {/* {renderTreeNodes(treeData.filter(node => node.key !== "fee"))} */}
-            </Tree>
-          </MDBox>
-        </Card>
-      ) : null}
+      <Card sx={{ width: "80%", margin: "auto", mt: "2%" }}>
+        <MDBox p={3}>
+          <Tree
+            checkable
+            onExpand={onExpand}
+            expandedKeys={expandedKeys}
+            autoExpandParent={autoExpandParent}
+            onCheck={onCheck}
+            checkedKeys={checkedKeys}
+            onSelect={onSelect}
+            selectedKeys={selectedKeys}
+          >
+            {renderTreeNodes(treeData)}
+            {/* {renderTreeNodes(treeData.filter(node => node.key !== "fee"))} */}
+          </Tree>
+        </MDBox>
+        <Grid item xs={12} sm={3} display="flex" justifyContent="flex-end">
+          <MDButton variant="gradient" color="info" onClick={handleFormSubmit}>
+            {"Save rbac"}
+          </MDButton>
+        </Grid>
+      </Card>
     </form>
   );
 };
 
-export default Rbac;
+export default CloudAdminRbac;
