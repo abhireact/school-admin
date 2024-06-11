@@ -17,7 +17,7 @@ build:
 deploy:test:
   stage: deploy:test
   script:
-   	- cp -rf ./build/* /usr/share/nginx/prod_school
+    - cp -rf ./build/* /usr/share/nginx/prod_school
   when: manual
   only:
     - main
@@ -28,4 +28,3 @@ deploy:
     - cp -rf ./build/* /usr/share/nginx/school/
   only:
     - main
-	
