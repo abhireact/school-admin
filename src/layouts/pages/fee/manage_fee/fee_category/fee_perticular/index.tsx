@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Icon from "@mui/material/Icon";
-import { Grid, Link, Tooltip } from "@mui/material";
+import { Grid, IconButton, Link, Tooltip } from "@mui/material";
 import Card from "@mui/material/Card";
 import Dialog from "@mui/material/Dialog";
 import MDTypography from "components/MDTypography";
@@ -12,7 +12,9 @@ import EditFeePerticularAmount from "./edit_fee_perticular_amount";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { Popconfirm, message } from "antd";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 const token = Cookies.get("token");
 export default function ManageFeeAmountPerticular() {
   const location = useLocation();
@@ -54,9 +56,36 @@ export default function ManageFeeAmountPerticular() {
     fetchData();
     handleClickCloseEdit();
   };
+
+  const confirm = async (data: any) => {
+    console.log(data, "confirm data");
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_particular`, {
+        data,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success("Deleted Successfully");
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      const myError = error as Error;
+      message.error(error.response.data.detail);
+    }
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   const feeConcessionData = {
     //
     columns: [
+      { Header: "Academic Year", accessor: "academic_year" },
+
       { Header: "FEE CATEGORY", accessor: "fee_category" },
       { Header: "FEE PARTICULAR", accessor: "fee_perticular" },
       { Header: "CLASS-SECTION", accessor: "section" },
@@ -65,6 +94,7 @@ export default function ManageFeeAmountPerticular() {
     ],
     rows: perticulardata.map((row, index) => ({
       fee_category: row.fee_category,
+      academic_year: row.academic_year,
       fee_perticular: row.fee_particular,
       section: `${row.class_name} - ${row.section_name}`,
       amount: row.amount,
@@ -72,15 +102,27 @@ export default function ManageFeeAmountPerticular() {
         <Grid container spacing={1}>
           <Grid item>
             <Tooltip title="Edit" placement="top">
-              <Icon fontSize="small" onClick={() => handleClickOpenEdit(row)}>
-                edit
-              </Icon>
+              <IconButton disabled={!row.is_editable} onClick={() => handleClickOpenEdit(row)}>
+                <EditIcon />
+              </IconButton>
             </Tooltip>
           </Grid>
           <Grid item>
-            <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
-            </Tooltip>
+            <IconButton>
+              <Popconfirm
+                title="Delete"
+                description="Are you sure to Delete it ?"
+                placement="topLeft"
+                onConfirm={() => confirm(row)} // Pass index to confirm function
+                onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete" placement="top">
+                  <DeleteIcon />
+                </Tooltip>
+              </Popconfirm>
+            </IconButton>
           </Grid>
         </Grid>
       ),

@@ -81,6 +81,8 @@ const FeeCollection = (props: any) => {
     setIsLoading(false); // Set loading state to false after data is fetched
   }, []);
   console.log(concessiondata, "collection datav ");
+  const Cacademic_year = Cookies.get("academic_year");
+  console.log(Cacademic_year, "Cacademic_year");
 
   //  const {wings,academicyear,classes}=useSelector
   function filterClassData(data: any, academic_year: any) {

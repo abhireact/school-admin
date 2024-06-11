@@ -57,7 +57,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { item } from "examples/Sidenav/styles/sidenavItem";
-import { setSelectedAcademicYear } from "layouts/pages/redux/otherdataslice";
+import FormField from "layouts/pages/account/components/FormField";
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -67,26 +67,7 @@ interface Props {
 }
 
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
-    initialValues: {
-      academic_year: "2024-2025",
-    },
-    // validationSchema: validationSchema,
-    onSubmit: (values, action) => {
-      console.log(values, "values");
-    },
-  });
-  const [navbarType, setNavbarType] = useState<
-    "fixed" | "absolute" | "relative" | "static" | "sticky"
-  >();
-  const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
-  const [openMenu, setOpenMenu] = useState<any>(false);
-  const route = useLocation().pathname.split("/").slice(1);
   const [data, setData] = useState([]);
-  const token = Cookies.get("token");
-
-  /* eslint-disable react-hooks/exhaustive-deps */
   const FetchAcademicYear = () => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
@@ -108,6 +89,8 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   useEffect(() => {
     FetchAcademicYear();
   }, []);
+  const Cacademic_year = Cookies.get("academic_year");
+  console.log(Cacademic_year, "Cacademic_year");
   let today = new Date().toISOString().split("T")[0];
 
   const currentAcademic = data.find((item) => {
@@ -119,19 +102,37 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   });
 
   if (currentAcademic) {
-    console.log("Current Academic Year:", currentAcademic.academic_year);
+    console.log("Current Academic Year:", currentAcademic?.academic_year);
   } else {
     console.log("No matching academic year found for today's date.");
   }
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
+    initialValues: {
+      academic_year: Cacademic_year || currentAcademic?.academic_year || "2024-2025",
+    },
+    // validationSchema: validationSchema,
+    onSubmit: (values, action) => {
+      console.log(values, "values");
+    },
+  });
+  const [navbarType, setNavbarType] = useState<
+    "fixed" | "absolute" | "relative" | "static" | "sticky"
+  >();
+  const [controller, dispatch] = useMaterialUIController();
+  const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
+  const [openMenu, setOpenMenu] = useState<any>(false);
+  const route = useLocation().pathname.split("/").slice(1);
+  const token = Cookies.get("token");
 
-  // set selectedAcademicYear in Redux
-  // const handleAcademicYearChange = (newAcademicYear: string) => {
-  //   dispatch(setSelectedAcademicYear(newAcademicYear));
-  // };
+  /* eslint-disable react-hooks/exhaustive-deps */
 
-  // useEffect(() => {
-  //   handleAcademicYearChange(values.academic_year);
-  // }, [values.academic_year]);
+  useEffect(() => {
+    // Cleanup the old cookie before setting the new one
+    Cookies.remove("academic_year");
+    if (values.academic_year) {
+      Cookies.set("academic_year", values.academic_year, { expires: 7 });
+    }
+  }, [values.academic_year]); // Add only values.academic_year as a dependency
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -227,6 +228,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
             <MDBox pr={1}>
               {/* <MDInput label="Search here" /> */}
               <Autocomplete
+                fullWidth
                 sx={{ width: "100%" }}
                 value={values.academic_year || currentAcademic?.academic_year}
                 onChange={(_event, value) => {
@@ -241,17 +243,15 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                   )
                 ).filter((option) => option !== currentAcademic?.academic_year)}
                 renderInput={(params) => (
-                  <MDInput
+                  <FormField
                     required
+                    sx={{ width: "100%" }}
+                    fullWidth
                     defaultValue={currentAcademic?.academic_year}
                     name="academic_year"
                     onChange={handleChange}
                     value={values.academic_year || currentAcademic?.academic_year}
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Academic Year
-                      </MDTypography>
-                    }
+                    label={"Academic Year"}
                     {...params}
                     variant="standard"
                   />

@@ -71,36 +71,6 @@ let routes = [
       },
     ],
   },
-  {
-    type: "collapse",
-    name: "Subject",
-    key: "subject",
-    icon: (
-      <Icon fontSize="medium">
-        <LocalLibraryIcon />
-      </Icon>
-    ),
-    collapse: [
-      {
-        name: "Subject Details",
-        key: "subjectdetails",
-        route: "pages/subject/subjectdetails",
-        component: <Subject />,
-      },
-      {
-        name: "Section Subject",
-        key: "sectionsubject",
-        route: "pages/subject/sectionsubject",
-        component: <SectionSubject />,
-      },
-      {
-        name: "Employee Subject",
-        key: "employeesubject",
-        route: "pages/subject/employeesubject",
-        component: <EmployeeSubject />,
-      },
-    ],
-  },
 
   {
     name: "createfee category",
