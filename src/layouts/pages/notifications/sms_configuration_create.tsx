@@ -23,7 +23,7 @@ export default function SMSConfigurationCreate(props: any) {
       setCreateOrEdir("edit");
       setParticularFields(props.data.key_value);
     }
-  });
+  }, []);
   const initialValues = {
     url: createOrEdir == "edit" ? props.data.url : "",
     mobile_number_attribute: createOrEdir == "edit" ? props.data.url : "",
@@ -33,7 +33,7 @@ export default function SMSConfigurationCreate(props: any) {
     request_type: createOrEdir == "edit" ? props.data.request_type : "",
     sender_id: createOrEdir == "edit" ? props.data.sender_id : "",
     sender_id_value: createOrEdir == "edit" ? props.data.sender_id_value : "",
-    vender_name: createOrEdir == "edit" ? props.data.vender_name : "",
+    vender_name: createOrEdir == "edit" ? props.data.vendor_name : "",
     english_key: createOrEdir == "edit" ? props.data.english_key : "",
     maximum_sms_Support: createOrEdir == "edit" ? props.data.maximum_sms_Support : "",
     english_value: createOrEdir == "edit" ? props.data.english_value : "",

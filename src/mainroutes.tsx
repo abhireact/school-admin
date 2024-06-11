@@ -45,6 +45,7 @@ import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
 import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
+import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 
 const routes = [
   {
@@ -354,13 +355,18 @@ const routes = [
             route: "pages/notification/emailconfiguration",
             component: <EmailSetting />,
           },
-
-          // {
-          //   name: "SMS",
-          //   key: "sms",
-          //   route: "pages/notification/sms",
-          //   component: <FeeCertificate />,
-          // },
+        ],
+      },
+      {
+        name: "SMS",
+        key: "sms",
+        collapse: [
+          {
+            name: "SMS Configuration",
+            key: "smsconfiguration",
+            route: "notification/smsconfiguration",
+            component: <SmsConfiguration />,
+          },
         ],
       },
       {

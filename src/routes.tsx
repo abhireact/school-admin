@@ -18,7 +18,7 @@ import CreateTemplate from "layouts/pages/notifications/create_message_template"
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
 import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
-import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
+
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -156,12 +156,6 @@ let routes = [
     key: "sms_configuration",
     route: "notification/sms_configuration",
     component: <SMSConfiguration />,
-  },
-  {
-    name: "Sms Configuration show",
-    key: "sms_configurationshow",
-    route: "notification/sms_configuration_show",
-    component: <SmsConfiguration />,
   },
 ];
 

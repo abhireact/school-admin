@@ -205,6 +205,67 @@ export default function CreateTemplateForm(props: any) {
             </MDButton>
           </Grid>
         </Grid>
+        <Grid
+          container
+          px={3}
+          pb={2}
+          sx={{ display: "flex", justifyContent: "flex-center" }}
+          mt={1}
+        >
+          <Grid item xs={12} sm={12}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Defination of Terms
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$User_ID]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">User ID of SMS Recipient</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$User_name]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Name of SMS Recipient</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$Current_date]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Currrent Date</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$School_name]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">School Name</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$Child_name]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Child name</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$Amount]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Amount</MDTypography>
+          </Grid>
+        </Grid>
       </Card>
     </form>
   );

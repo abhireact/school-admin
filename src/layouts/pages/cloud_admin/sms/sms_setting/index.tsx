@@ -26,6 +26,7 @@ export default function SmsSetting() {
   const [prioritypopup, setPrioritypopup] = useState(false);
   const [permissionopen, setPermissionopen] = useState(false);
   const [schoolName, setSchoolName] = useState("");
+  const [subdomain, setSubdomain] = useState("");
   const fetchEnableData = async () => {
     try {
       const response = await axios.get(`http://10.0.20.200:8000/mg_school/sms_enable`, {
@@ -76,7 +77,8 @@ export default function SmsSetting() {
     fetchPriorityData();
     fetchLimitData();
   }, []);
-  const handleManageLimitOpen = (data: any) => {
+  const handleManageLimitOpen = (data: any, sub: any) => {
+    setSubdomain(sub);
     setSchoolName(data);
     const filtered_limitdata = limitData.filter((l_row) => l_row.school_name == data);
     setPopupdata(filtered_limitdata);
@@ -89,7 +91,8 @@ export default function SmsSetting() {
   const handleManageLimit = () => {
     handleManageLimitClose();
   };
-  const handlePriorityOpen = (data: any) => {
+  const handlePriorityOpen = (data: any, sub: any) => {
+    setSubdomain(sub);
     setSchoolName(data);
     const filtered_prioritydata = priorityData.filter((l_row) => l_row.school_name == data);
     setPopupdata(filtered_prioritydata);
@@ -121,14 +124,17 @@ export default function SmsSetting() {
         <Grid container spacing={1}>
           <Grid item>
             <Tooltip title="Manage SMS Limit" placement="top">
-              <IsoIcon fontSize="small" onClick={() => handleManageLimitOpen(row.school_name)} />
+              <IsoIcon
+                fontSize="small"
+                onClick={() => handleManageLimitOpen(row.school_name, row.sub_domain)}
+              />
             </Tooltip>
           </Grid>
           <Grid item>
             <Tooltip title="Manage priority" placement="top">
               <LowPriorityIcon
                 fontSize="small"
-                onClick={() => handlePriorityOpen(row.school_name)}
+                onClick={() => handlePriorityOpen(row.school_name, row.sub_domain)}
               />
             </Tooltip>
           </Grid>
@@ -140,10 +146,20 @@ export default function SmsSetting() {
     <DashboardLayout>
       <DashboardNavbar />
       <Dialog open={managelimitopen} onClose={handleManageLimit}>
-        <ManageLimit data={popupdata[0]} sc_name={schoolName} onSuccess={handleEditSuccess} />
+        <ManageLimit
+          data={popupdata[0]}
+          sc_name={schoolName}
+          sub_name={subdomain}
+          onSuccess={handleEditSuccess}
+        />
       </Dialog>
       <Dialog open={prioritypopup} onClose={handlePriorityClose} maxWidth="lg">
-        <Priority data={popupdata} sc_name={schoolName} onSuccess={handleEditSuccess} />
+        <Priority
+          data={popupdata}
+          sc_name={schoolName}
+          sub_name={subdomain}
+          onSuccess={handleEditSuccess}
+        />
       </Dialog>
       <Card>
         <DataTable
