@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Icon from "@mui/material/Icon";
-import { Grid, Tooltip } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
@@ -16,12 +16,13 @@ import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 // import EditMessageTemplate from "./template_form";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { Popconfirm, message } from "antd";
 import SMSConfigurationCreate from "./sms_configuration_create";
 const token = Cookies.get("token");
 export default function SmsConfiguration() {
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
+
   const [templateData, setTemplateData] = useState([]);
   useEffect(() => {
     fetchData();
@@ -56,6 +57,33 @@ export default function SmsConfiguration() {
     fetchData();
     handleClickCloseEdit();
   };
+  const confirm = async (data: any) => {
+    console.log(data, "delete data");
+    const delete_value = {
+      url: data.url,
+      sender_id_value: data.sender_id_value,
+    };
+    axios
+      .delete("http://10.0.20.200:8000/mg_sms_configuration/school_incharge", {
+        data: delete_value,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        message.success(response.data.message);
+        fetchData();
+      })
+      .catch((error) => {
+        message.error(error.response.data.detail);
+      });
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   const feeCategory = {
     columns: [
       { Header: "URL", accessor: "url" },
@@ -77,9 +105,19 @@ export default function SmsConfiguration() {
             </Tooltip>
           </Grid>
           <Grid item>
-            <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
-            </Tooltip>
+            <Popconfirm
+              title="Delete"
+              description="Are you sure to Delete it ?"
+              placement="topLeft"
+              onConfirm={() => confirm(data)} // Pass index to confirm function
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tooltip title="Delete" placement="top">
+                <Icon fontSize="small">delete</Icon>
+              </Tooltip>
+            </Popconfirm>
           </Grid>
         </Grid>
       ),

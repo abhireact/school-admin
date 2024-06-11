@@ -222,13 +222,14 @@ export default function Priority(props: any) {
                   </Grid>
                 </Grid>
                 {index != 0 ? (
-                  <Grid item xs={12} sm={2}>
+                  <Grid item xs={12} sm={1}>
                     <Icon color="secondary" onClick={() => removeParticularField(index)}>
                       delete
                     </Icon>
                   </Grid>
-                ) : (
-                  <Grid item xs={12} sm={2}>
+                ) : null}
+                {index == particularFields.length - 1 ? (
+                  <Grid item xs={12} sm={1}>
                     <MDButton
                       color="info"
                       variant="text"
@@ -239,7 +240,7 @@ export default function Priority(props: any) {
                       {"ADD +"}
                     </MDButton>
                   </Grid>
-                )}
+                ) : null}
                 <Divider />
               </Grid>
             </>
