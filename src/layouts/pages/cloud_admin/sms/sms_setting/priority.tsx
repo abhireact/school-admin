@@ -8,6 +8,7 @@ import {
   FormLabel,
   RadioGroup,
 } from "@mui/material";
+import Divider from "@mui/material/Divider";
 import FormField from "layouts/pages/account/components/FormField";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
@@ -17,75 +18,107 @@ import { Radio, FormControlLabel } from "@mui/material";
 import Icon from "@mui/material/Icon";
 import Cookies from "js-cookie";
 import { message } from "antd";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import Checkbox from "@mui/material/Checkbox";
 const token = Cookies.get("token");
 
 export default function Priority(props: any) {
+  const [particularFields, setParticularFields] = useState([
+    {
+      school_name: props.sub_name,
+      sms_configeration_name: "",
+      sender_id_value: "",
+      priority: 0,
+      vendor_name: "",
+    },
+  ]);
+  console.log(props, "props data");
+  const [configuration, setConfiguration] = useState([]);
   const prioritypropvalue = props.data;
   const initialValues = {
-    school_name: "SAKSHARIKA VIDYA VARSHINI",
+    school_name: "",
     priority: "",
   };
 
   const [clonedFields, setClonedFields] = useState([]);
   useEffect(() => {
     if (prioritypropvalue.length > 0) {
-      const existing_priority = prioritypropvalue.map((field: any, index: number) => ({
+      const existing_priority = prioritypropvalue.map((field: any) => ({
+        school_name: props.sub_name,
         priority: field.priority,
-        sms_configeration__name: field.sms_configeration__name,
+        sms_configeration_name: field.sms_configeration_name,
         sender_id_value: field.sender_id_value,
         vendor_name: field.vendor_name,
       }));
-      setClonedFields(existing_priority);
-    } else {
-      setClonedFields([
-        {
-          priority: 0,
-          sms_configeration__name: "",
-          sender_id_value: "",
-          vendor_name: "",
-        },
-      ]);
+      setParticularFields(existing_priority);
     }
   }, []);
+  console.log(particularFields, "existing perticular hhjuh");
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.200:8000/mg_sms_configuration/school_incharge", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setConfiguration(response.data);
+        console.log(response.data, "configurationnnnnn");
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   console.log(props.data, "props valuesss");
-  const handleCloneFieldChange = (index: number, field: any, value: any) => {
-    const updatedFields = [...clonedFields];
-    updatedFields[index] = { ...updatedFields[index], [field]: value };
-    setClonedFields(updatedFields);
-  };
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
-    useFormik({
-      initialValues,
-      enableReinitialize: true,
-      onSubmit: async (values, action) => {
-        console.log(clonedFields, values, "submitted values");
-        message.success("Successfully Assigned");
-      },
-    });
+  const { handleSubmit } = useFormik({
+    initialValues,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      axios
+        .post("http://10.0.20.200:8000/mg_sms_priority", particularFields, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          message.success(response.data.message);
+          props.onSuccess();
+        })
+        .catch((error) => {
+          message.error(error.response.data.detail);
+        });
+    },
+  });
 
-  const addPriorityField = () => {
-    setClonedFields([
-      ...clonedFields,
+  const addParticularField = () => {
+    setParticularFields([
+      ...particularFields,
       {
-        priority: 0,
-        sms_configeration__name: "",
+        school_name: props.sub_name,
+        sms_configeration_name: "",
         sender_id_value: "",
-        vendor_name: "",
+        priority: 0,
+        vendor_name: "  ",
       },
     ]);
   };
 
-  const removePriorityField = (index: any) => {
-    const updatedFields = [...clonedFields];
-    updatedFields.splice(index, 1);
-    setClonedFields(updatedFields);
+  const removeParticularField = (index: any) => {
+    if (index != 0) {
+      const updatedFields = [...particularFields];
+      updatedFields.splice(index, 1);
+      setParticularFields(updatedFields);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        <Grid container xs={12} sm={12} pl={3} py={3}>
+        <Grid container spacing={3} p={3}>
           <Grid item xs={12} sm={12} p={2}>
             <Grid item xs={12} sm={12}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
@@ -98,110 +131,119 @@ export default function Priority(props: any) {
               </MDTypography>
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={12}>
-            <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="SMS WORLD"
-                name="priority"
-                onChange={handleChange}
-              >
-                {clonedFields.map((field, index) => (
-                  <FormControlLabel
-                    key={index}
-                    value={index}
-                    control={<Radio />}
-                    label={
-                      <React.Fragment key={index}>
-                        <Grid container spacing={3} p={2}>
-                          <Grid item xs={12} sm={4}>
-                            <Autocomplete
-                              value={clonedFields[index].sms_configeration__name}
-                              onChange={(_event, value) =>
-                                handleCloneFieldChange(index, "sms_configeration__name", value)
-                              }
-                              options={[
-                                "",
-                                "http://smsw.co.in/API/WebSMS/Http/v1.0a/index.php",
-                                "http://www.smsjust.com/sms/user/urlsms.php",
-                                "http://sms2.callcum.org:6005",
-                              ]}
-                              renderInput={(params) => (
-                                <MDInput
-                                  required
-                                  label={
-                                    <MDTypography
-                                      variant="button"
-                                      fontWeight="bold"
-                                      color="secondary"
-                                    >
-                                      SMS Configuration
-                                    </MDTypography>
-                                  }
-                                  {...params}
-                                  variant="standard"
-                                />
-                              )}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <Autocomplete
-                              value={clonedFields[index].vendor_name}
-                              onChange={(_event, value) =>
-                                handleCloneFieldChange(index, "vendor_name", value)
-                              }
-                              options={["", "SendSMS", "SDFG", "AAAA", "SMS WORLD", "CALLCUM"]}
-                              renderInput={(params) => (
-                                <MDInput
-                                  required
-                                  label={
-                                    <MDTypography
-                                      variant="button"
-                                      fontWeight="bold"
-                                      color="secondary"
-                                    >
-                                      Vendor Name
-                                    </MDTypography>
-                                  }
-                                  {...params}
-                                  variant="standard"
-                                />
-                              )}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={3}>
-                            <MDInput
-                              sx={{ width: "100%" }}
-                              label={
-                                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                  Sender Id Value
-                                </MDTypography>
-                              }
-                              value={clonedFields[index].sender_id_value}
-                              onChange={(e: any) =>
-                                handleCloneFieldChange(index, "sender_id_value", e.target.value)
-                              }
-                              variant="standard"
-                            />
-                          </Grid>
-                          <Grid item xs={2} sm={1}>
-                            <Icon color="secondary" onClick={() => removePriorityField(index)}>
-                              delete
-                            </Icon>
-                          </Grid>
-                        </Grid>
-                      </React.Fragment>
-                    }
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-            <Grid item xs={12} sm={12}>
-              <MDButton color="info" variant="outlined" size="small" onClick={addPriorityField}>
-                Add Priority Field
-              </MDButton>
-            </Grid>
-          </Grid>
+
+          {particularFields.map((particular, index) => (
+            <>
+              <Grid container key={index} p={2}>
+                <Grid item xs={12} sm={10}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <Autocomplete
+                        value={particularFields[index].sms_configeration_name}
+                        onChange={(e, selectedValue) => {
+                          // Use the second parameter to get the selected value
+                          const updatedFields = [...particularFields];
+                          updatedFields[index].sms_configeration_name = selectedValue;
+                          updatedFields[index].vendor_name = configuration.find(
+                            (obj) => obj.url === selectedValue
+                          ).vendor_name;
+                          setParticularFields(updatedFields);
+                        }}
+                        options={configuration.map((item) => item.url)}
+                        renderInput={(params) => (
+                          <MDInput
+                            required
+                            name={`SMS Configuration`}
+                            value={particularFields[index].sms_configeration_name}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                SMS Configuration
+                              </MDTypography>
+                            }
+                            {...params}
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        required
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {`Sender ID`}
+                          </MDTypography>
+                        }
+                        sx={{ width: "100%" }}
+                        name={`value${index}`}
+                        value={particularFields[index].sender_id_value}
+                        variant="standard"
+                        onChange={(e: any) => {
+                          const updatedFields = [...particularFields];
+                          updatedFields[index].sender_id_value = e.target.value;
+                          setParticularFields(updatedFields);
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        disabled
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {`Vendor Name`}
+                          </MDTypography>
+                        }
+                        sx={{ width: "100%" }}
+                        name={`value${index}`}
+                        value={particularFields[index].vendor_name}
+                        variant="standard"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        required
+                        type="number"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {`Priority`}
+                          </MDTypography>
+                        }
+                        sx={{ width: "100%" }}
+                        name={`value${index}`}
+                        value={particularFields[index].priority}
+                        variant="standard"
+                        onChange={(e: any) => {
+                          const updatedFields = [...particularFields];
+                          updatedFields[index].priority = e.target.value;
+                          setParticularFields(updatedFields);
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                {index != 0 ? (
+                  <Grid item xs={12} sm={2}>
+                    <Icon color="secondary" onClick={() => removeParticularField(index)}>
+                      delete
+                    </Icon>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} sm={2}>
+                    <MDButton
+                      color="info"
+                      variant="text"
+                      style={{ fontSize: "16px" }}
+                      onClick={addParticularField}
+                      pl={2}
+                    >
+                      {"ADD +"}
+                    </MDButton>
+                  </Grid>
+                )}
+                <Divider />
+              </Grid>
+            </>
+          ))}
 
           <Grid
             item

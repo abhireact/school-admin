@@ -52,6 +52,7 @@ export default function AssignClassTeacher() {
   const [concessiondata, setConcessiondata] = useState([]);
   const [defaultSelectedRowKeys, setDefaultSelectedRowKeys] = useState(["DFGJU67"]);
   const [assignOpen, setAssignOpen] = useState(false);
+  const [classTeacher, setClassTeacher] = useState([]);
   const fetchData = async () => {
     try {
       const response = await axios.post(
@@ -75,37 +76,39 @@ export default function AssignClassTeacher() {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
-      validationSchema: commonacademicyear,
+      // validationSchema: commonacademicyear,
       enableReinitialize: true,
-      onSubmit: async (values, action) => {
-        const editData = [
-          {
-            academic_year: values.academic_year,
-            wing_name: values.wing_name,
-            class_name: sectionData.class_name,
-            section_name: sectionData.section_name,
-            teacher_name: sectionData.user_id,
-          },
-        ];
-        console.log(editData, sectionData, "submitted");
-        axios
-          .put("http://10.0.20.200:8000/mg_assign_class_teacher", editData, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            if (response.status == 200) {
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
-        fetchData();
-      },
+      onSubmit: async (values, action) => {},
     });
 
+  const onsubmitt = async () => {
+    const editData = [
+      {
+        academic_year: values.academic_year,
+        wing_name: values.wing_name,
+        class_name: sectionData.class_name,
+        section_name: sectionData.section_name,
+        teacher_name: classTeacher[0],
+      },
+    ];
+    console.log(editData, sectionData, "submitted");
+    axios
+      .put("http://10.0.20.200:8000/mg_assign_class_teacher", editData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          handleClickCloseEdit();
+          fetchData();
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
   const handleClickOpenEdit = (data: any) => {
     // setEditdata(data);
 
@@ -114,16 +117,6 @@ export default function AssignClassTeacher() {
     console.log(data, "popupdata");
     setAssignOpen(true);
   };
-  const editData = [
-    {
-      academic_year: values.academic_year,
-      wing_name: values.wing_name,
-      class_name: sectionData.class_name,
-      section_name: sectionData.section_name,
-      teacher_name: sectionData.user_id,
-    },
-  ];
-  console.log(editData, sectionData, "submitted");
   const handleClickCloseEdit = () => {
     setAssignOpen(false);
   };
@@ -149,7 +142,6 @@ export default function AssignClassTeacher() {
         console.error("Error fetching data:", error);
       });
   }, []);
-  console.log(employeeData, "lllll");
   const feeConcessionData = {
     columns: [
       { Header: "CLASS & SECTION", accessor: "section" },
@@ -159,7 +151,7 @@ export default function AssignClassTeacher() {
     rows: concessiondata.map((data, index) => ({
       section: `${data.class_name}-${data.section_name}`,
       assigned_teacher:
-        data.mg_class_teacher != "No teacher assigned" ? (
+        data.mg_class_teacher == "No teacher assigned" ? (
           <MDButton
             color="info"
             variant="text"
@@ -177,7 +169,14 @@ export default function AssignClassTeacher() {
           <Grid container spacing={1}>
             <Grid item>
               <Tooltip title="Edit" placement="top">
-                <Icon fontSize="small">edit</Icon>
+                <Icon
+                  fontSize="small"
+                  onClick={() => {
+                    handleClickOpenEdit(data);
+                  }}
+                >
+                  edit
+                </Icon>
               </Tooltip>
             </Grid>
           </Grid>
@@ -218,6 +217,7 @@ export default function AssignClassTeacher() {
                     type: "radio",
                     defaultSelectedRowKeys: defaultSelectedRowKeys,
                     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+                      setClassTeacher(selectedRowKeys);
                       console.log(
                         `selectedRowKeys: ${selectedRowKeys}`,
                         "selectedRows: ",
@@ -229,15 +229,15 @@ export default function AssignClassTeacher() {
                   dataSource={data}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
                 <Grid item>
                   <MDButton color="dark" variant="contained" onClick={handleClickCloseEdit}>
-                    Back
+                    Cancel
                   </MDButton>
                 </Grid>
                 <Grid item ml={2}>
-                  <MDButton color="info" variant="contained" type="submit">
-                    Save
+                  <MDButton color="info" variant="contained" type="submit" onClick={onsubmitt}>
+                    Assign
                   </MDButton>
                 </Grid>
               </Grid>
@@ -250,7 +250,7 @@ export default function AssignClassTeacher() {
               <Grid container px={3} pt={3}>
                 <Grid item xs={12} sm={6} mt={2}>
                   <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                    Asign Class Teacher
+                    Assign Class Teacher
                   </MDTypography>
                 </Grid>
               </Grid>
@@ -308,6 +308,7 @@ export default function AssignClassTeacher() {
               </Grid>
             </Card>
           </Grid>
+
           <Grid item xs={12} sm={12}>
             <Card>
               <DataTable table={feeConcessionData} isSorted={false} canSearch={true} />

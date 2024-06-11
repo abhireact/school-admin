@@ -9,15 +9,13 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 const token = Cookies.get("token");
 export default function ManageLimit(props: any) {
+  console.log(props.data, "propsssss");
   const initialValues = props.data
     ? props.data
     : {
-        school_name: "SAKSHARIKA VIDYA VARSHINI",
+        school_name: props.sc_name,
         limit: 0,
         cost_of_sms: 0,
-        max_carry_forward_limit: 0,
-        start_date: Date,
-        end_date: Date, // Array to store particulars
       };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
@@ -105,52 +103,6 @@ export default function ManageLimit(props: any) {
                 }
                 name="cost_of_sms"
                 value={values.cost_of_sms}
-                variant="standard"
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-              <MDInput
-                sx={{ width: "100%" }}
-                type="number"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Max Carry Forward Limit
-                  </MDTypography>
-                }
-                name="max_carry_forward_limit"
-                value={values.max_carry_forward_limit}
-                variant="standard"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <MDInput
-                type="date"
-                sx={{ width: "100%" }}
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Start Date
-                  </MDTypography>
-                }
-                name="start_date"
-                value={values.start_date}
-                variant="standard"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <MDInput
-                type="date"
-                sx={{ width: "100%" }}
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    End Date
-                  </MDTypography>
-                }
-                name="end_date"
-                value={values.end_date}
                 variant="standard"
                 onChange={handleChange}
               />

@@ -48,6 +48,9 @@ import EmployeeSubject from "layouts/pages/subject/employee_subject";
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
+import WeekDays from "layouts/pages/employee/week_days";
+import ClassTiming from "layouts/pages/employee/class_timing";
+import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 import CreateStudentID from "layouts/pages/student/studentID_card/create";
 
 const routes = [
@@ -145,12 +148,6 @@ const routes = [
         key: "studentdetails",
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,
-      },
-      {
-        name: "Export Student Page",
-        key: "export_student_data",
-        route: "/pages/school/export_student_data",
-        component: <ExportStudentPage />,
       },
       // {
       //   name: "Scholastic Grade",
@@ -308,6 +305,19 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Attendance",
+    key: "attendance",
+    collapse: [
+      {
+        name: "Class Timing",
+        key: "classtiming",
+        route: "attendance/class_timing",
+        component: <ClassTiming />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
     name: "Employee",
     key: "employee",
     icon: (
@@ -360,6 +370,12 @@ const routes = [
         route: "employee/assignclassteacher",
         component: <AssignClassTeacher />,
       },
+      {
+        name: "Week Days",
+        key: "weekdays",
+        route: "employee/week_days",
+        component: <WeekDays />,
+      },
     ],
   },
   {
@@ -382,13 +398,18 @@ const routes = [
             route: "pages/notification/emailconfiguration",
             component: <EmailSetting />,
           },
-
-          // {
-          //   name: "SMS",
-          //   key: "sms",
-          //   route: "pages/notification/sms",
-          //   component: <FeeCertificate />,
-          // },
+        ],
+      },
+      {
+        name: "SMS",
+        key: "sms",
+        collapse: [
+          {
+            name: "SMS Configuration",
+            key: "smsconfiguration",
+            route: "notification/smsconfiguration",
+            component: <SmsConfiguration />,
+          },
         ],
       },
       {
