@@ -216,6 +216,8 @@ export default function SendMail() {
   }));
 
   const rowSelection = {
+    selectedRowKeys,
+    selections: [Table.SELECTION_ALL],
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
       setSelectedRowKeys(selectedRowKeys);

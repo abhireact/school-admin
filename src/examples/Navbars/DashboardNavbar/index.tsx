@@ -43,6 +43,7 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
+import MDButton from "components/MDButton";
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -53,12 +54,13 @@ interface Props {
 interface Notification {
   id: number;
   from_user_id: string;
+  employee_name: string;
+  created_at: string;
   subject: string;
   description: string;
   status: boolean;
   notification_type: string;
 }
-
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [message, setMessage] = useState([]);
   const [editopen, setEditOpen] = useState(false);
@@ -67,6 +69,8 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
     id: 0,
     from_user_id: "",
     subject: "",
+    employee_name: "",
+    created_at: "",
     description: "",
     status: false,
     notification_type: "",
@@ -137,7 +141,6 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const handleOpenMenu = (event: any) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
   const handleClickOpenEdit = (data: any) => {
-    console.log(data, "dddddddddddddddd");
     setEditdata(data);
     setEditOpen(true);
     if (data.status) {
@@ -229,13 +232,34 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
       <Dialog open={editopen} onClose={handleClickCloseEdit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={12} m={4}>
-            <MDTypography variant="h6">{editdata.subject}</MDTypography>
-            <Divider />
-            <MDTypography variant="button">{editdata.description}</MDTypography>
+        <Card>
+          <Grid container spacing={2} p={2}>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h6" fontWeight="bold">
+                Subject: {editdata.subject}
+                <br />
+                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                  sender:{editdata.employee_name}
+                </MDTypography>
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h6" fontWeight="bold">
+                Message: {editdata.description}
+                <br />
+                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                  Date:{editdata.created_at}
+                </MDTypography>
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              {" "}
+              <MDButton variant="text" color="info" onClick={handleClickCloseEdit}>
+                cancel
+              </MDButton>
+            </Grid>
           </Grid>
-        </Grid>
+        </Card>
       </Dialog>
       <Toolbar sx={navbarContainer}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
