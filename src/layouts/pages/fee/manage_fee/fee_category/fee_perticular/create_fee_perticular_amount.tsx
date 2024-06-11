@@ -28,6 +28,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 const token = Cookies.get("token");
 
@@ -252,6 +253,7 @@ export default function CreateFeeParicularAmount() {
     selectedTab === 0 ? result : selectedTab === 1 ? studentdata : [];
   return (
     <DashboardLayout>
+      <DashboardNavbar />
       <form onSubmit={handleSubmit}>
         <Card>
           <Grid xs={12} sm={12} p={2}>

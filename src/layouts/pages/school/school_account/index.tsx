@@ -53,6 +53,19 @@ const SchoolAccount = () => {
   }, [token]);
   //End
   const [data, setData] = useState([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const handleExport = () => {
+    setIsExporting(true);
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    XLSX.writeFile(workbook, `${"accounts"}.xlsx`, { bookType: "xlsx", type: "binary" });
+
+    setIsExporting(false);
+    console.log("export excel data", data);
+  };
 
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
@@ -242,6 +255,17 @@ const SchoolAccount = () => {
             {rbacData ? (
               rbacData?.find((element: string) => element === "schoolaccountcreate") ? (
                 <>
+                  {" "}
+                  <MDButton
+                    variant="contained"
+                    disabled={data.length < 1}
+                    color="dark"
+                    type="submit"
+                    onClick={handleExport}
+                  >
+                    {isExporting ? "Exporting..." : "Export to Excel"}
+                  </MDButton>
+                  &nbsp; &nbsp; &nbsp;
                   <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
                     Upload&nbsp;
                     <FileUploadIcon />

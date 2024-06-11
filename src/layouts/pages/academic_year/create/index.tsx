@@ -42,7 +42,7 @@ const validationSchema = Yup.object().shape({
           return true;
         }),
       end_date: Yup.date()
-        .nullable()
+        .required("Required *")
         .test("year-range", "Incorrect format", function (value) {
           if (value) {
             const year = value.getFullYear();
