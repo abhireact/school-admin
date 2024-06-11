@@ -39,7 +39,7 @@ const initialState: DataState = {
   status: "loading",
   error: null,
 };
-const dataSlice = createSlice({
+const dataSlice: any = createSlice({
   name: "data",
   initialState,
   reducers: {},

@@ -53,12 +53,14 @@ interface TreeNode {
 }
 
 export default function CreateFeeParicularAmount() {
+  const Cacademic_year = Cookies.get("academic_year");
+  console.log(Cacademic_year, "Cacademic_year");
   let initialValues = {
     fee_category: "",
     fee_perticular: "",
     account: "",
     amount: "",
-    academic_year: "",
+    academic_year: Cacademic_year,
     student_category: "",
     class_name: "",
     section_name: "",
@@ -315,6 +317,8 @@ export default function CreateFeeParicularAmount() {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
+                  defaultValue={Cacademic_year}
+                  disabled
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "academic_year", value } });
                   }}
@@ -325,10 +329,12 @@ export default function CreateFeeParicularAmount() {
                   }
                   renderInput={(params) => (
                     <MDInput
+                      defaultValue={Cacademic_year}
                       required
+                      disabled
                       name="academic_year"
                       onChange={handleChange}
-                      value={values.academic_year}
+                      value={values.academic_year || Cacademic_year}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Academic Year
