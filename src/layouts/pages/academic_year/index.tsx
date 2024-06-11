@@ -38,6 +38,19 @@ interface AcademicYearData {
 const Academic = () => {
   const [rbacData, setRbacData] = useState<string[]>([]);
   const [data, setData] = useState<AcademicYearData[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const handleExport = () => {
+    setIsExporting(true);
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    XLSX.writeFile(workbook, `${"academic_year"}.xlsx`, { bookType: "xlsx", type: "binary" });
+
+    setIsExporting(false);
+    console.log("export excel data", data);
+  };
   const [open, setOpen] = useState(false);
   const [editData, setEditData] = useState<AcademicYearData | null>(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -215,6 +228,16 @@ const Academic = () => {
           <Grid item pt={2} pr={2}>
             {rbacData.includes("academiccreate") && (
               <>
+                <MDButton
+                  variant="contained"
+                  disabled={data.length < 1}
+                  color="dark"
+                  type="submit"
+                  onClick={handleExport}
+                >
+                  {isExporting ? "Exporting..." : "Export to Excel"}
+                </MDButton>
+                &nbsp; &nbsp; &nbsp;
                 <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
                   Upload&nbsp;
                   <FileUploadIcon />
