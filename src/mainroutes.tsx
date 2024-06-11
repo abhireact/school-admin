@@ -26,6 +26,7 @@ import LateFee from "layouts/pages/fee/manage_fee/late_fee";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import Admin from "layouts/pages/school/create";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
@@ -52,6 +53,7 @@ import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 import CreateStudentID from "layouts/pages/student/studentID_card/create";
+import AdmissionForm from "layouts/pages/attendance";
 
 const routes = [
   {
@@ -613,6 +615,25 @@ const routes = [
             component: <FeeDefaulterReport />,
           },
         ],
+      },
+    ],
+  },
+
+  {
+    type: "collapse",
+    name: "Admission",
+    key: "admission",
+    icon: (
+      <Icon fontSize="medium">
+        <BookOnlineIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Admission Form",
+        key: "admissionform",
+        route: "pages/admission/admissionform",
+        component: <AdmissionForm />,
       },
     ],
   },
