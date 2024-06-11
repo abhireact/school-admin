@@ -20,7 +20,8 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 const Showrole = () => {
   const [data, setData] = useState([]);
   //Start
@@ -83,39 +84,51 @@ const Showrole = () => {
   }, []);
   const dataTableData = {
     columns: [
-      { Header: "Role Name", accessor: "role_name" },
+      { Header: "Role Name", accessor: "role_display_name" },
 
       { Header: "Status", accessor: "status" },
-      { Header: "Role Access", accessor: "seeded" },
+      { Header: "Description", accessor: "description" },
 
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
-      role_name: <MDTypography variant="p">{row.role_name}</MDTypography>,
+      role_display_name: <MDTypography variant="p">{row.role_display_name}</MDTypography>,
+      description: <MDTypography variant="p">{row.description}</MDTypography>,
 
       action: (
         <MDTypography variant="p">
-          {/* <IconButton
+          <IconButton
             onClick={() => {
               handleOpenupdate(index);
               console.log(index, "update index");
             }}
           >
             <CreateRoundedIcon />
-          </IconButton> */}
+          </IconButton>
           <IconButton
             onClick={() => {
-              handleOpenupdate2(index);
-              console.log(index, "update index");
+              if (index !== 0) {
+                handleOpenupdate2(index);
+                console.log(index, "update index");
+              }
             }}
+            disabled={index === 0}
           >
             <ManageAccountsIcon />
           </IconButton>
         </MDTypography>
       ),
 
-      status: <MDTypography variant="p">{row.status}</MDTypography>,
+      status: (
+        <MDTypography variant="p">
+          {row.status === "inactive" ? (
+            <ToggleOffIcon fontSize="large" />
+          ) : (
+            <ToggleOnIcon fontSize="large" />
+          )}
+        </MDTypography>
+      ),
       seeded: (
         <MDTypography variant="p">
           {row.seeded === "y" ? (

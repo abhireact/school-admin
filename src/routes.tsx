@@ -19,6 +19,10 @@ import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
 import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 
+import Subject from "layouts/pages/subject/subjectdetails";
+import SectionSubject from "layouts/pages/subject/section_subject";
+import EmployeeSubject from "layouts/pages/subject/employee_subject";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {

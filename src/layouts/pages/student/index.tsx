@@ -113,7 +113,7 @@ const Student = () => {
   const [data, setData] = useState([]);
 
   //Update Dialog Box Start
-  const [editData, setEditData] = useState(null);
+  const [username, setUsername] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
@@ -122,7 +122,7 @@ const Student = () => {
     console.log(main_data, "maindata");
 
     setOpenupdate(true);
-    setEditData(main_data.user_id);
+    setUsername(main_data.user_id);
   };
 
   const handleCloseupdate = () => {
@@ -249,10 +249,10 @@ const Student = () => {
           .then((response) => {
             setData(response.data);
             console.log(response.data);
-            action.resetForm();
           })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
+          .catch((error: any) => {
+            setData([]);
+            message.error(error.response.data.detail);
           });
       },
     });
@@ -268,14 +268,13 @@ const Student = () => {
         </>
       ) : (
         <>
-          {openupdate ? (
-            <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchStudents} />
+          {openupdate && username ? (
+            <Update setOpenupdate={setOpenupdate} username={username} fetchData={fetchStudents} />
           ) : (
             <>
               <Card>
                 <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Grid item pt={2} pl={2}>
-                    {" "}
                     <MDTypography variant="h4" fontWeight="bold" color="secondary">
                       Student List
                     </MDTypography>

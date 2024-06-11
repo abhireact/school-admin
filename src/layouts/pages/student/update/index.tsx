@@ -14,7 +14,7 @@ import Sidenav from "../sidenav";
 const token = Cookies.get("token");
 
 const Update = (props: any) => {
-  const { editData, setOpenupdate, fetchData } = props;
+  const { username, setOpenupdate, fetchData } = props;
   const [studentInfo, setStudentInfo] = useState({});
   const [guardianInfo, setGuardianInfo] = useState([]);
 
@@ -22,7 +22,7 @@ const Update = (props: any) => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_URL}/mg_guardian/manage`,
-        { student_user_name: editData },
+        { student_user_name: username },
         {
           headers: {
             "Content-Type": "application/json",
@@ -38,13 +38,12 @@ const Update = (props: any) => {
         console.error("Error fetching guardian data:", error);
       });
   };
-
-  useEffect(() => {
+  const fetchStudentInfo = () => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_URL}/mg_student/retrive`,
         {
-          user_name: editData,
+          user_name: username,
         },
         {
           headers: {
@@ -60,13 +59,16 @@ const Update = (props: any) => {
       .catch(() => {
         console.error("Error on getting student info");
       });
+  };
 
+  useEffect(() => {
     fetchGuardian();
+    fetchStudentInfo();
   }, []);
   return (
     <Student
-      editData={studentInfo}
-      username={editData}
+      studentInfo={studentInfo}
+      username={username}
       setOpenupdate={setOpenupdate}
       fetchData={fetchData}
       guardianInfo={guardianInfo}

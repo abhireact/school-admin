@@ -4,7 +4,7 @@
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-2-pro-react-ts
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Copyright 2023 Mindcom Group (https://www.creative-tim.com)
 
 Coded by www.creative-tim.com
 
@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { useMemo, useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 
 // react-table components
 import { useTable, usePagination, useGlobalFilter, useAsyncDebounce, useSortBy } from "react-table";
@@ -31,10 +32,16 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDPagination from "components/MDPagination";
+import DownloadIcon from "@mui/icons-material/Download";
 
 // Material Dashboard 2 PRO React TS examples components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
+import { Menu, MenuItem } from "@mui/material";
+import MDButton from "components/MDButton";
+import React from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // Declaring props types for DataTable
 interface Props {
@@ -45,6 +52,7 @@ interface Props {
         entries: number[];
       };
   canSearch?: boolean;
+  importbtn?: boolean;
   showTotalEntries?: boolean;
   table: {
     columns: { [key: string]: any }[];
@@ -57,6 +65,11 @@ interface Props {
   isSorted?: boolean;
   noEndBorder?: boolean;
 }
+// eslint-disable-next-line
+interface TableRow {
+  [key: string]: any; // Define the shape of your table rows here
+}
+// eslint-disable-next-line
 
 function DataTable({
   entriesPerPage,
@@ -66,6 +79,7 @@ function DataTable({
   pagination,
   isSorted,
   noEndBorder,
+  importbtn,
 }: Props): JSX.Element {
   let defaultValue: any;
   let entries: any[];
@@ -77,14 +91,19 @@ function DataTable({
 
   const columns = useMemo<any>(() => table.columns, [table]);
   const data = useMemo<any>(() => table.rows, [table]);
-
+  // eslint-disable-next-line
+  const [tablerowdata, setTablerowdata] = useState([]);
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0 } },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
-
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
   const {
     getTableProps,
     getTableBodyProps,
@@ -103,8 +122,11 @@ function DataTable({
     state: { pageIndex, pageSize, globalFilter },
   }: any = tableInstance;
 
+  console.log(page, pageIndex, pageSize, "rowss for tableeeeeeeeeeee");
   // Set the default value for the entries per page when component mounts
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
+  /* eslint-disable react-hooks/exhaustive-deps */
 
   // Set the entries per page value based on the select value
   const setEntriesPerPage = (value: any) => setPageSize(value);
@@ -160,6 +182,58 @@ function DataTable({
   // Setting the entries ending point
   let entriesEnd;
 
+  // pdfgeneration
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+
+    // Set up table headers and rows
+    const tableHeaders = table.columns.map((column) => column.Header);
+    const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
+    const tableRows = table.rows.map((row) => {
+      // Get the keys from the first row of the input data
+      const keys = Object.keys(table.rows[0]);
+      // Map the keys to the corresponding values in the current row
+      return keys.map((key) => row[key]);
+    });
+
+    // Flatten each individual row before passing to autoTable
+    const flattenedTableRows = tableRows.map((row) => row.flat());
+
+    // Add the table to the PDF document
+    autoTable(doc, {
+      head: [filteredTableHeaders],
+      body: flattenedTableRows, // Pass flattenedTableRows as an array of arrays
+    });
+
+    // Save the PDF file
+    doc.save("table.pdf");
+  };
+  // excel generation
+  const downloadXLSX = (tableData: TableRow[]) => {
+    // Filter out the "Action" column header and its corresponding data
+    const filteredTableData = tableData.map((row) => {
+      const filteredRow: TableRow = {};
+      Object.keys(row).forEach((key) => {
+        if (key !== "action") {
+          filteredRow[key] = row[key];
+        }
+      });
+      return filteredRow;
+    });
+
+    const headers = Object.keys(filteredTableData[0]);
+    const data = filteredTableData.map((row) => headers.map((header) => row[header]));
+
+    // Create a new style object for the header row with a background color
+
+    // Apply the header style to the first row of the worksheet (headers)
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "table.xlsx");
+  };
+
   if (pageIndex === 0) {
     entriesEnd = pageSize;
   } else if (pageIndex === pageOptions.length - 1) {
@@ -167,10 +241,11 @@ function DataTable({
   } else {
     entriesEnd = pageSize * (pageIndex + 1);
   }
-
+  console.log(table.columns, "column data ");
+  console.log(table.rows, "rowdata");
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
-      {entriesPerPage || canSearch ? (
+      {entriesPerPage || canSearch || importbtn ? (
         <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
           {entriesPerPage && (
             <MDBox display="flex" alignItems="center">
@@ -186,8 +261,58 @@ function DataTable({
                 renderInput={(params) => <MDInput {...params} />}
               />
               <MDTypography variant="caption" color="secondary">
-                &nbsp;&nbsp;Entries per page
+                &nbsp;&nbsp;entries per page
               </MDTypography>
+              {/* <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={handleGeneratePDF}>PDF</MenuItem>
+                <MenuItem onClick={() => downloadXLSX(table.rows)}>XSL</MenuItem>
+              </Menu>
+              <MDButton
+                variant="gradient"
+                color="info"
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <DownloadIcon />
+              </MDButton> */}
+            </MDBox>
+          )}
+          {importbtn && (
+            <MDBox width="12rem" ml="auto">
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={handleGeneratePDF}>PDF</MenuItem>
+                <MenuItem onClick={() => downloadXLSX(table.rows)}>XSL</MenuItem>
+              </Menu>
+              <MDButton
+                variant="gradient"
+                color="info"
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <DownloadIcon />
+              </MDButton>
             </MDBox>
           )}
           {canSearch && (
@@ -219,6 +344,7 @@ function DataTable({
                   sorted={setSortedValue(column)}
                 >
                   {column.render("Header")}
+                  {/* setHeader({column}) */}
                 </DataTableHeadCell>
               ))}
             </TableRow>
@@ -237,6 +363,7 @@ function DataTable({
                     {...cell.getCellProps()}
                   >
                     {cell.render("Cell")}
+                    {/* setBodydata(cell) */}
                   </DataTableBodyCell>
                 ))}
               </TableRow>
@@ -299,6 +426,7 @@ function DataTable({
 DataTable.defaultProps = {
   entriesPerPage: { defaultValue: 10, entries: ["5", "10", "15", "20", "25"] },
   canSearch: false,
+  importbtn: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },
   isSorted: true,

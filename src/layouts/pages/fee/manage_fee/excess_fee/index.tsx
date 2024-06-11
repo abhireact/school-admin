@@ -170,7 +170,7 @@ const ExcessFee = () => {
                 </MDTypography>
               </Grid>
             </Grid>
-            <DataTable table={dataTableData} isSorted={false} />
+            <DataTable table={dataTableData} canSearch isSorted={false} />
           </Card>
         </>
       )}

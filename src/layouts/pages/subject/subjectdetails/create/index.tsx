@@ -19,11 +19,11 @@ const validationSchema = Yup.object().shape({
   subject_code: Yup.string().required("Required *"),
   scoring_type: Yup.string().required("Required *"),
   academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
   max_weekly_class: Yup.number().required("Required *"),
-  index: Yup.number().required("Required *"),
-  no_of_classes: Yup.number().required("Required *"),
+  index: Yup.number(),
+  no_of_classes: Yup.number(),
 });
 
 const Create = (props: any) => {
@@ -44,7 +44,7 @@ const Create = (props: any) => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get("http://10.0.20.200:8000/mg_class", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -92,20 +92,20 @@ const Create = (props: any) => {
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
-        .post("http://10.0.20.200:8000/mg_subject", values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_subject`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          message.success(" Created successfully!");
           fetchingData();
           action.resetForm();
-          handleShowPage();
+          //handleShowPage();
         })
-        .catch(() => {
-          message.error("Error on creating  !");
+        .catch((error: any) => {
+          console.log(error, " error");
+          message.error(error.response.data.detail);
         });
     },
   });
@@ -129,6 +129,7 @@ const Create = (props: any) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.subject_name && Boolean(errors.subject_name)}
+                success={values.subject_name.length && !errors.subject_name}
                 helperText={touched.subject_name && errors.subject_name}
               />
             </Grid>
@@ -146,6 +147,7 @@ const Create = (props: any) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.subject_code && Boolean(errors.subject_code)}
+                success={values.subject_code.length && !errors.subject_code}
                 helperText={touched.subject_code && errors.subject_code}
               />
             </Grid>
@@ -168,11 +170,13 @@ const Create = (props: any) => {
                         Scoring Type
                       </MDTypography>
                     }
-                    onChange={handleChange}
                     value={values.scoring_type}
                     {...params}
                     variant="standard"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     error={touched.scoring_type && Boolean(errors.scoring_type)}
+                    success={values.scoring_type.length && !errors.scoring_type}
                     helperText={touched.scoring_type && errors.scoring_type}
                   />
                 )}
@@ -193,6 +197,7 @@ const Create = (props: any) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.max_weekly_class && Boolean(errors.max_weekly_class)}
+                success={values.max_weekly_class && !errors.max_weekly_class}
                 helperText={touched.max_weekly_class && errors.max_weekly_class}
               />
             </Grid>
@@ -211,6 +216,7 @@ const Create = (props: any) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.no_of_classes && Boolean(errors.no_of_classes)}
+                success={values.no_of_classes && !errors.no_of_classes}
                 helperText={touched.no_of_classes && errors.no_of_classes}
               />
             </Grid>
@@ -229,6 +235,7 @@ const Create = (props: any) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.index && Boolean(errors.index)}
+                success={values.index && !errors.index}
                 helperText={touched.index && errors.index}
               />
             </Grid>
@@ -279,17 +286,19 @@ const Create = (props: any) => {
                   <MDInput
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
-                    placeholder="2022-23"
+                    placeholder="eg. 2022-2023"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         Academic Year
                       </MDTypography>
                     }
-                    onChange={handleChange}
                     value={values.academic_year}
                     {...params}
                     variant="standard"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     error={touched.academic_year && Boolean(errors.academic_year)}
+                    success={values.academic_year.length && !errors.academic_year}
                     helperText={touched.academic_year && errors.academic_year}
                   />
                 )}
@@ -318,12 +327,14 @@ const Create = (props: any) => {
                         Class Name
                       </MDTypography>
                     }
-                    onChange={handleChange}
                     value={values.class_name}
                     {...params}
                     variant="standard"
-                    error={touched.class_name && Boolean(errors.class_name)}
-                    helperText={touched.class_name && errors.class_name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.academic_year && Boolean(errors.academic_year)}
+                    success={values.academic_year.length && !errors.academic_year}
+                    helperText={touched.academic_year && errors.academic_year}
                   />
                 )}
               />
@@ -333,12 +344,12 @@ const Create = (props: any) => {
               container
               xs={12}
               sm={12}
-              sx={{ display: "flex", justifyContent: "flex-start" }}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Grid item mt={4}>
                 <MDButton
-                  color="primary"
-                  variant="outlined"
+                  color="dark"
+                  variant="contained"
                   onClick={() => {
                     handleShowPage();
                   }}

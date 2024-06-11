@@ -61,7 +61,7 @@ const Update = (props: any) => {
     <form onSubmit={handleSubmit}>
       <Card>
         {" "}
-        <MDBox p={4}>
+        <MDBox pt={4} px={4} pb={1}>
           <Grid container>
             <Grid item xs={12} sm={5} py={1}>
               <MDTypography variant="button" fontWeight="bold" color="secondary">

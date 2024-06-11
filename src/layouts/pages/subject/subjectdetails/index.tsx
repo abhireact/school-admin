@@ -14,7 +14,7 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -70,7 +70,7 @@ const Subject = () => {
   }; //End
   const fetchSubjects = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_subject", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_subject`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const Subject = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_subject", {
+      const response = await axios.delete("${process.env.REACT_APP_BASE_URL}/mg_subject", {
         data: {
           class_code: name.class_code,
           subject_code: name.subject_code,
@@ -114,56 +114,39 @@ const Subject = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Subject", accessor: "subject_name" },
-      { Header: "Subject Code", accessor: "subject_code" },
-      { Header: "Class Name", accessor: "class_name" },
-      { Header: "Max Weekly Class", accessor: "max_weekly_class" },
-      { Header: "No. of Class", accessor: "no_of_classes" },
-      { Header: "Action", accessor: "action" },
+      { Header: "Subject", accessor: "subject_name", width: "20%" },
+      { Header: "Class Name", accessor: "class_name", width: "20%" },
+      { Header: "Max Weekly Class", accessor: "max_weekly_class", width: "20%" },
+      { Header: "No. of Class", accessor: "no_of_classes", width: "20%" },
+      { Header: "Action", accessor: "action", width: "20%" },
     ],
 
     rows: data.map((row, index) => ({
       action: (
         <MDTypography variant="p">
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectinfoupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+          <IconButton
+            onClick={() => {
+              handleOpenupdate(index);
+            }}
+          >
+            <CreateRoundedIcon />
+          </IconButton>
 
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "subjectinfodelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+          <IconButton
+            onClick={() => {
+              handleDelete(row);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
         </MDTypography>
       ),
-      subject_code: <MDTypography variant="p">{row.subject_code}</MDTypography>,
-      subject_name: <MDTypography variant="p">{row.subject_name}</MDTypography>,
+      subject_code: row.subject_code,
+      subject_name: row.subject_name,
 
-      class_name: <MDTypography variant="p">{row.class_name}</MDTypography>,
-      max_weekly_class: <MDTypography variant="p">{row.max_weekly_class}</MDTypography>,
-      no_of_classes: <MDTypography variant="p">{row.no_of_classes}</MDTypography>,
+      class_name: row.class_name,
+      max_weekly_class: row.max_weekly_class,
+      no_of_classes: row.no_of_classes,
     })),
   };
   const [showpage, setShowpage] = useState(false);
@@ -179,31 +162,29 @@ const Subject = () => {
         </>
       ) : (
         <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Subject
-            </MDTypography>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "subjectinfocreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+          {" "}
+          <Card>
+            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Grid item pt={2} pl={2}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  Subject
+                </MDTypography>
+              </Grid>
+              <Grid item pt={2} pr={2}>
+                <MDButton variant="outlined" color="info" onClick={handleShowPage}>
                   + New Subject
                 </MDButton>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-
-            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update
-                setOpenupdate={setOpenupdate}
-                editData={editData}
-                fetchingData={fetchSubjects}
-              />
-            </Dialog>
-          </Grid>
-          <DataTable table={dataTableData} />
+              </Grid>
+            </Grid>
+            <DataTable table={dataTableData} canSearch />
+          </Card>
+          <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+            <Update
+              setOpenupdate={setOpenupdate}
+              editData={editData}
+              fetchingData={fetchSubjects}
+            />
+          </Dialog>
         </>
       )}
     </DashboardLayout>

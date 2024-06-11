@@ -53,7 +53,6 @@ const ManageSection = (props: any) => {
     class_name: Yup.string().required("Required *"),
     academic_year: Yup.string().required("Required *"),
   });
-
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
@@ -153,7 +152,7 @@ const ManageSection = (props: any) => {
       })
       .then(() => {
         console.log("create successfully");
-        message.success(" Created successfully!");
+        message.success("Deleted Successfully!");
         fetchData();
       })
       .catch((error: any) => {
@@ -172,7 +171,7 @@ const ManageSection = (props: any) => {
                 <Autocomplete
                   sx={{ width: "80%" }}
                   value={values.academic_year}
-                  disableClearable
+                  disabled
                   onChange={(event, value) => {
                     handleChange({
                       target: { name: "academic_year", value },
@@ -211,6 +210,7 @@ const ManageSection = (props: any) => {
                   name="class_name"
                   value={values.class_name}
                   //onChange={handleChange}
+                  disabled
                   onBlur={handleBlur}
                   error={touched.class_name && Boolean(errors.class_name)}
                   success={values.class_name.length && !errors.class_name}

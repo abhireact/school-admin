@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tree, message } from "antd";
 import type { DataNode, Key } from "rc-tree-select/es/interface";
-import { route2 } from "routes";
+import route2 from "routes";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
@@ -153,35 +153,7 @@ const Rbac = (props: any) => {
         }
       },
     });
-  // const treeData: DataNode[] = [];
-  // let count = 0;
-  // if (count === 0) {
-  //   for (const item of route2) {
-  //     if (item.collapse) {
-  //       const module: any = {};
-  //       module.title = item.name;
-  //       module.key = item.key;
-  //       const modulechildren = [];
-  //       for (const subitem of item.collapse) {
-  //         const submodule: any = {};
-  //         submodule.title = subitem.name;
-  //         submodule.key = subitem.key;
-  //         submodule.children = [
-  //           { title: "read", key: `${submodule.key}read` },
-  //           { title: "update", key: `${submodule.key}update` },
-  //           { title: "delete", key: `${submodule.key}delete` },
-  //           { title: "create", key: `${submodule.key}create` },
-  //         ];
-  //         const submodulechildren = [];
 
-  //         modulechildren.push(submodule);
-  //       }
-  //       module.children = modulechildren;
-  //       treeData.push(module);
-  //     }
-  //   }
-  //   count += 1;
-  // }
   const treeData: DataNode[] = [];
   let count = 0;
   if (count === 0) {
@@ -307,45 +279,6 @@ const Rbac = (props: any) => {
     console.log("onSelect", selectedKeysValue);
     setSelectedKeys(selectedKeysValue);
   };
-  // const fetchRbac = async (school_name: string, roles_name: string) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_BACKEND_URL}/mg_rbac?school_name=${school_name}&role_name=${roles_name}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (response.status === 200) {
-  //       console.log(
-  //         "filtered data",
-  //         response.data[0].sub_module_menu.filter(
-  //           (item: string) =>
-  //             item.endsWith("read") ||
-  //             item.endsWith("update") ||
-  //             item.endsWith("delete") ||
-  //             item.endsWith("create")
-  //         )
-  //       );
-  //       setCheckedKeys(
-  //         response.data[0].sub_module_menu.filter(
-  //           (item: string) =>
-  //             item.endsWith("read") ||
-  //             item.endsWith("update") ||
-  //             item.endsWith("delete") ||
-  //             item.endsWith("create")
-  //         )
-  //       );
-  //       setEditorcreate("edit");
-  //       setRbacData(response.data[0].sub_module_menu);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const fetchRbac = async (roles_name: string) => {
     try {
@@ -386,8 +319,6 @@ const Rbac = (props: any) => {
     // Fetch data from API on component mount
   }, []);
   console.log("Tree Data", treeData);
-
-  // Cookies.set(["checboxvalue"], values?.access);
 
   const renderTreeNodes = (data: DataNode[]): React.ReactNode => {
     console.log(data, "data");

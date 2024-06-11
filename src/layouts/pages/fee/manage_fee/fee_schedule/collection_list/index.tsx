@@ -292,16 +292,29 @@ const CollectionList = () => {
                 </Grid>
               ) : (
                 <>
-                  <Grid sm={12} pt={2} px={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDButton
-                      variant="outlined"
-                      color="info"
-                      onClick={() => {
-                        handleCreatePage();
-                      }}
-                    >
-                      + Create New Fee Schedule
-                    </MDButton>
+                  <Grid
+                    sm={12}
+                    container
+                    pt={2}
+                    px={2}
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Grid item>
+                      <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                        Fee Schedule
+                      </MDTypography>
+                    </Grid>
+                    <Grid item>
+                      <MDButton
+                        variant="outlined"
+                        color="info"
+                        onClick={() => {
+                          handleCreatePage();
+                        }}
+                      >
+                        + Create New Fee Schedule
+                      </MDButton>
+                    </Grid>
                   </Grid>
                   <form onSubmit={handleSubmit}>
                     <MDBox p={4}>
