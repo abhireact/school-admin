@@ -5,7 +5,7 @@ import User from "layouts/pages/user";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import MessageIcon from "@mui/icons-material/Message";
 import SmsSetting from "layouts/pages/cloud_admin/sms/sms_setting";
-import SmsConfiguration from "layouts/pages/cloud_admin/sms/sms_configuration";
+import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 import Module from "layouts/pages/cloud_admin/modules";
 import SchoolCreation from "layouts/pages/cloud_admin/school";
 import Update from "layouts/pages/cloud_admin/school/update";

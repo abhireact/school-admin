@@ -12,10 +12,12 @@ import { Table } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
 import DataTable from "examples/Tables/DataTable";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
+import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 // import EditMessageTemplate from "./template_form";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
+import SMSConfigurationCreate from "./sms_configuration_create";
 const token = Cookies.get("token");
 export default function SmsConfiguration() {
   const [editdata, setEditdata] = useState({});
@@ -57,16 +59,12 @@ export default function SmsConfiguration() {
   const feeCategory = {
     columns: [
       { Header: "URL", accessor: "url" },
-      { Header: "SUPPORT MULTIPLE SMS", accessor: "support_multi_sms" },
-      { Header: "MAXIMUM SMS SUPPORT", accessor: "max_sms_support" },
       { Header: "MOBILE NUMBER ATTRIBUTE", accessor: "mobile_no_attribute" },
       { Header: "MSG", accessor: "msg" },
       { Header: "ACTIONS", accessor: "action" },
     ],
     rows: templateData.map((data, index) => ({
       url: data.url,
-      support_multi_sms: data.support_multiple_sms,
-      max_sms_support: data.maximum_sms_Support,
       mobile_no_attribute: data.mobile_number_attribute,
       msg: data.msg_attribute,
       action: (
@@ -92,8 +90,8 @@ export default function SmsConfiguration() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <Dialog open={editopen} onClose={handleClickCloseEdit}>
-          {/* <EditMessageTemplate data={editdata} onSuccess={handleEditSuccess} /> */}
+        <Dialog open={editopen} onClose={handleClickCloseEdit} maxWidth="lg">
+          <SMSConfigurationCreate data={editdata} onSuccess={handleEditSuccess} />
         </Dialog>
         <Grid container p={3}>
           <Grid item xs={12} sm={6} mt={2}>
@@ -102,7 +100,7 @@ export default function SmsConfiguration() {
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link to="notification/sms_configuration">
+            <Link to="/notification/sms_configuration">
               <MDButton variant="outlined" color="info">
                 + Create Configuration
               </MDButton>

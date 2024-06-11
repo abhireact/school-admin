@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import { useFormik } from "formik";
-import { Grid, Card, Autocomplete } from "@mui/material";
+import { Grid, Card, Autocomplete, FormLabel } from "@mui/material";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Table } from "antd";
+import { Button, Drawer } from "antd";
+import { Table, message } from "antd";
 import { useSelector } from "react-redux";
 import { Divider } from "antd";
-
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
+import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 const token = Cookies.get("token");
 
 interface DataType {
@@ -19,8 +21,9 @@ interface DataType {
   userid: string;
 }
 
-const initialValues = {
-  message_type: "",
+let initialValues = {
+  template_name: "",
+  message_type: "SMS",
   subject: "",
   message: "",
   academic_year: "",
@@ -36,6 +39,9 @@ export default function SendMail() {
   const [department, setDepartmentData] = useState([]);
   const [receiverData, setReceiverData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [templates, setTemplates] = useState([]);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const { classes, account, studentcategory, student } = useSelector((state: any) => state);
 
   useEffect(() => {
@@ -53,24 +59,43 @@ export default function SendMail() {
         console.error("Error fetching data:", error);
       });
   }, []);
+  useEffect(() => {
+    axios
+      .get(`http://10.0.20.200:8000/mg_templates/school_incharge/view`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setTemplates(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
       //   validationSchema: createschema,
       enableReinitialize: true,
       onSubmit: async (values, action) => {
-        console.log(selectedRowKeys, "lllllllllll");
+        console.log(values, "lllllllllll");
         const submitValue = {
           to_user: selectedRowKeys,
           subject: values.subject,
-          description: values.message,
+          description: values.template_name
+            ? templates.find((item) => item.sms_activity === values.template_name).message
+            : values.message,
           status: false,
           notification_type: "",
         };
         const emailsubmitvalue = {
           to: selectedRowKeys.map((item: any) => item.guardian_email),
           subject: values.subject,
-          body: values.message,
+          body: values.template_name
+            ? templates.find((item) => item.sms_activity === values.template_name).message
+            : values.message,
           cc: "",
         };
 
@@ -83,12 +108,15 @@ export default function SendMail() {
               },
             })
             .then((response) => {
-              console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+              message.success(response.data.message);
+              setReceiverData([]);
+              setOpen(false);
+              action.resetForm();
             })
             .catch((error) => {
-              console.error("Error fetching data:", error);
+              message.error(error.response.data.detail);
             });
-        } else if (values.message_type === "Inter-Portal") {
+        } else if (values.message_type === "Intra-Portal") {
           axios
             .post(`http://10.0.20.200:8000/internal_portal/`, submitValue, {
               headers: {
@@ -97,21 +125,25 @@ export default function SendMail() {
               },
             })
             .then((response) => {
-              console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+              message.success(response.data.message);
+              setReceiverData([]);
+              setOpen(false);
+              action.resetForm();
             })
             .catch((error) => {
-              console.error("Error fetching data:", error);
+              message.error(error.response.data.detail);
             });
         }
       },
     });
   const getFilteredInterportalData = () => {
+    showLoading();
     console.log(values, "filtered post value");
     const postvalue = {
       user_type: values.send_to,
-      class_name: [values.class_name],
+      class_name: values.class_name != "" ? [values.class_name] : [],
       filter: values.filter,
-      section_name: [values.section_name],
+      section_name: values.section_name != "" ? [values.section_name] : [],
       academic_year: values.academic_year,
       schedule: values.schedule,
       department: values.department,
@@ -126,10 +158,12 @@ export default function SendMail() {
       })
       .then((response) => {
         setReceiverData(response.data);
-        console.log(response.data, "kkkkkkkkkkkkkkkkkkkk");
+        if (response.data.length == 0) {
+          message.error("No Sender Data fount for this Filter");
+        }
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        message.error(error.response.data.detail);
       });
   };
 
@@ -137,21 +171,48 @@ export default function SendMail() {
     {
       title: "Name",
       dataIndex: "name",
-      render: (text: string) => <a>{text}</a>,
+      render: (text: string) => (
+        <MDTypography variant="button" fontWeight="bold" color="secondary">
+          {text}
+        </MDTypography>
+      ),
     },
     {
       title: "User Id",
       dataIndex: "userid",
+      render: (text: string) => (
+        <MDTypography variant="button" fontWeight="bold" color="secondary">
+          {text}
+        </MDTypography>
+      ),
     },
   ];
-
+  console.log(receiverData, "receivers data");
   const data: DataType[] = receiverData.map((dataItem: any, index: number) => ({
-    key: values.send_to === "Parent" ? dataItem.guardian_user_id : dataItem.user_id,
+    key:
+      values.send_to === "Parent"
+        ? dataItem.guardian_user_id
+        : values.send_to === "Student"
+        ? dataItem.user_id
+        : values.send_to === "Employee"
+        ? dataItem.employee_user_id
+        : null,
     name:
       values.send_to === "Parent"
         ? dataItem.guardian_name
-        : `${dataItem.first_name} ${dataItem.middle_name} ${dataItem.last_name}`, // Example name, replace with actual data
-    userid: values.send_to === "Parent" ? dataItem.guardian_user_id : dataItem.user_id,
+        : values.send_to === "Student"
+        ? `${dataItem.first_name} ${dataItem.middle_name} ${dataItem.last_name}`
+        : values.send_to === "Employee"
+        ? dataItem.employee_name
+        : null,
+    userid:
+      values.send_to === "Parent"
+        ? dataItem.guardian_user_id
+        : values.send_to === "Student"
+        ? dataItem.user_id
+        : values.send_to === "Employee"
+        ? dataItem.employee_user_id
+        : null,
   }));
 
   const rowSelection = {
@@ -160,79 +221,80 @@ export default function SendMail() {
       setSelectedRowKeys(selectedRowKeys);
     },
   };
+  const handleReset = () => {
+    console.log("inside onclick...");
+    handleSubmit();
+  };
 
+  const showLoading = () => {
+    setOpen(true);
+    setLoading(true);
+  };
   return (
     <DashboardLayout>
       <form onSubmit={handleSubmit}>
-        <Card>
-          <Grid xs={12} sm={12} p={2}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Send Notification
-                </MDTypography>
-              </Grid>
-            </Grid>
-            <Grid container spacing={3} p={2}>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "message_type", value } });
-                  }}
-                  options={["SMS", "Inter-Portal", "Email"]}
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      name="message_type"
-                      onChange={handleChange}
-                      value={values.message_type}
-                      label={
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={12}>
+            <Card>
+              <Grid xs={12} sm={12} p={2}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={12}>
+                    <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                      Send Notification
+                    </MDTypography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={3} p={2}>
+                  <Grid item xs={12} sm={12}>
+                    <FormControl>
+                      <FormLabel id="demo-radio-buttons-group-label">
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Notification Type
+                          Message Type
                         </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                    />
-                  )}
-                />
-              </Grid>
-            </Grid>
+                      </FormLabel>
+                      <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        row
+                        name="message_type"
+                        value={values.message_type}
+                        onChange={handleChange}
+                      >
+                        <FormControlLabel
+                          control={<Radio />}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              SMS
+                            </MDTypography>
+                          }
+                          value="SMS"
+                        />
+                        <FormControlLabel
+                          control={<Radio />}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Intra Portal
+                            </MDTypography>
+                          }
+                          value="Intra-Portal"
+                        />
+                        <FormControlLabel
+                          control={<Radio />}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Email
+                            </MDTypography>
+                          }
+                          value="Email"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                </Grid>
 
-            {values.message_type == "Email" || values.message_type == "Inter-Portal" ? (
-              <>
                 <Grid container spacing={3} p={2}>
                   <Grid item xs={12} sm={4}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Subject
-                        </MDTypography>
-                      }
-                      name="subject"
-                      value={values.subject}
-                      placeholder="Enter Subject"
-                      variant="standard"
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Message
-                        </MDTypography>
-                      }
-                      name="message"
-                      value={values.message}
-                      variant="standard"
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
                     <Autocomplete
+                      value={values.academic_year}
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "academic_year", value } });
                       }}
@@ -258,10 +320,69 @@ export default function SendMail() {
                       )}
                     />
                   </Grid>
-                </Grid>
-                <Grid container spacing={3} p={2}>
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
+                      value={values.template_name}
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "template_name", value } });
+                      }}
+                      options={templates.map((item: any) => item.sms_activity)}
+                      renderInput={(params) => (
+                        <MDInput
+                          name="template_name"
+                          onChange={handleChange}
+                          value={values.template_name}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Template
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      required
+                      sx={{ width: "100%" }}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Subject
+                        </MDTypography>
+                      }
+                      name="subject"
+                      value={values.subject}
+                      placeholder="Enter Subject"
+                      variant="standard"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={8}>
+                    <MDInput
+                      required
+                      sx={{ width: "100%" }}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Message
+                        </MDTypography>
+                      }
+                      name="message"
+                      value={
+                        values.template_name
+                          ? templates.find((item) => item.sms_activity === values.template_name)
+                              .message
+                          : values.message
+                      }
+                      variant="standard"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      value={values.send_to}
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "send_to", value } });
                       }}
@@ -291,6 +412,7 @@ export default function SendMail() {
                     <>
                       <Grid item xs={12} sm={4}>
                         <Autocomplete
+                          value={values.class_name}
                           onChange={(_event, value) => {
                             handleChange({ target: { name: "class_name", value } });
                           }}
@@ -322,6 +444,7 @@ export default function SendMail() {
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Autocomplete
+                          value={values.section_name}
                           onChange={(_event, value) => {
                             handleChange({ target: { name: "section_name", value } });
                           }}
@@ -355,6 +478,7 @@ export default function SendMail() {
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Autocomplete
+                          value={values.filter}
                           onChange={(_event, value) => {
                             handleChange({ target: { name: "filter", value } });
                           }}
@@ -379,6 +503,7 @@ export default function SendMail() {
                       {values.send_to === "Parent" && values.filter == "Defaulter" ? (
                         <Grid item xs={12} sm={4}>
                           <Autocomplete
+                            value={values.schedule}
                             onChange={(_event, value) => {
                               handleChange({ target: { name: "schedule", value } });
                             }}
@@ -410,6 +535,7 @@ export default function SendMail() {
                   {values.send_to == "Employee" ? (
                     <Grid item xs={12} sm={4}>
                       <Autocomplete
+                        value={values.department}
                         onChange={(_event, value) => {
                           handleChange({ target: { name: "department", value } });
                         }}
@@ -433,37 +559,123 @@ export default function SendMail() {
                     </Grid>
                   ) : null}
                 </Grid>
-              </>
-            ) : null}
 
-            <Grid container px={3} pb={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Grid item ml={2}>
-                <MDButton color="info" variant="contained" onClick={getFilteredInterportalData}>
-                  SHOW RECEIVERS
-                </MDButton>
+                <Grid container px={3} pb={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Grid item ml={2}>
+                    <MDButton color="info" variant="contained" onClick={getFilteredInterportalData}>
+                      SHOW RECEIVERS
+                    </MDButton>
+                  </Grid>
+                </Grid>
               </Grid>
-            </Grid>
+            </Card>
           </Grid>
-        </Card>
-        {receiverData.length > 0 ? (
-          <Card>
-            <Table
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
-              columns={columns}
-              dataSource={data}
-            />
-            <Grid container px={3} pb={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Grid item ml={2}>
-                <MDButton color="info" variant="contained" type="submit">
-                  SEND
-                </MDButton>
-              </Grid>
+
+          <Drawer
+            closable
+            destroyOnClose
+            title={
+              <MDTypography variant="h6" fontWeight="bold" color="secondary">
+                Select Receivers
+              </MDTypography>
+            }
+            placement="right"
+            size={"large"}
+            open={open}
+            onClose={() => setOpen(false)}
+          >
+            <Grid item xs={12} sm={12}>
+              {receiverData.length > 0 ? (
+                <>
+                  {/* <Card> */}
+                  <Table
+                    rowSelection={{
+                      type: "checkbox",
+                      ...rowSelection,
+                    }}
+                    columns={columns}
+                    dataSource={data}
+                    size="small"
+                  />
+                  <Grid
+                    container
+                    px={3}
+                    pb={2}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    <Grid item ml={2}>
+                      <MDButton color="info" variant="contained" onClick={handleReset}>
+                        SEND
+                      </MDButton>
+                    </Grid>
+                  </Grid>
+                  {/* </Card> */}
+                </>
+              ) : null}
             </Grid>
-          </Card>
-        ) : null}
+          </Drawer>
+        </Grid>
+        <Grid
+          container
+          px={3}
+          pb={2}
+          sx={{ display: "flex", justifyContent: "flex-center" }}
+          mt={1}
+        >
+          <Grid item xs={12} sm={12}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Defination of Terms
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$User_ID]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">User ID of SMS Recipient</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$User_name]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Name of SMS Recipient</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$Current_date]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Currrent Date</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$School_name]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">School Name</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$Child_name]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Child name</MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <MDTypography variant="h6" color="secondary">
+              [$Amount]
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <MDTypography variant="button">Amount</MDTypography>
+          </Grid>
+        </Grid>
       </form>
     </DashboardLayout>
   );
