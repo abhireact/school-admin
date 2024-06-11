@@ -8,7 +8,7 @@ import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import Create from "./create";
 import Update from "./update";
@@ -21,7 +21,9 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import Tooltip from "@mui/material/Tooltip";
+import * as XLSX from "xlsx";
 const token = Cookies.get("token");
 const Class = () => {
   // To fetch rbac from redux:  Start
@@ -195,7 +197,76 @@ const Class = () => {
   const handleShowPage = () => {
     setShowpage(!showpage);
   };
+  interface SessionData {
+    academic_year: string;
+    wing_name: string;
+    class_name: string;
+    class_code: string;
 
+    section_name: string;
+    start_date: string;
+    end_date: string;
+    index: 0;
+  }
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const handleClassExcel = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    // Check if the file is in .xlsx format
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension !== "xlsx") {
+      message.error("Please upload Excel file in .xlsx format.");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, range: 1 });
+
+      // Transform the data to the desired format
+      const transformedData: SessionData[] = jsonData.map((item: any) => ({
+        academic_year: item[0],
+        wing_name: item[1],
+        class_name: item[2],
+        class_code: item[3],
+
+        section_name: item[4],
+        start_date: XLSX.SSF.format("yyyy-mm-dd", item[5]),
+        end_date: XLSX.SSF.format("yyyy-mm-dd", item[6]),
+        index: 0,
+      }));
+
+      // Do something with the transformedData
+      console.log(transformedData, "json data from class excel ");
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_class/bulk_upload`, transformedData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          message.success("Classes created successfully!");
+
+          fetchClasses();
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -222,14 +293,27 @@ const Class = () => {
                   <Grid item pt={2} pr={2}>
                     {rbacData ? (
                       rbacData?.find((element: string) => element === "classcreate") ? (
-                        <MDButton
-                          variant="outlined"
-                          color="info"
-                          type="submit"
-                          onClick={() => handleShowPage()}
-                        >
-                          + New Class
-                        </MDButton>
+                        <>
+                          <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
+                            Upload&nbsp;
+                            <FileUploadIcon />
+                          </MDButton>
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleClassExcel}
+                            style={{ display: "none" }}
+                          />
+                          &nbsp; &nbsp; &nbsp;
+                          <MDButton
+                            variant="outlined"
+                            color="info"
+                            type="submit"
+                            onClick={handleShowPage}
+                          >
+                            + New Class
+                          </MDButton>
+                        </>
                       ) : (
                         ""
                       )

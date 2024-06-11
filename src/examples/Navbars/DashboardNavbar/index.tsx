@@ -57,7 +57,6 @@ import { useFormik } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { item } from "examples/Sidenav/styles/sidenavItem";
-import FormField from "layouts/pages/account/components/FormField";
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -226,7 +225,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox pr={1}>
-              {/* <MDInput label="Search here" /> */}
+              <MDInput label="Search here" />
               <Autocomplete
                 fullWidth
                 sx={{ width: "100%" }}
@@ -243,9 +242,8 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                   )
                 ).filter((option) => option !== currentAcademic?.academic_year)}
                 renderInput={(params) => (
-                  <FormField
+                  <MDInput
                     required
-                    sx={{ width: "100%" }}
                     fullWidth
                     defaultValue={currentAcademic?.academic_year}
                     name="academic_year"

@@ -8,7 +8,8 @@ import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect, useContext } from "react";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Create from "./create";
 import Update from "./update";
@@ -18,10 +19,11 @@ import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
+import * as XLSX from "xlsx";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
-const EmpAccount = () => {
+const SchoolAccount = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -80,7 +82,7 @@ const EmpAccount = () => {
   //End
   const fetchAccountData = () => {
     axios
-      .get("http://10.0.20.200:8000/mg_accounts", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -169,6 +171,62 @@ const EmpAccount = () => {
       account_name: row.account_name,
     })),
   };
+  interface SessionData {
+    account_name: string;
+    description: string | null;
+  }
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const handleAccountExcel = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    // Check if the file is in .xlsx format
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension !== "xlsx") {
+      message.error("Please upload Excel file in .xlsx format.");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, range: 1 });
+
+      // Transform the data to the desired format
+      const transformedData: SessionData[] = jsonData.map((item: any) => ({
+        account_name: item[0],
+        description: item[1],
+      }));
+
+      // Do something with the transformedData
+      console.log(transformedData, "json data from accounts excel ");
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, transformedData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          message.success("Accounts created successfully!");
+
+          fetchAccountData();
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
 
   return (
     <DashboardLayout>
@@ -181,12 +239,24 @@ const EmpAccount = () => {
             </MDTypography>
           </Grid>
           <Grid item pt={2} pr={2}>
-            {" "}
             {rbacData ? (
               rbacData?.find((element: string) => element === "schoolaccountcreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleOpen}>
-                  + New Account
-                </MDButton>
+                <>
+                  <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
+                    Upload&nbsp;
+                    <FileUploadIcon />
+                  </MDButton>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleAccountExcel}
+                    style={{ display: "none" }}
+                  />
+                  &nbsp; &nbsp; &nbsp;
+                  <MDButton variant="outlined" color="info" type="submit" onClick={handleOpen}>
+                    + New Account
+                  </MDButton>
+                </>
               ) : (
                 ""
               )
@@ -197,14 +267,14 @@ const EmpAccount = () => {
         </Grid>
         <DataTable table={dataTableData} canSearch />
       </Card>
-      <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="sm">
+      <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="md">
         <Update setOpenupdate={setOpenupdate} editData={editData} fetchingData={fetchAccountData} />
       </Dialog>
-      <Dialog open={open} onClose={handleClose} maxWidth="sm">
+      <Dialog open={open} onClose={handleClose} maxWidth="md">
         <Create handleClose={handleClose} fetchingData={fetchAccountData} />
       </Dialog>
     </DashboardLayout>
   );
 };
 
-export default EmpAccount;
+export default SchoolAccount;

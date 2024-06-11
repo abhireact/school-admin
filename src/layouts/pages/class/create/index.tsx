@@ -27,9 +27,85 @@ const Create = (props: any) => {
     class_code: Yup.string().required("Required *"),
     wing_name: Yup.string().required("Required *"),
     academic_year: Yup.string().required("Required *"),
-    start_date: Yup.date().required("Required *"),
-    end_date: Yup.date().required("Required *"),
+    start_date: Yup.date()
+      .required("Required *")
+      .test("max-year", "Incorrect format", function (value) {
+        if (value) {
+          const year = value.getFullYear();
+          return year <= 3000;
+        }
+        return true;
+      }),
+    end_date: Yup.date()
+      .required("Required *")
+      .test("max-year", "Incorrect format", function (value) {
+        if (value) {
+          const year = value.getFullYear();
+          return year <= 3000;
+        }
+        return true;
+      }),
   });
+
+  type LanguageCode =
+    | "es"
+    | "fr"
+    | "de"
+    | "auto"
+    | "af"
+    | "sq"
+    | "am"
+    | "ar"
+    | "hy"
+    | "az"
+    | "eu"
+    | "be"
+    | "bn"
+    | "bs"
+    | "bg"
+    | "ca"
+    | "ceb"
+    | "ny"
+    | "zh"
+    | "zh-cn"
+    | "zh-tw"
+    | "co"
+    | "hr"
+    | "cs"
+    | "da"
+    | "nl";
+
+  interface LanguageOption {
+    value: LanguageCode;
+    label: string;
+  }
+
+  const languageOptions: LanguageOption[] = [
+    { value: "es", label: "Spanish" },
+    { value: "fr", label: "French" },
+    { value: "de", label: "German" },
+    // Add more language options as needed
+  ];
+  const [translatedText, setTranslatedText] = useState<string>("");
+  const [targetLanguage, setTargetLanguage] = useState<LanguageCode>("es");
+
+  // useEffect(() => {
+  //   const translatePage = async () => {
+  //     try {
+  //       const pageContent = document.body.innerText; // Get the entire page content as text
+  //       // const translation = await translate(pageContent, { to: targetLanguage });
+  //       setTranslatedText(translation.text);
+  //     } catch (error) {
+  //       console.error("Error translating page:", error);
+  //     }
+  //   };
+
+  //   translatePage();
+  // }, [targetLanguage]);
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTargetLanguage(e.target.value as LanguageCode);
+  };
 
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
@@ -122,7 +198,6 @@ const Create = (props: any) => {
           console.log("create successfully");
           message.success(" Created successfully!");
           fetchData();
-          handleClose();
         })
         .catch(() => {
           message.error("Error on creating  !");
@@ -159,7 +234,7 @@ const Create = (props: any) => {
                     <MDInput
                       InputLabelProps={{ shrink: true }}
                       name="academic_year"
-                      placeholder="2022-23"
+                      placeholder="2022-2023"
                       label={"Academic Year"}
                       onChange={handleChange}
                       value={values.academic_year}
@@ -267,7 +342,7 @@ const Create = (props: any) => {
               <Grid item xs={12} sm={4}>
                 <MDInput
                   InputLabelProps={{ shrink: true }}
-                  type="Date"
+                  type="date"
                   sx={{ width: "80%" }}
                   label="Start Date"
                   variant="standard"
@@ -284,7 +359,7 @@ const Create = (props: any) => {
                 <MDInput
                   sx={{ width: "80%" }}
                   InputLabelProps={{ shrink: true }}
-                  type="Date"
+                  type="date"
                   label="End Date"
                   variant="standard"
                   name="end_date"

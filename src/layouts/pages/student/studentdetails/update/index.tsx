@@ -36,8 +36,24 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
 
-  admission_date: Yup.date().required("Required *"),
-  dob: Yup.date().required("Required *"),
+  admission_date: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
+  dob: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
   admission_number: Yup.string(),
   fee_code: Yup.string(),
   first_name: Yup.string().required("Required *"),

@@ -310,29 +310,6 @@ export default function SmsConfiguration() {
                 </MDTypography>
               </Grid>
             </Grid>
-            {/* 
-            {particularFields.map((particular, index) => (
-              <Grid container spacing={3} key={index} p={2}>
-                <Grid item xs={10} sm={6}>
-                  <FormField
-                    label={`Particular ${index + 2}`}
-                    name={`particulars.${index}`}
-                    value={particular}
-                    variant="standard"
-                    onChange={(e: any) => {
-                      const updatedFields = [...particularFields];
-                      updatedFields[index] = e.target.value;
-                      setParticularFields(updatedFields);
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2} sm={6}>
-                  <Icon color="secondary" onClick={() => removeParticularField(index)}>
-                    delete
-                  </Icon>
-                </Grid>
-              </Grid>
-            ))} */}
             <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
               <Grid item>
                 <Link href="fee_category" variant="body2">

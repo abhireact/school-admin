@@ -12,8 +12,24 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
-  start_date: Yup.date().required("Required *"),
-  end_date: Yup.date().required("Required *"),
+  start_date: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
+  end_date: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
 });
 
 const Update = (props: any) => {
