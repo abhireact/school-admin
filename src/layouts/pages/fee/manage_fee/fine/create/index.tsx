@@ -29,7 +29,15 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
-  start_date: Yup.date().required("Required *"),
+  start_date: Yup.date()
+    .required("Required *")
+    .test("max-year", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year <= 3000;
+      }
+      return true;
+    }),
   end_date: Yup.date()
     .required("Required *")
     .test(

@@ -14,8 +14,24 @@ import * as Yup from "yup";
 import Dialog from "@mui/material/Dialog";
 const validationSchema = Yup.object().shape({
   section_name: Yup.string().required("Required *"),
-  start_date: Yup.date().required("Required *"),
-  end_date: Yup.date().required("Required *"),
+  start_date: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
+  end_date: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
 });
 
 const UpdateSection = (props: any) => {

@@ -40,7 +40,13 @@ const validationSchema = Yup.object().shape({
   affilicated_to: Yup.string().required("Required *"),
   fax_number: Yup.string().matches(/^\d+$/, "Incorrect Format *"),
   reg_num: Yup.string().required("Required *"),
-  mg_leave_calendar_start_date: Yup.date(),
+  mg_leave_calendar_start_date: Yup.date().test("year-range", "Incorrect format", function (value) {
+    if (value) {
+      const year = value.getFullYear();
+      return year >= 2000 && year <= 3000;
+    }
+    return true;
+  }),
 });
 interface FormValues {
   school_name: string;

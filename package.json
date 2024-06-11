@@ -17,6 +17,7 @@
     "@mui/material": "5.13.1",
     "@mui/styled-engine": "5.12.3",
     "@mui/x-data-grid": "^7.5.0",
+    "@mui/x-date-pickers": "^7.6.2",
     "@react-jvectormap/core": "1.0.4",
     "@react-jvectormap/world": "1.1.2",
     "@reduxjs/toolkit": "^2.2.1",

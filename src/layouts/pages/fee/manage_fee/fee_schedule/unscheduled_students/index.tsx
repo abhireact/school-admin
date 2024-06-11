@@ -16,7 +16,13 @@ import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   subject_name: Yup.string().required("Required *"),
-  collection_date: Yup.date().required("Required"),
+  collection_date: Yup.date().test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }).required("Required"),
 
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
