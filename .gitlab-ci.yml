@@ -10,6 +10,8 @@ build:
     - npx prettier --write .
     - npm install ajv --save-dev
     - npm run build
+  only:
+    - main  
   artifacts:
     paths:
       - ./build
