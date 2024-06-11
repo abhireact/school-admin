@@ -15,13 +15,25 @@ import { message } from "antd";
 const token = Cookies.get("token");
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
-  start_date: Yup.date().required("Required *"),
+  start_date: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
   end_date: Yup.date()
     .required("Required *")
     .test(
       "endDateGreaterThanOrEqualToStartDate",
       "End date should  be greater than or equal to start date",
       function (value) {
+        if (value) {
+          const year = value.getFullYear();
+          return year >= 2000 && year <= 3000;
+        }
         const { start_date } = this.parent;
         return !start_date || value.getTime() >= start_date.getTime();
       }
@@ -32,6 +44,10 @@ const validationSchema = Yup.object().shape({
       "dueDateValidation",
       "Due date should be equal to or between start date and end date",
       function (value) {
+        if (value) {
+          const year = value.getFullYear();
+          return year >= 2000 && year <= 3000;
+        }
         const { start_date, end_date } = this.parent;
         return (
           start_date &&

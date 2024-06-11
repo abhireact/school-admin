@@ -21,7 +21,6 @@ import SummarizeIcon from "@mui/icons-material/Summarize";
 import IconButton from "@mui/material/IconButton";
 import StudentInfo from "./student_info";
 
-
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
 

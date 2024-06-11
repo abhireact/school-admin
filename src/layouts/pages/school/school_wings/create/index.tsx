@@ -129,7 +129,7 @@ const Create = (props: any) => {
           ))}
 
           <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Grid item mt={2}>
+            <Grid item>
               <MDButton
                 color="dark"
                 variant="contained"
@@ -140,7 +140,7 @@ const Create = (props: any) => {
                 Back
               </MDButton>
             </Grid>
-            <Grid item mt={2} ml={2}>
+            <Grid item ml={2}>
               <MDButton color="info" variant="contained" type="submit">
                 Save
               </MDButton>

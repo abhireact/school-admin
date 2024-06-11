@@ -1169,7 +1169,7 @@ export default MyDataTableComponent;
 //               </Grid> */}
 //               <Grid item xs={12} sm={5}>
 //                 <FormField
-//                   type="date"
+//                   type="date" inputMode="none"
 //                   label="from_date"
 //                   name="from_date"
 //                   value={values.from_date}
@@ -1189,7 +1189,7 @@ export default MyDataTableComponent;
 //               </Grid>{" "}
 //               <Grid item xs={12} sm={5}>
 //                 <FormField
-//                   type="date"
+//                   type="date" inputMode="none"
 //                   label="to_date"
 //                   name="to_date"
 //                   value={values.to_date}

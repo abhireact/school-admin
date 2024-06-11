@@ -25,7 +25,7 @@ interface Academic {
 interface FormValues {
   academic: Academic[];
 }
-
+// 3000 max year
 const validationSchema = Yup.object().shape({
   academic: Yup.array().of(
     Yup.object().shape({
@@ -33,9 +33,23 @@ const validationSchema = Yup.object().shape({
         .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
         .required("Required *"),
       start_date: Yup.date()
-        // .matches(/^\d{2}\/\d{2}\/\d{4}$/, "Date must be in dd/mm/yyyy format")
-        .required("Required *"),
-      end_date: Yup.date(),
+        .required("Required *")
+        .test("year-range", "Incorrect format", function (value) {
+          if (value) {
+            const year = value.getFullYear();
+            return year >= 2000 && year <= 3000;
+          }
+          return true;
+        }),
+      end_date: Yup.date()
+        .nullable()
+        .test("year-range", "Incorrect format", function (value) {
+          if (value) {
+            const year = value.getFullYear();
+            return year >= 2000 && year <= 3000;
+          }
+          return true;
+        }),
     })
   ),
 });
@@ -182,11 +196,12 @@ const Create = (props: any) => {
                   }
                 />
               </Grid>
+
               <Grid
                 item
                 xs={12}
                 sm={12}
-                mt={1.5}
+                mt={2}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 {index == values.academic.length - 1 && (

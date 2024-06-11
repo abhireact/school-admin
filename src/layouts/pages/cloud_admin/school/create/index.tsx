@@ -616,7 +616,7 @@ const Create = (props: any) => {
                     <>
                       <Grid>
                         <MDInput
-                          type="date"
+                          type="date" inputMode="none"
                           InputLabelProps={{ shrink: true }}
                           required
                           variant="standard"
@@ -638,7 +638,7 @@ const Create = (props: any) => {
                       <Grid>
                         <MDInput
                           required
-                          type="date"
+                          type="date" inputMode="none"
                           InputLabelProps={{ shrink: true }}
                           variant="standard"
                           name={`moduleAccess[${index}].end_date`}
