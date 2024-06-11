@@ -155,6 +155,13 @@ const Wing = () => {
   };
   const handleWingImport = (event: any) => {
     const file = event.target.files[0];
+    if (!file) return;
+    // Check if the file is in .xlsx format
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension !== "xlsx") {
+      message.error("Please upload Excel file in .xlsx format.");
+      return;
+    }
     const reader = new FileReader();
 
     reader.onload = (e: any) => {

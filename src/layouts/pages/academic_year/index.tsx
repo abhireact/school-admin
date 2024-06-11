@@ -42,8 +42,6 @@ const Academic = () => {
   const [editData, setEditData] = useState<AcademicYearData | null>(null);
   const [openupdate, setOpenupdate] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const fetchRbac = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
@@ -114,9 +112,9 @@ const Academic = () => {
       { Header: "Action", accessor: "action" },
     ],
     rows: data.map((row, index) => ({
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
-      start_date: <MDTypography variant="p">{row.start_date}</MDTypography>,
-      end_date: <MDTypography variant="p">{row.end_date}</MDTypography>,
+      academic_year: row.academic_year,
+      start_date: row.start_date,
+      end_date: row.end_date,
       action: (
         <MDTypography variant="p">
           {rbacData.includes("academicupdate") && (
@@ -133,7 +131,7 @@ const Academic = () => {
       ),
     })),
   };
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const handleFileInputClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -143,6 +141,12 @@ const Academic = () => {
   const handleAcademicYearImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    // Check if the file is in .xlsx format
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension !== "xlsx") {
+      message.error("Please upload Excel file in .xlsx format.");
+      return;
+    }
 
     const reader = new FileReader();
 

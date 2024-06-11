@@ -27,8 +27,24 @@ const Create = (props: any) => {
     class_code: Yup.string().required("Required *"),
     wing_name: Yup.string().required("Required *"),
     academic_year: Yup.string().required("Required *"),
-    start_date: Yup.date().required("Required *"),
-    end_date: Yup.date().required("Required *"),
+    start_date: Yup.date()
+      .required("Required *")
+      .test("max-year", "Incorrect format", function (value) {
+        if (value) {
+          const year = value.getFullYear();
+          return year <= 3000;
+        }
+        return true;
+      }),
+    end_date: Yup.date()
+      .required("Required *")
+      .test("max-year", "Incorrect format", function (value) {
+        if (value) {
+          const year = value.getFullYear();
+          return year <= 3000;
+        }
+        return true;
+      }),
   });
 
   type LanguageCode =
@@ -326,7 +342,7 @@ const Create = (props: any) => {
               <Grid item xs={12} sm={4}>
                 <MDInput
                   InputLabelProps={{ shrink: true }}
-                  type="Date"
+                  type="date"
                   sx={{ width: "80%" }}
                   label="Start Date"
                   variant="standard"
@@ -343,7 +359,7 @@ const Create = (props: any) => {
                 <MDInput
                   sx={{ width: "80%" }}
                   InputLabelProps={{ shrink: true }}
-                  type="Date"
+                  type="date"
                   label="End Date"
                   variant="standard"
                   name="end_date"

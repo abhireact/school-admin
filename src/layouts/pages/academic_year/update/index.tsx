@@ -17,8 +17,24 @@ import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 // import Autocomplete from "@mui/material/Autocomplete";
 const validationSchema = Yup.object().shape({
-  start_date: Yup.date().required(),
-  end_date: Yup.date().required("End date is required"),
+  start_date: Yup.date()
+    .required("Required *")
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
+  end_date: Yup.date()
+    .nullable()
+    .test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
 });
 const Update = (props: any) => {
   const { setOpenupdate, fetchData, editData } = props;
@@ -63,7 +79,7 @@ const Update = (props: any) => {
   });
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
+      <MDBox pt={4} px={4} pb={1}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
