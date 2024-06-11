@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy:test
   - deploy
 
 build:
@@ -13,10 +14,18 @@ build:
     paths:
       - ./build
 
+deploy:test:
+  stage: deploy:test
+  script:
+   	- cp -rf ./build/* /usr/share/nginx/prod_school
+  when: manual
+  only:
+    - main
+
 deploy:
   stage: deploy
   script:
     - cp -rf ./build/* /usr/share/nginx/school/
-
   only:
     - main
+	
