@@ -50,6 +50,9 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
+<<<<<<< HEAD
+import MDButton from "components/MDButton";
+=======
 import MYAccount from "layouts/pages/authentication/myaccount";
 import { Autocomplete } from "@mui/material";
 import MDTypography from "components/MDTypography";
@@ -57,6 +60,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { item } from "examples/Sidenav/styles/sidenavItem";
+>>>>>>> main
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -64,6 +68,31 @@ interface Props {
   light?: boolean;
   isMini?: boolean;
 }
+<<<<<<< HEAD
+interface Notification {
+  id: number;
+  from_user_id: string;
+  employee_name: string;
+  created_at: string;
+  subject: string;
+  description: string;
+  status: boolean;
+  notification_type: string;
+}
+function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
+  const [message, setMessage] = useState([]);
+  const [editopen, setEditOpen] = useState(false);
+  const [unread, setUnread] = useState(0);
+  const [editdata, setEditdata] = useState<Notification>({
+    id: 0,
+    from_user_id: "",
+    subject: "",
+    employee_name: "",
+    created_at: "",
+    description: "",
+    status: false,
+    notification_type: "",
+=======
 
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [data, setData] = useState([]);
@@ -113,6 +142,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
     onSubmit: (values, action) => {
       console.log(values, "values");
     },
+>>>>>>> main
   });
   const [navbarType, setNavbarType] = useState<
     "fixed" | "absolute" | "relative" | "static" | "sticky"
@@ -162,6 +192,35 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event: any) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
+<<<<<<< HEAD
+  const handleClickOpenEdit = (data: any) => {
+    setEditdata(data);
+    setEditOpen(true);
+    if (data.status) {
+    } else {
+      axios
+        .put(
+          `http://10.0.20.200:8000/internal_portal/notifications/${data.id}`,
+          {
+            status: true,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          fetchNotification();
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  };
+=======
+>>>>>>> main
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -208,6 +267,39 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       color="inherit"
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
+<<<<<<< HEAD
+      <Dialog open={editopen} onClose={handleClickCloseEdit}>
+        <Card>
+          <Grid container spacing={2} p={2}>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h6" fontWeight="bold">
+                Subject: {editdata.subject}
+                <br />
+                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                  sender:{editdata.employee_name}
+                </MDTypography>
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h6" fontWeight="bold">
+                Message: {editdata.description}
+                <br />
+                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                  Date:{editdata.created_at}
+                </MDTypography>
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              {" "}
+              <MDButton variant="text" color="info" onClick={handleClickCloseEdit}>
+                cancel
+              </MDButton>
+            </Grid>
+          </Grid>
+        </Card>
+      </Dialog>
+=======
+>>>>>>> main
       <Toolbar sx={navbarContainer}>
         <MDBox
           ml={-5.3}

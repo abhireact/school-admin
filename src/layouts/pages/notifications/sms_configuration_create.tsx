@@ -395,7 +395,7 @@ export default function SMSConfigurationCreate(props: any) {
           ))}
           <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
             <Grid item>
-              <Link href="/notification/sms_configuration_show" variant="body2">
+              <Link href="/notification/smsconfiguration" variant="body2">
                 <MDButton color="dark" variant="contained">
                   Back
                 </MDButton>
