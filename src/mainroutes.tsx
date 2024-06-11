@@ -78,6 +78,7 @@ const routes = [
       // },
     ],
   },
+
   {
     type: "collapse",
     name: "School",

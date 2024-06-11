@@ -77,7 +77,7 @@ export default function EditFeeParicularAmount(props: any) {
             <Grid item xs={12} sm={4}>
               <FormField
                 disabled
-                label="Fee Perticular"
+                label="Fee Particular"
                 name="fee_perticular"
                 value={values.fee_perticular}
                 variant="standard"

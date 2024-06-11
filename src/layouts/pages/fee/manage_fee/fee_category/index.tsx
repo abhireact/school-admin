@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Icon from "@mui/material/Icon";
-import { Grid, Tooltip } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import { Table } from "antd";
+import { Popconfirm, Table } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
 import DataTable from "examples/Tables/DataTable";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
@@ -16,6 +16,9 @@ import EditFeeCategory from "./edit_fee_category";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+
 const token = Cookies.get("token");
 export default function FeeConcession() {
   const [editdata, setEditdata] = useState({});
@@ -40,6 +43,8 @@ export default function FeeConcession() {
     }
   };
   const handleClickOpenEdit = (data: any) => {
+    console.log(data, "editdata");
+
     setEditdata(data);
     setEditOpen(true);
   };
@@ -50,6 +55,30 @@ export default function FeeConcession() {
   const handleEditSuccess = () => {
     fetchData();
     handleClickCloseEdit();
+  };
+  const confirm = async (data: any) => {
+    console.log(data, "confirm data");
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_particular`, {
+        data,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success("Deleted Successfully");
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      const myError = error as Error;
+      message.error(error.response.data.detail);
+    }
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
   };
   const feeCategory = {
     columns: [
@@ -63,23 +92,41 @@ export default function FeeConcession() {
       action: (
         <Grid container spacing={1}>
           <Grid item>
-            <Tooltip title="Edit" placement="top">
-              <Icon fontSize="small" onClick={() => handleClickOpenEdit(data)}>
-                edit
-              </Icon>
-            </Tooltip>
+            <IconButton
+              onClick={() => {
+                handleClickOpenEdit(data);
+              }}
+            >
+              <Tooltip title="Edit" placement="top">
+                <EditIcon />
+              </Tooltip>
+            </IconButton>
           </Grid>
           <Grid item>
-            <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
-            </Tooltip>
+            <IconButton>
+              <Popconfirm
+                title="Delete"
+                description="Are you sure to Delete it ?"
+                placement="topLeft"
+                onConfirm={() => confirm(data)} // Pass index to confirm function
+                onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete" placement="top">
+                  <DeleteIcon />
+                </Tooltip>
+              </Popconfirm>
+            </IconButton>
           </Grid>
           <Grid item>
-            <Tooltip title="Manage Fee Amount Perticular" placement="top">
-              <Link to="/fee/fee_category/manage_fee_amount_perticular" state={data}>
-                <FormatListBulletedTwoToneIcon fontSize="small" color="secondary" />
-              </Link>
-            </Tooltip>
+            <IconButton>
+              <Tooltip title="Manage Fee Amount Perticular" placement="top">
+                <Link to="/fee/fee_category/manage_fee_amount_perticular" state={data}>
+                  <FormatListBulletedTwoToneIcon fontSize="small" color="secondary" />
+                </Link>
+              </Tooltip>
+            </IconButton>
           </Grid>
         </Grid>
       ),
