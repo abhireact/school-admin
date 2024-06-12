@@ -115,6 +115,11 @@ const Create = (props: any) => {
         {" "}
         <MDBox p={4}>
           <Grid container>
+            <Grid item xs={12} sm={12} py={1}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Subject
+              </MDTypography>
+            </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}
