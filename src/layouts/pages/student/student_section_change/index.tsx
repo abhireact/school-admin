@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 const token = Cookies.get("token");
 import * as Yup from "yup";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 const validationSchema = Yup.object().shape({
   to_section_name: Yup.string().required("Required *"),
   class_name: Yup.string().required("Required *"),
@@ -129,6 +130,7 @@ export default function StudentSectionChange() {
   };
   return (
     <DashboardLayout>
+      <DashboardNavbar />
       <form onSubmit={handleSubmit}>
         <Card>
           <MDBox p={4}>
