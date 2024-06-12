@@ -7,7 +7,7 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
 import MDInput from "components/MDInput";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -21,6 +21,7 @@ import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import UpdateSection from "./update_section";
+import { Tooltip } from "@mui/material";
 function convertData(inputData: any[]) {
   return inputData.map((item: { section_name: any; start_date: string; end_date: string }) => ({
     section_name: item.section_name,
@@ -291,15 +292,28 @@ const ManageSection = (props: any) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3} mt={2} key={index + "space"}>
-                    <CreateRoundedIcon
-                      fontSize="medium"
-                      onClick={() => handleOpenSection(clone, index)}
-                    />
+                    <Tooltip title="Delete" placement="top">
+                      <CreateRoundedIcon
+                        fontSize="medium"
+                        onClick={() => handleOpenSection(clone, index)}
+                      />
+                    </Tooltip>
                     &nbsp; &nbsp; &nbsp;
-                    <DeleteIcon
-                      fontSize="medium"
-                      onClick={() => handleDeleteSection(clone, index)}
-                    />
+                    <IconButton>
+                      <Popconfirm
+                        title="Delete"
+                        description="Are you sure to Delete it ?"
+                        placement="topLeft"
+                        onConfirm={() => handleDeleteSection(clone, index)} // Pass index to confirm function
+                        // onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Tooltip title="Delete" placement="top">
+                          <DeleteIcon fontSize="medium" />
+                        </Tooltip>
+                      </Popconfirm>
+                    </IconButton>
                   </Grid>
                 </>
               ))}

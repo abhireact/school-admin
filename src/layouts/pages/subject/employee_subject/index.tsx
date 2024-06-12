@@ -151,7 +151,7 @@ const EmployeeSubject = () => {
             <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
               <Grid item pt={2} pl={2}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Employee Subject List
+                  Subject Teacher List
                 </MDTypography>
               </Grid>
             </Grid>

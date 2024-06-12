@@ -158,6 +158,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
+                disableClearable
                 sx={{ width: "70%" }}
                 value={values.scoring_type}
                 onChange={(event, value) => {
@@ -278,6 +279,7 @@ const Create = (props: any) => {
             </Grid>{" "}
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
+                disableClearable
                 sx={{ width: "70%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {
@@ -311,6 +313,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
+                disableClearable
                 sx={{ width: "70%" }}
                 value={values.class_name}
                 onChange={
