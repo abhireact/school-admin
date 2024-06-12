@@ -93,6 +93,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import { Dashboard } from "@mui/icons-material";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 const token = Cookies.get("token");
 export default function CreateFeeCategory() {
   const initialValues = {
@@ -154,6 +156,7 @@ export default function CreateFeeCategory() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar />
       <form onSubmit={handleSubmit}>
         <Card>
           <Grid xs={12} sm={12} p={2}>
