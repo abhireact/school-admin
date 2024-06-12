@@ -56,11 +56,14 @@ export default function FeeConcession() {
     fetchData();
     handleClickCloseEdit();
   };
+
   const confirm = async (data: any) => {
     console.log(data, "confirm data");
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_particular`, {
-        data,
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_category`, {
+        data: {
+          name: data.name,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -71,8 +74,7 @@ export default function FeeConcession() {
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error(error.response.data.detail);
+      message.error(error.response?.data?.detail || "An error occurred");
     }
   };
 

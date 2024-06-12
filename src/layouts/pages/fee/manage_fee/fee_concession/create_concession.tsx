@@ -44,6 +44,8 @@ interface TreeNode {
   key: string;
   children?: TreeNode[];
 }
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 export default function CreateConcession() {
   const [feecategorydata, setFeecategorydata] = useState([]);
   const [result, setResult] = useState([]);
@@ -64,7 +66,7 @@ export default function CreateConcession() {
     student_category: "",
     admission_number: 0,
     concession_amount: 0,
-    academic_year: "",
+    academic_year: Cacademic_year,
     class_name: "",
     section_name: "",
     account: "",
@@ -296,6 +298,7 @@ export default function CreateConcession() {
                     onChange={(_event, value) => {
                       handleChange({ target: { name: "academic_year", value } });
                     }}
+                    defaultValue={Cacademic_year}
                     options={
                       classes
                         ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
@@ -304,8 +307,10 @@ export default function CreateConcession() {
                     renderInput={(params) => (
                       <MDInput
                         required
+                        defaultValue="Cacademic_year"
                         name="academic_year"
                         onChange={handleChange}
+                        disabled
                         value={values.academic_year}
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
