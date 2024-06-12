@@ -6,7 +6,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
+import { IconButton, Tooltip } from "@mui/material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 import * as XLSX from "xlsx";
+import { Popconfirm, Table } from "antd";
 
 const token = Cookies.get("token");
 
@@ -136,8 +137,20 @@ const Academic = () => {
             </IconButton>
           )}
           {rbacData.includes("academicdelete") && (
-            <IconButton onClick={() => handleDelete(row.academic_year)}>
-              <DeleteIcon />
+            <IconButton>
+              <Popconfirm
+                title="Delete"
+                description="Are you sure to Delete it ?"
+                placement="topLeft"
+                onConfirm={() => handleDelete(row.academic_year)} // Pass index to confirm function
+                // onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete" placement="top">
+                  <DeleteIcon />
+                </Tooltip>
+              </Popconfirm>
             </IconButton>
           )}
         </MDTypography>
