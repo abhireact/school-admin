@@ -116,7 +116,7 @@ const Create = (props: any) => {
                   name={`academic.${index}.academic_year`}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      ACADEMIC YEAR
+                      ACADEMIC YEAR *
                     </MDTypography>
                   }
                   value={account.academic_year}
@@ -146,7 +146,7 @@ const Create = (props: any) => {
                   InputLabelProps={{ shrink: true }}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Start Date
+                      Start Date *
                     </MDTypography>
                   }
                   value={account.start_date}
@@ -176,7 +176,7 @@ const Create = (props: any) => {
                   InputLabelProps={{ shrink: true }}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      End Date
+                      End Date *
                     </MDTypography>
                   }
                   value={account.end_date}

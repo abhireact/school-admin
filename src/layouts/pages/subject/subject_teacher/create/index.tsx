@@ -171,7 +171,7 @@ const Create = (props: any) => {
                     placeholder="eg. 2022-2023"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Academic Year
+                        Academic Year *
                       </MDTypography>
                     }
                     value={values.academic_year}
@@ -207,7 +207,7 @@ const Create = (props: any) => {
                     name="class_name"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Class Name
+                        Class Name *
                       </MDTypography>
                     }
                     value={values.class_name}
@@ -238,54 +238,58 @@ const Create = (props: any) => {
           </Grid>{" "}
           <Grid item xs={12} sm={12} m={4}>
             {data.length > 0 && (
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr>
-                    <td
-                      style={{
-                        fontSize: "18px",
-                        textAlign: "left",
-                      }}
-                    >
-                      <b>Available Subjects</b>
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "18px",
-                        textAlign: "left",
-                      }}
-                    >
-                      <b>Select</b>:
-                      <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
-                        All
-                      </MDButton>
-                      <MDButton color="info" variant="text" onClick={() => handleSelectNone()}>
-                        None
-                      </MDButton>
-                    </td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data?.length > 0
-                    ? data?.map((item: any, index: any) => (
-                        <tr key={index + item.subject_name}>
-                          <td style={{ textAlign: "left" }}>
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              {item.subject_name}
-                            </MDTypography>
-                          </td>
+              <div style={{ maxHeight: "400px", overflowY: "auto", position: "relative" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                  <thead
+                    style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}
+                  >
+                    <tr>
+                      <td
+                        style={{
+                          fontSize: "18px",
+                          textAlign: "left",
+                        }}
+                      >
+                        AVAILABLE SUBJECTS
+                      </td>
+                      <td
+                        style={{
+                          fontSize: "18px",
+                          textAlign: "left",
+                        }}
+                      >
+                        SELECT:
+                        <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
+                          All
+                        </MDButton>
+                        <MDButton color="info" variant="text" onClick={() => handleSelectNone()}>
+                          None
+                        </MDButton>
+                      </td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data?.length > 0
+                      ? data?.map((item: any, index: any) => (
+                          <tr key={index + item.subject_name}>
+                            <td style={{ textAlign: "left" }}>
+                              <MDTypography variant="button" fontWeight="bold">
+                                {item.subject_name}
+                              </MDTypography>
+                            </td>
 
-                          <td>
-                            <Checkbox
-                              checked={item.is_selected}
-                              onChange={() => handleCheckboxChange(index)}
-                            />
-                          </td>
-                        </tr>
-                      ))
-                    : ""}
-                </tbody>
-              </table>
+                            <td>
+                              <Checkbox
+                                checked={item.is_selected}
+                                onChange={() => handleCheckboxChange(index)}
+                              />
+                            </td>
+                          </tr>
+                        ))
+                      : ""}
+                  </tbody>
+                </table>
+              </div>
             )}
           </Grid>
           <Grid container xs={12} sm={12} sx={{ display: "flex", justifyContent: "space-between" }}>

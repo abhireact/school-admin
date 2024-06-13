@@ -16,26 +16,22 @@ const token = Cookies.get("token");
 import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 const validationSchema = Yup.object().shape({
-  to_class: Yup.string().required("Required *"),
-  to_section: Yup.string().required("Required *"),
-  to_academic: Yup.string()
+  to_section_name: Yup.string().required("Required *"),
+  class_name: Yup.string().required("Required *"),
+  from_section_name: Yup.string().required("Required *"),
+  academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
-  from_class: Yup.string().required("Required *"),
-  from_section: Yup.string().required("Required *"),
-  from_academic: Yup.string()
-    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
-    .required("Required *"),
+  select_fees: Yup.string().required("Required *"),
 });
-export default function StudentPromotion() {
+export default function StudentSectionChange() {
   const [data, setData] = useState([]);
   const initialValues = {
-    from_academic: "",
-    from_class: "",
-    from_section: "",
-    to_academic: "",
-    to_class: "",
-    to_section: "",
+    academic_year: "",
+    class_name: "",
+    from_section_name: "",
+    to_section_name: "",
+    select_fees: "",
     user_name: [] as string[], // Array to store particulars
   };
 
@@ -47,17 +43,19 @@ export default function StudentPromotion() {
       validationSchema: validationSchema,
       enableReinitialize: true,
       onSubmit: async (values, action) => {
+        console.log("submit");
         const sendData = data
           .filter((info: any) => info.is_selected)
           .map((info: any) => info.user_id);
         console.log(sendData);
         if (sendData.length < 1) {
           message.error("No Student is Selected");
+          return;
         }
         const sendValue = { ...values, user_name: sendData };
 
         axios
-          .post(`${process.env.REACT_APP_BASE_URL}/mg_student_promotions/`, sendValue, {
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_student/change_section`, sendValue, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -66,7 +64,7 @@ export default function StudentPromotion() {
           .then(() => {
             action.resetForm();
 
-            message.success("Student Promoted Successfully");
+            message.success("Student Section Changed Successfully");
           })
           .catch((error: any) => {
             console.log(error, "error");
@@ -77,11 +75,11 @@ export default function StudentPromotion() {
 
   const handleShowData = () => {
     const sendData = {
-      academic_year: values.from_academic,
+      academic_year: values.academic_year,
       classes: [
         {
-          class_name: values.from_class,
-          section_name: values.from_section,
+          class_name: values.class_name,
+          section_name: values.from_section_name,
         },
       ],
     };
@@ -95,8 +93,8 @@ export default function StudentPromotion() {
       .then((response) => {
         console.log(response.data, "Student for this  Academic Year,Class and Section");
         if (response.data.length < 1) {
-          message.error("No Student found  for this Academic Year ,Class and Section ");
           setData([]);
+          message.error("No Student found  for this Academic Year ,Class and Section ");
         }
         let studentData = response.data.map((selection: any, i: number) => ({
           ...selection,
@@ -139,7 +137,7 @@ export default function StudentPromotion() {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Student Promotion
+                  Student Section Change
                 </MDTypography>
               </Grid>
 
@@ -147,7 +145,7 @@ export default function StudentPromotion() {
                 <Autocomplete
                   disableClearable
                   onChange={(_event, value) => {
-                    handleChange({ target: { name: "from_academic", value } });
+                    handleChange({ target: { name: "academic_year", value } });
                   }}
                   options={
                     classes
@@ -157,20 +155,20 @@ export default function StudentPromotion() {
                   renderInput={(params) => (
                     <MDInput
                       required
-                      name="from_academic"
+                      name="academic_year"
                       //onChange={handleChange}
-                      value={values.from_academic}
+                      value={values.academic_year}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          From Academic Year
+                          Academic Year
                         </MDTypography>
                       }
                       {...params}
                       variant="standard"
                       onBlur={handleBlur}
-                      error={touched.from_academic && Boolean(errors.from_academic)}
-                      success={values.from_academic.length && !errors.from_academic}
-                      helperText={touched.from_academic && errors.from_academic}
+                      error={touched.academic_year && Boolean(errors.academic_year)}
+                      success={values.academic_year.length && !errors.academic_year}
+                      helperText={touched.academic_year && errors.academic_year}
                     />
                   )}
                 />
@@ -179,32 +177,32 @@ export default function StudentPromotion() {
                 <Autocomplete
                   disableClearable
                   onChange={(_event, value) => {
-                    handleChange({ target: { name: "from_class", value } });
+                    handleChange({ target: { name: "class_name", value } });
                   }}
                   options={
-                    values.from_academic !== ""
+                    values.academic_year !== ""
                       ? classes
-                          .filter((item: any) => item.academic_year === values.from_academic)
+                          .filter((item: any) => item.academic_year === values.academic_year)
                           .map((item: any) => item.class_name)
                       : []
                   }
                   renderInput={(params) => (
                     <MDInput
                       required
-                      name="from_class"
+                      name="class_name"
                       // onChange={handleChange}
-                      value={values.from_class}
+                      value={values.class_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          From Class
+                          Class
                         </MDTypography>
                       }
                       {...params}
                       variant="standard"
                       onBlur={handleBlur}
-                      error={touched.from_class && Boolean(errors.from_class)}
-                      success={values.from_class.length && !errors.from_class}
-                      helperText={touched.from_class && errors.from_class}
+                      error={touched.class_name && Boolean(errors.class_name)}
+                      success={values.class_name.length && !errors.class_name}
+                      helperText={touched.class_name && errors.class_name}
                     />
                   )}
                 />
@@ -213,15 +211,15 @@ export default function StudentPromotion() {
                 <Autocomplete
                   disableClearable
                   onChange={(_event, value) => {
-                    handleChange({ target: { name: "from_section", value } });
+                    handleChange({ target: { name: "from_section_name", value } });
                   }}
                   options={
-                    values.from_class !== ""
+                    values.class_name !== ""
                       ? classes
                           .filter(
                             (item: any) =>
-                              item.academic_year === values.from_academic &&
-                              item.class_name === values.from_class
+                              item.academic_year === values.academic_year &&
+                              item.class_name === values.class_name
                           )[0]
                           .section_data.map((item: any) => item.section_name)
                       : []
@@ -231,7 +229,7 @@ export default function StudentPromotion() {
                       required
                       name="section_name"
                       //  onChange={handleChange}
-                      value={values.from_section}
+                      value={values.from_section_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           From Section
@@ -240,9 +238,9 @@ export default function StudentPromotion() {
                       {...params}
                       variant="standard"
                       onBlur={handleBlur}
-                      error={touched.from_section && Boolean(errors.from_section)}
-                      success={values.from_section.length && !errors.from_section}
-                      helperText={touched.from_section && errors.from_section}
+                      error={touched.from_section_name && Boolean(errors.from_section_name)}
+                      success={values.from_section_name.length && !errors.from_section_name}
+                      helperText={touched.from_section_name && errors.from_section_name}
                     />
                   )}
                 />
@@ -252,91 +250,28 @@ export default function StudentPromotion() {
                 <Autocomplete
                   disableClearable
                   onChange={(_event, value) => {
-                    handleChange({ target: { name: "to_academic", value } });
+                    handleChange({ target: { name: "to_section_name", value } });
                   }}
                   options={
-                    classes
-                      ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                      : []
-                  }
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      name="to_academic"
-                      //onChange={handleChange}
-                      value={values.to_academic}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          To Academic Year
-                        </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.to_academic && Boolean(errors.to_academic)}
-                      success={values.to_academic.length && !errors.to_academic}
-                      helperText={touched.to_academic && errors.to_academic}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  disableClearable
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "to_class", value } });
-                  }}
-                  options={
-                    values.to_academic !== ""
-                      ? classes
-                          .filter((item: any) => item.academic_year === values.to_academic)
-                          .map((item: any) => item.class_name)
-                      : []
-                  }
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      name="to_class"
-                      //onChange={handleChange}
-                      value={values.to_class}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          To Class
-                        </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.to_class && Boolean(errors.to_class)}
-                      success={values.to_class.length && !errors.to_class}
-                      helperText={touched.to_class && errors.to_class}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  disableClearable
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "to_section", value } });
-                  }}
-                  options={
-                    values.to_class !== ""
+                    values.class_name !== ""
                       ? classes
                           .filter(
                             (item: any) =>
-                              item.academic_year === values.to_academic &&
-                              item.class_name === values.to_class
+                              item.academic_year === values.academic_year &&
+                              item.class_name === values.class_name
                           )[0]
-                          .section_data.map((item: any) => item.section_name)
+                          .section_data.filter(
+                            (item: any) => item.section_name !== values.from_section_name
+                          )
+                          .map((item: any) => item.section_name)
                       : []
                   }
                   renderInput={(params) => (
                     <MDInput
                       required
-                      name="to_section"
+                      name="to_section_name"
                       //onChange={handleChange}
-                      value={values.to_section}
+                      value={values.to_section_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           To Section
@@ -345,9 +280,40 @@ export default function StudentPromotion() {
                       {...params}
                       variant="standard"
                       onBlur={handleBlur}
-                      error={touched.to_section && Boolean(errors.to_section)}
-                      success={values.to_section.length && !errors.to_section}
-                      helperText={touched.to_section && errors.to_section}
+                      error={touched.to_section_name && Boolean(errors.to_section_name)}
+                      success={values.to_section_name.length && !errors.to_section_name}
+                      helperText={touched.to_section_name && errors.to_section_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  disableClearable
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "select_fees", value } });
+                  }}
+                  options={[
+                    "Section change with fee deletion",
+                    "Section change without fee deletion",
+                  ]}
+                  renderInput={(params) => (
+                    <MDInput
+                      required
+                      name="select_fees"
+                      //onChange={handleChange}
+                      value={values.select_fees}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Select Fees
+                        </MDTypography>
+                      }
+                      {...params}
+                      variant="standard"
+                      onBlur={handleBlur}
+                      error={touched.select_fees && Boolean(errors.select_fees)}
+                      success={values.select_fees.length && !errors.select_fees}
+                      helperText={touched.select_fees && errors.select_fees}
                     />
                   )}
                 />

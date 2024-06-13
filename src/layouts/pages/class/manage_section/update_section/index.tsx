@@ -37,7 +37,16 @@ const validationSchema = Yup.object().shape({
 const UpdateSection = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpen, sectionData, academic_year, class_name, fetchData } = props;
+  const {
+    setOpen,
+    sectionData,
+    academic_year,
+    class_name,
+    fetchData,
+    setFieldValue,
+    sectiondata,
+    editIndex,
+  } = props;
   const handleClose = () => {
     setOpen(false);
   };
@@ -63,9 +72,19 @@ const UpdateSection = (props: any) => {
         })
         .then(() => {
           fetchData();
+          const editedData = sectiondata.map((info: any, i: number) => {
+            if (i === editIndex) {
+              return {
+                ...info,
+                section_name: values.section_name,
+                start_date: values.start_date,
+                end_date: values.end_date,
+              };
+            }
+            return info;
+          });
+          setFieldValue("sectiondata", editedData);
           message.success("Updated successfully!");
-          action.resetForm();
-
           handleClose();
         })
         .catch(() => {
@@ -79,7 +98,7 @@ const UpdateSection = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={5} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Section Name
+              Section Name *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
@@ -96,7 +115,7 @@ const UpdateSection = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={5} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              Start Date
+              Start Date *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
@@ -114,7 +133,7 @@ const UpdateSection = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={5} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              End Date
+              End Date *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>

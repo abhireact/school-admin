@@ -239,14 +239,14 @@ const Update = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        <MDBox>
-          <Grid container p={4} spacing={2}>
+        <MDBox p={4}>
+          <Grid container spacing={3}>
             <Grid item sm={12} sx={{ display: "flex", justifyContent: "flex-start" }}>
-              <MDTypography color="secondary" fontWeight="bold" variant="h4" py={2}>
+              <MDTypography color="secondary" fontWeight="bold" variant="h4">
                 Update School Info
               </MDTypography>
             </Grid>
-            <Grid item sm={12} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -262,12 +262,12 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12} mt={2}>
+            <Grid item sm={4} mt={2} xs={12}>
               <MDTypography color="secondary" fontWeight="bold" variant="body2">
                 Upload School School Logo
               </MDTypography>
             </Grid>
-            <Grid item sm={6} xs={12} mt={2}>
+            <Grid item sm={4} mt={2} xs={12}>
               <MDInput
                 type="file"
                 accept="image/*"
@@ -279,7 +279,7 @@ const Update = (props: any) => {
               />
             </Grid>
 
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -295,7 +295,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -311,7 +311,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -327,7 +327,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -344,7 +344,7 @@ const Update = (props: any) => {
               />
             </Grid>
 
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -360,7 +360,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <Autocomplete
                 disableClearable
                 sx={{ width: "90%" }}
@@ -390,7 +390,7 @@ const Update = (props: any) => {
               />
             </Grid>
 
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -406,7 +406,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -422,7 +422,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <Autocomplete
                 sx={{ width: "90%" }}
                 onChange={(event, value) => {
@@ -451,7 +451,7 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <Autocomplete
                 sx={{ width: "90%" }}
                 onChange={(event, value) => {
@@ -480,7 +480,7 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -504,7 +504,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -520,7 +520,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -536,7 +536,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -552,7 +552,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -568,7 +568,7 @@ const Update = (props: any) => {
                 mb={10}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 autoComplete="off"
                 variant="standard"
@@ -585,7 +585,7 @@ const Update = (props: any) => {
                 sx={{ width: "90%" }}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <Autocomplete
                 sx={{ width: "90%" }}
                 onChange={(event, value) => {
@@ -613,7 +613,7 @@ const Update = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 variant="standard"
                 name="pin_code"
@@ -628,7 +628,7 @@ const Update = (props: any) => {
                 sx={{ width: "90%" }}
               />
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <MDInput
                 variant="standard"
                 name="country"

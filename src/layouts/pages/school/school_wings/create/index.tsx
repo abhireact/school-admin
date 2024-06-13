@@ -89,7 +89,7 @@ const Create = (props: any) => {
                   value={account.wing_name}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      WING NAME
+                      WING NAME *
                     </MDTypography>
                   }
                   onChange={handleChange}

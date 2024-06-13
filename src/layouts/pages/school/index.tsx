@@ -83,261 +83,353 @@ function SchoolShowPage() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container justifyContent={""}>
-        <Grid container item sm={6} my={2} spacing={1}>
-          <Grid item>
-            <MDAvatar bgColor="secondary" size="sm" onClick={() => handleOpen()} variant="square">
-              <ModeEditOutlineIcon />
-            </MDAvatar>
-          </Grid>
-          <Grid item>
-            <MDTypography variant="body1" color="secondary" fontWeight="bold">
-              Edit
-            </MDTypography>
-          </Grid>
-        </Grid>
-        <Grid item sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <MDAvatar alt="School Logo" size="xxl" src={schoolData?.school_logo} />
-        </Grid>
-      </Grid>
-
-      <MDBox pt={2}>
-        <Card>
-          <CardContent>
-            <Grid container>
-              <Grid item sm={12} py={2}>
-                <MDTypography variant="h4" color="info" fontWeight="bold">
-                  School Details
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography
-                  variant="button"
-                  color="secondary"
-                  fontWeight="bold"
-                  component="div"
-                  gutterBottom
-                >
-                  School Name
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  School Code
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Start Time
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.school_name?.toUpperCase()}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.school_code}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.start_time}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  End Time
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Affiliated To
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Affiliation No/Reg No
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.end_time}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.affilicated_to}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.reg_num}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Leave Calendar Start Date
-                </MDTypography>
-              </Grid>{" "}
-              <Grid item sm={4}></Grid>
-              <Grid item sm={4}></Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.mg_leave_calendar_start_date}
-                </MDTypography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </MDBox>
-
-      <MDBox pt={2}>
-        {" "}
-        <Card>
-          <CardContent>
-            <Grid container>
-              {" "}
-              <Grid item sm={12} py={2}>
-                <MDTypography variant="h4" color="info" fontWeight="bold">
-                  Address Details
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Address Line 1
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Address Line 2
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Street
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.address_line1}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.address_line2}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.street}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  City
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  State
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Pincode
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.city}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.state}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.pin_code}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Landmark
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Country
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}></Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.landmark}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.country}
-                </MDTypography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </MDBox>
-      <MDBox pt={2}>
-        {" "}
-        <Card>
-          <CardContent>
-            <Grid container>
-              {" "}
-              <Grid item sm={12} py={2}>
-                <MDTypography variant="h4" color="info" fontWeight="bold">
-                  Contact Details
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Phone Number
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Email
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="button" color="secondary" fontWeight="bold" component="div">
-                  Fax Number
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.mobile_number}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.email_id}
-                </MDTypography>
-              </Grid>
-              <Grid item sm={4}>
-                <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
-                  {schoolData?.fax_number}
-                </MDTypography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </MDBox>
-
-      <Dialog open={open} onClose={handleClose} maxWidth="md">
+      {open ? (
         <Update schoolData={schoolData} handleClose={handleClose} fetchData={fetchSchoolInfo} />
-      </Dialog>
+      ) : (
+        <>
+          <Grid container justifyContent={""}>
+            <Grid container item sm={6} my={2} spacing={1}>
+              <Grid item>
+                <MDAvatar
+                  bgColor="secondary"
+                  size="sm"
+                  onClick={() => handleOpen()}
+                  variant="square"
+                >
+                  <ModeEditOutlineIcon />
+                </MDAvatar>
+              </Grid>
+              <Grid item>
+                <MDTypography variant="body1" color="secondary" fontWeight="bold">
+                  Edit
+                </MDTypography>
+              </Grid>
+            </Grid>
+            <Grid item sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <MDAvatar alt="School Logo" size="xxl" src={schoolData?.school_logo} />
+            </Grid>
+          </Grid>
+
+          <MDBox pt={2}>
+            <Card>
+              <CardContent>
+                <Grid container>
+                  <Grid item sm={12} py={2}>
+                    <MDTypography variant="h4" color="info" fontWeight="bold">
+                      School Details
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                      gutterBottom
+                    >
+                      School Name
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      School Code
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Start Time
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.school_name?.toUpperCase()}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.school_code}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.start_time}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      End Time
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Affiliated To
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Affiliation No/Reg No
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.end_time}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.affilicated_to}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.reg_num}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Leave Calendar Start Date
+                    </MDTypography>
+                  </Grid>{" "}
+                  <Grid item sm={4}></Grid>
+                  <Grid item sm={4}></Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.mg_leave_calendar_start_date}
+                    </MDTypography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </MDBox>
+
+          <MDBox pt={2}>
+            {" "}
+            <Card>
+              <CardContent>
+                <Grid container>
+                  {" "}
+                  <Grid item sm={12} py={2}>
+                    <MDTypography variant="h4" color="info" fontWeight="bold">
+                      Address Details
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Address Line 1
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Address Line 2
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Street
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.address_line1}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.address_line2}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.street}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      City
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      State
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Pincode
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.city}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.state}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.pin_code}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Landmark
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Country
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}></Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.landmark}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.country}
+                    </MDTypography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </MDBox>
+          <MDBox pt={2}>
+            {" "}
+            <Card>
+              <CardContent>
+                <Grid container>
+                  {" "}
+                  <Grid item sm={12} py={2}>
+                    <MDTypography variant="h4" color="info" fontWeight="bold">
+                      Contact Details
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Phone Number
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Email
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography
+                      variant="button"
+                      color="secondary"
+                      fontWeight="bold"
+                      component="div"
+                    >
+                      Fax Number
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.mobile_number}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.email_id}
+                    </MDTypography>
+                  </Grid>
+                  <Grid item sm={4}>
+                    <MDTypography variant="body2" fontWeight="bold" component="div" gutterBottom>
+                      {schoolData?.fax_number}
+                    </MDTypography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </MDBox>
+        </>
+      )}
     </DashboardLayout>
   );
 }

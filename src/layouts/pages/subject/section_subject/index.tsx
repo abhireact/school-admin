@@ -196,7 +196,7 @@ const SectionSubject = () => {
                           name="academic_year"
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Academic Year
+                              Academic Year *
                             </MDTypography>
                           }
                           value={values.academic_year}

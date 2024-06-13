@@ -83,7 +83,7 @@ const Update = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              ACADEMIC YEAR
+              ACADEMIC YEAR *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -102,7 +102,7 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              START DATE
+              START DATE *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
@@ -121,7 +121,7 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              END DATE
+              END DATE *
             </MDTypography>
           </Grid>
 

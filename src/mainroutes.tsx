@@ -43,7 +43,8 @@ import StudentPromotion from "layouts/pages/student/student_promotion";
 import ExportStudentPage from "layouts/pages/student/export_student_data";
 import Subject from "layouts/pages/subject/subjectdetails";
 import SectionSubject from "layouts/pages/subject/section_subject";
-import EmployeeSubject from "layouts/pages/subject/employee_subject";
+import EmployeeSubject from "layouts/pages/subject/subject_teacher";
+import StudentSectionChange from "layouts/pages/student/student_section_change";
 
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
@@ -52,6 +53,7 @@ import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 import CreateStudentID from "layouts/pages/student/studentID_card/create";
+import StudentSubject from "layouts/pages/subject/student_subject";
 
 const routes = [
   {
@@ -186,18 +188,24 @@ const routes = [
         route: "/pages/school/housedetails",
         component: <HouseDetails />,
       },
-      {
-        name: "Student ID Card",
-        key: "student_id",
-        route: "/pages/school/student_id",
-        component: <CreateStudentID />,
-      },
+      // {
+      //   name: "Student ID Card",
+      //   key: "student_id",
+      //   route: "/pages/school/student_id",
+      //   component: <CreateStudentID />,
+      // },
 
       {
         name: "Student Promotion",
         key: "studentpromotion",
         route: "/student/student_promoton",
         component: <StudentPromotion />,
+      },
+      {
+        name: "Student Section Change",
+        key: "studentsectionchange",
+        route: "/student/student_section_change",
+        component: <StudentSectionChange />,
       },
     ],
   },
@@ -219,16 +227,22 @@ const routes = [
         component: <Subject />,
       },
       {
+        name: "Subject Teacher",
+        key: "employeesubject",
+        route: "pages/subject/employeesubject",
+        component: <EmployeeSubject />,
+      },
+      {
         name: "Section Subject",
         key: "sectionsubject",
         route: "pages/subject/sectionsubject",
         component: <SectionSubject />,
       },
       {
-        name: "Employee Subject",
-        key: "employeesubject",
-        route: "pages/subject/employeesubject",
-        component: <EmployeeSubject />,
+        name: "Student Subject",
+        key: "student_subject",
+        route: "pages/subject/student_subject",
+        component: <StudentSubject />,
       },
     ],
   },
