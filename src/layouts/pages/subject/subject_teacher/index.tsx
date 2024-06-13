@@ -74,29 +74,6 @@ const EmployeeSubject = () => {
     fetchEmployeeList();
   }, []);
 
-  const handleDelete = async (name: any) => {
-    try {
-      const response = await axios.delete("${process.env.REACT_APP_BASE_URL}/mg_subject", {
-        data: {
-          class_code: name.class_code,
-          subject_code: name.subject_code,
-          subject_name: name.subject_name,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        message.success("Deleted successFully");
-        fetchEmployeeList();
-      }
-    } catch (error: any) {
-      console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error(error.response.data.detail);
-    }
-  };
   const dataTableData = {
     columns: [
       { Header: "Employee No.", accessor: "user_id", width: "20%" },

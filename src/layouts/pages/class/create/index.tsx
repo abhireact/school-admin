@@ -26,7 +26,9 @@ const Create = (props: any) => {
     section_name: Yup.string().required("Required *"),
     class_code: Yup.string().required("Required *"),
     wing_name: Yup.string().required("Required *"),
-    academic_year: Yup.string().required("Required *"),
+    academic_year: Yup.string()
+      .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
+      .required("Required *"),
     start_date: Yup.date()
       .required("Required *")
       .test("max-year", "Incorrect format", function (value) {
@@ -47,48 +49,6 @@ const Create = (props: any) => {
       }),
   });
 
-  type LanguageCode =
-    | "es"
-    | "fr"
-    | "de"
-    | "auto"
-    | "af"
-    | "sq"
-    | "am"
-    | "ar"
-    | "hy"
-    | "az"
-    | "eu"
-    | "be"
-    | "bn"
-    | "bs"
-    | "bg"
-    | "ca"
-    | "ceb"
-    | "ny"
-    | "zh"
-    | "zh-cn"
-    | "zh-tw"
-    | "co"
-    | "hr"
-    | "cs"
-    | "da"
-    | "nl";
-
-  interface LanguageOption {
-    value: LanguageCode;
-    label: string;
-  }
-
-  const languageOptions: LanguageOption[] = [
-    { value: "es", label: "Spanish" },
-    { value: "fr", label: "French" },
-    { value: "de", label: "German" },
-    // Add more language options as needed
-  ];
-  const [translatedText, setTranslatedText] = useState<string>("");
-  const [targetLanguage, setTargetLanguage] = useState<LanguageCode>("es");
-
   // useEffect(() => {
   //   const translatePage = async () => {
   //     try {
@@ -102,10 +62,6 @@ const Create = (props: any) => {
 
   //   translatePage();
   // }, [targetLanguage]);
-
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTargetLanguage(e.target.value as LanguageCode);
-  };
 
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
@@ -211,166 +167,168 @@ const Create = (props: any) => {
       {" "}
       <form onSubmit={handleSubmit}>
         <MDBox p={4}>
-          <Grid container>
-            <Grid container spacing={3} pt={2} px={2}>
-              <Grid item xs={12} sm={12}>
-                <MDTypography variant="h6" fontWeight="bold" color="secondary">
-                  Create Class
-                </MDTypography>
-              </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Create Class
+              </MDTypography>
             </Grid>
-            <Grid container spacing={3} p={2}>
-              <Grid item sm={4} xs={4}>
-                <Autocomplete
-                  sx={{ width: "80%" }}
-                  value={values.academic_year}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "academic_year", value },
-                    });
-                  }}
-                  options={academicdata.map((acd) => acd.academic_year)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="academic_year"
-                      placeholder="2022-2023"
-                      label={"Academic Year"}
-                      onChange={handleChange}
-                      value={values.academic_year}
-                      {...params}
-                      variant="standard"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  sx={{ width: "80%" }}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "wing_name", value },
-                    });
-                  }}
-                  value={values.wing_name}
-                  options={winginfo.map((acd) => acd.wing_name)}
-                  renderInput={(params: any) => (
-                    <FormField
-                      label="Wing Name"
-                      autoComplete="off"
-                      InputLabelProps={{ shrink: true }}
-                      name="wing_name"
-                      onChange={handleChange}
-                      value={values.wing_name}
-                      {...params}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.wing_name && Boolean(errors.wing_name)}
-                      success={values.wing_name.length && !errors.wing_name}
-                      helperText={touched.wing_name && errors.wing_name}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <MDInput
-                  sx={{ width: "80%" }}
-                  mb={2}
-                  label="Class Name"
-                  variant="standard"
-                  name="class_name"
-                  value={values.class_name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.class_name && Boolean(errors.class_name)}
-                  success={values.class_name.length && !errors.class_name}
-                  helperText={touched.class_name && errors.class_name}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <MDInput
-                  sx={{ width: "80%" }}
-                  mb={2}
-                  label="Class Code"
-                  variant="standard"
-                  name="class_code"
-                  value={values.class_code}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.class_code && Boolean(errors.class_code)}
-                  success={values.class_code.length && !errors.class_code}
-                  helperText={touched.class_code && errors.class_code}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <MDInput
-                  sx={{ width: "80%" }}
-                  mb={2}
-                  label="Index"
-                  variant="standard"
-                  name="index"
-                  value={values.index}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.index && Boolean(errors.index)}
-                  success={values.index && !errors.index}
-                  helperText={touched.index && errors.index}
-                />
-              </Grid>
+
+            <Grid item sm={4} xs={4}>
+              <Autocomplete
+                disableClearable
+                sx={{ width: "80%" }}
+                value={values.academic_year}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "academic_year", value },
+                  });
+                }}
+                options={academicdata.map((acd) => acd.academic_year)}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="academic_year"
+                    placeholder="2022-2023"
+                    label="Academic Year *"
+                    onChange={handleChange}
+                    value={values.academic_year}
+                    {...params}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.academic_year && Boolean(errors.academic_year)}
+                    success={values.academic_year.length && !errors.academic_year}
+                    helperText={touched.academic_year && errors.academic_year}
+                  />
+                )}
+              />
             </Grid>
-            <Grid container xs={12} sm={12} px={2}>
-              <Grid item xs={12} sm={12}>
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Initial Section
-                </MDTypography>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <MDInput
-                  mb={2}
-                  sx={{ width: "80%" }}
-                  label="Section Name"
-                  variant="standard"
-                  name="section_name"
-                  value={values.section_name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.section_name && Boolean(errors.section_name)}
-                  success={values.section_name.length && !errors.section_name}
-                  helperText={touched.section_name && errors.section_name}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <MDInput
-                  InputLabelProps={{ shrink: true }}
-                  type="date"
-                  sx={{ width: "80%" }}
-                  label="Start Date"
-                  variant="standard"
-                  name="start_date"
-                  value={values.start_date}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.start_date && Boolean(errors.start_date)}
-                  success={values.start_date.length && !errors.start_date}
-                  helperText={touched.start_date && errors.start_date}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <MDInput
-                  sx={{ width: "80%" }}
-                  InputLabelProps={{ shrink: true }}
-                  type="date"
-                  label="End Date"
-                  variant="standard"
-                  name="end_date"
-                  value={values.end_date}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.end_date && Boolean(errors.end_date)}
-                  success={values.end_date.length && !errors.end_date}
-                  helperText={touched.end_date && errors.end_date}
-                />
-              </Grid>
+            <Grid item xs={12} sm={4}>
+              <Autocomplete
+                disableClearable
+                sx={{ width: "80%" }}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "wing_name", value },
+                  });
+                }}
+                value={values.wing_name}
+                options={winginfo.map((acd) => acd.wing_name)}
+                renderInput={(params: any) => (
+                  <FormField
+                    label="Wing Name *"
+                    autoComplete="off"
+                    InputLabelProps={{ shrink: true }}
+                    name="wing_name"
+                    onChange={handleChange}
+                    value={values.wing_name}
+                    {...params}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.wing_name && Boolean(errors.wing_name)}
+                    success={values.wing_name.length && !errors.wing_name}
+                    helperText={touched.wing_name && errors.wing_name}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                sx={{ width: "80%" }}
+                mb={2}
+                label="Class Name *"
+                variant="standard"
+                name="class_name"
+                value={values.class_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.class_name && Boolean(errors.class_name)}
+                success={values.class_name.length && !errors.class_name}
+                helperText={touched.class_name && errors.class_name}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                sx={{ width: "80%" }}
+                mb={2}
+                label="Class Code *"
+                variant="standard"
+                name="class_code"
+                value={values.class_code}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.class_code && Boolean(errors.class_code)}
+                success={values.class_code.length && !errors.class_code}
+                helperText={touched.class_code && errors.class_code}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                sx={{ width: "80%" }}
+                mb={2}
+                label="Index"
+                variant="standard"
+                name="index"
+                value={values.index}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.index && Boolean(errors.index)}
+                success={values.index && !errors.index}
+                helperText={touched.index && errors.index}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Initial Section
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                mb={2}
+                sx={{ width: "80%" }}
+                label="Section Name *"
+                variant="standard"
+                name="section_name"
+                value={values.section_name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.section_name && Boolean(errors.section_name)}
+                success={values.section_name.length && !errors.section_name}
+                helperText={touched.section_name && errors.section_name}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                InputLabelProps={{ shrink: true }}
+                type="date"
+                sx={{ width: "80%" }}
+                label="Start Date *"
+                variant="standard"
+                name="start_date"
+                value={values.start_date}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.start_date && Boolean(errors.start_date)}
+                success={values.start_date.length && !errors.start_date}
+                helperText={touched.start_date && errors.start_date}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <MDInput
+                sx={{ width: "80%" }}
+                InputLabelProps={{ shrink: true }}
+                type="date"
+                label="End Date *"
+                variant="standard"
+                name="end_date"
+                value={values.end_date}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.end_date && Boolean(errors.end_date)}
+                success={values.end_date.length && !errors.end_date}
+                helperText={touched.end_date && errors.end_date}
+              />
             </Grid>
 
             <Grid

@@ -43,7 +43,7 @@ import StudentPromotion from "layouts/pages/student/student_promotion";
 import ExportStudentPage from "layouts/pages/student/export_student_data";
 import Subject from "layouts/pages/subject/subjectdetails";
 import SectionSubject from "layouts/pages/subject/section_subject";
-import EmployeeSubject from "layouts/pages/subject/employee_subject";
+import EmployeeSubject from "layouts/pages/subject/subject_teacher";
 import StudentSectionChange from "layouts/pages/student/student_section_change";
 
 //EXAMINATION module
@@ -53,6 +53,7 @@ import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 import CreateStudentID from "layouts/pages/student/studentID_card/create";
+import StudentSubject from "layouts/pages/subject/student_subject";
 
 const routes = [
   {
@@ -236,6 +237,12 @@ const routes = [
         key: "sectionsubject",
         route: "pages/subject/sectionsubject",
         component: <SectionSubject />,
+      },
+      {
+        name: "Student Subject",
+        key: "student_subject",
+        route: "pages/subject/student_subject",
+        component: <StudentSubject />,
       },
     ],
   },

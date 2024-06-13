@@ -36,50 +36,48 @@ const Create = (props: { handleClose: () => void; fetchingData: () => void }) =>
   const token = Cookies.get("token");
   const { handleClose, fetchingData } = props;
 
-  const formik = useFormik<FormValues>({
-    initialValues: {
-      accounts: [{ account_name: "", description: "" }],
-    },
-    validationSchema,
-    onSubmit: (values, actions) => {
-      axios
-        .post(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, values.accounts, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          message.success("Created successfully!");
-          fetchingData();
-          actions.resetForm();
-          handleClose();
-        })
-        .catch(() => {
-          message.error("Error on creating!");
-        });
-    },
-  });
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue } =
+    useFormik<FormValues>({
+      initialValues: {
+        accounts: [{ account_name: "", description: "" }],
+      },
+      validationSchema,
+      onSubmit: (values, actions) => {
+        axios
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_accounts`, values.accounts, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(() => {
+            message.success("Created successfully!");
+            fetchingData();
+            actions.resetForm();
+            handleClose();
+          })
+          .catch(() => {
+            message.error("Error on creating!");
+          });
+      },
+    });
 
   const addAccount = () => {
-    formik.setFieldValue("accounts", [
-      ...formik.values.accounts,
-      { account_name: "", description: "" },
-    ]);
+    setFieldValue("accounts", [...values.accounts, { account_name: "", description: "" }]);
   };
 
   const removeAccount = (index: number) => {
-    const newAccounts = [...formik.values.accounts];
+    const newAccounts = [...values.accounts];
     newAccounts.splice(index, 1);
-    formik.setFieldValue("accounts", newAccounts);
+    setFieldValue("accounts", newAccounts);
   };
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <Card>
         <MDBox pt={4} px={4} pb={1}>
           <Grid container spacing={3}>
-            {formik.values.accounts.map((account, index) => (
+            {values.accounts.map((account, index) => (
               <React.Fragment key={index}>
                 <Grid item xs={12} sm={5}>
                   <MDInput
@@ -90,24 +88,22 @@ const Create = (props: { handleClose: () => void; fetchingData: () => void }) =>
                     value={account.account_name}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        ACCOUNT
+                        ACCOUNT *
                       </MDTypography>
                     }
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     error={
-                      formik.touched.accounts?.[index]?.account_name &&
-                      Boolean(
-                        (formik.errors.accounts as FormikErrors<Account>[])?.[index]?.account_name
-                      )
+                      touched.accounts?.[index]?.account_name &&
+                      Boolean((errors.accounts as FormikErrors<Account>[])?.[index]?.account_name)
                     }
                     success={
                       account.account_name.length > 0 &&
-                      !(formik.errors.accounts as FormikErrors<Account>[])?.[index]?.account_name
+                      !(errors.accounts as FormikErrors<Account>[])?.[index]?.account_name
                     }
                     helperText={
-                      formik.touched.accounts?.[index]?.account_name &&
-                      (formik.errors.accounts as FormikErrors<Account>[])?.[index]?.account_name
+                      touched.accounts?.[index]?.account_name &&
+                      (errors.accounts as FormikErrors<Account>[])?.[index]?.account_name
                     }
                   />
                 </Grid>
@@ -125,27 +121,25 @@ const Create = (props: { handleClose: () => void; fetchingData: () => void }) =>
                     }
                     placeholder="Enter the description"
                     value={account.description}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     error={
-                      formik.touched.accounts?.[index]?.description &&
-                      Boolean(
-                        (formik.errors.accounts as FormikErrors<Account>[])?.[index]?.description
-                      )
+                      touched.accounts?.[index]?.description &&
+                      Boolean((errors.accounts as FormikErrors<Account>[])?.[index]?.description)
                     }
                     helperText={
-                      formik.touched.accounts?.[index]?.description &&
-                      (formik.errors.accounts as FormikErrors<Account>[])?.[index]?.description
+                      touched.accounts?.[index]?.description &&
+                      (errors.accounts as FormikErrors<Account>[])?.[index]?.description
                     }
                     success={
                       account.description.length > 0 &&
-                      !(formik.errors.accounts as FormikErrors<Account>[])?.[index]?.description
+                      !(errors.accounts as FormikErrors<Account>[])?.[index]?.description
                     }
                   />
                 </Grid>
 
                 <Grid item xs={12} sm={2} mt={1.5}>
-                  {index == formik.values.accounts.length - 1 && (
+                  {index == values.accounts.length - 1 && (
                     <IconButton onClick={addAccount}>
                       <AddIcon />
                     </IconButton>
@@ -153,7 +147,7 @@ const Create = (props: { handleClose: () => void; fetchingData: () => void }) =>
 
                   <IconButton
                     onClick={() => removeAccount(index)}
-                    disabled={formik.values.accounts.length === 1}
+                    disabled={values.accounts.length === 1}
                   >
                     <DeleteIcon />
                   </IconButton>

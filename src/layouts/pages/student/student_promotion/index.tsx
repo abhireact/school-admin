@@ -162,7 +162,7 @@ export default function StudentPromotion() {
                       value={values.from_academic}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Academic Year
+                          From Academic Year
                         </MDTypography>
                       }
                       {...params}
@@ -196,7 +196,7 @@ export default function StudentPromotion() {
                       value={values.from_class}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Class
+                          From Class
                         </MDTypography>
                       }
                       {...params}
@@ -234,7 +234,7 @@ export default function StudentPromotion() {
                       value={values.from_section}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Section
+                          From Section
                         </MDTypography>
                       }
                       {...params}
@@ -267,7 +267,7 @@ export default function StudentPromotion() {
                       value={values.to_academic}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Academic Year
+                          To Academic Year
                         </MDTypography>
                       }
                       {...params}
@@ -301,7 +301,7 @@ export default function StudentPromotion() {
                       value={values.to_class}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Class
+                          To Class
                         </MDTypography>
                       }
                       {...params}
@@ -339,7 +339,7 @@ export default function StudentPromotion() {
                       value={values.to_section}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Section
+                          To Section
                         </MDTypography>
                       }
                       {...params}
@@ -385,7 +385,9 @@ export default function StudentPromotion() {
                     <table
                       style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
                     >
-                      <thead style={{ position: "sticky", top: 0, backgroundColor: "white" }}>
+                      <thead
+                        style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}
+                      >
                         <tr>
                           <td
                             style={{

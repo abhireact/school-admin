@@ -114,20 +114,20 @@ const Create = (props: any) => {
       <Card>
         {" "}
         <MDBox p={4}>
-          <Grid container>
-            <Grid item xs={12} sm={12} py={1}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
                 Subject
               </MDTypography>
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="subject_name"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Subject Name
+                    Subject Name *
                   </MDTypography>
                 }
                 value={values.subject_name}
@@ -138,14 +138,14 @@ const Create = (props: any) => {
                 helperText={touched.subject_name && errors.subject_name}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "70%" }}
                 variant="standard"
                 name="subject_code"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Subject Code
+                    Subject Code *
                   </MDTypography>
                 }
                 value={values.subject_code}
@@ -156,7 +156,7 @@ const Create = (props: any) => {
                 helperText={touched.subject_code && errors.subject_code}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
                 disableClearable
                 sx={{ width: "70%" }}
@@ -173,7 +173,7 @@ const Create = (props: any) => {
                     name="scoring_type"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Scoring Type
+                        Scoring Type *
                       </MDTypography>
                     }
                     value={values.scoring_type}
@@ -188,7 +188,7 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "70%" }}
                 type="number"
@@ -196,7 +196,7 @@ const Create = (props: any) => {
                 name="max_weekly_class"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Max Weekly Class{" "}
+                    Max Weekly Class *
                   </MDTypography>
                 }
                 value={values.max_weekly_class}
@@ -207,7 +207,7 @@ const Create = (props: any) => {
                 helperText={touched.max_weekly_class && errors.max_weekly_class}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "70%" }}
                 type="number"
@@ -215,7 +215,7 @@ const Create = (props: any) => {
                 name="no_of_classes"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    No. of Classes{" "}
+                    No. of Classes *
                   </MDTypography>
                 }
                 value={values.no_of_classes}
@@ -226,7 +226,7 @@ const Create = (props: any) => {
                 helperText={touched.no_of_classes && errors.no_of_classes}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "70%" }}
                 type="number"
@@ -277,7 +277,7 @@ const Create = (props: any) => {
                 name="is_extra_curricular"
               />
             </Grid>{" "}
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
                 disableClearable
                 sx={{ width: "70%" }}
@@ -296,7 +296,7 @@ const Create = (props: any) => {
                     placeholder="eg. 2022-2023"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Academic Year
+                        Academic Year *
                       </MDTypography>
                     }
                     value={values.academic_year}
@@ -311,7 +311,7 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
                 disableClearable
                 sx={{ width: "70%" }}
@@ -332,7 +332,7 @@ const Create = (props: any) => {
                     name="class_name"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Class Name
+                        Class Name *
                       </MDTypography>
                     }
                     value={values.class_name}

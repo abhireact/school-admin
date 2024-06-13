@@ -50,11 +50,11 @@ const Create = (props: any) => {
   });
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
+      <MDBox pt={4} px={4} pb={1}>
         <Grid container>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              STUDENT CATEGORY
+              STUDENT CATEGORY *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
