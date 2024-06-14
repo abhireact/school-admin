@@ -18,21 +18,19 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 const validationSchema = Yup.object().shape({
   to_section_name: Yup.string().required("Required *"),
   class_name: Yup.string().required("Required *"),
-  from_section_name: Yup.string().required("Required *"),
+  section_name: Yup.string().required("Required *"),
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
   select_fees: Yup.string().required("Required *"),
 });
-export default function StudentSectionChange() {
+export default function SubjectReport() {
   const [data, setData] = useState([]);
   const initialValues = {
     academic_year: "",
     class_name: "",
-    from_section_name: "",
-    to_section_name: "",
-    select_fees: "",
-    user_name: [] as string[], // Array to store particulars
+    section_name: "",
+    // Array to store particulars
   };
 
   const { classes, account, studentcategory } = useSelector((state: any) => state);
@@ -76,12 +74,9 @@ export default function StudentSectionChange() {
   const handleShowData = () => {
     const sendData = {
       academic_year: values.academic_year,
-      classes: [
-        {
-          class_name: values.class_name,
-          section_name: values.from_section_name,
-        },
-      ],
+
+      class_name: values.class_name,
+      section_name: values.section_name,
     };
     axios
       .post(`${process.env.REACT_APP_BASE_URL}/mg_student/search`, sendData, {
@@ -91,10 +86,10 @@ export default function StudentSectionChange() {
         },
       })
       .then((response) => {
-        console.log(response.data, "Student for this  Academic Year,Class and Section");
+        console.log(response.data, "Subject for this  Academic Year,Class and Section");
         if (response.data.length < 1) {
           setData([]);
-          message.error("No Student found  for this Academic Year ,Class and Section ");
+          message.error("No Subject found  for this Academic Year ,Class and Section ");
         }
         let studentData = response.data.map((selection: any, i: number) => ({
           ...selection,
@@ -108,26 +103,7 @@ export default function StudentSectionChange() {
         message.error(error.response.data.detail);
       });
   };
-  const handleCheckboxChange = (index: number) => {
-    setData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) =>
-        i === index ? { ...selection, is_selected: !selection.is_selected } : selection
-      )
-    );
-    console.log(data, "change checkbox");
-  };
-  const handleSelectAll = () => {
-    setData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: true }))
-    );
-    console.log(data, "change checkbox");
-  };
-  const handleSelectNone = () => {
-    setData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: false }))
-    );
-    console.log(data, "change checkbox");
-  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -137,7 +113,7 @@ export default function StudentSectionChange() {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Student Section Change
+                  Section Subject Report
                 </MDTypography>
               </Grid>
 
@@ -212,9 +188,9 @@ export default function StudentSectionChange() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
-                  value={values.from_section_name}
+                  value={values.section_name}
                   onChange={(_event, value) => {
-                    handleChange({ target: { name: "from_section_name", value } });
+                    handleChange({ target: { name: "section_name", value } });
                   }}
                   options={
                     values.class_name !== ""
@@ -232,7 +208,7 @@ export default function StudentSectionChange() {
                       required
                       name="section_name"
                       //  onChange={handleChange}
-                      value={values.from_section_name}
+                      value={values.section_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           From Section
@@ -241,87 +217,14 @@ export default function StudentSectionChange() {
                       {...params}
                       variant="standard"
                       onBlur={handleBlur}
-                      error={touched.from_section_name && Boolean(errors.from_section_name)}
-                      success={values.from_section_name.length && !errors.from_section_name}
-                      helperText={touched.from_section_name && errors.from_section_name}
+                      error={touched.section_name && Boolean(errors.section_name)}
+                      success={values.section_name.length && !errors.section_name}
+                      helperText={touched.section_name && errors.section_name}
                     />
                   )}
                 />
               </Grid>
 
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  disableClearable
-                  value={values.to_section_name}
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "to_section_name", value } });
-                  }}
-                  options={
-                    values.class_name !== ""
-                      ? classes
-                          .filter(
-                            (item: any) =>
-                              item.academic_year === values.academic_year &&
-                              item.class_name === values.class_name
-                          )[0]
-                          .section_data.filter(
-                            (item: any) => item.section_name !== values.from_section_name
-                          )
-                          .map((item: any) => item.section_name)
-                      : []
-                  }
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      name="to_section_name"
-                      //onChange={handleChange}
-                      value={values.to_section_name}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          To Section
-                        </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.to_section_name && Boolean(errors.to_section_name)}
-                      success={values.to_section_name.length && !errors.to_section_name}
-                      helperText={touched.to_section_name && errors.to_section_name}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  disableClearable
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "select_fees", value } });
-                  }}
-                  options={[
-                    "Section change with fee deletion",
-                    "Section change without fee deletion",
-                  ]}
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      name="select_fees"
-                      //onChange={handleChange}
-                      value={values.select_fees}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Fees
-                        </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.select_fees && Boolean(errors.select_fees)}
-                      success={values.select_fees.length && !errors.select_fees}
-                      helperText={touched.select_fees && errors.select_fees}
-                    />
-                  )}
-                />
-              </Grid>
               <Grid
                 item
                 container
@@ -348,70 +251,6 @@ export default function StudentSectionChange() {
                   </Grid>
                 )}
               </Grid>
-
-              {data.length > 0 && (
-                <Grid item xs={12} sm={12} m={4}>
-                  <div style={{ maxHeight: "400px", overflowY: "auto", position: "relative" }}>
-                    <table
-                      style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
-                    >
-                      <thead
-                        style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}
-                      >
-                        <tr>
-                          <td
-                            style={{
-                              fontSize: "18px",
-                              textAlign: "left",
-                            }}
-                          >
-                            AVAILABLE STUDENTS
-                          </td>
-                          <td
-                            style={{
-                              fontSize: "18px",
-                              textAlign: "left",
-                            }}
-                          >
-                            SELECT:
-                            <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
-                              All
-                            </MDButton>
-                            <MDButton
-                              color="info"
-                              variant="text"
-                              onClick={() => handleSelectNone()}
-                            >
-                              None
-                            </MDButton>
-                          </td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data?.length > 0
-                          ? data?.map((item: any, index: any) => (
-                              <tr key={index + item.user_id}>
-                                <td style={{ textAlign: "left" }}>
-                                  <MDTypography variant="button" fontWeight="bold">
-                                    {item.admission_number} {item.user_id} {item.first_name}
-                                    {item.middle_name} {item.last_name}
-                                  </MDTypography>
-                                </td>
-
-                                <td>
-                                  <Checkbox
-                                    checked={item.is_selected}
-                                    onChange={() => handleCheckboxChange(index)}
-                                  />
-                                </td>
-                              </tr>
-                            ))
-                          : ""}
-                      </tbody>
-                    </table>
-                  </div>
-                </Grid>
-              )}
             </Grid>
           </MDBox>
         </Card>

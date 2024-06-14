@@ -39,13 +39,12 @@ const Create = (props: any) => {
         .then(() => {
           message.success("Created successfully!");
           fetchData();
-          handleClose();
+
+          action.resetForm();
         })
         .catch((error) => {
           message.error(error.response.data.detail);
         });
-
-      action.resetForm();
     },
   });
   return (

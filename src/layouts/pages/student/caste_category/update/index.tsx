@@ -49,7 +49,6 @@ const Update = (props: any) => {
           },
         })
         .then(() => {
-          action.resetForm();
           message.success("Updated  successfully!");
           fetchData();
           handleCloseupdate();

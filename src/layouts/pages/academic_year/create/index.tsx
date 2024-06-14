@@ -43,7 +43,14 @@ const validationSchema = Yup.object().shape({
         }),
       end_date: Yup.date()
         .required("Required *")
-        .test("year-range", "Incorrect format", function (value) {
+        .test("endDateGreaterThanStartDate", "Incorrect Format", function (value) {
+          const { start_date } = this.parent;
+          if (value && start_date) {
+            return value.getTime() > start_date.getTime();
+          }
+          return true;
+        })
+        .test("endDateYearRange", "Incorrect Format", function (value) {
           if (value) {
             const year = value.getFullYear();
             return year >= 2000 && year <= 3000;
@@ -53,7 +60,6 @@ const validationSchema = Yup.object().shape({
     })
   ),
 });
-
 const Create = (props: any) => {
   const token = Cookies.get("token");
 

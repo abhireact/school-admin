@@ -56,8 +56,6 @@ const Update = (props: any) => {
         .catch((error: any) => {
           message.error(error.response.data.detail);
         });
-
-      action.resetForm();
     },
   });
   return (

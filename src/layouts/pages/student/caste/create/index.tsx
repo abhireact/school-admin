@@ -40,7 +40,6 @@ const Create = (props: any) => {
         .then(() => {
           action.resetForm();
 
-          handleClose();
           message.success("Created Successfully!");
           fetchData();
         })

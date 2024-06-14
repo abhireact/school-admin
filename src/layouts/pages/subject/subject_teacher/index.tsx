@@ -21,6 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
+const cookies_academic_year = Cookies.get("academic_year");
 const EmployeeSubject = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);

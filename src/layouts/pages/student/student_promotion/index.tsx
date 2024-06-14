@@ -53,6 +53,7 @@ export default function StudentPromotion() {
         console.log(sendData);
         if (sendData.length < 1) {
           message.error("No Student is Selected");
+          return;
         }
         const sendValue = { ...values, user_name: sendData };
 
@@ -146,6 +147,7 @@ export default function StudentPromotion() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  value={values.from_academic}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "from_academic", value } });
                   }}
@@ -178,6 +180,7 @@ export default function StudentPromotion() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  value={values.from_class}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "from_class", value } });
                   }}
@@ -212,6 +215,7 @@ export default function StudentPromotion() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  value={values.from_section}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "from_section", value } });
                   }}
@@ -251,6 +255,7 @@ export default function StudentPromotion() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  value={values.to_academic}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "to_academic", value } });
                   }}
@@ -283,6 +288,7 @@ export default function StudentPromotion() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  value={values.to_class}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "to_class", value } });
                   }}
@@ -317,6 +323,7 @@ export default function StudentPromotion() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  value={values.to_section}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "to_section", value } });
                   }}
@@ -361,7 +368,7 @@ export default function StudentPromotion() {
               >
                 <Grid item>
                   <MDButton
-                    color="dark"
+                    color="info"
                     variant="contained"
                     onClick={() => {
                       handleShowData();
