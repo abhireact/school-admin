@@ -30,8 +30,9 @@ import { useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 const token = Cookies.get("token");
+const current_academic_year = Cookies.get("academic_year");
 const initialValues = {
-  academic_year: "",
+  academic_year: current_academic_year,
   class_name: "",
 };
 export default function ClassTiming() {
@@ -102,6 +103,7 @@ export default function ClassTiming() {
       ),
     })),
   };
+  console.log(values, "valuesss");
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -125,28 +127,17 @@ export default function ClassTiming() {
           </Grid>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
-              <Autocomplete
-                onChange={(_event, value) => {
-                  handleChange({ target: { name: "academic_year", value } });
-                }}
-                options={
-                  classes ? Array.from(new Set(classes.map((item: any) => item.academic_year))) : []
+              <MDInput
+                disabled
+                sx={{ width: "100%" }}
+                name="academic_year"
+                value={values.academic_year}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Academic Year
+                  </MDTypography>
                 }
-                renderInput={(params) => (
-                  <MDInput
-                    required
-                    name="academic_year"
-                    onChange={handleChange}
-                    value={values.academic_year}
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Academic Year
-                      </MDTypography>
-                    }
-                    {...params}
-                    variant="standard"
-                  />
-                )}
+                variant="standard"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -160,6 +151,13 @@ export default function ClassTiming() {
                         .filter((item: any) => item.academic_year === values.academic_year)
                         .map((item: any) => item.class_name)
                     : []
+                }
+                defaultValue={
+                  values.academic_year !== ""
+                    ? classes
+                        .filter((item: any) => item.academic_year === values.academic_year)
+                        .map((item: any) => item.class_name)[0]
+                    : ""
                 }
                 renderInput={(params) => (
                   <MDInput

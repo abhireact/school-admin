@@ -12,7 +12,6 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
-
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
@@ -151,12 +150,6 @@ let routes = [
     key: "createclasstiming",
     route: "attendance/create_class_timing",
     component: <ClassTimingCreate />,
-  },
-  {
-    name: "Sms Configuration",
-    key: "sms_configuration",
-    route: "notification/sms_configuration",
-    component: <SMSConfiguration />,
   },
 ];
 
