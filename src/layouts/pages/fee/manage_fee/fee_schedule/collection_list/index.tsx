@@ -23,6 +23,8 @@ import ManageSchedule from "./manage";
 import NewFeeSchedule from "../new_fee_schedule";
 
 const token = Cookies.get("token");
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string().required("Required *"),
   class_name: Yup.string().required("Required *"),
@@ -111,7 +113,7 @@ const CollectionList = () => {
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
-        academic_year: "",
+        academic_year: Cacademic_year,
         class_name: "",
         section_name: "",
       },
@@ -322,6 +324,8 @@ const CollectionList = () => {
                         <Grid item xs={12} sm={4}>
                           <Autocomplete
                             sx={{ width: "80%" }}
+                            disabled
+                            defaultValue={Cacademic_year}
                             disableClearable
                             value={values.academic_year}
                             onChange={(event, value) => {
@@ -334,6 +338,7 @@ const CollectionList = () => {
                             renderInput={(params: any) => (
                               <MDInput
                                 InputLabelProps={{ shrink: true }}
+                                defaultValue={Cacademic_year}
                                 name="academic_year"
                                 placeholder="eg. 2022-2023"
                                 label={

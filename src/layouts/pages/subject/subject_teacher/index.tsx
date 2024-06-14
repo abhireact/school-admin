@@ -21,6 +21,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
+const cookies_academic_year = Cookies.get("academic_year");
 const EmployeeSubject = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
@@ -74,29 +75,6 @@ const EmployeeSubject = () => {
     fetchEmployeeList();
   }, []);
 
-  const handleDelete = async (name: any) => {
-    try {
-      const response = await axios.delete("${process.env.REACT_APP_BASE_URL}/mg_subject", {
-        data: {
-          class_code: name.class_code,
-          subject_code: name.subject_code,
-          subject_name: name.subject_name,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        message.success("Deleted successFully");
-        fetchEmployeeList();
-      }
-    } catch (error: any) {
-      console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error(error.response.data.detail);
-    }
-  };
   const dataTableData = {
     columns: [
       { Header: "Employee No.", accessor: "user_id", width: "20%" },
@@ -151,7 +129,7 @@ const EmployeeSubject = () => {
             <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
               <Grid item pt={2} pl={2}>
                 <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Employee Subject List
+                  Subject Teacher List
                 </MDTypography>
               </Grid>
             </Grid>

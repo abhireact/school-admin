@@ -7,7 +7,7 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
 import MDInput from "components/MDInput";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -21,6 +21,7 @@ import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import UpdateSection from "./update_section";
+import { Tooltip } from "@mui/material";
 function convertData(inputData: any[]) {
   return inputData.map((item: { section_name: any; start_date: string; end_date: string }) => ({
     section_name: item.section_name,
@@ -54,7 +55,7 @@ const ManageSection = (props: any) => {
             return true;
           }),
         end_date: Yup.date()
-          .nullable()
+          .required("Required *")
           .test("year-range", "Incorrect format", function (value) {
             if (value) {
               const year = value.getFullYear();
@@ -142,6 +143,7 @@ const ManageSection = (props: any) => {
 
   const [sectionData, setSectionData] = useState({});
   const [open, setOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState<Number>();
 
   const handleCloseSection = () => {
     setOpen(false);
@@ -149,6 +151,7 @@ const ManageSection = (props: any) => {
   const handleOpenSection = (data: any, index: number) => {
     const main_data = data;
     console.log(main_data, "section edit Data");
+    setEditIndex(index);
 
     setSectionData(data);
     setOpen(true);
@@ -168,7 +171,9 @@ const ManageSection = (props: any) => {
         },
       })
       .then(() => {
-        console.log("create successfully");
+        let afterDeletedData = values.sectiondata.filter((_: any, i: any) => i != index);
+        setFieldValue("sectiondata", afterDeletedData);
+        console.log("deleted successfully");
         message.success("Deleted Successfully!");
         fetchData();
       })
@@ -245,7 +250,6 @@ const ManageSection = (props: any) => {
                 <>
                   <Grid item xs={12} sm={3} key={index + "section_name"}>
                     <MDInput
-                      required
                       sx={{ width: "80%" }}
                       variant="standard"
                       disabled
@@ -290,16 +294,31 @@ const ManageSection = (props: any) => {
                       value={values.sectiondata[index].end_date}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3} mt={2} key={index + "space"}>
-                    <CreateRoundedIcon
-                      fontSize="medium"
-                      onClick={() => handleOpenSection(clone, index)}
-                    />
+                  <Grid item xs={12} mt={1} sm={3} key={index + "space"}>
+                    <IconButton>
+                      <Tooltip title="Edit " placement="top">
+                        <CreateRoundedIcon
+                          fontSize="medium"
+                          onClick={() => handleOpenSection(clone, index)}
+                        />
+                      </Tooltip>
+                    </IconButton>
                     &nbsp; &nbsp; &nbsp;
-                    <DeleteIcon
-                      fontSize="medium"
-                      onClick={() => handleDeleteSection(clone, index)}
-                    />
+                    <IconButton>
+                      <Popconfirm
+                        title="Delete"
+                        description="Are you sure to Delete it ?"
+                        placement="topLeft"
+                        onConfirm={() => handleDeleteSection(clone, index)} // Pass index to confirm function
+                        // onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Tooltip title="Delete" placement="top">
+                          <DeleteIcon fontSize="medium" />
+                        </Tooltip>
+                      </Popconfirm>
+                    </IconButton>
                   </Grid>
                 </>
               ))}
@@ -324,7 +343,7 @@ const ManageSection = (props: any) => {
                         name={`section[${index}].section_name`}
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Section Name
+                            Section Name *
                           </MDTypography>
                         }
                         value={values.section[index].section_name}
@@ -355,7 +374,7 @@ const ManageSection = (props: any) => {
                         name={`section[${index}].start_date`}
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Start Date
+                            Start Date *
                           </MDTypography>
                         }
                         value={values.section[index].start_date}
@@ -384,7 +403,7 @@ const ManageSection = (props: any) => {
                         name={`section[${index}].end_date`}
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            End Date
+                            End Date *
                           </MDTypography>
                         }
                         value={values.section[index].end_date}
@@ -420,6 +439,9 @@ const ManageSection = (props: any) => {
             <Dialog open={open} onClose={handleCloseSection} maxWidth="sm">
               <UpdateSection
                 sectionData={sectionData}
+                setFieldValue={setFieldValue}
+                editIndex={editIndex}
+                sectiondata={values.sectiondata}
                 class_name={editData.class_name}
                 academic_year={editData.academic_year}
                 setOpen={setOpen}

@@ -1,5 +1,6 @@
 // Material Dashboard 2 PRO React layouts
 import SchoolIcon from "@mui/icons-material/School";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import Icon from "@mui/material/Icon";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
@@ -43,7 +44,8 @@ import StudentPromotion from "layouts/pages/student/student_promotion";
 import ExportStudentPage from "layouts/pages/student/export_student_data";
 import Subject from "layouts/pages/subject/subjectdetails";
 import SectionSubject from "layouts/pages/subject/section_subject";
-import EmployeeSubject from "layouts/pages/subject/employee_subject";
+import EmployeeSubject from "layouts/pages/subject/subject_teacher";
+import StudentSectionChange from "layouts/pages/student/student_section_change";
 
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
@@ -54,6 +56,8 @@ import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show
 import CreateStudentID from "layouts/pages/student/studentID_card/create";
 import TimeTable from "layouts/pages/Attendance/time_table";
 import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/school_admin_sms_configuration";
+import StudentSubject from "layouts/pages/subject/student_subject";
+import SubjectReport from "layouts/pages/subject/subject_report";
 
 const routes = [
   {
@@ -152,18 +156,18 @@ const routes = [
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,
       },
-      // {
-      //   name: "Scholastic Grade",
-      //   key: "academicgrade",
-      //   route: "/pages/school/academicgrade",
-      //   component: <AcademicGrade />,
-      // },
-      // {
-      //   name: "Non-Scholastic Grade",
-      //   key: "nonacademicgrade",
-      //   route: "/pages/school/nonacademicgrade",
-      //   component: <NonAcademicGrade />,
-      // },
+      {
+        name: "Student Promotion",
+        key: "studentpromotion",
+        route: "/student/student_promoton",
+        component: <StudentPromotion />,
+      },
+      {
+        name: "Student Section Change",
+        key: "studentsectionchange",
+        route: "/student/student_section_change",
+        component: <StudentSectionChange />,
+      },
       {
         name: "Caste",
         key: "caste",
@@ -188,19 +192,12 @@ const routes = [
         route: "/pages/school/housedetails",
         component: <HouseDetails />,
       },
-      {
-        name: "Student ID Card",
-        key: "student_id",
-        route: "/pages/school/student_id",
-        component: <CreateStudentID />,
-      },
-
-      {
-        name: "Student Promotion",
-        key: "studentpromotion",
-        route: "/student/student_promoton",
-        component: <StudentPromotion />,
-      },
+      // {
+      //   name: "Student ID Card",
+      //   key: "student_id",
+      //   route: "/pages/school/student_id",
+      //   component: <CreateStudentID />,
+      // },
     ],
   },
 
@@ -221,16 +218,28 @@ const routes = [
         component: <Subject />,
       },
       {
+        name: "Subject Teacher",
+        key: "employeesubject",
+        route: "pages/subject/employeesubject",
+        component: <EmployeeSubject />,
+      },
+      {
         name: "Section Subject",
         key: "sectionsubject",
         route: "pages/subject/sectionsubject",
         component: <SectionSubject />,
       },
       {
-        name: "Employee Subject",
-        key: "employeesubject",
-        route: "pages/subject/employeesubject",
-        component: <EmployeeSubject />,
+        name: "Student Subject",
+        key: "student_subject",
+        route: "pages/subject/student_subject",
+        component: <StudentSubject />,
+      },
+      {
+        name: "Subject Report",
+        key: "subject_report",
+        route: "pages/subject/subject_report",
+        component: <SubjectReport />,
       },
     ],
   },
@@ -262,11 +271,11 @@ const routes = [
     type: "collapse",
     name: "Exam Setting",
     key: "exam",
-    // icon: (
-    //   <Icon fontSize="medium">
-    //     <EditNoteIcon />
-    //   </Icon>
-    // ),
+    icon: (
+      <Icon fontSize="medium">
+        <EditNoteIcon />
+      </Icon>
+    ),
     collapse: [
       {
         name: "Exam Type",
@@ -361,12 +370,7 @@ const routes = [
         route: "pages/employee/employee_type",
         component: <EmployeeType />,
       },
-      // {
-      //   name: "Leave Types",
-      //   key: "employee_leave",
-      //   route: "pages/employee/employee_leave",
-      //   component: <EmployeeLeave />,
-      // },
+
       {
         name: "Department",
         key: "department",
@@ -436,53 +440,6 @@ const routes = [
     ],
   },
 
-  // {
-  //   type: "collapse",
-  //   name: "Fee",
-  //   key: "fee",
-  //   icon: (
-  //     <Icon fontSize="medium">
-  //       <CurrencyRupeeIcon />
-  //     </Icon>
-  //   ),
-  //   collapse: [
-  //     {
-  //       name: "Late Fee",
-  //       key: "latefee",
-  //       route: "pages/fee/latefee",
-  //       component: <LateFee />,
-  //     },
-  //     {
-  //       name: "Excess Fee ",
-  //       key: "excessfee",
-  //       route: "pages/fee/excessfee",
-  //       component: <ExcessFee />,
-  //     },
-  //     {
-  //       name: "Fine Particular",
-  //       key: "fineparticular",
-  //       route: "pages/fee/fineparticular",
-  //       component: <FineParticular />,
-  //     },
-  //     {
-  //       name: "Fee Collection",
-  //       key: "feecollection",
-  //       route: "pages/fee/feecollection",
-  //       component: <FeeCollection />,
-  //     },
-  //     {
-  //       name: "Fee By Admission Number",
-  //       key: "feecollectionbyadmission",
-  //       route: "pages/fee/feecollectionbyadmission",
-  //       component: <FeeCollectionByAdmission />,
-  //     },
-
-  //     {
-  //       name: "Fee Schedule",
-  //       key: "feeschedule",
-  //       route: "pages/fee/feeschedule",
-  //       component: <FeeSchedule />,
-  //     },
   {
     name: "Fine",
     key: "fineparticular",
@@ -495,17 +452,7 @@ const routes = [
     route: "pages/fee/feereceipt",
     component: <FeeReceipt />,
   },
-  //       route: "pages/fee/feeregister",
-  //       component: <FeeRegister />,
-  //     },
-  //     {
-  //       name: "Student Certificate",
-  //       key: "studentcertificate",
-  //       route: "pages/fee/studentcertificate",
-  //       component: <StudentCertificate />,
-  //     },
-  //   ],
-  // },
+
   {
     type: "collapse",
     name: "Fee",
@@ -546,13 +493,6 @@ const routes = [
             route: "pages/fee/excessfee",
             component: <ExcessFee />,
           },
-
-          // {
-          //   name: "Fee By Admission No",
-          //   key: "feecollectionbyadmission",
-          //   route: "pages/fee/feecollectionbyadmission",
-          //   component: <FeeCollectionByAdmission />,
-          // },
 
           {
             name: "Fine",

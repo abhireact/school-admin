@@ -87,14 +87,15 @@ interface TreeNode {
   key: string;
   children?: TreeNode[];
 }
-
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 export default function Create(props: any) {
   let initialValues = {
     fine_name: "",
     description: "",
     account: "",
     amount: "",
-    academic_year: "",
+    academic_year: Cacademic_year,
     student_category: "",
     class_name: "",
     section_name: "",
@@ -417,6 +418,8 @@ export default function Create(props: any) {
           <Grid item xs={12} sm={4}>
             <Autocomplete
               disableClearable
+              disabled
+              defaultValue={Cacademic_year}
               value={values.academic_year}
               onChange={(_event, value) => {
                 handleChange({ target: { name: "academic_year", value } });
@@ -428,6 +431,7 @@ export default function Create(props: any) {
                 <MDInput
                   required
                   name="academic_year"
+                  defaultValue={Cacademic_year}
                   onChange={handleChange}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">

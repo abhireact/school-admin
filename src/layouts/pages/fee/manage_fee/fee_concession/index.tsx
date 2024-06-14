@@ -21,8 +21,10 @@ import { message } from "antd";
 import { commonacademicyear } from "layouts/pages/fee/common_validationschema";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 const initialValues = {
-  academic_year: "",
+  academic_year: Cacademic_year,
   class_name: "",
   section_name: "",
 };
@@ -49,6 +51,7 @@ export default function FeeConcession() {
       message.error("No data for this section");
     }
   };
+
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
@@ -168,6 +171,8 @@ export default function FeeConcession() {
               <Grid container spacing={3} p={3}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    defaultValue={Cacademic_year}
+                    disabled
                     onChange={(_event, value) => {
                       handleChange({ target: { name: "academic_year", value } });
                     }}
@@ -179,6 +184,7 @@ export default function FeeConcession() {
                     renderInput={(params) => (
                       <MDInput
                         required
+                        defaultValue={Cacademic_year}
                         name="academic_year"
                         onChange={handleChange}
                         value={values.academic_year}

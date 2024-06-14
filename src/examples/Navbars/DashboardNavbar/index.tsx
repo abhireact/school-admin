@@ -115,7 +115,6 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   useEffect(() => {
     FetchAcademicYear();
   }, []);
-
   const Cacademic_year = Cookies.get("academic_year");
   console.log(Cacademic_year, "Cacademic_year");
   let today = new Date().toISOString().split("T")[0];
@@ -170,6 +169,14 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   useEffect(() => {
     fetchNotification();
   }, []);
+
+  useEffect(() => {
+    // Cleanup the old cookie before setting the new one
+    Cookies.remove("academic_year");
+    if (values.academic_year) {
+      Cookies.set("academic_year", values.academic_year, { expires: 7 });
+    }
+  }, [values.academic_year]);
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {

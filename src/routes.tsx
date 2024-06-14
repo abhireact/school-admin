@@ -17,6 +17,7 @@ import CreateTemplate from "layouts/pages/notifications/create_message_template"
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
 import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
+import StudentSectionChange from "layouts/pages/student/student_section_change";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
@@ -145,7 +146,7 @@ let routes = [
     component: <ClassTiming />,
   },
   {
-    name: " create Class Timing",
+    name: "Create Class Timing",
     key: "createclasstiming",
     route: "attendance/create_class_timing",
     component: <ClassTimingCreate />,
