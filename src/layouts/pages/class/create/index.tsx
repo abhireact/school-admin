@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import FormField from "layouts/pages/account/components/FormField";
-
+const cookies_academic_year = Cookies.get("academic_year");
 const Create = (props: any) => {
   const token = Cookies.get("token");
   const [academicdata, setAcademicdata] = useState([]);
@@ -49,38 +49,8 @@ const Create = (props: any) => {
       }),
   });
 
-  // useEffect(() => {
-  //   const translatePage = async () => {
-  //     try {
-  //       const pageContent = document.body.innerText; // Get the entire page content as text
-  //       // const translation = await translate(pageContent, { to: targetLanguage });
-  //       setTranslatedText(translation.text);
-  //     } catch (error) {
-  //       console.error("Error translating page:", error);
-  //     }
-  //   };
-
-  //   translatePage();
-  // }, [targetLanguage]);
-
   const [winginfo, setWinginfo] = useState([]);
   useEffect(() => {
-    // axios
-    //   .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year", {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setAcademicData(response.data);
-
-    //     console.log(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching data:", error);
-    //   });
-
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
         headers: {
@@ -115,7 +85,7 @@ const Create = (props: any) => {
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      academic_year: "",
+      academic_year: cookies_academic_year,
       wing_name: "",
       class_name: "",
       class_code: "",
@@ -124,6 +94,7 @@ const Create = (props: any) => {
       start_date: "",
       end_date: "",
     },
+    enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: (values, action) => {
       axios
@@ -177,6 +148,7 @@ const Create = (props: any) => {
             <Grid item sm={4} xs={4}>
               <Autocomplete
                 disableClearable
+                //disabled
                 sx={{ width: "80%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {

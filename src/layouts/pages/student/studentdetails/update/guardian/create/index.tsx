@@ -31,7 +31,21 @@ import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import DataTable from "examples/Tables/DataTable";
 import Dialog from "@mui/material/Dialog";
 const token = Cookies.get("token");
-
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  date_of_birth: Yup.date().test("year-range", "Incorrect format", function (value: any) {
+    if (value) {
+      const year = value.getFullYear();
+      return year >= 2000 && year <= 3000;
+    }
+    return true;
+  }),
+  mobile_number: Yup.string()
+    .matches(/^[0-9]{10}$/, "Incorrect Format *")
+    .required("Required *"),
+  first_name: Yup.string(),
+  relation: Yup.string(),
+});
 const Create = (props: any) => {
   const { username, guardianData, setCreateOpen, fetchGuardian } = props;
 
@@ -54,7 +68,7 @@ const Create = (props: any) => {
       subscription: false,
     },
 
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     enableReinitialize: true,
     onSubmit: (values, action) => {
       const guardianDetails = {
@@ -107,16 +121,15 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card id="guardian-info">
-        <MDBox p={4}>
-          <Grid container>
+        <MDBox p={4} pb={1}>
+          <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
               <MDTypography variant="h4">Add Guardian </MDTypography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                mb={2}
                 required
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`first_name`}
                 label={
@@ -131,8 +144,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"middle_name"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`middle_name`}
                 label={
@@ -147,8 +159,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"last_name"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`last_name`}
                 label={
@@ -163,11 +174,10 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"relation"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                required
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`relation`}
-                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Relation
@@ -180,8 +190,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"email_id"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`email_id`}
                 label={
@@ -196,8 +205,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"date_of_birth"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 type="date"
                 InputLabelProps={{ shrink: true }}
                 variant="standard"
@@ -214,8 +222,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"qualification"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`qualification`}
                 label={
@@ -230,8 +237,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"occupation"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`occupation`}
                 label={
@@ -246,8 +252,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"designation"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`designation`}
                 label={
@@ -262,8 +267,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"income"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`income`}
                 label={
@@ -278,8 +282,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"education"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`education`}
                 label={
@@ -294,8 +297,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"aadhar_number"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`aadhar_number`}
                 label={
@@ -310,8 +312,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4} key={"mobile_number"}>
               <MDInput
-                mb={2}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
                 name={`mobile_number`}
                 required
@@ -325,7 +326,7 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} pt={2} sm={4} key={"notification"}>
+            <Grid item xs={12} sm={4} mt={2} key={"notification"}>
               <FormControl>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
@@ -349,7 +350,7 @@ const Create = (props: any) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={12} pt={2} sm={4} key={"subscription"}>
+            <Grid item xs={12} sm={4} mt={2} key={"subscription"}>
               <FormControl>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
