@@ -52,6 +52,8 @@ import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 import CreateStudentID from "layouts/pages/student/studentID_card/create";
+import TimeTable from "layouts/pages/Attendance/time_table";
+import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/school_admin_sms_configuration";
 
 const routes = [
   {
@@ -315,6 +317,12 @@ const routes = [
         route: "attendance/class_timing",
         component: <ClassTiming />,
       },
+      {
+        name: "Time Table",
+        key: "time_table",
+        route: "attendance/time_table",
+        component: <TimeTable />,
+      },
     ],
   },
   {
@@ -409,7 +417,7 @@ const routes = [
             name: "SMS Configuration",
             key: "smsconfiguration",
             route: "notification/smsconfiguration",
-            component: <SmsConfiguration />,
+            component: <SMSConfigurationCreateSchoolAdmin />,
           },
         ],
       },
@@ -420,7 +428,7 @@ const routes = [
         component: <SendNotification />,
       },
       {
-        name: "Message Template",
+        name: "Template Setting",
         key: "message_template",
         route: "pages/notification/message_template",
         component: <MessageTemplate />,

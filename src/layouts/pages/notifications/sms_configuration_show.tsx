@@ -39,6 +39,7 @@ export default function SmsConfiguration() {
         }
       );
       if (response.status === 200) {
+        console.log(response.data, "configuration data");
         setTemplateData(response.data);
       }
     } catch (error) {
@@ -61,7 +62,7 @@ export default function SmsConfiguration() {
     console.log(data, "delete data");
     const delete_value = {
       url: data.url,
-      sender_id_value: data.sender_id_value,
+      vendor: data.vendor_name,
     };
     axios
       .delete("http://10.0.20.200:8000/mg_sms_configuration/school_incharge", {
@@ -86,15 +87,17 @@ export default function SmsConfiguration() {
   };
   const feeCategory = {
     columns: [
+      { Header: "VENDOR", accessor: "vendor" },
       { Header: "URL", accessor: "url" },
-      { Header: "MOBILE NUMBER ATTRIBUTE", accessor: "mobile_no_attribute" },
-      { Header: "MSG", accessor: "msg" },
+      { Header: "SENDER ID", accessor: "sender_id" },
+      { Header: "School Subdomain", accessor: "sub_domain" },
       { Header: "ACTIONS", accessor: "action" },
     ],
     rows: templateData.map((data, index) => ({
+      vendor: data.vendor_name,
       url: data.url,
-      mobile_no_attribute: data.mobile_number_attribute,
-      msg: data.msg_attribute,
+      sender_id: data.sender_id,
+      sub_domain: data.sub_domain,
       action: (
         <Grid container spacing={1}>
           <Grid item>
@@ -138,19 +141,14 @@ export default function SmsConfiguration() {
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link to="/notification/sms_configuration">
+            <Link to="/notification/sms_configuration_create">
               <MDButton variant="outlined" color="info">
                 + Create Configuration
               </MDButton>
             </Link>
           </Grid>
         </Grid>
-        <DataTable
-          table={feeCategory}
-          isSorted={false}
-          entriesPerPage={false}
-          showTotalEntries={false}
-        />
+        <DataTable table={feeCategory} isSorted={false} showTotalEntries={false} canSearch={true} />
       </Card>
     </DashboardLayout>
   );

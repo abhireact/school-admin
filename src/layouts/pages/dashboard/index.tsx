@@ -57,7 +57,7 @@ const MyDashboard = () => {
           <StudentIDCard3 />{" "}
         </Grid> */}
       </Grid>
-      <MyDataTableComponent />{" "}
+      {/* <MyDataTableComponent />{" "} */}
     </DashboardLayout>
   );
 };

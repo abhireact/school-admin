@@ -51,6 +51,7 @@ export default function SmsSetting() {
         },
       });
       if (response.status === 200) {
+        console.log(response.data, "priority for all school");
         setPriorityData(response.data);
       }
     } catch (error) {
@@ -108,8 +109,11 @@ export default function SmsSetting() {
     setPermissionopen(true);
   };
   const handleEditSuccess = () => {
-    //   fetchData();
+    fetchEnableData();
+    fetchPriorityData();
+    fetchLimitData();
     handleManageLimitClose();
+    handlePriorityClose();
   };
   const sms_data = {
     columns: [
@@ -162,13 +166,7 @@ export default function SmsSetting() {
         />
       </Dialog>
       <Card>
-        <DataTable
-          table={sms_data}
-          isSorted={false}
-          entriesPerPage={false}
-          showTotalEntries={false}
-          canSearch
-        />
+        <DataTable table={sms_data} isSorted={false} showTotalEntries={false} canSearch />
       </Card>
     </DashboardLayout>
   );
