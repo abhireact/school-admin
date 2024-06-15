@@ -16,8 +16,6 @@ import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create
 import CreateTemplate from "layouts/pages/notifications/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
-import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
-import StudentSectionChange from "layouts/pages/student/student_section_change";
 
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
