@@ -53,7 +53,9 @@ import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
 import CreateStudentID from "layouts/pages/student/studentID_card/create";
-import AdmissionForm from "layouts/pages/attendance";
+import AdmissionForm from "layouts/pages/admission/new_admimssion";
+import StudentAdmission from "layouts/pages/admission";
+import FormSetting from "layouts/pages/admission/form_setting";
 
 const routes = [
   {
@@ -623,7 +625,7 @@ const routes = [
   {
     type: "collapse",
     name: "Admission",
-    key: "admission",
+    key: "admissionfolder",
     icon: (
       <Icon fontSize="medium">
         <BookOnlineIcon />
@@ -631,10 +633,16 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Admission Form",
-        key: "admissionform",
-        route: "pages/admission/admissionform",
-        component: <AdmissionForm />,
+        name: "Admission",
+        key: "admissionpage",
+        route: "pages/admission/studentAdmission",
+        component: <StudentAdmission />,
+      },
+      {
+        name: "Form Setting",
+        key: "formsetting",
+        route: "pages/admission/formsetting",
+        component: <FormSetting />,
       },
     ],
   },

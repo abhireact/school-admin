@@ -23,6 +23,9 @@ import Subject from "layouts/pages/subject/subjectdetails";
 import SectionSubject from "layouts/pages/subject/section_subject";
 import EmployeeSubject from "layouts/pages/subject/employee_subject";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import Fee from "layouts/pages/admission/fee_admission";
+import AdmissionForm from "layouts/pages/admission/new_admimssion";
+import AddDate from "layouts/pages/admission/form_setting/add_date";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -113,6 +116,7 @@ let routes = [
     route: "/fee/create_fee_category",
     component: <CreateFeeCategory />,
   },
+
   {
     name: "create fee amount perticular",
     key: "createfeeamountperticular",
@@ -160,6 +164,24 @@ let routes = [
     key: "sms_configuration",
     route: "notification/sms_configuration",
     component: <SMSConfiguration />,
+  },
+  {
+    name: "Admission Fee",
+    key: "admission_fee",
+    route: "/pages/admission/fee",
+    component: <Fee />,
+  },
+  {
+    name: "New Admission",
+    key: "new_admission",
+    route: "/pages/admission/AdmissionForm",
+    component: <AdmissionForm />,
+  },
+  {
+    name: "Add Date",
+    key: "add_date",
+    route: "/pages/admission/add_date",
+    component: <AddDate />,
   },
 ];
 

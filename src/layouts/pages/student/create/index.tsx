@@ -145,12 +145,22 @@ const Create = (props: any) => {
         console.error("Error fetching Caste Category data:", error);
       });
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_caste_category`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        `${process.env.REACT_APP_BASE_URL}/mg_cconst file = event.target.files?.[0];
+    if (!file) return;
+    // Check if the file is in .xlsx format
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension !== "xlsx") {
+      message.error("Please upload Excel file in .xlsx format.");
+      return;
+    }aste_category`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         setCastecategoryData(response.data);
 
