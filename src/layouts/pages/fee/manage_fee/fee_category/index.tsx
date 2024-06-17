@@ -18,11 +18,14 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import CreateFeeCategory from "./create";
 
 const token = Cookies.get("token");
-export default function FeeConcession() {
+export default function FeeConcession(props: any) {
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
+  const [createopen, setCreateOpen] = useState(false);
+
   const [feecategoryData, setFeecategoryData] = useState([]);
   useEffect(() => {
     fetchData();
@@ -56,11 +59,18 @@ export default function FeeConcession() {
     fetchData();
     handleClickCloseEdit();
   };
+  const handleCreateSuccess = () => {
+    fetchData();
+    setCreateOpen(false);
+  };
+
   const confirm = async (data: any) => {
     console.log(data, "confirm data");
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_particular`, {
-        data,
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_category`, {
+        data: {
+          name: data.name,
+        },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -68,11 +78,11 @@ export default function FeeConcession() {
       });
       if (response.status === 200) {
         message.success("Deleted Successfully");
+        fetchData();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
-      const myError = error as Error;
-      message.error(error.response.data.detail);
+      message.error(error.response?.data?.detail || "An error occurred");
     }
   };
 
@@ -83,14 +93,30 @@ export default function FeeConcession() {
   const feeCategory = {
     columns: [
       { Header: "NAME", accessor: "name" },
+      { Header: "Particular", accessor: "particular_types" },
       { Header: "DESCRIPTION", accessor: "description" },
+
       { Header: "ACTIONS", accessor: "action" },
     ],
     rows: feecategoryData.map((data, index) => ({
       name: data.name,
       description: data.description,
+      particular_types: data.particular_types.map(
+        (
+          item: {
+            particular_name:
+              | string
+              | number
+              | boolean
+              | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+              | React.ReactFragment
+              | React.ReactPortal;
+          },
+          itemIndex: React.Key
+        ) => <li key={itemIndex}>{item.particular_name}</li>
+      ),
       action: (
-        <Grid container spacing={1}>
+        <Grid container>
           <Grid item>
             <IconButton
               onClick={() => {
@@ -98,7 +124,7 @@ export default function FeeConcession() {
               }}
             >
               <Tooltip title="Edit" placement="top">
-                <EditIcon />
+                <EditIcon fontSize="small" color="secondary" />
               </Tooltip>
             </IconButton>
           </Grid>
@@ -114,7 +140,7 @@ export default function FeeConcession() {
                 cancelText="No"
               >
                 <Tooltip title="Delete" placement="top">
-                  <DeleteIcon />
+                  <DeleteIcon fontSize="small" color="secondary" />
                 </Tooltip>
               </Popconfirm>
             </IconButton>
@@ -140,6 +166,9 @@ export default function FeeConcession() {
         <Dialog open={editopen} onClose={handleClickCloseEdit}>
           <EditFeeCategory data={editdata} onSuccess={handleEditSuccess} />
         </Dialog>
+        <Dialog open={createopen} onClose={() => setCreateOpen(false)}>
+          <CreateFeeCategory onSuccess={handleCreateSuccess} />
+        </Dialog>
         <Grid container p={3}>
           <Grid item xs={12} sm={6} mt={2}>
             <MDTypography variant="h4" fontWeight="bold" color="secondary">
@@ -147,11 +176,11 @@ export default function FeeConcession() {
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link to="/fee/create_fee_category">
-              <MDButton variant="outlined" color="info">
-                + Create Fee Category
-              </MDButton>
-            </Link>
+            {/* <Link to="/fee/create_fee_category"> */}
+            <MDButton variant="outlined" color="info" onClick={() => setCreateOpen(true)}>
+              + Create Fee Category
+            </MDButton>
+            {/* </Link> */}
           </Grid>
         </Grid>
         <DataTable

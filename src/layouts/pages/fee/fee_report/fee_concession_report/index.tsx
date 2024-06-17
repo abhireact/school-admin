@@ -18,6 +18,8 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 const token = Cookies.get("token");
 import { useSelector } from "react-redux";
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 interface FeeConcessionInterface {
   columns: { Header: string; accessor: string }[];
   rows: {
@@ -31,7 +33,7 @@ interface FeeConcessionInterface {
   }[];
 }
 const initialValues = {
-  academic_year: "",
+  academic_year: Cacademic_year,
   class_name: "",
   section_name: "",
   late_fine_discount: false,
@@ -125,6 +127,8 @@ export default function FeeConcessionReport() {
                 <Grid container spacing={3} pt={2}>
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
+                      disabled
+                      defaultValue={Cacademic_year}
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "academic_year", value } });
                       }}
@@ -136,9 +140,10 @@ export default function FeeConcessionReport() {
                       renderInput={(params) => (
                         <MDInput
                           required
+                          disabled
                           name="academic_year"
                           onChange={handleChange}
-                          value={values.academic_year}
+                          value={values.academic_year || Cacademic_year}
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
                               Academic Year

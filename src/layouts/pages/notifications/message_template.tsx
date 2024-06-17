@@ -12,10 +12,10 @@ import { Table } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
 import DataTable from "examples/Tables/DataTable";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
+import { Popconfirm, message } from "antd";
 import EditMessageTemplate from "./template_form";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
 const token = Cookies.get("token");
 export default function MessageTemplate() {
   const [editdata, setEditdata] = useState({});
@@ -51,13 +51,44 @@ export default function MessageTemplate() {
     fetchData();
     handleClickCloseEdit();
   };
+  const confirm = async (data: any) => {
+    console.log(data, "delete data");
+    const delete_value = {
+      module_name: data.module_name,
+      sms_activity: data.sms_activity,
+    };
+    axios
+      .delete("http://10.0.20.200:8000/mg_templates/school_incharge", {
+        data: delete_value,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        message.success(response.data.message);
+        fetchData();
+      })
+      .catch((error) => {
+        message.error(error.response.data.detail);
+      });
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   const feeCategory = {
     columns: [
-      { Header: "MODULE NAME", accessor: "modulename" },
-      { Header: "ACTIVITY", accessor: "activity" },
-      { Header: "VENDOR NAME", accessor: "vendername" },
-      { Header: "MESSAGE", accessor: "message", Width: "40%" },
-      { Header: "ACTIONS", accessor: "action" },
+      { Header: "MODULE NAME", accessor: "modulename", Width: "15%" },
+      { Header: "ACTIVITY", accessor: "activity", Width: "15%" },
+      { Header: "VENDOR NAME", accessor: "vendername", Width: "15%" },
+      {
+        Header: "MESSAGE",
+        accessor: "message",
+        Width: "40%",
+      },
+      { Header: "ACTIONS", accessor: "action", Width: "15%" },
     ],
     rows: templateData.map((data, index) => ({
       modulename: data.module_name,
@@ -74,15 +105,24 @@ export default function MessageTemplate() {
             </Tooltip>
           </Grid>
           <Grid item>
-            <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
-            </Tooltip>
+            <Popconfirm
+              title="Delete"
+              description="Are you sure to Delete it ?"
+              placement="topLeft"
+              onConfirm={() => confirm(data)} // Pass index to confirm function
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tooltip title="Delete" placement="top">
+                <Icon fontSize="small">delete</Icon>
+              </Tooltip>
+            </Popconfirm>
           </Grid>
         </Grid>
       ),
     })),
   };
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -104,12 +144,14 @@ export default function MessageTemplate() {
             </Link>
           </Grid>
         </Grid>
-        <DataTable
-          table={feeCategory}
-          isSorted={false}
-          entriesPerPage={false}
-          showTotalEntries={false}
-        />
+        <Grid item xs={12} sm={12} mt={2}>
+          <DataTable
+            table={feeCategory}
+            isSorted={false}
+            entriesPerPage={false}
+            showTotalEntries={false}
+          />
+        </Grid>
       </Card>
     </DashboardLayout>
   );

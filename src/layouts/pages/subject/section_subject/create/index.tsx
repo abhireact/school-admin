@@ -100,129 +100,135 @@ const Create = (props: any) => {
               {data.length < 1 ? (
                 "NO DATA AVAILABLE"
               ) : (
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                  <thead>
-                    <tr>
-                      <td
-                        style={{
-                          fontSize: "18px",
-                          textAlign: "left",
-                        }}
-                        rowSpan={2}
-                      >
-                        <b> SUBJECT</b>
-                      </td>
-                      <td
-                        style={{
-                          fontSize: "18px",
-                          textAlign: "left",
-                        }}
-                        rowSpan={2}
-                      >
-                        <b>TEACHER</b>
-                      </td>
-                      <td
-                        style={{
-                          fontSize: "18px",
-                          textAlign: "center",
-                        }}
-                        rowSpan={2}
-                      >
-                        <b>SELECT</b>
-                        <MDButton
-                          color="info"
-                          size="small"
-                          variant="text"
-                          onClick={() => handleSelectAll()}
+                <div style={{ maxHeight: "400px", overflowY: "auto", position: "relative" }}>
+                  <table
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                  >
+                    <thead
+                      style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}
+                    >
+                      <tr>
+                        <td
+                          style={{
+                            fontSize: "18px",
+                            textAlign: "left",
+                          }}
+                          rowSpan={2}
                         >
-                          All
-                        </MDButton>
-                        <MDButton
-                          color="info"
-                          size="small"
-                          variant="text"
-                          onClick={() => handleSelectNone()}
+                          SUBJECT
+                        </td>
+                        <td
+                          style={{
+                            fontSize: "18px",
+                            textAlign: "left",
+                          }}
+                          rowSpan={2}
                         >
-                          None
-                        </MDButton>
-                      </td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data?.length > 0
-                      ? data?.map((item: any, index: any) => (
-                          <tr key={index + item.subject_name}>
-                            <td style={{ textAlign: "left" }}>
-                              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                {item.subject_name}
-                              </MDTypography>
-                            </td>
-                            <td style={{ textAlign: "left" }}>
-                              <Autocomplete
-                                disableClearable
-                                sx={{ width: "100%" }}
-                                value={
-                                  item.employee_list.find((info: any) => info.is_selected)?.name ||
-                                  "Select Options"
-                                }
-                                onChange={(event, value) => {
-                                  if (value === "No Options") {
-                                    setData((prev) =>
-                                      prev.map((prevItem, idx) =>
-                                        idx === index
-                                          ? {
-                                              ...prevItem,
-
-                                              employee_list: prevItem.employee_list.map(
-                                                (emp: any) => ({ ...emp, is_selected: false })
-                                              ),
-                                            }
-                                          : prevItem
-                                      )
-                                    );
-                                  } else {
-                                    setData((prev) =>
-                                      prev.map((prevItem, idx) =>
-                                        idx === index
-                                          ? {
-                                              ...prevItem,
-
-                                              employee_list: prevItem.employee_list.map(
-                                                (emp: any) =>
-                                                  emp.name === value
-                                                    ? { ...emp, is_selected: true }
-                                                    : { ...emp, is_selected: false }
-                                              ),
-                                            }
-                                          : prevItem
-                                      )
-                                    );
+                          TEACHER
+                        </td>
+                        <td
+                          style={{
+                            fontSize: "18px",
+                            textAlign: "center",
+                          }}
+                          rowSpan={2}
+                        >
+                          SELECT
+                          <MDButton
+                            color="info"
+                            size="small"
+                            variant="text"
+                            onClick={() => handleSelectAll()}
+                          >
+                            All
+                          </MDButton>
+                          <MDButton
+                            color="info"
+                            size="small"
+                            variant="text"
+                            onClick={() => handleSelectNone()}
+                          >
+                            None
+                          </MDButton>
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data?.length > 0
+                        ? data?.map((item: any, index: any) => (
+                            <tr key={index + item.subject_name}>
+                              <td style={{ textAlign: "left" }}>
+                                <MDTypography variant="button" fontWeight="bold">
+                                  {item.subject_name}
+                                </MDTypography>
+                              </td>
+                              <td style={{ textAlign: "left" }}>
+                                <Autocomplete
+                                  disableClearable
+                                  sx={{ width: "100%" }}
+                                  value={
+                                    item.employee_list.find((info: any) => info.is_selected)
+                                      ?.name || "Select Options"
                                   }
-                                }}
-                                options={[
-                                  ...item.employee_list.map((acd: any) => acd.name),
-                                  "No Options",
-                                ]}
-                                renderInput={(params: any) => (
-                                  <MDInput
-                                    InputLabelProps={{ shrink: true }}
-                                    {...params}
-                                    variant="standard"
-                                  />
-                                )}
-                              />
-                            </td>
-                            <td style={{ textAlign: "center" }}>
-                              <Checkbox
-                                checked={item.is_selected}
-                                onChange={() => handleCheckboxChange(index)}
-                              />
-                            </td>
-                          </tr>
-                        ))
-                      : ""}
-                  </tbody>
-                </table>
+                                  onChange={(event, value) => {
+                                    if (value === "No Options") {
+                                      setData((prev) =>
+                                        prev.map((prevItem, idx) =>
+                                          idx === index
+                                            ? {
+                                                ...prevItem,
+
+                                                employee_list: prevItem.employee_list.map(
+                                                  (emp: any) => ({ ...emp, is_selected: false })
+                                                ),
+                                              }
+                                            : prevItem
+                                        )
+                                      );
+                                    } else {
+                                      setData((prev) =>
+                                        prev.map((prevItem, idx) =>
+                                          idx === index
+                                            ? {
+                                                ...prevItem,
+
+                                                employee_list: prevItem.employee_list.map(
+                                                  (emp: any) =>
+                                                    emp.name === value
+                                                      ? { ...emp, is_selected: true }
+                                                      : { ...emp, is_selected: false }
+                                                ),
+                                              }
+                                            : prevItem
+                                        )
+                                      );
+                                    }
+                                  }}
+                                  options={[
+                                    ...item.employee_list.map((acd: any) => acd.name),
+                                    "No Options",
+                                  ]}
+                                  renderInput={(params: any) => (
+                                    <MDInput
+                                      InputLabelProps={{ shrink: true }}
+                                      {...params}
+                                      variant="standard"
+                                    />
+                                  )}
+                                />
+                              </td>
+                              <td style={{ textAlign: "center" }}>
+                                <Checkbox
+                                  checked={item.is_selected}
+                                  onChange={() => handleCheckboxChange(index)}
+                                />
+                              </td>
+                            </tr>
+                          ))
+                        : ""}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </Grid>
           </Grid>

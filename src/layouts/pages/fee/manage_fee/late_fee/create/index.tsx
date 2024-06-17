@@ -15,8 +15,16 @@ import AddIcon from "@mui/icons-material/Add";
 import Icon from "@mui/material/Icon";
 import Tooltip from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import {
+  FormControlLabel,
+  FormControl,
+  Radio,
+  RadioGroup,
+  Checkbox,
+  IconButton,
+} from "@mui/material";
 import * as Yup from "yup";
+import React from "react";
 const validationSchema = Yup.object().shape({
   fine_name: Yup.string().required("Required *"),
   account_name: Yup.string(),
@@ -55,7 +63,8 @@ const Create = (props: any) => {
         account_name: "",
         description: "",
         late_fee_calculation_type: "",
-        due_date: [{ day_after_due_date: "", amount: "" }],
+        // due_date: [{ day_after_due_date: "", amount: "" }],
+        due_date: [{ particular_name: "", amount: "" }],
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -77,14 +86,24 @@ const Create = (props: any) => {
           });
       },
     });
-  const handleAddField = () => {
-    setFieldValue("due_date", [...values.due_date, { day_after_due_date: "", amount: "" }]);
+  // const handleAddField = () => {
+  //   setFieldValue("due_date", [...values.due_date, { day_after_due_date: "", amount: "" }]);
+  // };
+
+  // const handleRemoveField = (index: number) => {
+  //   const newDues = [...values.due_date];
+  //   newDues.splice(index, 1);
+  //   setFieldValue("due_date", newDues);
+  // };
+  // Function to add a new particular field
+  const addParticular = () => {
+    setFieldValue("due_date", [...values.due_date, { particular_name: "", amount: "" }]);
   };
 
-  const handleRemoveField = (index: number) => {
-    const newDues = [...values.due_date];
-    newDues.splice(index, 1);
-    setFieldValue("due_date", newDues);
+  const removeParticular = (index: number) => {
+    const newparticular = [...values.due_date];
+    newparticular.splice(index, 1);
+    setFieldValue("due_date", newparticular);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -92,9 +111,16 @@ const Create = (props: any) => {
         {" "}
         <MDBox p={4}>
           <Grid container>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Create Late Fee
+              </MDTypography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="fine_name"
                 label={
@@ -113,7 +139,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
                 disableClearable
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 value={values.account_name}
                 onChange={(event, value) => {
                   handleChange({
@@ -145,7 +171,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 rows={2}
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="description"
                 label={
@@ -161,9 +187,9 @@ const Create = (props: any) => {
                 success={values.description.length && !errors.description}
               />
             </Grid>
-            <Grid xs={12} sm={4} py={1}>
+            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
-                sx={{ width: "70%" }}
+                sx={{ width: "100%" }}
                 onChange={(event, value) => {
                   handleChange({
                     target: { name: "late_fee_calculation_type", value },
@@ -198,7 +224,101 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            {cloneFields && (
+            {values.late_fee_calculation_type &&
+              values.due_date.map((particular_name, index) => (
+                <Grid item container sm={12} key={index} spacing={3}>
+                  <Grid item xs={12} sm={4} py={1}>
+                    <MDInput
+                      placeholder="Enter Particular Name"
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name={`due_date.${index}.particular_name`}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Particular Name
+                        </MDTypography>
+                      }
+                      required
+                      value={particular_name.particular_name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      // error={
+                      //   touched.due_date?.[index]?.particular_name &&
+                      //   Boolean(
+                      //     (errors.due_date as FormikErrors<Particular>[])?.[index]
+                      //       ?.particular_name
+                      //   )
+                      // }
+                      // success={
+                      //   particular_name.particular_name.length > 0 &&
+                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      // }
+                      // helperText={
+                      //   touched.due_date?.[index]?.particular_name &&
+                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      // }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} py={1}>
+                    <MDInput
+                      placeholder="Enter Amount"
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name={`due_date.${index}.particular_name`}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Particular Name
+                        </MDTypography>
+                      }
+                      required
+                      value={particular_name.particular_name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      // error={
+                      //   touched.due_date?.[index]?.particular_name &&
+                      //   Boolean(
+                      //     (errors.due_date as FormikErrors<Particular>[])?.[index]
+                      //       ?.particular_name
+                      //   )
+                      // }
+                      // success={
+                      //   particular_name.particular_name.length > 0 &&
+                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      // }
+                      // helperText={
+                      //   touched.due_date?.[index]?.particular_name &&
+                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      // }
+                    />
+                  </Grid>
+
+                  <Grid
+                    item
+                    xs={12}
+                    sm={4}
+                    py={1}
+                    mt={2}
+                    // sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    {index == values.due_date.length - 1 && (
+                      <IconButton
+                        onClick={() => addParticular()}
+                        disabled={values.late_fee_calculation_type !== "By Days"}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    )}
+
+                    <IconButton
+                      onClick={() => removeParticular(index)}
+                      disabled={values.due_date.length === 1}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
+            {/* {cloneFields && (
               <Grid xs={12} sm={8} py={1}>
                 <MDButton
                   onClick={() => {
@@ -218,7 +338,7 @@ const Create = (props: any) => {
                   <Grid item xs={12} sm={4} py={1} key={index + "day_after_due_date"}>
                     <MDInput
                       required
-                      sx={{ width: "70%" }}
+                      sx={{ width: "100%" }}
                       variant="standard"
                       name={`due_date[${index}].day_after_due_date`}
                       label={
@@ -234,7 +354,7 @@ const Create = (props: any) => {
                   <Grid item xs={12} sm={4} py={1} key={index + "amount"}>
                     <MDInput
                       required
-                      sx={{ width: "70%" }}
+                      sx={{ width: "100%" }}
                       variant="standard"
                       name={`due_date[${index}].amount`}
                       type="number"
@@ -261,7 +381,7 @@ const Create = (props: any) => {
                     ) : null}
                   </Grid>
                 </>
-              ))}
+              ))} */}
 
             <Grid
               item

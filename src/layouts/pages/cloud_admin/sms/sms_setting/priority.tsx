@@ -139,6 +139,7 @@ export default function Priority(props: any) {
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                       <Autocomplete
+                        disableClearable
                         value={particularFields[index].sms_configeration_name}
                         onChange={(e, selectedValue) => {
                           // Use the second parameter to get the selected value
@@ -149,7 +150,11 @@ export default function Priority(props: any) {
                           ).vendor_name;
                           setParticularFields(updatedFields);
                         }}
-                        options={configuration.map((item) => item.url)}
+                        options={configuration
+                          .filter(
+                            (item) => item.sub_domain === null || item.sub_domain === props.sub_name
+                          )
+                          .map((item) => item.url)}
                         renderInput={(params) => (
                           <MDInput
                             required
@@ -222,13 +227,14 @@ export default function Priority(props: any) {
                   </Grid>
                 </Grid>
                 {index != 0 ? (
-                  <Grid item xs={12} sm={2}>
+                  <Grid item xs={12} sm={1}>
                     <Icon color="secondary" onClick={() => removeParticularField(index)}>
                       delete
                     </Icon>
                   </Grid>
-                ) : (
-                  <Grid item xs={12} sm={2}>
+                ) : null}
+                {index == particularFields.length - 1 ? (
+                  <Grid item xs={12} sm={1}>
                     <MDButton
                       color="info"
                       variant="text"
@@ -239,7 +245,7 @@ export default function Priority(props: any) {
                       {"ADD +"}
                     </MDButton>
                   </Grid>
-                )}
+                ) : null}
                 <Divider />
               </Grid>
             </>

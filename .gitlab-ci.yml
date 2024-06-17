@@ -1,7 +1,7 @@
 stages:
   - build
-  - deploy:test
   - deploy
+  - deploy:PROD
 
 build:
   stage: build
@@ -10,17 +10,11 @@ build:
     - npx prettier --write .
     - npm install ajv --save-dev
     - npm run build
+  only:
+    - main  
   artifacts:
     paths:
       - ./build
-
-deploy:test:
-  stage: deploy:test
-  script:
-    - cp -rf ./build/* /usr/share/nginx/prod_school
-  when: manual
-  only:
-    - main
 
 deploy:
   stage: deploy
@@ -28,3 +22,12 @@ deploy:
     - cp -rf ./build/* /usr/share/nginx/school/
   only:
     - main
+
+deploy:PROD:
+  stage: deploy:PROD
+  script:
+    - cp -rf ./build/* /usr/share/nginx/prod_school
+  when: manual
+  only:
+    - main
+

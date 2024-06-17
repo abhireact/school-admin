@@ -12,7 +12,7 @@
 // import { createschema } from "./createschema";
 // export default function CreateFeeCategory() {
 //   const initialValues = {
-//     fee_category_name: "",
+//     name: "",
 //     description: "",
 //     particulars: [] as string[],
 //   };
@@ -40,14 +40,14 @@
 //               <Grid item xs={12} sm={6}>
 //                 <FormField
 //                   label="Name "
-//                   name="fee_category_name"
-//                   value={values.fee_category_name}
+//                   name="name"
+//                   value={values.name}
 //                   placeholder="Enter Fee Category Name"
 //                   variant="standard"
 //                   onChange={handleChange}
 //                   onBlur={handleBlur}
-//                   error={touched.fee_category_name && Boolean(errors.fee_category_name)}
-//                   success={values.fee_category_name.length && !errors.fee_category_name}
+//                   error={touched.name && Boolean(errors.name)}
+//                   success={values.name.length && !errors.name}
 //                 />
 //               </Grid>
 //               <Grid item xs={12} sm={6}>
@@ -83,9 +83,9 @@
 import React, { useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import FormField from "layouts/pages/account/components/FormField";
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import { createschema } from "./createschema";
-import { Grid, Card, Link } from "@mui/material";
+import { Grid, Card, Link, IconButton } from "@mui/material";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import Icon from "@mui/material/Icon";
@@ -93,16 +93,29 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import { Dashboard } from "@mui/icons-material";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import MDInput from "components/MDInput";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 const token = Cookies.get("token");
-export default function CreateFeeCategory() {
+interface Particular {
+  particular_name: string;
+  start_date: Date;
+  end_date: Date;
+}
+
+interface FormValues {
+  particular_types: Particular[];
+}
+export default function CreateFeeCategory(props: any) {
   const initialValues = {
-    fee_category_name: "",
+    name: "",
     description: "",
-    first_perticular: "",
-    particulars: [] as string[], // Array to store particulars
+
+    particular_types: [{ particular_name: "" }],
   };
 
-  const [particularFields, setParticularFields] = useState([]);
   const data = useSelector((state: any) => state);
   console.log(data.wings, "lllllllllllllllllllllll");
 
@@ -112,105 +125,144 @@ export default function CreateFeeCategory() {
       validationSchema: createschema,
       enableReinitialize: true,
       onSubmit: async (values, action) => {
-        const submitvalue = {
-          name: values.fee_category_name,
-          description: values.description,
-          particular_types: particularFields.map((data: string, index: number) => ({
-            particular_name: data,
-          })),
-        };
-        submitvalue.particular_types.unshift({ particular_name: values.first_perticular });
-
-        try {
-          const response = await axios.post("http://10.0.20.200:8000/fee_category", submitvalue, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          console.log(response);
-
-          if (response.status === 200) {
-            message.success(" Created Successfully");
-          }
-        } catch (error) {
-          console.error("Error saving data:", error);
-        }
+        action.resetForm();
       },
     });
+  const handleFormSubmit = async () => {
+    try {
+      const response = await axios.post("http://10.0.20.200:8000/fee_category", values, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      console.log(response);
+
+      if (response.status === 200) {
+        message.success(" Created Successfully");
+        props.onSuccess();
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+    }
+  };
   // Function to add a new particular field
-  const addParticularField = () => {
-    setParticularFields([...particularFields, ""]);
+  const addParticular = () => {
+    setFieldValue("particular_types", [...values.particular_types, { particular_name: "" }]);
   };
 
-  // Function to remove a particular field
-  const removeParticularField = (index: any) => {
-    const updatedFields = [...particularFields];
-    updatedFields.splice(index, 1);
-    setParticularFields(updatedFields);
+  const removeParticular = (index: number) => {
+    const newparticular = [...values.particular_types];
+    newparticular.splice(index, 1);
+    setFieldValue("particular_types", newparticular);
   };
-
   return (
-    <DashboardLayout>
-      <form onSubmit={handleSubmit}>
-        <Card>
-          <Grid xs={12} sm={12} p={2}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Create Fee Category
-                </MDTypography>
-              </Grid>
+    <form onSubmit={handleSubmit}>
+      <Card>
+        <Grid xs={12} sm={12} p={2}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Create Fee Category
+              </MDTypography>
             </Grid>
-            <Grid container spacing={3} p={2}>
-              <Grid item xs={12} sm={6}>
-                <FormField
-                  label="Name "
-                  name="fee_category_name"
-                  value={values.fee_category_name}
-                  placeholder="Enter Fee Category Name"
-                  variant="standard"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.fee_category_name && Boolean(errors.fee_category_name)}
-                  success={values.fee_category_name.length && !errors.fee_category_name}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormField
-                  label="Description"
-                  name="description"
-                  value={values.description}
-                  variant="standard"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={10} sm={6}>
-                <FormField
-                  label={`Particular`}
-                  name={`first_perticular`}
-                  value={values.first_perticular}
-                  variant="standard"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <MDButton
-                  color="info"
-                  variant="text"
-                  type="submit"
-                  style={{ fontSize: "16px" }}
-                  onClick={addParticularField}
-                  pl={2}
-                >
-                  {"ADD +"}
-                </MDButton>
-              </Grid>
+          </Grid>
+          <Grid container spacing={3} p={2}>
+            <Grid item xs={12} sm={6}>
+              <MDInput
+                sx={{ width: "100%" }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Fee Category
+                  </MDTypography>
+                }
+                required
+                name="name"
+                value={values.name}
+                placeholder="Enter Fee Category Name"
+                variant="standard"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.name && Boolean(errors.name)}
+                success={values.name.length && !errors.name}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MDInput
+                sx={{ width: "100%" }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Description
+                  </MDTypography>
+                }
+                name="description"
+                value={values.description}
+                variant="standard"
+                onChange={handleChange}
+              />
             </Grid>
 
-            {particularFields.map((particular, index) => (
+            {values.particular_types.map((particular_name, index) => (
+              <React.Fragment key={index}>
+                <Grid item xs={12} sm={6}>
+                  <MDInput
+                    placeholder="Enter Particular Name"
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    name={`particular_types.${index}.particular_name`}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Particular Name
+                      </MDTypography>
+                    }
+                    required
+                    value={particular_name.particular_name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    // error={
+                    //   touched.particular_types?.[index]?.particular_name &&
+                    //   Boolean(
+                    //     (errors.particular_types as FormikErrors<Particular>[])?.[index]
+                    //       ?.particular_name
+                    //   )
+                    // }
+                    // success={
+                    //   particular_name.particular_name.length > 0 &&
+                    //   !(errors.particular_types as FormikErrors<Particular>[])?.[index]?.particular_name
+                    // }
+                    // helperText={
+                    //   touched.particular_types?.[index]?.particular_name &&
+                    //   (errors.particular_types as FormikErrors<Particular>[])?.[index]?.particular_name
+                    // }
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  mt={2}
+                  // sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  {index == values.particular_types.length - 1 && (
+                    <IconButton onClick={() => addParticular()}>
+                      <AddIcon />
+                    </IconButton>
+                  )}
+
+                  <IconButton
+                    onClick={() => removeParticular(index)}
+                    disabled={values.particular_types.length === 1}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+              </React.Fragment>
+            ))}
+          </Grid>
+
+          {/* {particularFields.map((particular, index) => (
               <Grid container spacing={3} key={index} p={2}>
                 <Grid item xs={10} sm={6}>
                   <FormField
@@ -231,24 +283,25 @@ export default function CreateFeeCategory() {
                   </Icon>
                 </Grid>
               </Grid>
-            ))}
-            <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
-              <Grid item>
-                <Link href="fee_category" variant="body2">
-                  <MDButton color="dark" variant="contained">
-                    Back
-                  </MDButton>
-                </Link>
-              </Grid>
-              <Grid item ml={2}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Save
+            ))} */}
+
+          <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
+            <Grid item>
+              <Link href="fee_category" variant="body2">
+                <MDButton color="dark" variant="contained">
+                  Back
                 </MDButton>
-              </Grid>
+              </Link>
+            </Grid>
+            <Grid item ml={2}>
+              <MDButton color="info" variant="contained" type="submit" onClick={handleFormSubmit}>
+                Save
+              </MDButton>
             </Grid>
           </Grid>
-        </Card>
-      </form>
-    </DashboardLayout>
+        </Grid>
+      </Card>
+    </form>
+    // </DashboardLayout>
   );
 }

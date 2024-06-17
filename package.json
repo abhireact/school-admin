@@ -28,6 +28,8 @@
     "@types/jest": "29.5.1",
     "@types/node": "20.2.3",
     "@types/react": "18.2.6",
+    "@types/react-beautiful-dnd": "^13.1.8",
+    "@types/react-dnd": "^3.0.2",
     "@types/react-dom": "18.2.4",
     "antd": "^5.15.4",
     "chart.js": "3.0.1",
@@ -43,8 +45,13 @@
     "js-cookie": "^3.0.5",
     "jspdf-autotable": "^3.8.2",
     "react": ">=16.8.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-chartjs-2": "3.0.4",
+<<<<<<< HEAD
     "react-datepicker": "^6.9.0",
+=======
+    "react-dnd": "^16.0.1",
+>>>>>>> main
     "react-dom": ">=16.8.0",
     "react-draft-wysiwyg": "^1.15.0",
     "react-flatpickr": "3.10.13",

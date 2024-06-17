@@ -6,7 +6,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
+import { IconButton, Tooltip } from "@mui/material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
@@ -18,13 +18,14 @@ import { useTheme } from "@emotion/react";
 import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import Tooltip from "@mui/material/Tooltip";
+
 import * as XLSX from "xlsx";
 const token = Cookies.get("token");
+
 const Class = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
@@ -56,6 +57,44 @@ const Class = () => {
   }, [token]);
   //End
   const [data, setData] = useState([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const handleExport = () => {
+    setIsExporting(true);
+    function transformData(data: any) {
+      const result: any[] = [];
+
+      data.forEach((item: any) => {
+        const { academic_year, wing_name, class_name, class_code, section_data } = item;
+
+        section_data.forEach((section: any) => {
+          const { section_name, start_date, end_date } = section;
+          const formattedStartDate = start_date.split(" ")[0];
+          const formattedEndDate = end_date.split(" ")[0];
+
+          result.push({
+            academic_year,
+            wing_name,
+            class_name,
+            class_code,
+            section_name,
+            start_date: formattedStartDate,
+            end_date: formattedEndDate,
+          });
+        });
+      });
+
+      return result;
+    }
+    const modifiedData = transformData(data);
+    const worksheet = XLSX.utils.json_to_sheet(modifiedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    XLSX.writeFile(workbook, `${"class"}.xlsx`, { bookType: "xlsx", type: "binary" });
+
+    setIsExporting(false);
+    console.log("export excel data", modifiedData);
+  };
 
   //Update Dialog Box Start
   const [editData, setEditData] = useState(null);
@@ -170,15 +209,21 @@ const Class = () => {
 
           {rbacData ? (
             rbacData?.find((element: string) => element === "classdelete") ? (
-              <Tooltip title="Delete Class">
-                <IconButton
-                  onClick={() => {
-                    handleDelete(row.class_name);
-                  }}
+              <IconButton>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure to Delete it ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(row.class_name)} // Pass index to confirm function
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
                 >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
+                  <Tooltip title="Delete" placement="top">
+                    <DeleteIcon />
+                  </Tooltip>
+                </Popconfirm>
+              </IconButton>
             ) : (
               ""
             )
@@ -294,6 +339,16 @@ const Class = () => {
                     {rbacData ? (
                       rbacData?.find((element: string) => element === "classcreate") ? (
                         <>
+                          <MDButton
+                            variant="contained"
+                            disabled={data.length < 1}
+                            color="dark"
+                            type="submit"
+                            onClick={handleExport}
+                          >
+                            {isExporting ? "Exporting..." : "Export to Excel"}
+                          </MDButton>
+                          &nbsp; &nbsp; &nbsp;
                           <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
                             Upload&nbsp;
                             <FileUploadIcon />

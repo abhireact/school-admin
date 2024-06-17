@@ -13,6 +13,8 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 function extractIdFromString(str: string) {
   // Regular expression to match the ID pattern "(id-XXXXX)"
   const idRegex = /\(id-(\d+)\)/;
@@ -161,7 +163,7 @@ const Create = (props: any) => {
         fine_name: "",
         due_date: "",
         fee_particular_name: "",
-        academic_year: "",
+        academic_year: Cacademic_year,
         is_applicable: true,
       },
       validationSchema: validationSchema,
@@ -391,6 +393,8 @@ const Create = (props: any) => {
             <Grid item xs={6} sm={4}>
               <Autocomplete
                 disableClearable
+                disabled
+                defaultValue={Cacademic_year}
                 sx={{ width: "80%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {
@@ -401,6 +405,7 @@ const Create = (props: any) => {
                 options={academicdata.map((acd) => acd.academic_year)}
                 renderInput={(params: any) => (
                   <MDInput
+                    defaultValue={Cacademic_year}
                     InputLabelProps={{ shrink: true }}
                     name="academic_year"
                     placeholder="eg. 2022-2023"

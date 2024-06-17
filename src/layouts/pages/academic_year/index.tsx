@@ -6,7 +6,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
+import { IconButton, Tooltip } from "@mui/material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 import * as XLSX from "xlsx";
+import { Popconfirm, Table } from "antd";
 
 const token = Cookies.get("token");
 
@@ -38,6 +39,19 @@ interface AcademicYearData {
 const Academic = () => {
   const [rbacData, setRbacData] = useState<string[]>([]);
   const [data, setData] = useState<AcademicYearData[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const handleExport = () => {
+    setIsExporting(true);
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    XLSX.writeFile(workbook, `${"academic_year"}.xlsx`, { bookType: "xlsx", type: "binary" });
+
+    setIsExporting(false);
+    console.log("export excel data", data);
+  };
   const [open, setOpen] = useState(false);
   const [editData, setEditData] = useState<AcademicYearData | null>(null);
   const [openupdate, setOpenupdate] = useState(false);
@@ -123,8 +137,20 @@ const Academic = () => {
             </IconButton>
           )}
           {rbacData.includes("academicdelete") && (
-            <IconButton onClick={() => handleDelete(row.academic_year)}>
-              <DeleteIcon />
+            <IconButton>
+              <Popconfirm
+                title="Delete"
+                description="Are you sure to Delete it ?"
+                placement="topLeft"
+                onConfirm={() => handleDelete(row.academic_year)} // Pass index to confirm function
+                // onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete" placement="top">
+                  <DeleteIcon />
+                </Tooltip>
+              </Popconfirm>
             </IconButton>
           )}
         </MDTypography>
@@ -215,6 +241,16 @@ const Academic = () => {
           <Grid item pt={2} pr={2}>
             {rbacData.includes("academiccreate") && (
               <>
+                <MDButton
+                  variant="contained"
+                  disabled={data.length < 1}
+                  color="dark"
+                  type="submit"
+                  onClick={handleExport}
+                >
+                  {isExporting ? "Exporting..." : "Export to Excel"}
+                </MDButton>
+                &nbsp; &nbsp; &nbsp;
                 <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
                   Upload&nbsp;
                   <FileUploadIcon />

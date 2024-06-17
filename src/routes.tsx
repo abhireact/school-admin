@@ -12,17 +12,13 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
-
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
 import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
-
-import Subject from "layouts/pages/subject/subjectdetails";
-import SectionSubject from "layouts/pages/subject/section_subject";
-import EmployeeSubject from "layouts/pages/subject/employee_subject";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import React, { createRef } from "react";
+import Myrbacroutes from "myrbacroutes";
 import Fee from "layouts/pages/admission/fee_admission";
 import AdmissionForm from "layouts/pages/admission/new_admimssion";
 import AddDate from "layouts/pages/admission/form_setting/add_date";
@@ -47,6 +43,10 @@ const parts = url.substring(url.indexOf("http://") + 7).split(".");
 const trimmed = parts[0];
 
 console.log(trimmed, "school code "); // Output: "mindcom"
+// const data = useSelector((state: any) => state);
+const rendered: any = <Myrbacroutes />;
+console.log(rendered, "rendered component");
+
 try {
   if (token) {
     const response = await axios.get("http://10.0.20.200:8000/mg_rbac_current_user", {
@@ -154,34 +154,10 @@ let routes = [
     component: <ClassTiming />,
   },
   {
-    name: " create Class Timing",
+    name: "Create Class Timing",
     key: "createclasstiming",
     route: "attendance/create_class_timing",
     component: <ClassTimingCreate />,
-  },
-  {
-    name: "Sms Configuration",
-    key: "sms_configuration",
-    route: "notification/sms_configuration",
-    component: <SMSConfiguration />,
-  },
-  {
-    name: "Admission Fee",
-    key: "admission_fee",
-    route: "/pages/admission/fee",
-    component: <Fee />,
-  },
-  {
-    name: "New Admission",
-    key: "new_admission",
-    route: "/pages/admission/AdmissionForm",
-    component: <AdmissionForm />,
-  },
-  {
-    name: "Add Date",
-    key: "add_date",
-    route: "/pages/admission/add_date",
-    component: <AddDate />,
   },
 ];
 

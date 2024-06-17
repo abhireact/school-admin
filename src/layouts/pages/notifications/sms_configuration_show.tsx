@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Icon from "@mui/material/Icon";
-import { Grid, Tooltip } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
@@ -16,12 +16,13 @@ import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 // import EditMessageTemplate from "./template_form";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { Popconfirm, message } from "antd";
 import SMSConfigurationCreate from "./sms_configuration_create";
 const token = Cookies.get("token");
 export default function SmsConfiguration() {
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
+
   const [templateData, setTemplateData] = useState([]);
   useEffect(() => {
     fetchData();
@@ -38,6 +39,7 @@ export default function SmsConfiguration() {
         }
       );
       if (response.status === 200) {
+        console.log(response.data, "configuration data");
         setTemplateData(response.data);
       }
     } catch (error) {
@@ -56,17 +58,46 @@ export default function SmsConfiguration() {
     fetchData();
     handleClickCloseEdit();
   };
+  const confirm = async (data: any) => {
+    console.log(data, "delete data");
+    const delete_value = {
+      url: data.url,
+      vendor: data.vendor_name,
+    };
+    axios
+      .delete("http://10.0.20.200:8000/mg_sms_configuration/school_incharge", {
+        data: delete_value,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        message.success(response.data.message);
+        fetchData();
+      })
+      .catch((error) => {
+        message.error(error.response.data.detail);
+      });
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   const feeCategory = {
     columns: [
+      { Header: "VENDOR", accessor: "vendor" },
       { Header: "URL", accessor: "url" },
-      { Header: "MOBILE NUMBER ATTRIBUTE", accessor: "mobile_no_attribute" },
-      { Header: "MSG", accessor: "msg" },
+      { Header: "SENDER ID", accessor: "sender_id" },
+      { Header: "School Subdomain", accessor: "sub_domain" },
       { Header: "ACTIONS", accessor: "action" },
     ],
     rows: templateData.map((data, index) => ({
+      vendor: data.vendor_name,
       url: data.url,
-      mobile_no_attribute: data.mobile_number_attribute,
-      msg: data.msg_attribute,
+      sender_id: data.sender_id,
+      sub_domain: data.sub_domain,
       action: (
         <Grid container spacing={1}>
           <Grid item>
@@ -77,9 +108,19 @@ export default function SmsConfiguration() {
             </Tooltip>
           </Grid>
           <Grid item>
-            <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
-            </Tooltip>
+            <Popconfirm
+              title="Delete"
+              description="Are you sure to Delete it ?"
+              placement="topLeft"
+              onConfirm={() => confirm(data)} // Pass index to confirm function
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tooltip title="Delete" placement="top">
+                <Icon fontSize="small">delete</Icon>
+              </Tooltip>
+            </Popconfirm>
           </Grid>
         </Grid>
       ),
@@ -100,19 +141,14 @@ export default function SmsConfiguration() {
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link to="/notification/sms_configuration">
+            <Link to="/notification/sms_configuration_create">
               <MDButton variant="outlined" color="info">
                 + Create Configuration
               </MDButton>
             </Link>
           </Grid>
         </Grid>
-        <DataTable
-          table={feeCategory}
-          isSorted={false}
-          entriesPerPage={false}
-          showTotalEntries={false}
-        />
+        <DataTable table={feeCategory} isSorted={false} showTotalEntries={false} canSearch={true} />
       </Card>
     </DashboardLayout>
   );

@@ -66,35 +66,59 @@ export default function EditFeeParicularAmount(props: any) {
           </Grid>
           <Grid container spacing={3} p={2}>
             <Grid item xs={12} sm={4}>
-              <FormField
+              <MDInput
+                sx={{ width: "100%" }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Fee Category
+                  </MDTypography>
+                }
                 disabled
-                label="Fee Category"
+                // label="Fee Category"
                 name="fee_category"
                 value={values.fee_category}
                 variant="standard"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField
+              <MDInput
                 disabled
-                label="Fee Particular"
+                sx={{ width: "100%" }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Fee Particular
+                  </MDTypography>
+                }
+                // label="Fee Particular"
                 name="fee_perticular"
                 value={values.fee_perticular}
                 variant="standard"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField
+              <MDInput
                 disabled
-                label="Account"
+                sx={{ width: "100%" }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Account
+                  </MDTypography>
+                }
+                // label="Account"
                 name="account"
                 value={values.account}
                 variant="standard"
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FormField
-                label="Amount"
+              <MDInput
+                sx={{ width: "100%" }}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Amount
+                  </MDTypography>
+                }
+                // label="Amount"
                 name="amount"
                 value={values.amount}
                 placeholder="Enter Amount"

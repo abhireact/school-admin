@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import { useFormik } from "formik";
-import { Grid, Card, Autocomplete, FormLabel } from "@mui/material";
+import { Grid, Card, Autocomplete, FormLabel, Tooltip, Icon } from "@mui/material";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
@@ -13,7 +13,10 @@ import { useSelector } from "react-redux";
 import { Divider } from "antd";
 import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 const token = Cookies.get("token");
+const current_academic_year = Cookies.get("academic_year");
 
 interface DataType {
   key: React.Key;
@@ -26,7 +29,7 @@ let initialValues = {
   message_type: "SMS",
   subject: "",
   message: "",
-  academic_year: "",
+  academic_year: current_academic_year,
   send_to: "",
   class_name: "",
   section_name: "",
@@ -36,6 +39,8 @@ let initialValues = {
 };
 
 export default function SendMail() {
+  const [base64String, setBase64String] = useState([""]);
+  const [attachedFileName, setAttachedFileName] = useState([""]);
   const [department, setDepartmentData] = useState([]);
   const [receiverData, setReceiverData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -68,6 +73,7 @@ export default function SendMail() {
         },
       })
       .then((response) => {
+        console.log(response.data, "template datataaa");
         setTemplates(response.data);
       })
       .catch((error) => {
@@ -89,6 +95,9 @@ export default function SendMail() {
             : values.message,
           status: false,
           notification_type: "",
+          file_attach: base64String,
+          content_type: attachedFileName,
+          user_type: values.send_to,
         };
         const emailsubmitvalue = {
           to: selectedRowKeys.map((item: any) => item.guardian_email),
@@ -129,6 +138,7 @@ export default function SendMail() {
               setReceiverData([]);
               setOpen(false);
               action.resetForm();
+              setBase64String([""]);
             })
             .catch((error) => {
               message.error(error.response.data.detail);
@@ -216,13 +226,14 @@ export default function SendMail() {
   }));
 
   const rowSelection = {
+    selectedRowKeys,
+    selections: [Table.SELECTION_ALL, Table.SELECTION_NONE],
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
       setSelectedRowKeys(selectedRowKeys);
     },
   };
   const handleReset = () => {
-    console.log("inside onclick...");
     handleSubmit();
   };
 
@@ -230,8 +241,41 @@ export default function SendMail() {
     setOpen(true);
     setLoading(true);
   };
+  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const updatedFields = [...attachedFileName];
+      updatedFields[index] = file.name;
+      setAttachedFileName(updatedFields);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        const updatedFieldsbase64 = [...base64String];
+        updatedFieldsbase64[index] = base64;
+        setBase64String(updatedFieldsbase64);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const addInputField = () => {
+    setAttachedFileName([...attachedFileName, ""]);
+    setBase64String([...base64String, ""]);
+  };
+  const removeInputField = (indexToRemove: any) => {
+    const updatedAttachedFileNames = [...attachedFileName];
+    const updatedBase64Strings = [...base64String];
+
+    updatedAttachedFileNames.splice(indexToRemove, 1);
+    updatedBase64Strings.splice(indexToRemove, 1);
+
+    setAttachedFileName(updatedAttachedFileNames);
+    setBase64String(updatedBase64Strings);
+  };
+  console.log(base64String, "selected fileeee");
+  console.log(attachedFileName, "fileeee name selecteddd");
   return (
     <DashboardLayout>
+      <DashboardNavbar />
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12}>
@@ -245,7 +289,7 @@ export default function SendMail() {
                   </Grid>
                 </Grid>
                 <Grid container spacing={3} p={2}>
-                  <Grid item xs={12} sm={12}>
+                  <Grid item xs={12} sm={9}>
                     <FormControl>
                       <FormLabel id="demo-radio-buttons-group-label">
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -293,31 +337,18 @@ export default function SendMail() {
 
                 <Grid container spacing={3} p={2}>
                   <Grid item xs={12} sm={4}>
-                    <Autocomplete
+                    <MDInput
+                      disabled
+                      sx={{ width: "100%" }}
+                      name="academic_year"
+                      onChange={handleChange}
                       value={values.academic_year}
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "academic_year", value } });
-                      }}
-                      options={
-                        classes
-                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                          : []
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Academic Year
+                        </MDTypography>
                       }
-                      renderInput={(params) => (
-                        <MDInput
-                          required
-                          name="academic_year"
-                          onChange={handleChange}
-                          value={values.academic_year}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Academic Year
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                        />
-                      )}
+                      variant="standard"
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -343,22 +374,24 @@ export default function SendMail() {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <MDInput
-                      required
-                      sx={{ width: "100%" }}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Subject
-                        </MDTypography>
-                      }
-                      name="subject"
-                      value={values.subject}
-                      placeholder="Enter Subject"
-                      variant="standard"
-                      onChange={handleChange}
-                    />
-                  </Grid>
+                  {values.message_type === "SMS" ? null : (
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        required
+                        sx={{ width: "100%" }}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Subject
+                          </MDTypography>
+                        }
+                        name="subject"
+                        value={values.subject}
+                        placeholder="Enter Subject"
+                        variant="standard"
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                  )}
                   <Grid item xs={12} sm={8}>
                     <MDInput
                       required
@@ -558,14 +591,64 @@ export default function SendMail() {
                       />
                     </Grid>
                   ) : null}
+                  {values.message_type === "Intra-Portal" ? (
+                    <Grid item xs={12} sm={6}>
+                      {base64String.map((_item, index) => (
+                        <>
+                          <MDInput
+                            InputLabelProps={{ shrink: true }}
+                            key={index}
+                            variant="standard"
+                            type="file"
+                            onChange={(event: any) => handleFileInputChange(event, index)}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Attach File
+                              </MDTypography>
+                            }
+                          />
+                          {index != 0 && (
+                            <Tooltip title="Delete" placement="top">
+                              <Icon
+                                fontSize="small"
+                                color="secondary"
+                                onClick={() => removeInputField(index)}
+                              >
+                                delete
+                              </Icon>
+                            </Tooltip>
+                          )}
+                        </>
+                      ))}
+                      <MDButton
+                        color="info"
+                        variant="text"
+                        onClick={addInputField} // Call addInputField function when "+" button is clicked
+                      >
+                        + add
+                      </MDButton>
+                    </Grid>
+                  ) : null}
                 </Grid>
 
                 <Grid container px={3} pb={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Grid item ml={2}>
-                    <MDButton color="info" variant="contained" onClick={getFilteredInterportalData}>
-                      SHOW RECEIVERS
-                    </MDButton>
-                  </Grid>
+                  {values.send_to === "All" ? (
+                    <Grid item ml={2}>
+                      <MDButton color="info" variant="contained" onClick={handleReset}>
+                        SEND
+                      </MDButton>
+                    </Grid>
+                  ) : (
+                    <Grid item ml={2}>
+                      <MDButton
+                        color="info"
+                        variant="contained"
+                        onClick={getFilteredInterportalData}
+                      >
+                        SHOW RECEIVERS
+                      </MDButton>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
             </Card>
@@ -623,12 +706,12 @@ export default function SendMail() {
           mt={1}
         >
           <Grid item xs={12} sm={12}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" fontWeight="bold" color="secondary">
               Defination of Terms
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+            <MDTypography variant="button" color="secondary">
               [$User_ID]
             </MDTypography>
           </Grid>
@@ -636,7 +719,7 @@ export default function SendMail() {
             <MDTypography variant="button">User ID of SMS Recipient</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+            <MDTypography variant="button" color="secondary">
               [$User_name]
             </MDTypography>
           </Grid>
@@ -644,7 +727,7 @@ export default function SendMail() {
             <MDTypography variant="button">Name of SMS Recipient</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+            <MDTypography variant="button" color="secondary">
               [$Current_date]
             </MDTypography>
           </Grid>
@@ -652,7 +735,7 @@ export default function SendMail() {
             <MDTypography variant="button">Currrent Date</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+            <MDTypography variant="button" color="secondary">
               [$School_name]
             </MDTypography>
           </Grid>
@@ -660,7 +743,7 @@ export default function SendMail() {
             <MDTypography variant="button">School Name</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+            <MDTypography variant="button" color="secondary">
               [$Child_name]
             </MDTypography>
           </Grid>
@@ -668,7 +751,7 @@ export default function SendMail() {
             <MDTypography variant="button">Child name</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+            <MDTypography variant="button" color="secondary">
               [$Amount]
             </MDTypography>
           </Grid>
