@@ -18,11 +18,8 @@ import CreateTemplate from "layouts/pages/notifications/create_message_template"
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
 import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
-
-import Subject from "layouts/pages/subject/subjectdetails";
-import SectionSubject from "layouts/pages/subject/section_subject";
-import EmployeeSubject from "layouts/pages/subject/employee_subject";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import React, { createRef } from "react";
+import Myrbacroutes from "myrbacroutes";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -44,6 +41,10 @@ const parts = url.substring(url.indexOf("http://") + 7).split(".");
 const trimmed = parts[0];
 
 console.log(trimmed, "school code "); // Output: "mindcom"
+// const data = useSelector((state: any) => state);
+const rendered: any = <Myrbacroutes />;
+console.log(rendered, "rendered component");
+
 try {
   if (token) {
     const response = await axios.get("http://10.0.20.200:8000/mg_rbac_current_user", {

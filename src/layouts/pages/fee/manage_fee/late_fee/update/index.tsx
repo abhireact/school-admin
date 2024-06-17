@@ -95,6 +95,13 @@ const Update = (props: any) => {
         {" "}
         <MDBox p={4}>
           <Grid container>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Edit Late Fee
+              </MDTypography>
+            </Grid>
+          </Grid>
+          <Grid container>
             <Grid item xs={12} sm={4} py={1}>
               <MDInput
                 sx={{ width: "70%" }}

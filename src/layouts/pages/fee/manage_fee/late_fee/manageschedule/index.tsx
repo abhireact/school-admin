@@ -12,6 +12,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
 import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
 
@@ -25,7 +26,7 @@ const validationSchema = Yup.object().shape({
 
 const ManageSchedule = (props: any) => {
   const { manageData, handleClose } = props;
-
+  const { classes, account, studentcategory, student } = useSelector((state: any) => state);
   const [data, setData] = useState([]);
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
@@ -159,7 +160,7 @@ const ManageSchedule = (props: any) => {
         <form onSubmit={handleSubmit}>
           <MDBox p={4}>
             <Grid container>
-              <Grid item xs={12} sm={4}>
+              {/* <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disabled
                   defaultValue={Cacademic_year}
@@ -267,6 +268,99 @@ const ManageSchedule = (props: any) => {
                       error={touched.section_name && Boolean(errors.section_name)}
                       success={values.section_name.length && !errors.section_name}
                       helperText={touched.section_name && errors.section_name}
+                    />
+                  )}
+                />
+              </Grid> */}
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "academic_year", value } });
+                  }}
+                  defaultValue={Cacademic_year}
+                  options={
+                    classes
+                      ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                      : []
+                  }
+                  disabled
+                  renderInput={(params) => (
+                    <MDInput
+                      required
+                      defaultValue="Cacademic_year"
+                      name="academic_year"
+                      onChange={handleChange}
+                      disabled
+                      value={values.academic_year}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Academic Year
+                        </MDTypography>
+                      }
+                      {...params}
+                      variant="standard"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "class_name", value } });
+                  }}
+                  options={
+                    values.academic_year !== ""
+                      ? classes
+                          .filter((item: any) => item.academic_year === values.academic_year)
+                          .map((item: any) => item.class_name)
+                      : []
+                  }
+                  renderInput={(params) => (
+                    <MDInput
+                      required
+                      name="class"
+                      onChange={handleChange}
+                      value={values.class_name}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Class
+                        </MDTypography>
+                      }
+                      {...params}
+                      variant="standard"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "section_name", value } });
+                  }}
+                  options={
+                    values.class_name !== ""
+                      ? classes
+                          .filter(
+                            (item: any) =>
+                              item.academic_year === values.academic_year &&
+                              item.class_name === values.class_name
+                          )[0]
+                          .section_data.map((item: any) => item.section_name)
+                      : []
+                  }
+                  renderInput={(params) => (
+                    <MDInput
+                      required
+                      name="section_name"
+                      onChange={handleChange}
+                      value={values.section_name}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Section
+                        </MDTypography>
+                      }
+                      {...params}
+                      variant="standard"
                     />
                   )}
                 />
