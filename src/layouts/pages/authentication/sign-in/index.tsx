@@ -312,6 +312,7 @@ Coded by www.creative-tim.com
 */
 
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 // react-router-dom components
 import { Link, useNavigate } from "react-router-dom";
@@ -344,6 +345,7 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { isLength } from "validator";
 import axios from "axios";
+import { setMyRbac } from "layouts/pages/redux/dataSlice";
 interface LogoData {
   school_logo: string;
   // Add other properties if needed
@@ -355,6 +357,7 @@ function CoverLogin(): JSX.Element {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const url = window.location.href;
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
@@ -429,11 +432,14 @@ function CoverLogin(): JSX.Element {
       );
       console.log(res, "login response");
 
-      if (res.data.access_token) {
+      if (res.data.access_token && res.data.rbac_data) {
         // setTokendata(res.data.access_token);
         // Cookies.set("token", res.data.access_token, { httpOnly: true });
         const token = res.data.access_token;
         Cookies.set("token", token, { expires: 7 });
+        const myrbac = res.data.rbac_data;
+        // dispatch(setMyRbac(myrbac)); // Dispatch the setToken action
+
         navigate("/dashboards/analytics");
         // window.location.reload();
         message.success("Login Successful");
@@ -448,6 +454,14 @@ function CoverLogin(): JSX.Element {
 
   console.log(logoData?.school_logo, "logoData");
 
+  // Redux Call
+  const data = useSelector((state: any) => state);
+  console.log("may redux data", data);
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(fetchToken() as any);
+  // }, [dispatch]);
   return (
     <BasicLayout image={bgImage}>
       <Card>

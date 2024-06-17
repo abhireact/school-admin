@@ -39,12 +39,13 @@ import brandWhite from "assets/images/orglogo.png";
 import brandDark from "assets/images/orglogo.png";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React, { createContext } from "react";
 import MDTypography from "components/MDTypography";
 const MyContext = createContext([]);
 export default function App() {
   const dispatched = useDispatch();
+
   const [controller, dispatch] = useMaterialUIController();
   const [rbacInfo, setrbacInfo] = useState([]);
   const token = Cookies.get("token");
@@ -61,26 +62,29 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  const data = useSelector((state: any) => state);
+  console.log("may redux data", data);
   // store rbac data
-  const fetchRbac = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        //rbac data storing
-        setrbacInfo(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const fetchRbac = async () => {
+  //   try {
+  //     const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     if (response.status === 200) {
+  //       //rbac data storing
+  //       setrbacInfo(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
   useEffect(() => {
-    fetchRbac(); // Fetch data from API on component mount
-  }, [token]);
+    // fetchRbac(); // Fetch data from API on component mount
+    setrbacInfo(data?.my_rbac);
+  }, [token, data]);
   console.log("rbac data storing in app.tsx ", rbacInfo);
 
   // Cache for the rtl

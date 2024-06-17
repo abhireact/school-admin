@@ -20,10 +20,10 @@ import DataTable from "examples/Tables/DataTable";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import IconButton from "@mui/material/IconButton";
 import StudentInfo from "./student_info";
-
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
-
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YY format")
     .required("Required *"),
@@ -161,7 +161,7 @@ const StudentCertificate = () => {
     initialValues: {
       class_name: "",
 
-      academic_year: "",
+      academic_year: Cacademic_year,
 
       section_name: "",
       wing_name: "",
@@ -201,7 +201,9 @@ const StudentCertificate = () => {
                   <Grid item xs={6} sm={4}>
                     <Autocomplete
                       sx={{ width: "80%" }}
-                      value={values.academic_year}
+                      disabled
+                      defaultValue={Cacademic_year}
+                      value={values.academic_year || Cacademic_year}
                       onChange={(event, value) => {
                         handleChange({
                           target: { name: "academic_year", value },
@@ -220,7 +222,7 @@ const StudentCertificate = () => {
                             </MDTypography>
                           }
                           onChange={handleChange}
-                          value={values.academic_year}
+                          value={values.academic_year || Cacademic_year}
                           {...params}
                           variant="standard"
                           onBlur={handleBlur}

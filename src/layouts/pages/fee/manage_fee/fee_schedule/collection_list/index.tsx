@@ -21,6 +21,7 @@ import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import Update from "./update";
 import ManageSchedule from "./manage";
 import NewFeeSchedule from "../new_fee_schedule";
+import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
 const Cacademic_year = Cookies.get("academic_year");
@@ -32,6 +33,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const CollectionList = () => {
+  const { classes, account, studentcategory, student } = useSelector((state: any) => state);
+
   const [data, setData] = useState([]);
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
@@ -323,24 +326,26 @@ const CollectionList = () => {
                       <Grid container>
                         <Grid item xs={12} sm={4}>
                           <Autocomplete
-                            sx={{ width: "80%" }}
-                            disabled
-                            defaultValue={Cacademic_year}
-                            disableClearable
-                            value={values.academic_year}
-                            onChange={(event, value) => {
-                              handleChange({
-                                target: { name: "academic_year", value },
-                              });
-                              filterDataByAcdName(classdata, value);
+                            onChange={(_event, value) => {
+                              handleChange({ target: { name: "academic_year", value } });
                             }}
-                            options={academicdata.map((acd) => acd.academic_year)}
-                            renderInput={(params: any) => (
+                            defaultValue={Cacademic_year}
+                            options={
+                              classes
+                                ? Array.from(
+                                    new Set(classes.map((item: any) => item.academic_year))
+                                  )
+                                : []
+                            }
+                            disabled
+                            renderInput={(params) => (
                               <MDInput
-                                InputLabelProps={{ shrink: true }}
-                                defaultValue={Cacademic_year}
+                                required
+                                defaultValue="Cacademic_year"
                                 name="academic_year"
-                                placeholder="eg. 2022-2023"
+                                onChange={handleChange}
+                                disabled
+                                value={values.academic_year}
                                 label={
                                   <MDTypography
                                     variant="button"
@@ -350,96 +355,80 @@ const CollectionList = () => {
                                     Academic Year
                                   </MDTypography>
                                 }
-                                value={values.academic_year}
                                 {...params}
                                 variant="standard"
-                                onBlur={handleBlur}
-                                error={touched.academic_year && Boolean(errors.academic_year)}
-                                success={values.academic_year.length && !errors.academic_year}
-                                helperText={touched.academic_year && errors.academic_year}
                               />
                             )}
                           />
                         </Grid>
                         <Grid item xs={12} sm={4}>
                           <Autocomplete
-                            sx={{ width: "80%" }}
-                            disableClearable
-                            value={values.class_name}
-                            onChange={
-                              filteredClass.length >= 1
-                                ? (event, value) => {
-                                    handleChange({
-                                      target: { name: "class_name", value },
-                                    });
-                                    filterSectionData(sectiondata, value);
-                                  }
-                                : undefined
-                            }
-                            options={filteredClass}
-                            renderInput={(params: any) => (
-                              <MDInput
-                                InputLabelProps={{ shrink: true }}
-                                name="class_name"
-                                label={
-                                  <MDTypography
-                                    variant="button"
-                                    fontWeight="bold"
-                                    color="secondary"
-                                  >
-                                    Class Name
-                                  </MDTypography>
-                                }
-                                value={values.class_name}
-                                {...params}
-                                variant="standard"
-                                error={touched.class_name && Boolean(errors.class_name)}
-                                success={values.class_name.length && !errors.class_name}
-                                helperText={touched.class_name && errors.class_name}
-                              />
-                            )}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <Autocomplete
-                            sx={{ width: "80%" }}
-                            disableClearable
-                            value={values.section_name}
-                            onChange={
-                              filteredSection.length >= 1
-                                ? (event, value) => {
-                                    handleChange({
-                                      target: { name: "section_name", value },
-                                    });
-                                  }
-                                : undefined
-                            }
+                            onChange={(_event, value) => {
+                              handleChange({ target: { name: "class_name", value } });
+                            }}
                             options={
-                              filteredSection[0]
-                                ? filteredSection[0].map(
-                                    (sectiondata: any) => sectiondata.section_name
-                                  )
+                              values.academic_year !== ""
+                                ? classes
+                                    .filter(
+                                      (item: any) => item.academic_year === values.academic_year
+                                    )
+                                    .map((item: any) => item.class_name)
                                 : []
                             }
-                            renderInput={(params: any) => (
+                            renderInput={(params) => (
                               <MDInput
-                                InputLabelProps={{ shrink: true }}
-                                name="section_name"
+                                required
+                                name="class"
+                                onChange={handleChange}
+                                value={values.class_name}
                                 label={
                                   <MDTypography
                                     variant="button"
                                     fontWeight="bold"
                                     color="secondary"
                                   >
-                                    Section Name
+                                    Class
                                   </MDTypography>
                                 }
-                                value={values.section_name}
                                 {...params}
                                 variant="standard"
-                                error={touched.section_name && Boolean(errors.section_name)}
-                                success={values.section_name.length && !errors.section_name}
-                                helperText={touched.section_name && errors.section_name}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <Autocomplete
+                            onChange={(_event, value) => {
+                              handleChange({ target: { name: "section_name", value } });
+                            }}
+                            options={
+                              values.class_name !== ""
+                                ? classes
+                                    .filter(
+                                      (item: any) =>
+                                        item.academic_year === values.academic_year &&
+                                        item.class_name === values.class_name
+                                    )[0]
+                                    .section_data.map((item: any) => item.section_name)
+                                : []
+                            }
+                            renderInput={(params) => (
+                              <MDInput
+                                required
+                                name="section_name"
+                                onChange={handleChange}
+                                value={values.section_name}
+                                label={
+                                  <MDTypography
+                                    variant="button"
+                                    fontWeight="bold"
+                                    color="secondary"
+                                  >
+                                    Section
+                                  </MDTypography>
+                                }
+                                {...params}
+                                variant="standard"
                               />
                             )}
                           />
