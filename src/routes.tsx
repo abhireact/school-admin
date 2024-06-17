@@ -12,14 +12,17 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
-
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
+<<<<<<< HEAD
 import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 import React, { createRef } from "react";
 import Myrbacroutes from "myrbacroutes";
+=======
+
+>>>>>>> main
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -151,16 +154,10 @@ let routes = [
     component: <ClassTiming />,
   },
   {
-    name: " create Class Timing",
+    name: "Create Class Timing",
     key: "createclasstiming",
     route: "attendance/create_class_timing",
     component: <ClassTimingCreate />,
-  },
-  {
-    name: "Sms Configuration",
-    key: "sms_configuration",
-    route: "notification/sms_configuration",
-    component: <SMSConfiguration />,
   },
 ];
 

@@ -30,8 +30,22 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import DataTable from "examples/Tables/DataTable";
 import Dialog from "@mui/material/Dialog";
+import * as Yup from "yup";
 const token = Cookies.get("token");
-
+const validationSchema = Yup.object().shape({
+  date_of_birth: Yup.date().test("year-range", "Incorrect format", function (value: any) {
+    if (value) {
+      const year = value.getFullYear();
+      return year >= 2000 && year <= 3000;
+    }
+    return true;
+  }),
+  mobile_number: Yup.string()
+    .matches(/^[0-9]{10}$/, "Incorrect Format *")
+    .required("Required *"),
+  first_name: Yup.string(),
+  relation: Yup.string(),
+});
 const Update = (props: any) => {
   const { guardianData, fetchData, setOpen, fetchGuardian } = props;
   const [guardianInfo, setGuardianInfo] = useState({});
@@ -88,7 +102,7 @@ const Update = (props: any) => {
       email_notification: guardianData.email_notification,
     },
 
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     enableReinitialize: true,
     onSubmit: (values, action) => {
       axios
@@ -136,14 +150,14 @@ const Update = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card id="guardian-info">
-        <MDBox p={4}>
-          <Grid container>
-            <Grid item xs={12} sm={12} py={2}>
+        <MDBox p={4} pb={1}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>
               <MDTypography variant="h4">Update Guardian Information</MDTypography>
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
+                required
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">First Name</MDTypography>}
@@ -155,7 +169,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Middle Name</MDTypography>}
@@ -167,7 +180,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Last Name</MDTypography>}
@@ -179,7 +191,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Relation</MDTypography>}
@@ -191,7 +202,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Occupation</MDTypography>}
@@ -203,7 +213,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Annual Income</MDTypography>}
@@ -215,7 +224,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Education</MDTypography>}
@@ -227,7 +235,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Aadhaar Number</MDTypography>}
@@ -239,7 +246,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Mobile Number</MDTypography>}
@@ -251,7 +257,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 sx={{ width: "80%" }}
                 variant="standard"
                 label={<MDTypography variant="body2">Email</MDTypography>}
@@ -262,7 +267,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
-                mb={2}
                 type="date"
                 sx={{ width: "80%" }}
                 variant="standard"
@@ -276,7 +280,6 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4} mt={2}>
               <MDInput
-                mb={2}
                 type="file"
                 accept="image/*"
                 name="guardian_img"
@@ -288,13 +291,7 @@ const Update = (props: any) => {
             </Grid>
           </Grid>
 
-          <Grid
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-            py={2}
-          >
+          <Grid container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item mt={2}>
               <MDButton
                 color="dark"

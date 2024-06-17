@@ -36,15 +36,13 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
 
-  admission_date: Yup.date()
-    .required("Required *")
-    .test("year-range", "Incorrect format", function (value) {
-      if (value) {
-        const year = value.getFullYear();
-        return year >= 2000 && year <= 3000;
-      }
-      return true;
-    }),
+  admission_date: Yup.date().test("year-range", "Incorrect format", function (value) {
+    if (value) {
+      const year = value.getFullYear();
+      return year >= 2000 && year <= 3000;
+    }
+    return true;
+  }),
   dob: Yup.date()
     .required("Required *")
     .test("year-range", "Incorrect format", function (value) {
@@ -57,7 +55,7 @@ const validationSchema = Yup.object().shape({
   admission_number: Yup.string(),
   fee_code: Yup.string(),
   first_name: Yup.string().required("Required *"),
-  last_name: Yup.string().required("Required *"),
+  last_name: Yup.string(),
   mobile_number: Yup.string()
     .matches(/^[0-9]{10}$/, "Incorrect Format *")
     .required("Required *"),
@@ -88,12 +86,12 @@ const Update = (props: any) => {
   const handleOpenCreate = () => {
     setCreateOpen(true);
   };
-  const { editData, username, setOpenupdate, guardianInfo, fetchData, fetchGuardian } = props;
+  const { studentInfo, username, setOpenupdate, guardianInfo, fetchData, fetchGuardian } = props;
 
   const handleClose = () => {
     setOpenupdate(false);
   };
-  console.log(editData, "student info update");
+  console.log(studentInfo, "student info update");
   console.log(guardianInfo, "guardian info data");
 
   const token = Cookies.get("token");
@@ -244,68 +242,68 @@ const Update = (props: any) => {
     useFormik({
       initialValues: {
         user_name: username,
-        admission_date: editData.admission_date || "",
-        admission_number: editData.admission_number || "",
-        fee_code: editData.fee_code || "",
-        first_name: editData.first_name,
-        middle_name: editData.middle_name,
-        last_name: editData.last_name,
-        academic_year: editData.academic_year,
-        class_name: editData.class_name,
-        section_name: editData.section_name,
-        dob: editData.dob,
-        gender: editData.gender || "",
-        birth_place: editData.birth_place,
-        blood_group: editData.blood_group,
-        aadhaar_number: editData.aadhaar_number || "",
-        religion: editData.religion,
-        mother_tongue: editData.mother_tongue,
-        pen_number: editData.pen_number || "",
 
-        house_details: editData.house_details,
-        student_category: editData.student_category,
-        caste_category: editData.caste_category,
-        caste: editData.caste,
+        admission_date: studentInfo.admission_date || "",
+        admission_number: studentInfo.admission_number || "",
+        fee_code: studentInfo.fee_code || "",
+        first_name: studentInfo.first_name || "",
+        middle_name: studentInfo.middle_name || "",
+        last_name: studentInfo.last_name || "",
+        academic_year: studentInfo.academic_year || "",
+        class_name: studentInfo.class_name || "",
+        section_name: studentInfo.section_name || "",
+        dob: studentInfo.dob || "",
+        gender: studentInfo.gender || "",
+        birth_place: studentInfo.birth_place || "",
+        blood_group: studentInfo.blood_group || "",
+        aadhaar_number: studentInfo.aadhaar_number || "",
+        religion: studentInfo.religion || "",
+        mother_tongue: studentInfo.mother_tongue || "",
+        pen_number: studentInfo.pen_number || "",
+        house_details: studentInfo.house_details || "",
+        student_category: studentInfo.student_category || "",
+        caste_category: studentInfo.caste_category || "",
+        caste: studentInfo.caste || "",
+        address_line1: studentInfo.address_line1 || "",
+        address_line2: studentInfo.address_line2 || "",
+        pin_code: studentInfo.pin_code || "",
+        city: studentInfo.city || "",
+        state: studentInfo.state || "",
+        country: studentInfo.country || "",
+        pr_address_line1: studentInfo.pr_address_line1 || "",
+        pr_address_line2: studentInfo.pr_address_line2 || "",
+        pr_pin_code: studentInfo.pr_pin_code || "",
+        pr_city: studentInfo.pr_city || "",
+        pr_state: studentInfo.pr_state || "",
+        pr_country: studentInfo.pr_country || "",
+        quota: studentInfo.quota || "",
+        mobile_number: studentInfo.mobile_number || "",
+        alt_phone_number: studentInfo.alt_phone_number || "",
+        email: studentInfo.email || "",
+        hobby: studentInfo.hobby || "",
+        prev_school_name: studentInfo.prev_school_name || "",
+        prev_class_name: studentInfo.prev_class_name || "",
+        year: studentInfo.year || "",
+        marks_obtained: studentInfo.marks_obtained || "",
+        total_marks: studentInfo.total_marks || "",
+        grade_percentage: studentInfo.grade_percentage || "",
+        sibling: studentInfo.sibling || "",
+        sibling_name: studentInfo.sibling_name || "",
+        sibling_relationship: studentInfo.sibling_relationship || "",
+        sibling_class: studentInfo.sibling_class || "",
+        sibling_section: studentInfo.sibling_section || "",
+        sibling_roll_number: studentInfo.sibling_roll_number || "",
+        sibling_date_of_admission: studentInfo.sibling_date_of_admission || "",
+        sibling_admission_number: studentInfo.sibling_admission_number || "",
 
-        address_line1: editData.address_line1,
-        address_line2: editData.address_line2,
-        pin_code: editData.pin_code,
-        city: editData.city,
-        state: editData.state,
-        country: editData.country,
-        pr_address_line1: editData.pr_address_line1,
-        pr_address_line2: editData.pr_address_line2,
-        pr_pin_code: editData.pr_pin_code,
-        pr_city: editData.pr_city,
-        pr_state: editData.pr_state,
-        pr_country: editData.pr_country,
-        quota: editData.quota,
-        mobile_number: editData.mobile_number,
-        alt_phone_number: editData.alt_phone_number,
-        email: editData.email || "",
-        hobby: editData.hobby,
-        prev_school_name: editData.prev_school_name,
-        prev_class_name: editData.prev_class_name,
-        year: editData.year,
-        marks_obtained: editData.marks_obtained,
-        total_marks: editData.total_marks,
-        grade_percentage: editData.grade_percentage,
-        sibling: editData.sibling,
-        sibling_name: editData.sibling_name,
-        sibling_relationship: editData.sibling_relationship,
-        sibling_class: editData.sibling_class,
-        sibling_section: editData.sibling_section,
-        sibling_roll_number: editData.sibling_roll_number,
-        sibling_date_of_admission: editData.sibling_date_of_admission,
-        sibling_admission_number: editData.sibling_admission_number,
-        birth_certificate: editData.birth_certificate,
-        character_certificate: editData.character_certificate,
-        transfer_certificate: editData.transfer_certificate,
+        birth_certificate: studentInfo.birth_certificate,
+        character_certificate: studentInfo.character_certificate,
+        transfer_certificate: studentInfo.transfer_certificate,
         stud_img: null,
-        sport_activity: editData.sport_activity,
-        extra_curricular: editData.extra_curricular,
-        health_record: editData.health_record,
-        class_record: editData.class_record,
+        sport_activity: studentInfo.sport_activity,
+        extra_curricular: studentInfo.extra_curricular,
+        health_record: studentInfo.health_record,
+        class_record: studentInfo.class_record,
         sport_activity_files: [],
         extra_curricular_files: [],
         health_record_files: [],
@@ -324,12 +322,11 @@ const Update = (props: any) => {
             },
           })
           .then(() => {
-            message.success(" Student Updated successfully!");
-            fetchData();
-            handleClose();
+            message.success("Student Updated successfully!");
+            //fetchData();
           })
-          .catch(() => {
-            message.error("Error on Updating Student !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
       },
     });
@@ -529,8 +526,8 @@ const Update = (props: any) => {
         <MDBox pt={4} px={4}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Student Details
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                STUDENT DETAILS
               </MDTypography>
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -558,7 +555,7 @@ const Update = (props: any) => {
                 variant="standard"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Admission Number{" "}
+                    Admission Number
                   </MDTypography>
                 }
                 name="admission_number"
@@ -588,14 +585,15 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={12} sm={12} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Personal Details
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                PERSONAL DETAILS
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
                 sx={{ width: "100%" }}
                 variant="standard"
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     First Name
@@ -603,16 +601,12 @@ const Update = (props: any) => {
                 }
                 name="first_name"
                 value={values.first_name}
-                onChange={(event: { target: { value: any } }) => {
-                  handleChange({
-                    target: { name: "first_name", value: event.target.value },
-                  });
-                }}
+                onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.first_name && Boolean(errors.first_name)}
                 helperText={touched.first_name && errors.first_name}
               />
-            </Grid>{" "}
+            </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
                 sx={{ width: "100%" }}
@@ -624,16 +618,12 @@ const Update = (props: any) => {
                 }
                 name="middle_name"
                 value={values.middle_name}
-                onChange={(event: { target: { value: any } }) => {
-                  handleChange({
-                    target: { name: "middle_name", value: event.target.value },
-                  });
-                }}
+                onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.middle_name && Boolean(errors.middle_name)}
                 helperText={touched.middle_name && errors.middle_name}
               />
-            </Grid>{" "}
+            </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
                 sx={{ width: "100%" }}
@@ -658,8 +648,9 @@ const Update = (props: any) => {
             <Grid item xs={6} sm={4}>
               <MDInput
                 sx={{ width: "100%" }}
+                disabled
                 name="academic_year"
-                placeholder="2022-2023"
+                placeholder="eg. 2022-2023"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Academic Year
@@ -673,6 +664,7 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
+                disabled
                 sx={{ width: "100%" }}
                 name="class_name"
                 label={
@@ -688,6 +680,7 @@ const Update = (props: any) => {
             </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
+                disabled
                 sx={{ width: "100%" }}
                 name="section_name"
                 label={
@@ -704,6 +697,7 @@ const Update = (props: any) => {
             <Grid item xs={6} sm={4}>
               <MDInput
                 type="date"
+                required
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "100%" }}
                 variant="standard"
@@ -804,7 +798,7 @@ const Update = (props: any) => {
                 error={touched.hobby && Boolean(errors.hobby)}
                 helperText={touched.hobby && errors.hobby}
               />
-            </Grid>{" "}
+            </Grid>
             <Grid item xs={6} sm={4}>
               <MDInput
                 sx={{ width: "100%" }}
@@ -1000,8 +994,8 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={4} mt={3}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Sibling
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                SIBLING
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={8} mt={2}>
@@ -1009,14 +1003,13 @@ const Update = (props: any) => {
             </Grid>
             {values.sibling && (
               <>
-                {" "}
                 <Grid item xs={6} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Sibling Name{" "}
+                        Sibling Name
                       </MDTypography>
                     }
                     name="sibling_name"
@@ -1159,8 +1152,8 @@ const Update = (props: any) => {
               </>
             )}
             <Grid item xs={12} sm={12} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Contact Details
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                CONTACT DETAILS
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4}>
@@ -1191,7 +1184,13 @@ const Update = (props: any) => {
                 }
                 name="alt_phone_number"
                 value={values.alt_phone_number}
-                onChange={handleChange}
+                onChange={(event: { target: { value: any } }) => {
+                  if (event.target.value != values.mobile_number) {
+                    handleChange({
+                      target: { name: "alt_phone_number", value: event.target.value },
+                    });
+                  }
+                }}
                 onBlur={handleBlur}
                 error={touched.alt_phone_number && Boolean(errors.alt_phone_number)}
                 helperText={touched.alt_phone_number && errors.alt_phone_number}
@@ -1215,8 +1214,8 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={12} sm={4.1} mt={2} id="guardian-info">
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Guardian Info
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                GUARDIAN INFO
               </MDTypography>
             </Grid>
             {guardianInfo.map((guardianinfo: any, index: any) => (
@@ -1230,6 +1229,7 @@ const Update = (props: any) => {
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
+                    disabled
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         First Name
@@ -1242,6 +1242,7 @@ const Update = (props: any) => {
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
+                    disabled
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         Middle Name
@@ -1254,6 +1255,7 @@ const Update = (props: any) => {
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
+                    disabled
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         Last Name
@@ -1266,6 +1268,7 @@ const Update = (props: any) => {
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
+                    disabled
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         RelationShip
@@ -1278,6 +1281,7 @@ const Update = (props: any) => {
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
+                    disabled
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         Mobile Number
@@ -1298,24 +1302,29 @@ const Update = (props: any) => {
                   </MDTypography>
                 </Grid>
                 <Grid item xs={12} sm={2} py={1} key={index + "space"}>
-                  <IconButton onClick={() => handleOpenGuardian(guardianinfo)}>
-                    <CreateRoundedIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteGuardian(guardianinfo.user_name)}>
-                    {guardianinfo.guardian_user_name}
-                    <DeleteIcon />
-                  </IconButton>
+                  <Tooltip title="Edit  Guardian" placement="top">
+                    <IconButton onClick={() => handleOpenGuardian(guardianinfo)}>
+                      <CreateRoundedIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  <Tooltip title="Delete Guardian" placement="top">
+                    <IconButton onClick={() => handleDeleteGuardian(guardianinfo.user_name)}>
+                      {guardianinfo.guardian_user_name}
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
               </>
             ))}
-            <Grid item xs={12} sm={2} mt={1}>
+            <Grid item xs={12} sm={2}>
               <Tooltip title="Add Guardian" placement="top">
                 <AddIcon fontSize="large" color="info" onClick={() => handleOpenCreate()} />
               </Tooltip>
             </Grid>
             <Grid item xs={12} sm={12} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Current Address
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                CURRENT ADDRESS
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4}>
@@ -1420,10 +1429,10 @@ const Update = (props: any) => {
                 error={touched.country && Boolean(errors.country)}
                 helperText={touched.country && errors.country}
               />
-            </Grid>{" "}
+            </Grid>
             <Grid item xs={12} sm={12} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Permanent Address
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                PERMANENT ADDRESS
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={4.1} mt={2}>
@@ -1525,8 +1534,8 @@ const Update = (props: any) => {
               />
             </Grid>
             <Grid item xs={6} sm={4.1} mt={2}>
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Previous Education
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                PREVIOUS EDUCATION
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={6} mt={1}>
@@ -1543,7 +1552,7 @@ const Update = (props: any) => {
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        School Name{" "}
+                        School Name
                       </MDTypography>
                     }
                     name="prev_school_name"
@@ -1589,7 +1598,7 @@ const Update = (props: any) => {
                     variant="standard"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Marks Obtained{" "}
+                        Marks Obtained
                       </MDTypography>
                     }
                     name="marks_obtained"
@@ -1757,10 +1766,10 @@ const Update = (props: any) => {
                   </FormControl>
                 </Grid>
               </>
-            )}{" "}
+            )}
             <Grid item xs={12} sm={4.1} mt={2} id="activities">
-              <MDTypography variant="body2" fontWeight="bold" fontSize="18px">
-                Activities
+              <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                ACTIVITIES
               </MDTypography>
             </Grid>
             <Grid item xs={6} sm={6} mt={1}>
@@ -1771,10 +1780,9 @@ const Update = (props: any) => {
             </Grid>
             {activityRecord && (
               <>
-                {" "}
                 <Grid item xs={12} sm={12}>
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Sport Activity{" "}
+                    Sport Activity
                   </MDTypography>
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -1793,7 +1801,7 @@ const Update = (props: any) => {
                     onBlur={handleBlur}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
                     sx={{ width: "100%" }}
                     type="file"
@@ -1824,7 +1832,7 @@ const Update = (props: any) => {
                     onBlur={handleBlur}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
                     sx={{ width: "100%" }}
                     type="file"
@@ -1855,7 +1863,7 @@ const Update = (props: any) => {
                     onBlur={handleBlur}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
                     sx={{ width: "100%" }}
                     type="file"
@@ -1886,7 +1894,7 @@ const Update = (props: any) => {
                     onBlur={handleBlur}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={4} mt={2}>
                   <MDInput
                     sx={{ width: "100%" }}
                     type="file"
@@ -1904,7 +1912,7 @@ const Update = (props: any) => {
               item
               xs={12}
               sm={12}
-              py={2}
+              m={2}
               sx={{ display: "flex", justifyContent: "space-between" }}
               mr={5}
             >

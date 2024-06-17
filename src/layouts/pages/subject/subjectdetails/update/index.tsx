@@ -232,7 +232,7 @@ const Update = (props: any) => {
                 name="max_weekly_class"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Max Weekly Class{" "}
+                    Max Weekly Class
                   </MDTypography>
                 }
                 value={values.max_weekly_class}
@@ -250,7 +250,7 @@ const Update = (props: any) => {
                 name="no_of_classes"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    No. of Classes{" "}
+                    No. of Classes
                   </MDTypography>
                 }
                 value={values.no_of_classes}
@@ -272,7 +272,7 @@ const Update = (props: any) => {
                   </MDTypography>
                 }
                 value={values.index}
-                // onChange={handleChange}
+                onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.index && Boolean(errors.index)}
                 helperText={touched.index && errors.index}

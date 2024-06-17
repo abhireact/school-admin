@@ -31,7 +31,7 @@ const SectionSubject = () => {
   //End
 
   // Fetch rbac  Date from useEffect: Start
-
+  const cookies_academic_year = Cookies.get("academic_year");
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
@@ -142,7 +142,7 @@ const SectionSubject = () => {
   };
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      academic_year: "2023-2024",
+      academic_year: cookies_academic_year,
     },
 
     onSubmit: (values, action) => {
@@ -162,7 +162,6 @@ const SectionSubject = () => {
         </>
       ) : (
         <>
-          {" "}
           <form onSubmit={handleSubmit}>
             <Card>
               <MDBox p={4}>
@@ -196,7 +195,7 @@ const SectionSubject = () => {
                           name="academic_year"
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Academic Year
+                              Academic Year *
                             </MDTypography>
                           }
                           value={values.academic_year}

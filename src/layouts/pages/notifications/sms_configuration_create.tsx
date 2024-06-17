@@ -35,9 +35,9 @@ export default function SMSConfigurationCreate(props: any) {
     sender_id_value: createOrEdir == "edit" ? props.data.sender_id_value : "",
     vender_name: createOrEdir == "edit" ? props.data.vendor_name : "",
     english_key: createOrEdir == "edit" ? props.data.english_key : "",
-    maximum_sms_Support: createOrEdir == "edit" ? props.data.maximum_sms_Support : "",
+    maximum_sms_Support: createOrEdir == "edit" ? props.data.maximum_sms_Support : 0,
     english_value: createOrEdir == "edit" ? props.data.english_value : "",
-    support_multiple_sms: createOrEdir == "edit" ? props.data.support_multiple_sms : "",
+    support_multiple_sms: createOrEdir == "edit" ? props.data.support_multiple_sms : false,
   };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
@@ -93,7 +93,7 @@ export default function SMSConfigurationCreate(props: any) {
               action.resetForm();
             })
             .catch((error) => {
-              console.error("Error fetching data:", error);
+              message.error(error.response.data.detail);
             });
         } else {
           axios
@@ -109,7 +109,7 @@ export default function SMSConfigurationCreate(props: any) {
               props.onSuccess();
             })
             .catch((error) => {
-              console.error("Error fetching data:", error);
+              message.error(error.response.data.detail);
             });
         }
       },
@@ -233,6 +233,7 @@ export default function SMSConfigurationCreate(props: any) {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Sender Id
@@ -248,6 +249,7 @@ export default function SMSConfigurationCreate(props: any) {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Sender Id Value
@@ -338,6 +340,7 @@ export default function SMSConfigurationCreate(props: any) {
             <Grid container spacing={3} key={index} p={2}>
               <Grid item xs={10} sm={4}>
                 <MDInput
+                  required
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
                       {`Key ${index + 1}`}
@@ -356,6 +359,7 @@ export default function SMSConfigurationCreate(props: any) {
               </Grid>
               <Grid item xs={10} sm={4}>
                 <MDInput
+                  required
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
                       {`Value ${index + 1}`}
@@ -395,7 +399,7 @@ export default function SMSConfigurationCreate(props: any) {
           ))}
           <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
             <Grid item>
-              <Link href="/notification/smsconfiguration" variant="body2">
+              <Link href="/notification/sms_configuration" variant="body2">
                 <MDButton color="dark" variant="contained">
                   Back
                 </MDButton>

@@ -6,7 +6,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
+import { IconButton, Tooltip } from "@mui/material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
@@ -18,11 +18,11 @@ import { useTheme } from "@emotion/react";
 import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import Tooltip from "@mui/material/Tooltip";
+
 import * as XLSX from "xlsx";
 const token = Cookies.get("token");
 
@@ -209,15 +209,21 @@ const Class = () => {
 
           {rbacData ? (
             rbacData?.find((element: string) => element === "classdelete") ? (
-              <Tooltip title="Delete Class">
-                <IconButton
-                  onClick={() => {
-                    handleDelete(row.class_name);
-                  }}
+              <IconButton>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure to Delete it ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(row.class_name)} // Pass index to confirm function
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
                 >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
+                  <Tooltip title="Delete" placement="top">
+                    <DeleteIcon />
+                  </Tooltip>
+                </Popconfirm>
+              </IconButton>
             ) : (
               ""
             )

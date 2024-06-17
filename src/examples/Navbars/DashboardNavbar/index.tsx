@@ -315,7 +315,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
-
+import DownloadIcon from "@mui/icons-material/Download";
 // Material Dashboard 2 PRO React TS components
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
@@ -324,11 +324,10 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 // Material Dashboard 2 PRO React TS examples components
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
-import { Grid, Card, Autocomplete, Divider } from "@mui/material";
+import { Grid, Card, Autocomplete, Divider, Tooltip } from "@mui/material";
 import MDTypography from "components/MDTypography";
 import MarkChatReadIcon from "@mui/icons-material/MarkChatRead";
 import MarkChatUnreadIcon from "@mui/icons-material/MarkChatUnread";
-// Custom styles for DashboardNavbar
 import axios from "axios";
 import Cookies from "js-cookie";
 const token = Cookies.get("token");
@@ -351,6 +350,7 @@ import {
 } from "context";
 import MYAccount from "layouts/pages/authentication/myaccount";
 import { useFormik } from "formik";
+import MDButton from "components/MDButton";
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -359,12 +359,18 @@ interface Props {
   isMini?: boolean;
 }
 interface Notification {
-  id: number;
-  from_user_id: string;
-  subject: string;
+  created_at: string;
   description: string;
-  status: boolean;
+  employee_name: string;
+  file_content_type: Array<string>;
+  file_file_size: string;
+  file_name: Array<string>;
+  from_user_id: string;
+  id: number;
   notification_type: string;
+  status: boolean;
+  subject: string;
+  user_type: string;
 }
 
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
@@ -372,13 +378,20 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [editopen, setEditOpen] = useState(false);
   const [unread, setUnread] = useState(0);
   const [editdata, setEditdata] = useState<Notification>({
-    id: 0,
-    from_user_id: "",
-    subject: "",
+    created_at: "",
     description: "",
-    status: false,
+    employee_name: "",
+    file_content_type: [],
+    file_file_size: "",
+    file_name: [],
+    from_user_id: "",
+    id: 2612592,
     notification_type: "",
+    status: true,
+    subject: "",
+    user_type: null,
   });
+
   const [navbarType, setNavbarType] = useState<
     "fixed" | "absolute" | "relative" | "static" | "sticky"
   >();
@@ -500,6 +513,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const handleOpenMenu = (event: any) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
   const handleClickOpenEdit = (data: any) => {
+    console.log(data, "comming data");
     setEditdata(data);
     setEditOpen(true);
     if (data.status) {
@@ -528,9 +542,6 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
 
   const handleClickCloseEdit = () => {
     setEditOpen(false);
-  };
-  const handleEditSuccess = () => {
-    handleClickCloseEdit();
   };
   // Render the notifications menu
   const renderMenu = () => (
@@ -583,6 +594,23 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       return colorValue;
     },
   });
+  useEffect(() => {
+    // Cleanup the old cookie before setting the new one
+    Cookies.remove("academic_year");
+    if (values.academic_year) {
+      Cookies.set("academic_year", values.academic_year, { expires: 7 });
+    }
+  }, [values.academic_year]);
+
+  const downloadBase64File = (base64Data: string, fileName: string) => {
+    const fileNameParts = fileName.split(".");
+    const fileExtension = fileNameParts[fileNameParts.length - 1];
+    const linkSource = `data:${fileExtension};base64,${base64Data}`;
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+  };
 
   return (
     <AppBar
@@ -591,11 +619,53 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
       <Dialog open={editopen} onClose={handleClickCloseEdit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={12} m={4}>
-            <MDTypography variant="h6">{editdata.subject}</MDTypography>
-            <Divider />
-            <MDTypography variant="button">{editdata.description}</MDTypography>
+        <Grid container spacing={2} p={2}>
+          <Grid item xs={12} sm={10}>
+            <MDTypography variant="h6" fontWeight="bold">
+              Subject:{editdata.subject}
+              <br />
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                sender:{editdata.employee_name}
+              </MDTypography>
+            </MDTypography>
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <MDTypography variant="h6" fontWeight="bold">
+              Message:{editdata.description}
+              <br />
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Date:{editdata.created_at}
+              </MDTypography>
+            </MDTypography>
+          </Grid>
+
+          <Grid container p={2}>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                Attached Files
+              </MDTypography>
+              {editdata.file_content_type
+                ? editdata.file_name.map((particular, index) => (
+                    <MDButton
+                      key={index}
+                      onClick={() =>
+                        downloadBase64File(
+                          editdata.file_content_type[index],
+                          editdata.file_name[index]
+                        )
+                      }
+                    >
+                      {editdata.file_name[index]}
+                    </MDButton>
+                  ))
+                : null}
+            </Grid>
+            <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <MDButton color="info" variant="text" onClick={handleClickCloseEdit}>
+                cancel
+              </MDButton>
+            </Grid>
           </Grid>
         </Grid>
       </Dialog>
@@ -620,15 +690,14 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                 onChange={(_event, value) => {
                   handleChange({ target: { name: "academic_year", value } });
                 }}
-                options={
-                  Array.from(
-                    new Set(
-                      data.filter((item) => item.academic_year).map((item) => item.academic_year)
-                      // .concat(currentAcademic ? [currentAcademic.academic_year] : [])
-                    )
+                options={Array.from(
+                  new Set(
+                    data
+                      .filter((item) => item.academic_year)
+                      .map((item) => item.academic_year)
+                      .concat(currentAcademic ? [currentAcademic.academic_year] : [])
                   )
-                  // .filter((option) => option !== currentAcademic?.academic_year)
-                }
+                ).filter((option) => option !== currentAcademic?.academic_year)}
                 renderInput={(params) => (
                   <MDInput
                     required

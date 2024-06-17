@@ -41,23 +41,23 @@ const CloudAdminRouts = [
     ),
     collapse: [
       {
+        name: "SMS Configuration",
+        key: "sms_configuration",
+        route: "notification/sms_configuration",
+        component: <SmsConfiguration />,
+      },
+      {
         name: "SMS Setting",
         key: "sms_setting",
         route: "sms/sms_setting",
         component: <SmsSetting />,
-      },
-      {
-        name: "SMS Configuration",
-        key: "sms_configuration",
-        route: "sms/sms_configuration",
-        component: <SmsConfiguration />,
       },
     ],
   },
   {
     name: "Sms Configuration",
     key: "sms_configuration",
-    route: "notification/sms_configuration",
+    route: "notification/sms_configuration_create",
     component: <SMSConfiguration />,
   },
   {

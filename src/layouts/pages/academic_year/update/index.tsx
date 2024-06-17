@@ -34,6 +34,13 @@ const validationSchema = Yup.object().shape({
         return year >= 2000 && year <= 3000;
       }
       return true;
+    })
+    .test("endDateGreaterThanStartDate", "Incorrect Format", function (value) {
+      const { start_date } = this.parent;
+      if (value && start_date) {
+        return value.getTime() > start_date.getTime();
+      }
+      return true;
     }),
 });
 const Update = (props: any) => {
@@ -83,13 +90,13 @@ const Update = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              ACADEMIC YEAR
+              ACADEMIC YEAR *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
               placeholder="eg. 2023-2024"
-              sx={{ width: "65%" }}
+              sx={{ width: "70%" }}
               variant="standard"
               name="academic_year"
               value={values.academic_year}
@@ -102,18 +109,19 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              START DATE
+              START DATE *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>
             <MDInput
               type="date"
-              sx={{ width: "65%" }}
+              sx={{ width: "70%" }}
               variant="standard"
               name="start_date"
               value={values.start_date}
               onChange={handleChange}
               error={touched.start_date && Boolean(errors.start_date)}
+              success={values.start_date.length && !errors.start_date}
               helperText={touched.start_date && errors.start_date}
               onBlur={handleBlur}
             />
@@ -121,14 +129,14 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              END DATE
+              END DATE *
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={7}>
             <MDInput
               type="date"
-              sx={{ width: "65%" }}
+              sx={{ width: "70%" }}
               variant="standard"
               name="end_date"
               value={values.end_date}
@@ -136,6 +144,7 @@ const Update = (props: any) => {
               onBlur={handleBlur}
               error={touched.end_date && Boolean(errors.end_date)}
               helperText={touched.end_date && errors.end_date}
+              success={values.end_date.length && !errors.end_date}
             />
           </Grid>
 

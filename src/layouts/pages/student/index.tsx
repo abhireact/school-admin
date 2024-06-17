@@ -10,9 +10,10 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import GroupsIcon from "@mui/icons-material/Groups";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
+import { IconButton, Tooltip } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Update from "./update";
@@ -143,6 +144,7 @@ const Student = () => {
         console.log(response.data);
       })
       .catch((error) => {
+        message.error(error.response.data.detail);
         console.error("Error fetching data:", error);
       });
   };
@@ -192,7 +194,9 @@ const Student = () => {
                   handleOpenupdate(index);
                 }}
               >
-                <CreateRoundedIcon />
+                <Tooltip title="Edit Student" placement="top">
+                  <CreateRoundedIcon />
+                </Tooltip>
               </IconButton>
             ) : (
               ""
@@ -206,13 +210,15 @@ const Student = () => {
               handleDelete(row.user_id);
             }}
           >
-            <DeleteIcon />
+            <Tooltip title="Delete Student" placement="top">
+              <DeleteIcon />
+            </Tooltip>
           </IconButton>
         </MDTypography>
       ),
 
       full_name: `${row.first_name} ${row.middle_name == null ? "" : row.middle_name} ${
-        row.last_name
+        row.last_name == null ? "" : row.last_name
       }`,
       class_name: row.class_name,
       gender: row.gender,
@@ -417,14 +423,16 @@ const Student = () => {
                         xs={12}
                         sm={12}
                         ml={2}
-                        sx={{ display: "flex", justifyContent: "flex-end" }}
+                        sx={{ display: "flex", justifyContent: "flex-start" }}
                       >
                         <MDButton color="info" variant="contained" type="submit">
                           Show Data
                         </MDButton>
                       </Grid>
                     </Grid>
-                    {data.length > 1 && <DataTable canSearch={true} table={dataTableData} />}
+                    {data.length > 0 && (
+                      <DataTable canSearch={true} isSorted={false} table={dataTableData} />
+                    )}
                   </MDBox>
                 </form>
               </Card>

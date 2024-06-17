@@ -40,22 +40,20 @@ const Create = (props: any) => {
         .then(() => {
           message.success("Created successfully!");
           fetchData();
-          handleClose();
+          action.resetForm();
         })
         .catch((error: any) => {
           message.error(error.response.data.detail);
         });
-
-      action.resetForm();
     },
   });
   return (
     <form onSubmit={handleSubmit}>
-      <MDBox p={4}>
+      <MDBox pt={4} px={4} pb={1}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              HOUSE DETAILS
+              HOUSE DETAILS *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7}>

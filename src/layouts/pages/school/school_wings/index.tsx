@@ -15,10 +15,10 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { Card, useMediaQuery } from "@mui/material";
+import { Card, Tooltip, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
 import * as XLSX from "xlsx";
@@ -143,12 +143,20 @@ const Wing = () => {
           )}
           {rbacData ? (
             rbacData?.find((element: string) => element === "wingsdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row.wing_name);
-                }}
-              >
-                <DeleteIcon />
+              <IconButton>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure to Delete it ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(row.wing_name)} // Pass index to confirm function
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Tooltip title="Delete" placement="top">
+                    <DeleteIcon />
+                  </Tooltip>
+                </Popconfirm>
               </IconButton>
             ) : (
               ""
