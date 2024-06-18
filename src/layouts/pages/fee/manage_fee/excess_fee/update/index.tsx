@@ -70,9 +70,16 @@ const Update = (props: any) => {
     <>
       <Card>
         <form onSubmit={handleSubmit}>
+          <Grid container spacing={3} p={3}>
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Edit Excess Fees
+              </MDTypography>
+            </Grid>
+          </Grid>
           <MDBox p={4}>
             <Grid container>
-              <Grid item xs={12} sm={4} mt={2}>
+              <Grid item xs={12} sm={4}>
                 <MDInput
                   name="name"
                   sx={{ width: "80%" }}

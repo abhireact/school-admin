@@ -11,7 +11,7 @@ build:
     - npm install ajv --save-dev
     - npm run build
   only:
-    - main  
+    - main
   artifacts:
     paths:
       - ./build
@@ -30,4 +30,3 @@ deploy:PROD:
   when: manual
   only:
     - main
-

@@ -697,7 +697,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                       .map((item) => item.academic_year)
                       .concat(currentAcademic ? [currentAcademic.academic_year] : [])
                   )
-                ).filter((option) => option !== currentAcademic?.academic_year)}
+                )}
                 renderInput={(params) => (
                   <MDInput
                     required

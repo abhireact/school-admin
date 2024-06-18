@@ -595,6 +595,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "90%" }}
                 variant="standard"
@@ -825,6 +826,7 @@ const Create = (props: any) => {
             <Grid item xs={6} sm={4}>
               <MDInput
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 required
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "90%" }}
@@ -1257,6 +1259,7 @@ const Create = (props: any) => {
                 <Grid item xs={6} sm={4}>
                   <MDInput
                     type="date"
+                    onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                     sx={{ width: "90%" }}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
@@ -1499,6 +1502,7 @@ const Create = (props: any) => {
                   <MDInput
                     sx={{ width: "90%" }}
                     type="date"
+                    onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                     InputLabelProps={{ shrink: true }}
                     variant="standard"
                     name={`guardian_info[${index}].date_of_birth`}
