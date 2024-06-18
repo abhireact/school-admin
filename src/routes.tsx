@@ -16,7 +16,6 @@ import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
-import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 import React, { createRef } from "react";
 import Myrbacroutes from "myrbacroutes";
 let route2 = mainroutes;
