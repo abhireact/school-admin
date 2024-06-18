@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Icon from "@mui/material/Icon";
-import { Grid, Tooltip } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
@@ -12,27 +12,34 @@ import { Table } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
 import DataTable from "examples/Tables/DataTable";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
-import { Popconfirm, message } from "antd";
-import EditMessageTemplate from "./template_form";
+import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configuration";
+// import EditMessageTemplate from "./template_form";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Popconfirm, message } from "antd";
+import SMSConfigurationCreate from "layouts/pages/cloud_admin/sms_config/sms_configuration_create";
 const token = Cookies.get("token");
-export default function MessageTemplate() {
+export default function SmsConfiguration() {
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
+
   const [templateData, setTemplateData] = useState([]);
   useEffect(() => {
     fetchData();
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_templates/school_incharge`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `http://10.0.20.200:8000/mg_sms_configuration/school_incharge`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
+        console.log(response.data, "configuration data");
         setTemplateData(response.data);
       }
     } catch (error) {
@@ -54,11 +61,11 @@ export default function MessageTemplate() {
   const confirm = async (data: any) => {
     console.log(data, "delete data");
     const delete_value = {
-      module_name: data.module_name,
-      sms_activity: data.sms_activity,
+      url: data.url,
+      vendor: data.vendor_name,
     };
     axios
-      .delete("http://10.0.20.200:8000/mg_templates/school_incharge", {
+      .delete("http://10.0.20.200:8000/mg_sms_configuration/school_incharge", {
         data: delete_value,
         headers: {
           "Content-Type": "application/json",
@@ -80,21 +87,17 @@ export default function MessageTemplate() {
   };
   const feeCategory = {
     columns: [
-      { Header: "MODULE NAME", accessor: "modulename", Width: "15%" },
-      { Header: "ACTIVITY", accessor: "activity", Width: "15%" },
-      { Header: "VENDOR NAME", accessor: "vendername", Width: "15%" },
-      {
-        Header: "MESSAGE",
-        accessor: "message",
-        Width: "40%",
-      },
-      { Header: "ACTIONS", accessor: "action", Width: "15%" },
+      { Header: "VENDOR", accessor: "vendor" },
+      { Header: "URL", accessor: "url" },
+      { Header: "SENDER ID", accessor: "sender_id" },
+      { Header: "School Subdomain", accessor: "sub_domain" },
+      { Header: "ACTIONS", accessor: "action" },
     ],
     rows: templateData.map((data, index) => ({
-      modulename: data.module_name,
-      activity: data.sms_activity,
-      vendername: data.vendor,
-      message: data.message,
+      vendor: data.vendor_name,
+      url: data.url,
+      sender_id: data.sender_id,
+      sub_domain: data.sub_domain,
       action: (
         <Grid container spacing={1}>
           <Grid item>
@@ -123,35 +126,29 @@ export default function MessageTemplate() {
       ),
     })),
   };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <Dialog open={editopen} onClose={handleClickCloseEdit}>
-          <EditMessageTemplate data={editdata} onSuccess={handleEditSuccess} />
+        <Dialog open={editopen} onClose={handleClickCloseEdit} maxWidth="lg">
+          <SMSConfigurationCreate data={editdata} onSuccess={handleEditSuccess} />
         </Dialog>
         <Grid container p={3}>
           <Grid item xs={12} sm={6} mt={2}>
             <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Message Template
+              SMS Configuration
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link to="/notification/create_template">
+            <Link to="/notification/sms_configuration_create">
               <MDButton variant="outlined" color="info">
-                + Create Template
+                + Create Configuration
               </MDButton>
             </Link>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={12} mt={2}>
-          <DataTable
-            table={feeCategory}
-            isSorted={false}
-            entriesPerPage={false}
-            showTotalEntries={false}
-          />
-        </Grid>
+        <DataTable table={feeCategory} isSorted={false} showTotalEntries={false} canSearch={true} />
       </Card>
     </DashboardLayout>
   );
