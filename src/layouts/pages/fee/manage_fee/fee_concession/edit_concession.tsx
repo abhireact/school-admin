@@ -10,8 +10,8 @@ import MDInput from "components/MDInput";
 const token = Cookies.get("token");
 export default function EditConcession(props: any) {
   const initialValues = props.data;
-  console.log(props,"props");
-  
+  console.log(props, "props");
+
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,

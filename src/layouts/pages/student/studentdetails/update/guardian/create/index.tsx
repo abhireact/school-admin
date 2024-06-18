@@ -207,6 +207,7 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "90%" }}
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 InputLabelProps={{ shrink: true }}
                 variant="standard"
                 name={`date_of_birth`}

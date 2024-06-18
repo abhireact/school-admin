@@ -13,23 +13,60 @@ import { useSelector } from "react-redux";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   start_date: Yup.date()
-    .required("Required *")
-    .test("year-range", "Incorrect format", function (value) {
+    .required("Start Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
       if (value) {
-        const year = value.getFullYear();
-        return year >= 2000 && year <= 3000;
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
       }
       return true;
     }),
   end_date: Yup.date()
-    .required("Required *")
-    .test("year-range", "Incorrect format", function (value) {
+    .required("End Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
       if (value) {
-        const year = value.getFullYear();
-        return year >= 2000 && year <= 3000;
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
       }
       return true;
-    }),
+    })
+    .test(
+      "endDateGreaterThanOrEqualToStartDate",
+      "End date should be greater than or equal to start date",
+      function (value) {
+        const { start_date } = this.parent;
+        return start_date ? value.getTime() >= start_date.getTime() : true;
+      }
+    ),
+  due_date: Yup.date()
+    .required("Due Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
+      if (value) {
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
+      }
+      return true;
+    })
+    .test(
+      "dueDateValidation",
+      "Due date should be equal to or between start date and end date",
+      function (value) {
+        const { start_date, end_date } = this.parent;
+        return (
+          start_date &&
+          value.getTime() >= start_date.getTime() &&
+          end_date &&
+          value.getTime() <= end_date.getTime()
+        );
+      }
+    ),
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
+    .required("Academic Year is required"),
+  category_name: Yup.string().required("Category Name is required"),
+  fee_particular_name: Yup.string().required("Fee Particular Name is required"),
+  name: Yup.string().required(" Collection Name is required"),
+  fine_name: Yup.string().required("Late Fine Name is required"),
 });
 
 const Update = (props: any) => {
@@ -81,12 +118,20 @@ const Update = (props: any) => {
   });
   return (
     <form onSubmit={handleSubmit}>
+      <Grid container p={3}>
+        <Grid item xs={12} sm={6}>
+          <MDTypography variant="h4" fontWeight="bold" color="secondary">
+            Edit Fee Schedule
+          </MDTypography>
+        </Grid>
+      </Grid>
       <MDBox p={4}>
         {" "}
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDInput
-              sx={{ width: "80%" }}
+              disabled
+              sx={{ width: "100%" }}
               variant="standard"
               name="category_name"
               label={
@@ -99,7 +144,8 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDInput
-              sx={{ width: "80%" }}
+              disabled
+              sx={{ width: "100%" }}
               variant="standard"
               name="class_name"
               label={
@@ -112,7 +158,8 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDInput
-              sx={{ width: "80%" }}
+              disabled
+              sx={{ width: "100%" }}
               variant="standard"
               name="section_name"
               label={
@@ -125,7 +172,7 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDInput
-              sx={{ width: "80%" }}
+              sx={{ width: "100%" }}
               variant="standard"
               name="name"
               label={
@@ -145,7 +192,9 @@ const Update = (props: any) => {
           <Grid item xs={12} sm={4}>
             <MDInput
               type="date"
-              sx={{ width: "80%" }}
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+              InputLabelProps={{ shrink: true }}
+              sx={{ width: "100%" }}
               variant="standard"
               name="start_date"
               value={values.start_date}
@@ -158,14 +207,14 @@ const Update = (props: any) => {
               onBlur={handleBlur}
               error={touched.start_date && Boolean(errors.start_date)}
               helperText={touched.start_date && errors.start_date}
-              success={values.start_date.length && !errors.start_date}
             />
           </Grid>
-
           <Grid item xs={12} sm={4}>
             <MDInput
               type="date"
-              sx={{ width: "80%" }}
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+              InputLabelProps={{ shrink: true }}
+              sx={{ width: "100%" }}
               variant="standard"
               name="end_date"
               value={values.end_date}
@@ -176,7 +225,7 @@ const Update = (props: any) => {
               }
               onChange={handleChange}
               onBlur={handleBlur}
-              success={values.end_date.length && !errors.end_date}
+              inputProps={{ min: values.start_date }}
               error={touched.end_date && Boolean(errors.end_date)}
               helperText={touched.end_date && errors.end_date}
             />
@@ -184,10 +233,12 @@ const Update = (props: any) => {
           <Grid item xs={12} sm={4}>
             <MDInput
               type="date"
-              sx={{ width: "80%" }}
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+              InputLabelProps={{ shrink: true }}
+              sx={{ width: "100%" }}
               variant="standard"
-              name="end_date"
-              value={values.end_date}
+              name="due_date"
+              value={values.due_date}
               label={
                 <MDTypography variant="button" fontWeight="bold" color="secondary">
                   Due Date
@@ -195,9 +246,9 @@ const Update = (props: any) => {
               }
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.end_date && Boolean(errors.end_date)}
-              helperText={touched.end_date && errors.end_date}
-              success={values.end_date.length && !errors.end_date}
+              inputProps={{ max: values.end_date, min: values.start_date }}
+              error={touched.due_date && Boolean(errors.due_date)}
+              helperText={touched.due_date && errors.due_date}
             />
           </Grid>
 

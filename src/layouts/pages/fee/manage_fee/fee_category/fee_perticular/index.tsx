@@ -103,7 +103,7 @@ export default function ManageFeeAmountPerticular() {
           <Grid item>
             <Tooltip title="Edit" placement="top">
               <IconButton disabled={!row.is_editable} onClick={() => handleClickOpenEdit(row)}>
-                <EditIcon />
+                <EditIcon fontSize="small" color="secondary" />
               </IconButton>
             </Tooltip>
           </Grid>
@@ -119,7 +119,7 @@ export default function ManageFeeAmountPerticular() {
                 cancelText="No"
               >
                 <Tooltip title="Delete" placement="top">
-                  <DeleteIcon />
+                  <DeleteIcon fontSize="small" color="secondary" />
                 </Tooltip>
               </Popconfirm>
             </IconButton>

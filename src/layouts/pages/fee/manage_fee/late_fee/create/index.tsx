@@ -64,7 +64,7 @@ const Create = (props: any) => {
         description: "",
         late_fee_calculation_type: "",
         // due_date: [{ day_after_due_date: "", amount: "" }],
-        due_date: [{ particular_name: "", amount: "" }],
+        due_date: [{ day_after_due_date: "", amount: "" }],
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -97,7 +97,7 @@ const Create = (props: any) => {
   // };
   // Function to add a new particular field
   const addParticular = () => {
-    setFieldValue("due_date", [...values.due_date, { particular_name: "", amount: "" }]);
+    setFieldValue("due_date", [...values.due_date, { day_after_due_date: "", amount: "" }]);
   };
 
   const removeParticular = (index: number) => {
@@ -225,37 +225,37 @@ const Create = (props: any) => {
               />
             </Grid>
             {values.late_fee_calculation_type &&
-              values.due_date.map((particular_name, index) => (
+              values.due_date.map((day_after_due_date, index) => (
                 <Grid item container sm={12} key={index} spacing={3}>
                   <Grid item xs={12} sm={4} py={1}>
                     <MDInput
-                      placeholder="Enter Particular Name"
+                      placeholder="Enter Days After Due Date"
                       sx={{ width: "100%" }}
                       variant="standard"
-                      name={`due_date.${index}.particular_name`}
+                      name={`due_date.${index}.day_after_due_date`}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Particular Name
+                          Days After Due Date
                         </MDTypography>
                       }
                       required
-                      value={particular_name.particular_name}
+                      value={day_after_due_date.day_after_due_date}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       // error={
-                      //   touched.due_date?.[index]?.particular_name &&
+                      //   touched.due_date?.[index]?.day_after_due_date &&
                       //   Boolean(
                       //     (errors.due_date as FormikErrors<Particular>[])?.[index]
-                      //       ?.particular_name
+                      //       ?.day_after_due_date
                       //   )
                       // }
                       // success={
-                      //   particular_name.particular_name.length > 0 &&
-                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      //   day_after_due_date.day_after_due_date.length > 0 &&
+                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
                       // }
                       // helperText={
-                      //   touched.due_date?.[index]?.particular_name &&
-                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      //   touched.due_date?.[index]?.day_after_due_date &&
+                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
                       // }
                     />
                   </Grid>
@@ -264,30 +264,30 @@ const Create = (props: any) => {
                       placeholder="Enter Amount"
                       sx={{ width: "100%" }}
                       variant="standard"
-                      name={`due_date.${index}.particular_name`}
+                      name={`due_date.${index}.amount`}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Particular Name
+                          Amount{" "}
                         </MDTypography>
                       }
                       required
-                      value={particular_name.particular_name}
+                      value={day_after_due_date.amount}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       // error={
-                      //   touched.due_date?.[index]?.particular_name &&
+                      //   touched.due_date?.[index]?.day_after_due_date &&
                       //   Boolean(
                       //     (errors.due_date as FormikErrors<Particular>[])?.[index]
-                      //       ?.particular_name
+                      //       ?.day_after_due_date
                       //   )
                       // }
                       // success={
-                      //   particular_name.particular_name.length > 0 &&
-                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      //   day_after_due_date.day_after_due_date.length > 0 &&
+                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
                       // }
                       // helperText={
-                      //   touched.due_date?.[index]?.particular_name &&
-                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.particular_name
+                      //   touched.due_date?.[index]?.day_after_due_date &&
+                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
                       // }
                     />
                   </Grid>

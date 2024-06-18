@@ -268,6 +268,7 @@ const Update = (props: any) => {
             <Grid item xs={6} sm={4}>
               <MDInput
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 sx={{ width: "80%" }}
                 variant="standard"
                 InputLabelProps={{ shrink: true }}

@@ -25,39 +25,6 @@ import NewFeeSchedule from "./new_fee_schedule";
 
 import CollectionList from "./collection_list";
 const FeeSchedule = () => {
-  // To fetch rbac from redux:  Start
-  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
-  // console.log("rbac user", rbacData);
-  //End
-
-  // Fetch rbac  Date from useEffect: Start
-
-  const [rbacData, setRbacData] = useState([]);
-  const fetchRbac = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        console.log("rbac user", response.data);
-        setRbacData(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchRbac();
-  }, [token]);
-  //End
-
-  const [createpage, setCreatepage] = useState(false);
-  const handleCreatePage = () => {
-    setCreatepage(!createpage);
-  };
   return (
     <DashboardLayout>
       <DashboardNavbar />

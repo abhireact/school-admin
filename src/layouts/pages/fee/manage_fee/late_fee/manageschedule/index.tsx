@@ -28,66 +28,11 @@ const ManageSchedule = (props: any) => {
   const { manageData, handleClose } = props;
   const { classes, account, studentcategory, student } = useSelector((state: any) => state);
   const [data, setData] = useState([]);
-  const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
 
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.class_name);
-    setFilteredClass(filtereddata);
-  }
-  const [sectiondata, setsectiondata] = useState([]);
   const [filteredSection, setFilteredSection] = useState([]);
-
-  function filterSectionData(data: any, class_name: any) {
-    console.log(classdata, "class data");
-    let filtereddata = classdata
-      .filter(
-        (item: any) => item.class_name === class_name && item.academic_year === values.academic_year
-      )
-      .map((item: any) => item.section_data);
-
-    console.log(filtereddata, "filter section Data");
-    setFilteredSection(filtereddata);
-  }
 
   console.log(filteredSection, "section name");
 
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setAcademicdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
@@ -97,30 +42,39 @@ const ManageSchedule = (props: any) => {
         fine_name: manageData.fine_name,
       },
       validationSchema: validationSchema,
-      onSubmit: (values, action) => {
-        axios
-          .post(`${process.env.REACT_APP_BASE_URL}/late_fee/collection`, values, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setData(response.data);
-            console.log("may 20", response.data);
-          })
-          .catch((error: any) => {
-            message.error(error.response.data.detail);
-          });
+
+      onSubmit: (values: any, action: { resetForm: () => void }) => {
+        console.log(" values", values);
+        action.resetForm();
       },
     });
-  // console.log(manageData.fine_name, "fine name");
+
+  // call api to show collection data
+  useEffect(() => {
+    if (values.section_name) {
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/late_fee/collection`, values, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setData(response.data);
+          console.log("data response", response.data);
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
+    }
+  }, [values.section_name]);
+
   const handleCheckboxChange = (index: number) => {
-    setData((prevSelections) => [
-      ...prevSelections,
-      (prevSelections[index].select = !prevSelections[index].select),
-    ]);
-    console.log(data, "change checkbox");
+    setData((prevData) => {
+      const updatedData = [...prevData];
+      updatedData[index].select = !updatedData[index].select;
+      return updatedData;
+    });
   };
   const handleSelectAll = () => {
     setData((prevData) => prevData.map((item) => ({ ...item, select: true })));
@@ -158,120 +112,15 @@ const ManageSchedule = (props: any) => {
     <>
       <Card>
         <form onSubmit={handleSubmit}>
+          <Grid container p={3}>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Manage Late Fee
+              </MDTypography>
+            </Grid>
+          </Grid>
           <MDBox p={4}>
-            <Grid container>
-              {/* <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  disabled
-                  defaultValue={Cacademic_year}
-                  sx={{ width: "80%" }}
-                  disableClearable
-                  value={values.academic_year}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "academic_year", value },
-                    });
-                    filterDataByAcdName(classdata, value);
-                  }}
-                  options={academicdata.map((acd) => acd.academic_year)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      defaultValue={Cacademic_year}
-                      name="academic_year"
-                      placeholder="eg. 2022-2023"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Academic Year
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.academic_year}
-                      {...params}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.academic_year && Boolean(errors.academic_year)}
-                      success={values.academic_year.length && !errors.academic_year}
-                      helperText={touched.academic_year && errors.academic_year}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  sx={{ width: "80%" }}
-                  disableClearable
-                  value={values.class_name}
-                  onChange={
-                    filteredClass.length >= 1
-                      ? (event, value) => {
-                          handleChange({
-                            target: { name: "class_name", value },
-                          });
-                          filterSectionData(sectiondata, value);
-                        }
-                      : undefined
-                  }
-                  options={filteredClass}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="class_name"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Class Name
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.class_name}
-                      {...params}
-                      variant="standard"
-                      error={touched.class_name && Boolean(errors.class_name)}
-                      success={values.class_name.length && !errors.class_name}
-                      helperText={touched.class_name && errors.class_name}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  sx={{ width: "80%" }}
-                  disableClearable
-                  value={values.section_name}
-                  onChange={
-                    filteredSection.length >= 1
-                      ? (event, value) => {
-                          handleChange({
-                            target: { name: "section_name", value },
-                          });
-                        }
-                      : undefined
-                  }
-                  options={
-                    filteredSection[0]
-                      ? filteredSection[0].map((sectiondata: any) => sectiondata.section_name)
-                      : []
-                  }
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="section_name"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Section Name
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.section_name}
-                      {...params}
-                      variant="standard"
-                      error={touched.section_name && Boolean(errors.section_name)}
-                      success={values.section_name.length && !errors.section_name}
-                      helperText={touched.section_name && errors.section_name}
-                    />
-                  )}
-                />
-              </Grid> */}
+            <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   onChange={(_event, value) => {
@@ -365,31 +214,6 @@ const ManageSchedule = (props: any) => {
                   )}
                 />
               </Grid>
-              <Grid
-                item
-                container
-                xs={12}
-                sm={12}
-                sx={{ display: "flex", justifyContent: "flex-end" }}
-                mr={2}
-              >
-                <Grid item mt={2} mr={2}>
-                  <MDButton
-                    color="dark"
-                    variant="contained"
-                    onClick={() => {
-                      handleClose(false);
-                    }}
-                  >
-                    Back
-                  </MDButton>
-                </Grid>
-                <Grid item mt={2}>
-                  <MDButton color="info" variant="contained" type="submit">
-                    Submit
-                  </MDButton>
-                </Grid>
-              </Grid>
             </Grid>
           </MDBox>
         </form>
@@ -424,16 +248,6 @@ const ManageSchedule = (props: any) => {
                           &nbsp; None
                           <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
                         </td>
-                        <td>
-                          {" "}
-                          <MDButton
-                            color="info"
-                            variant="contained"
-                            onClick={() => handleCollectionSubmit()}
-                          >
-                            Submit
-                          </MDButton>
-                        </td>
                       </tr>
                     </thead>
                     <tbody>
@@ -455,21 +269,36 @@ const ManageSchedule = (props: any) => {
                     </tbody>
                   </table>
                 </Grid>
-
-                {/* <Grid
+                <Grid
                   item
                   container
                   xs={12}
-                  sm={6}
-                  mr={8}
+                  sm={12}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
+                  mr={2}
                 >
+                  <Grid item mt={2} mr={2}>
+                    <MDButton
+                      color="dark"
+                      variant="contained"
+                      onClick={() => {
+                        handleClose(false);
+                      }}
+                    >
+                      Back
+                    </MDButton>
+                  </Grid>
                   <Grid item mt={2}>
-                    <MDButton color="info" variant="contained">
+                    <MDButton
+                      color="info"
+                      variant="contained"
+                      type="submit"
+                      onClick={() => handleCollectionSubmit()}
+                    >
                       Submit
                     </MDButton>
                   </Grid>
-                </Grid> */}
+                </Grid>
               </Grid>
             </MDBox>
           </>

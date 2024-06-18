@@ -1222,6 +1222,7 @@ const PayFee = (props: any) => {
           <Grid item xs={12} sm={4} py={1}>
             <MDInput
               type="date"
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
               InputLabelProps={{ shrink: true }}
               sx={{ width: "80%" }}
               name="collection_date"

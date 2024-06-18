@@ -2,17 +2,19 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Icon from "@mui/material/Icon";
-import { Grid, Link, Tooltip } from "@mui/material";
+import { Grid, IconButton, Link, Tooltip } from "@mui/material";
 import Card from "@mui/material/Card";
 import Dialog from "@mui/material/Dialog";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
+import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import DataTable from "examples/Tables/DataTable";
 import EditFeePerticularAmount from "./update";
 import Create from "./create";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Popconfirm, message } from "antd";
 const token = Cookies.get("token");
 export default function ManageFeeAmountPerticular() {
   const [editdata, setEditdata] = useState({});
@@ -57,6 +59,32 @@ export default function ManageFeeAmountPerticular() {
     handleClickCloseEdit();
   };
 
+  const confirm = async (data: any) => {
+    console.log(data, "confirm data");
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_category`, {
+        data: {
+          name: data.name,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success("Deleted Successfully");
+        fetchData();
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      message.error(error.response?.data?.detail || "An error occurred");
+    }
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   const feeConcessionData = {
     //
     columns: [
@@ -75,15 +103,31 @@ export default function ManageFeeAmountPerticular() {
         <Grid container spacing={1}>
           <Grid item>
             <Tooltip title="Edit" placement="top">
-              <Icon fontSize="small" onClick={() => handleClickOpenEdit(row)}>
-                edit
-              </Icon>
+              <IconButton
+                onClick={() => {
+                  handleClickOpenEdit(index);
+                }}
+              >
+                <CreateRoundedIcon fontSize="small" color="secondary" />
+              </IconButton>
             </Tooltip>
           </Grid>
           <Grid item>
-            <Tooltip title="Delete" placement="top">
-              <Icon fontSize="small">delete</Icon>
-            </Tooltip>
+            <IconButton>
+              <Popconfirm
+                title="Delete"
+                description="Are you sure to Delete it ?"
+                placement="topLeft"
+                onConfirm={() => confirm(row)} // Pass index to confirm function
+                onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete" placement="top">
+                  <DeleteIcon fontSize="small" color="secondary" />
+                </Tooltip>
+              </Popconfirm>
+            </IconButton>
           </Grid>
         </Grid>
       ),
