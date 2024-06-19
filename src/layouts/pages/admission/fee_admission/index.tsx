@@ -18,12 +18,18 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import TextField from "assets/theme/components/form/textField";
+import { useNavigate } from "react-router-dom";
 
 const initialValues = {
   amount: "",
+  collected_at: "",
+  cheque_number: "",
+  bank_name: "",
+  online_trans_no: "",
 };
 
 const Fee = () => {
+  const navigate = useNavigate();
   const [isOnlinePayment, setIsOnlinePayment] = useState(false);
   const [isCheque, setIsCheque] = useState(false);
   const [isDraft, setIsDraft] = useState(false);
@@ -52,66 +58,78 @@ const Fee = () => {
     // validationSchema: admissionformschema,
     onSubmit: async () => {},
   });
-
+  const collectiontypes = ["School", "Bank Details"];
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox p={3}>
-          <MDBox
-            style={{
-              textAlign: "center",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Fee Details
-            </MDTypography>
-          </MDBox>
-          <Grid container spacing={3} pt={2}>
-            <Grid item xs={12} sm={4}>
-              <FormField
-                label="Amount"
+        <MDBox p={4}>
+          <Grid container>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Fee Details
+              </MDTypography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={4} py={1}>
+              <MDInput
+                sx={{ width: "100%" }}
+                variant="standard"
                 name="amount"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Amount
+                  </MDTypography>
+                }
                 value={values.amount}
-                // onBlur={handleBlur}
+                // onChange={handleChange}
+                onBlur={handleBlur}
                 disabled
-                required
-                // error={errors.first_name && touched.first_name}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4} py={1}>
               <Autocomplete
-                options={["School", "Bank Details"]}
-                getOptionLabel={(option) => option}
-                // value={values.gender}
-                // onChange={(event: any, newValue) => {
-                //   handleChange({
-                //     target: {
-                //       name: "gender",
-                //       value: newValue,
-                //     },
-                //   });
-                // }}
-                renderInput={(params) => (
+                sx={{ width: "100%" }}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "collected_at", value },
+                  });
+                }}
+                disableClearable
+                options={collectiontypes}
+                renderInput={(params: any) => (
                   <MDInput
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Collected At
+                      </MDTypography>
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    name="collected_at"
+                    onChange={handleChange}
+                    value={values.collected_at}
                     {...params}
                     variant="standard"
-                    label="Collected At "
-                    name="gender"
-                    // onBlur={handleBlur}
-
-                    required
+                    error={touched.collected_at && Boolean(errors.collected_at)}
+                    success={values.collected_at.length && !errors.collected_at}
+                    helperText={touched.collected_at && errors.collected_at}
                   />
                 )}
               />
             </Grid>
           </Grid>
           <MDBox>
+            {/* <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center"> */}
             <FormControl>
-              <FormLabel id="demo-radio-buttons-group-label">
-                <MDTypography variant="h6" color="secondary" style={{ marginTop: "20px" }}>
+              <FormLabel>
+                <MDTypography
+                  variant="h6"
+                  fontWeight="bold"
+                  color="secondary"
+                  sx={{ marginLeft: "20px" }}
+                  style={{ marginTop: "20px" }}
+                >
                   Payment Details
                 </MDTypography>
               </FormLabel>
@@ -122,9 +140,15 @@ const Fee = () => {
               >
                 <FormControlLabel
                   value="by_cash"
-                  control={<Radio />}
+                  control={
+                    <Radio
+                    // onChange={handleChange}
+                    //         name="search_by"
+                    //         value="Class"
+                    />
+                  }
                   label={
-                    <MDTypography variant="button" color="standard">
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
                       By Cash
                     </MDTypography>
                   }
@@ -133,7 +157,7 @@ const Fee = () => {
                   value="by_cheque"
                   control={<Radio />}
                   label={
-                    <MDTypography variant="button" color="standard">
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
                       By Cheque
                     </MDTypography>
                   }
@@ -142,62 +166,54 @@ const Fee = () => {
                   <MDBox style={{ marginLeft: "40px" }}>
                     <Grid container spacing={2}>
                       <Grid item>
-                        <FormField
-                          label="Cheque Number"
+                        <MDInput
+                          sx={{ width: "100%" }}
+                          variant="standard"
                           name="cheque_number"
-                          //   value={values.cheque_number}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Cheque Number
+                            </MDTypography>
+                          }
+                          value={values.cheque_number}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          required
                         />
                       </Grid>
                       <Grid item>
-                        <FormField
-                          label="Bank Name And Branch"
+                        <MDInput
+                          sx={{ width: "100%" }}
+                          variant="standard"
                           name="bank_name"
-                          //   value={values.bank_name}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              BankName And Branch
+                            </MDTypography>
+                          }
+                          value={values.bank_name}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          required
                         />
                       </Grid>
                       <Grid item>
-                        <FormField
+                        <MDInput
                           type="date"
-                          label="Date"
-                          name="date"
                           InputLabelProps={{ shrink: true }}
-                          //   value={values.date}
+                          sx={{ width: "100%" }}
+                          variant="standard"
+                          name="end_date"
+                          // value={values.end_date}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Date
+                            </MDTypography>
+                          }
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          required
+                          // error={touched.end_date && Boolean(errors.end_date)}
+                          // helperText={touched.end_date && errors.end_date}
                         />
                       </Grid>
-                      {/* <Grid item>
-                      <Autocomplete
-                        options={["Received", "Realized", "Bounced"]}
-                        getOptionLabel={(option) => option}
-                        //   value={values.check_status}
-                        onChange={(event, newValue) => {
-                          handleChange({
-                            target: {
-                              name: "check_status",
-                              value: newValue,
-                            },
-                          });
-                        }}
-                        renderInput={(params) => (
-                          <MDInput
-                            {...params}
-                            variant="standard"
-                            label="Check Status"
-                            name="check_status"
-                            onBlur={handleBlur}
-                            required
-                          />
-                        )}
-                      />
-                    </Grid> */}
                     </Grid>
                   </MDBox>
                 )}
@@ -205,7 +221,7 @@ const Fee = () => {
                   value="online_payment"
                   control={<Radio />}
                   label={
-                    <MDTypography variant="button" color="standard">
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
                       Online Payment
                     </MDTypography>
                   }
@@ -214,13 +230,18 @@ const Fee = () => {
                   <MDBox style={{ marginLeft: "40px" }}>
                     <Grid container spacing={2}>
                       <Grid item>
-                        <FormField
-                          label="Online Transaction No"
-                          name="cheque_number"
-                          //   value={values.cheque_number}
+                        <MDInput
+                          sx={{ width: "100%" }}
+                          variant="standard"
+                          name="online_trans_no"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Online Transcation Number
+                            </MDTypography>
+                          }
+                          value={values.online_trans_no}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          required
                         />
                       </Grid>
                     </Grid>
@@ -230,91 +251,88 @@ const Fee = () => {
                   value="by_draft"
                   control={<Radio />}
                   label={
-                    <MDTypography variant="button" color="standard">
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
                       By Draft
                     </MDTypography>
                   }
                 />
                 {isDraft && (
                   <MDBox style={{ marginLeft: "40px" }}>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={3}>
                       <Grid item>
-                        <FormField
-                          label="Draft Number"
+                        <MDInput
+                          sx={{ width: "100%" }}
+                          variant="standard"
                           name="cheque_number"
-                          //   value={values.cheque_number}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Draft Number
+                            </MDTypography>
+                          }
+                          value={values.cheque_number}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          required
                         />
                       </Grid>
                       <Grid item>
-                        <FormField
-                          label="Bank Name And Branch"
+                        <MDInput
+                          sx={{ width: "100%" }}
+                          variant="standard"
                           name="bank_name"
-                          //   value={values.bank_name}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              BankName And Branch
+                            </MDTypography>
+                          }
+                          value={values.bank_name}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          required
                         />
                       </Grid>
                       <Grid item>
-                        <FormField
+                        <MDInput
                           type="date"
-                          label="Date"
-                          name="date"
                           InputLabelProps={{ shrink: true }}
-                          //   value={values.date}
+                          sx={{ width: "100%" }}
+                          variant="standard"
+                          name="end_date"
+                          // value={values.end_date}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Date
+                            </MDTypography>
+                          }
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          required
+                          // error={touched.end_date && Boolean(errors.end_date)}
+                          // helperText={touched.end_date && errors.end_date}
                         />
                       </Grid>
-                      {/* <Grid item>
-                      <Autocomplete
-                        options={["Received", "Realized", "Bounced"]}
-                        getOptionLabel={(option) => option}
-                        //   value={values.check_status}
-                        onChange={(event, newValue) => {
-                          handleChange({
-                            target: {
-                              name: "check_status",
-                              value: newValue,
-                            },
-                          });
-                        }}
-                        renderInput={(params) => (
-                          <MDInput
-                            {...params}
-                            variant="standard"
-                            label="Check Status"
-                            name="check_status"
-                            onBlur={handleBlur}
-                            required
-                          />
-                        )}
-                      />
-                    </Grid> */}
                     </Grid>
                   </MDBox>
                 )}
               </RadioGroup>
             </FormControl>
+            {/* </Grid> */}
           </MDBox>
 
-          <MDBox p={2}>
-            <MDButton variant="gradient" color="info" style={{ marginRight: "10px" }} type="submit">
-              Pay Fee
-            </MDButton>
-            <MDButton
-              variant="gradient"
-              color="info"
-              style={{ marginRight: "10px" }}
-              onClick={handleClearClick}
-            >
-              Cancel
-            </MDButton>
-          </MDBox>
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item mt={2}>
+              <MDButton color="dark" variant="contained">
+                Pay Fee
+              </MDButton>
+            </Grid>
+            <Grid item mt={2} ml={2}>
+              <MDButton
+                color="info"
+                variant="contained"
+                type="submit"
+                onClick={() => navigate("/pages/admission/studentAdmission")}
+              >
+                Cancel
+              </MDButton>
+            </Grid>
+          </Grid>
         </MDBox>
       </Card>
     </DashboardLayout>

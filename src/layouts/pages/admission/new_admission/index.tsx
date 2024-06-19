@@ -1,10 +1,13 @@
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
+import { message, Modal } from "antd";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useFormik, useFormikContext } from "formik";
 import MDInput from "components/MDInput";
+import { format } from "date-fns";
+import axios from "axios";
 import {
   Grid,
   FormControl,
@@ -25,8 +28,11 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 // import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Cookies from "js-cookie";
+import { v4 as uuidv4 } from "uuid";
 
 const AdmissionForm = () => {
+  const token = Cookies.get("token");
   const { classes, account, studentcategory } = useSelector((state: any) => state);
   const [isAlumni, setIsAlumni] = useState(false);
   const [isSiblings, setIsSiblings] = useState(false);
@@ -34,42 +40,63 @@ const AdmissionForm = () => {
   const navigate = useNavigate();
   const handleAlumniChange = (event: any) => {
     handleChange(event);
-    setIsAlumni(event.target.value === "yes");
+    // setIsAlumni(event.target.value === "yes");
+    const value = event.target.value === "yes";
+    setFieldValue("alumni", value);
+    setIsAlumni(value);
   };
   const handleSiblingsChange = (event: any) => {
     handleChange(event);
-    setIsSiblings(event.target.value === "yes");
+    const value = event.target.value === "yes";
+    setFieldValue("siblings", value);
+    setIsSiblings(value);
   };
-
-  const [fields, setFields] = useState([{ id: Date.now(), name: "", className: "" }]);
-
+  //display the current date
+  const [currentDate, setCurrentDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [fields, setFields] = useState([{ id: Date.now(), sibling_name: "", sibling_class: "" }]);
+  const [fields, setFields] = useState([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
   const handleAddField = () => {
-    setFields([...fields, { id: Date.now(), name: "", className: "" }]);
+    // setFields([...fields, { id: Date.now(), sibling_name: "", sibling_class: "" }]);
+    setFields([...fields, { id: uuidv4(), sibling_name: "", sibling_class: "" }]);
   };
 
-  const handleRemoveField = (id: number) => {
+  const handleRemoveField = (id: any) => {
     if (fields.length > 1) {
       setFields(fields.filter((field) => field.id !== id));
     }
   };
 
-  const handleFieldChange = (id: number, fieldName: any, value: any) => {
-    setFields(fields.map((field) => (field.id === id ? { ...field, [fieldName]: value } : field)));
+  const handleFieldChange = (id: string, fieldName: string, value: any) => {
+    const updatedFields = fields.map((field) =>
+      field.id === id ? { ...field, [fieldName]: value } : field
+    );
+    setFields(updatedFields);
   };
 
-  const handleClearClick = () => {
-    // setAutocompleteValue(null);
-    resetForm();
-  };
+  // const handleClearClick = () => {
+  //   window.loc
+  //   resetForm();
+  //   setIsAlumni(false);
+  //   setIsSiblings(false);
+  //   setFields([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
+  //   setFieldValue("academic_year", ""); // Using setFieldValue from Formik
+  //   setFieldValue("class_name", "");
+  //   // const checkbox = document.getElementsByName("same_as_current_address")[0] as HTMLInputElement;
+  //   // if (checkbox) {
+  //   //   checkbox.checked = false;
+  //   // }
+  // };
 
   const handleCheckboxChange = (event: any) => {
+    // const isChecked = event.target.checked;
     setIsSameAsCurrentAddress(event.target.checked);
     if (event.target.checked) {
       handleChange({
-        target: { name: "correspondence_line_1", value: values.address_line_1 },
+        target: { name: "correspondence_address_line_1", value: values.address_line_1 },
       });
       handleChange({
-        target: { name: "correspondence_line_2", value: values.address_line_2 },
+        target: { name: "correspondence_address_line_2", value: values.address_line_2 },
       });
       handleChange({
         target: { name: "correspondence_district", value: values.district },
@@ -78,9 +105,43 @@ const AdmissionForm = () => {
         target: { name: "correspondence_country", value: values.country },
       });
       handleChange({
-        target: { name: "correspondence_pincode", value: values.pin_code },
+        target: { name: "correspondence_pin_code", value: values.pin_code },
       });
     }
+  };
+
+  //for converting the image in base 64 and check the filetype
+  const handleImage = (event: any, fieldName: string) => {
+    const file = event.currentTarget.files[0];
+    if (file) {
+      if (
+        file.type !== "image/png" &&
+        file.type !== "image/jpeg" &&
+        file.type !== "image/jpg" &&
+        file.type !== "application/pdf"
+      ) {
+        message.error("Please select a valid PNG, JPEG, JPG, or PDF file.");
+        event.target.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFieldValue(fieldName, reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    navigate("/pages/admission/Fee");
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    message.info("You can proceed to fee payment later.");
+    navigate("/pages/admission/studentAdmission");
   };
 
   const {
@@ -95,7 +156,37 @@ const AdmissionForm = () => {
   } = useFormik({
     initialValues: initialValues,
     validationSchema: admissionformschema,
-    onSubmit: async () => {},
+    onSubmit: (values, action) => {
+      const allValues = {
+        ...values,
+        admission_date: currentDate,
+        sibling_data: values.siblings
+          ? fields.map((field) => ({
+              sibling_name: field.sibling_name,
+              sibling_class: field.sibling_class,
+            }))
+          : [],
+      };
+      axios
+        .post("http://10.0.20.200:8000/admissions", allValues, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          // message.success(" Created successfully!");
+          setIsModalVisible(true);
+          action.resetForm();
+          setIsAlumni(false); // Reset Alumni state
+          setIsSiblings(false); // Reset Siblings state
+          setFieldValue("upload_candidate_photo", "");
+          setFields([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
+    },
   });
 
   return (
@@ -105,19 +196,15 @@ const AdmissionForm = () => {
         <Grid container>
           <Grid item xs={12} sm={12}>
             <Card>
-              <MDBox p={3}>
-                <MDBox
-                  style={{
-                    textAlign: "center",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                    Admission Form
-                  </MDTypography>
-                </MDBox>
-                <Grid container spacing={3} pt={2}>
+              <MDBox p={4}>
+                <Grid container>
+                  <Grid item xs={12} sm={6}>
+                    <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                      Admission Form
+                    </MDTypography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={3} pt={3}>
                   <Grid item xs={12} sm={3}>
                     <Autocomplete
                       onChange={(_event, value) => {
@@ -130,13 +217,17 @@ const AdmissionForm = () => {
                       }
                       renderInput={(params) => (
                         <MDInput
-                          required
                           name="academic_year"
                           onChange={handleChange}
                           value={values.academic_year}
-                          label="Academic Year"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Academic Year
+                            </MDTypography>
+                          }
                           {...params}
                           variant="standard"
+                          required
                         />
                       )}
                     />
@@ -155,38 +246,54 @@ const AdmissionForm = () => {
                       }
                       renderInput={(params) => (
                         <MDInput
-                          required
                           name="class_name"
                           onChange={handleChange}
                           value={values.class_name}
-                          label="Class"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Class
+                            </MDTypography>
+                          }
                           {...params}
                           variant="standard"
+                          required
                         />
                       )}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    <FormField
-                      label="Form Number"
+                    <MDInput
+                      sx={{ width: "100%" }}
+                      variant="standard"
                       name="form_number"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Form Number
+                        </MDTypography>
+                      }
                       value={values.form_number}
+                      onChange={handleChange}
                       onBlur={handleBlur}
-                      disabled
-                      required
-                      // error={errors.first_name && touched.first_name}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    <FormField
+                    <MDInput
                       type="date"
-                      label="Admission Date"
-                      name="admission_date"
                       InputLabelProps={{ shrink: true }}
-                      value={values.admission_date}
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name="admission_date"
+                      value={currentDate}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Admission Date
+                        </MDTypography>
+                      }
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      required
+                      error={touched.admission_date && Boolean(errors.admission_date)}
+                      helperText={touched.admission_date && errors.admission_date}
                     />
                   </Grid>
                 </Grid>
@@ -194,7 +301,7 @@ const AdmissionForm = () => {
             </Card>
           </Grid>
         </Grid>
-        {/* Form for candidate details  */}
+        {/* Form for candidate details */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -206,14 +313,20 @@ const AdmissionForm = () => {
                 </Grid>
               </Grid>
               <Grid container spacing={3} pt={2}>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="First Name"
+                <Grid item xs={12} sm={3}>
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="candidate_first_name"
-                    required
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        First Name
+                      </MDTypography>
+                    }
                     value={values.candidate_first_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.candidate_first_name && touched.candidate_first_name}
                     success={values.candidate_first_name.length && !errors.candidate_first_name}
                   />
@@ -223,43 +336,61 @@ const AdmissionForm = () => {
                     </MDTypography>
                   ) : null}
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Middle Name"
+                <Grid item xs={12} sm={3}>
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="candidate_middle_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Middle Name
+                      </MDTypography>
+                    }
                     value={values.candidate_middle_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={errors.candidate_middle_name && touched.candidate_middle_name}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Last Name"
+                <Grid item xs={12} sm={3}>
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="candidate_last_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Last Name
+                      </MDTypography>
+                    }
                     value={values.candidate_last_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={errors.candidate_last_name && touched.candidate_last_name}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
+                <Grid item xs={12} sm={3}>
+                  <MDInput
                     type="date"
-                    label="Date of Birth"
-                    name="candidate_dob"
                     InputLabelProps={{ shrink: true }}
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    name="candidate_dob"
                     value={values.candidate_dob}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Date of Birth
+                      </MDTypography>
+                    }
+                    onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     required
+                    error={touched.candidate_dob && Boolean(errors.candidate_dob)}
                   />
                 </Grid>
               </Grid>
             </MDBox>
           </Card>
         </MDBox>
-        {/* Form for deatiled information  */}
+        {/* Form for deatiled information */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -273,6 +404,7 @@ const AdmissionForm = () => {
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    sx={{ width: "100%" }}
                     options={["General", "OBC", "SC", "ST"]}
                     getOptionLabel={(option) => option}
                     value={values.category}
@@ -284,11 +416,15 @@ const AdmissionForm = () => {
                         },
                       });
                     }}
-                    renderInput={(params) => (
+                    renderInput={(params: any) => (
                       <MDInput
                         {...params}
                         variant="standard"
-                        label="Category"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Category
+                          </MDTypography>
+                        }
                         name="category"
                         onBlur={handleBlur}
                         required
@@ -298,6 +434,7 @@ const AdmissionForm = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    sx={{ width: "100%" }}
                     options={["Hindu", "Muslim", "Christian", "Sikh"]}
                     getOptionLabel={(option) => option}
                     value={values.religion}
@@ -313,7 +450,11 @@ const AdmissionForm = () => {
                       <MDInput
                         {...params}
                         variant="standard"
-                        label="Religion"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Religion
+                          </MDTypography>
+                        }
                         name="religion"
                         onBlur={handleBlur}
                         required
@@ -323,6 +464,7 @@ const AdmissionForm = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    sx={{ width: "100%" }}
                     options={["Male", "Female", "Others"]}
                     getOptionLabel={(option) => option}
                     value={values.gender}
@@ -338,7 +480,11 @@ const AdmissionForm = () => {
                       <MDInput
                         {...params}
                         variant="standard"
-                        label="Gender"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Gender
+                          </MDTypography>
+                        }
                         name="gender"
                         onBlur={handleBlur}
                         required
@@ -348,6 +494,7 @@ const AdmissionForm = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    sx={{ width: "100%" }}
                     options={["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]}
                     getOptionLabel={(option) => option}
                     value={values.blood_group}
@@ -363,7 +510,11 @@ const AdmissionForm = () => {
                       <MDInput
                         {...params}
                         variant="standard"
-                        label="Blood Group"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Blood Group
+                          </MDTypography>
+                        }
                         name="blood_group"
                         onBlur={handleBlur}
                         required
@@ -373,6 +524,7 @@ const AdmissionForm = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    sx={{ width: "100%" }}
                     options={["Indian"]}
                     getOptionLabel={(option) => option}
                     value={values.nationality}
@@ -388,7 +540,11 @@ const AdmissionForm = () => {
                       <MDInput
                         {...params}
                         variant="standard"
-                        label="Nationality"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Nationality
+                          </MDTypography>
+                        }
                         name="nationality"
                         onBlur={handleBlur}
                         required
@@ -400,7 +556,7 @@ const AdmissionForm = () => {
             </MDBox>
           </Card>
         </MDBox>
-        {/* Form for fathers information  */}
+        {/* Form for fathers information */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -413,13 +569,19 @@ const AdmissionForm = () => {
               </Grid>
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="First Name"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_first_name"
-                    required
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        First Name
+                      </MDTypography>
+                    }
                     value={values.father_first_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.father_first_name && touched.father_first_name}
                     success={values.father_first_name.length && !errors.father_first_name}
                   />
@@ -430,33 +592,51 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Middle Name"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_middle_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Middle Name
+                      </MDTypography>
+                    }
                     value={values.father_middle_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Last Name"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_last_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Last Name
+                      </MDTypography>
+                    }
                     value={values.father_last_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Qualification"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_qualification"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Qualification
+                      </MDTypography>
+                    }
                     value={values.father_qualification}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.father_qualification && touched.father_qualification}
                     success={values.father_qualification.length && !errors.father_qualification}
-                    required
                   />
                   {errors.father_qualification && touched.father_qualification ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
@@ -465,15 +645,21 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Occupation"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_occupation"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Occupation
+                      </MDTypography>
+                    }
                     value={values.father_occupation}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.father_occupation && touched.father_occupation}
                     success={values.father_occupation.length && !errors.father_occupation}
-                    required
                   />
                   {errors.father_occupation && touched.father_occupation ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
@@ -482,33 +668,51 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Designation"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_designation"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Designation
+                      </MDTypography>
+                    }
                     value={values.father_designation}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Place of Occupation"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_place_occupation"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Place of Occupation
+                      </MDTypography>
+                    }
                     value={values.father_place_occupation}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Contact Number"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Contact Number
+                      </MDTypography>
+                    }
                     value={values.father_number}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.father_number && touched.father_number}
                     success={values.father_number.length && !errors.father_number}
-                    required
                   />
                   {errors.father_number && touched.father_number ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
@@ -517,9 +721,15 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Email Id"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="father_email_id"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Email ID
+                      </MDTypography>
+                    }
                     value={values.father_email_id}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -537,7 +747,7 @@ const AdmissionForm = () => {
             </MDBox>
           </Card>
         </MDBox>
-        {/* Form for mothers information  */}
+        {/* Form for mothers information */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -550,13 +760,19 @@ const AdmissionForm = () => {
               </Grid>
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="First Name"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        First Name
+                      </MDTypography>
+                    }
                     name="mother_first_name"
-                    required
                     value={values.mother_first_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.mother_first_name && touched.mother_first_name}
                     success={values.mother_first_name.length && !errors.mother_first_name}
                   />
@@ -567,8 +783,14 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Middle Name"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Middle Name
+                      </MDTypography>
+                    }
                     name="mother_middle_name"
                     value={values.mother_middle_name}
                     onChange={handleChange}
@@ -576,8 +798,14 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Last Name"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Last Name
+                      </MDTypography>
+                    }
                     name="mother_last_name"
                     value={values.mother_last_name}
                     onChange={handleChange}
@@ -585,15 +813,21 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Qualification"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Qualification
+                      </MDTypography>
+                    }
                     name="mother_qualification"
                     value={values.mother_qualification}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.mother_qualification && touched.mother_qualification}
                     success={values.mother_qualification.length && !errors.mother_qualification}
-                    required
                   />
                   {errors.mother_qualification && touched.mother_qualification ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
@@ -602,15 +836,21 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Occupation"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Occupation
+                      </MDTypography>
+                    }
                     name="mother_occupation"
                     value={values.mother_occupation}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.mother_occupation && touched.mother_occupation}
                     success={values.mother_occupation.length && !errors.mother_occupation}
-                    required
                   />
                   {errors.mother_occupation && touched.mother_occupation ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
@@ -619,8 +859,14 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Designation"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Designation
+                      </MDTypography>
+                    }
                     name="mother_designation"
                     value={values.mother_designation}
                     onChange={handleChange}
@@ -628,8 +874,14 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Place of Occupation"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Place of Occupation
+                      </MDTypography>
+                    }
                     name="mother_place_occupation"
                     value={values.mother_place_occupation}
                     onChange={handleChange}
@@ -637,15 +889,21 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Contact Number"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Contact Number
+                      </MDTypography>
+                    }
                     name="mother_number"
                     value={values.mother_number}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                     error={errors.mother_number && touched.mother_number}
                     success={values.mother_number.length && !errors.mother_number}
-                    required
                   />
                   {errors.mother_number && touched.mother_number ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
@@ -654,9 +912,15 @@ const AdmissionForm = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Email Id"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
                     name="mother_email_id"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Email ID
+                      </MDTypography>
+                    }
                     value={values.mother_email_id}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -673,107 +937,7 @@ const AdmissionForm = () => {
             </MDBox>
           </Card>
         </MDBox>
-        {/* Form for guardian information  */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
-                  <MDTypography variant="h6" color="secondary">
-                    Guardian&apos;s Details
-                  </MDTypography>
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="First Name"
-                    name="guardian_first_name"
-                    value={values.guardian_first_name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={errors.guardian_first_name && touched.guardian_first_name}
-                    success={values.guardian_first_name.length && !errors.guardian_first_name}
-                  />
-                  {errors.guardian_first_name && touched.guardian_first_name ? (
-                    <MDTypography variant="caption" fontWeight="regular" color="error">
-                      {errors.guardian_first_name}
-                    </MDTypography>
-                  ) : null}
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Middle Name"
-                    name="guardian_middle_name"
-                    value={values.guardian_middle_name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Last Name"
-                    name="guardian_last_name"
-                    value={values.guardian_last_name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Relation With Candidate"
-                    name="relation_with_candidate"
-                    value={values.relation_with_candidate}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={errors.relation_with_candidate && touched.relation_with_candidate}
-                    success={
-                      values.relation_with_candidate.length && !errors.relation_with_candidate
-                    }
-                  />
-                  {errors.relation_with_candidate && touched.relation_with_candidate ? (
-                    <MDTypography variant="caption" fontWeight="regular" color="error">
-                      {errors.relation_with_candidate}
-                    </MDTypography>
-                  ) : null}
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Contact Number"
-                    name="guardian_number"
-                    value={values.guardian_number}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={errors.guardian_number && touched.guardian_number}
-                    success={values.guardian_number.length && !errors.guardian_number}
-                  />
-                  {errors.guardian_number && touched.guardian_number ? (
-                    <MDTypography variant="caption" fontWeight="regular" color="error">
-                      {errors.guardian_number}
-                    </MDTypography>
-                  ) : null}
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Email Id"
-                    name="guardian_email_id"
-                    value={values.guardian_email_id}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={errors.guardian_email_id && touched.guardian_email_id}
-                    success={values.guardian_email_id.length && !errors.guardian_email_id}
-                  />
-                  {errors.guardian_email_id && touched.guardian_email_id ? (
-                    <MDTypography variant="caption" fontWeight="regular" color="error">
-                      {errors.guardian_email_id}
-                    </MDTypography>
-                  ) : null}
-                </Grid>
-              </Grid>
-            </MDBox>
-          </Card>
-        </MDBox>
-        {/* Form for Domicile  */}
+        {/* Form for Domicile */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -786,18 +950,30 @@ const AdmissionForm = () => {
               </Grid>
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Address Line 1"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Address Line 1
+                      </MDTypography>
+                    }
                     name="address_line_1"
-                    required
                     value={values.address_line_1}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Address Line 2"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Address Line 2
+                      </MDTypography>
+                    }
                     name="address_line_2"
                     value={values.address_line_2}
                     onChange={handleChange}
@@ -805,8 +981,14 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="District"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        District
+                      </MDTypography>
+                    }
                     name="district"
                     value={values.district}
                     onChange={handleChange}
@@ -815,8 +997,14 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Country"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Country
+                      </MDTypography>
+                    }
                     name="country"
                     value={values.country}
                     onChange={handleChange}
@@ -825,15 +1013,21 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Pin Code"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Pin Code
+                      </MDTypography>
+                    }
                     name="pin_code"
                     value={values.pin_code}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    required
                     error={errors.pin_code && touched.pin_code}
                     success={values.pin_code.length && !errors.pin_code}
+                    required
                   />
                   {errors.pin_code && touched.pin_code ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
@@ -845,7 +1039,7 @@ const AdmissionForm = () => {
             </MDBox>
           </Card>
         </MDBox>
-        {/* Form for adress for correspondence  */}
+        {/* Form for adress for correspondence */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -858,7 +1052,8 @@ const AdmissionForm = () => {
                 <Grid item xs={12} sm={3}>
                   <Checkbox
                     // checked={values.late_fine_discount}
-                    name="late_fine_discount"
+                    name="same_as_current_address"
+                    //  checked={isSameAsCurrentAddress}
                     value="true"
                     onChange={handleCheckboxChange}
                   />
@@ -869,35 +1064,53 @@ const AdmissionForm = () => {
               </Grid>
               <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Correspondence Line 1"
-                    name="correspondence_line_1"
-                    required
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Correspondence Line 1
+                      </MDTypography>
+                    }
+                    name="correspondence_address_line_1"
                     value={
-                      values.correspondence_line_1
+                      values.correspondence_address_line_1
                         ? values.address_line_1
-                        : values.correspondence_line_1
+                        : values.correspondence_address_line_1
                     }
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    required
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Correspondence Line 2"
-                    name="correspondence_line_2"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Correspondence Line 2
+                      </MDTypography>
+                    }
+                    name="correspondence_address_line_2"
                     value={
-                      values.correspondence_line_2
+                      values.correspondence_address_line_2
                         ? values.address_line_2
-                        : values.correspondence_line_2
+                        : values.correspondence_address_line_2
                     }
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Correspondence District"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Correspondence District
+                      </MDTypography>
+                    }
                     name="correspondence_district"
                     value={
                       values.correspondence_district
@@ -910,8 +1123,14 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Correspondence Country"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Correspondence Country
+                      </MDTypography>
+                    }
                     name="correspondence_country"
                     value={
                       values.correspondence_country ? values.country : values.correspondence_country
@@ -922,23 +1141,31 @@ const AdmissionForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormField
-                    label="Correspondence Pin Code"
-                    name="correspondence_pincode"
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Correspondence Pin Code
+                      </MDTypography>
+                    }
+                    name="correspondence_pin_code"
                     value={
-                      values.correspondence_pincode
+                      values.correspondence_pin_code
                         ? values.pin_code
-                        : values.correspondence_pincode
+                        : values.correspondence_pin_code
                     }
                     onChange={handleChange}
                     onBlur={handleBlur}
                     required
-                    error={errors.correspondence_pincode && touched.correspondence_pincode}
-                    success={values.correspondence_pincode.length && !errors.correspondence_pincode}
+                    error={errors.correspondence_pin_code && touched.correspondence_pin_code}
+                    success={
+                      values.correspondence_pin_code.length && !errors.correspondence_pin_code
+                    }
                   />
-                  {errors.correspondence_pincode && touched.correspondence_pincode ? (
+                  {errors.correspondence_pin_code && touched.correspondence_pin_code ? (
                     <MDTypography variant="caption" fontWeight="regular" color="error">
-                      {errors.correspondence_pincode}
+                      {errors.correspondence_pin_code}
                     </MDTypography>
                   ) : null}
                 </Grid>
@@ -972,7 +1199,7 @@ const AdmissionForm = () => {
                       row
                       aria-label="parent-student"
                       name="alumni"
-                      value={values.alumni}
+                      value={values.alumni ? "yes" : "no"}
                       onChange={handleAlumniChange}
                       onBlur={handleBlur}
                     >
@@ -985,51 +1212,75 @@ const AdmissionForm = () => {
               {isAlumni && (
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={3}>
-                    <FormField
-                      label="From Year"
+                    <MDInput
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          From Year
+                        </MDTypography>
+                      }
                       name="from_year"
                       value={values.from_year}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      required
                       error={errors.from_year && touched.from_year}
                       success={values.from_year.length && !errors.from_year}
+                      required
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    <FormField
-                      label="To Year"
+                    <MDInput
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          To Year
+                        </MDTypography>
+                      }
                       name="to_year"
                       value={values.to_year}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      required
                       error={errors.to_year && touched.to_year}
                       success={values.to_year.length && !errors.to_year}
+                      required
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    <FormField
-                      label="From Class"
+                    <MDInput
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          From Class
+                        </MDTypography>
+                      }
                       name="from_class"
                       value={values.from_class}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      required
                       error={errors.from_class && touched.from_class}
                       success={values.from_class.length && !errors.from_class}
+                      required
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-                    <FormField
-                      label="To Class"
+                    <MDInput
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          To Class
+                        </MDTypography>
+                      }
                       name="to_class"
                       value={values.to_class}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      required
                       error={errors.to_class && touched.to_class}
                       success={values.to_class.length && !errors.to_class}
+                      required
                     />
                   </Grid>
                 </Grid>
@@ -1038,7 +1289,7 @@ const AdmissionForm = () => {
           </Card>
         </Grid>
 
-        {/* form for Sibling Details  */}
+        {/* form for Sibling Details */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -1060,7 +1311,7 @@ const AdmissionForm = () => {
                       row
                       aria-label="parent-student"
                       name="siblings"
-                      value={values.siblings}
+                      value={values.siblings ? "yes" : "no"}
                       onChange={handleSiblingsChange}
                       onBlur={handleBlur}
                     >
@@ -1080,40 +1331,39 @@ const AdmissionForm = () => {
                   {fields.map((field, index) => (
                     <React.Fragment key={field.id}>
                       <Grid item xs={12} sm={5}>
-                        <FormField
-                          label={`Name ${index + 1}`}
-                          name={`name-${field.id}`}
-                          // value={field.name}
-                          onChange={(e: any) => handleFieldChange(field.id, "name", e.target.value)}
-                          // onBlur={handleBlur}
+                        <MDInput
+                          sx={{ width: "100%" }}
+                          variant="standard"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              {`Name ${index + 1}`}
+                            </MDTypography>
+                          }
+                          name={`sibling_name-${field.id}`}
+                          value={field.sibling_name}
+                          onChange={(e: any) =>
+                            handleFieldChange(field.id, "sibling_name", e.target.value)
+                          }
+                          onBlur={handleBlur}
                           required
                         />
                       </Grid>
                       <Grid item xs={12} sm={5}>
-                        <Autocomplete
-                          onChange={(_event, value) =>
-                            handleFieldChange(field.id, "className", value)
+                        <MDInput
+                          sx={{ width: "100%" }}
+                          variant="standard"
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              {`Class ${index + 1}`}
+                            </MDTypography>
                           }
-                          options={
-                            values.academic_year !== ""
-                              ? classes
-                                  .filter(
-                                    (item: any) => item.academic_year === values.academic_year
-                                  )
-                                  .map((item: any) => item.class_name)
-                              : []
+                          name={`sibling_class-${field.id}`}
+                          value={field.sibling_class}
+                          onChange={(e: any) =>
+                            handleFieldChange(field.id, "sibling_class", e.target.value)
                           }
-                          renderInput={(params) => (
-                            <MDInput
-                              required
-                              name="class_name"
-                              onChange={handleChange}
-                              value={values.class_name}
-                              label="Class"
-                              {...params}
-                              variant="standard"
-                            />
-                          )}
+                          onBlur={handleBlur}
+                          required
                         />
                       </Grid>
                       {index > 0 && (
@@ -1131,7 +1381,7 @@ const AdmissionForm = () => {
             </MDBox>
           </Card>
         </MDBox>
-        {/* Form for Upload information  */}
+        {/* Form for Upload information */}
         <MDBox style={{ marginTop: "15px" }}>
           <Card>
             <MDBox p={3}>
@@ -1149,8 +1399,8 @@ const AdmissionForm = () => {
                     type="file"
                     label="Upload Candidate Photo"
                     accept="image/*"
-                    name="candidate_photo"
-                    // onChange={handleImage}
+                    name="upload_candidate_photo"
+                    onChange={(event: any) => handleImage(event, "upload_candidate_photo")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     required
@@ -1162,8 +1412,8 @@ const AdmissionForm = () => {
                     type="file"
                     label="Upload Father Photo"
                     accept="image/*"
-                    name="father_photo"
-                    // onChange={handleImage}
+                    name="upload_father_photo"
+                    onChange={(event: any) => handleImage(event, "upload_father_photo")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     required
@@ -1175,8 +1425,8 @@ const AdmissionForm = () => {
                     type="file"
                     label="Upload Mother Photo"
                     accept="image/*"
-                    name="mother_photo"
-                    // onChange={handleImage}
+                    name="upload_mother_photo"
+                    onChange={(event: any) => handleImage(event, "upload_mother_photo")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     required
@@ -1188,8 +1438,8 @@ const AdmissionForm = () => {
                     type="file"
                     label="Upload Father Aadhar"
                     accept="image/*"
-                    name="father_aadhar"
-                    // onChange={handleImage}
+                    name="upload_father_aadhar"
+                    onChange={(event: any) => handleImage(event, "upload_father_aadhar")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     required
@@ -1201,8 +1451,8 @@ const AdmissionForm = () => {
                     type="file"
                     label="Upload Mother Aadhar"
                     accept="image/*"
-                    name="mother_aadhar"
-                    // onChange={handleImage}
+                    name="upload_mother_aadhar"
+                    onChange={(event: any) => handleImage(event, "upload_mother_aadhar")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     required
@@ -1214,8 +1464,8 @@ const AdmissionForm = () => {
                     type="file"
                     label="Upload Candidate Aadhar"
                     accept="image/*"
-                    name="candidate_aadhar"
-                    // onChange={handleImage}
+                    name="upload_candidate_aadhar"
+                    onChange={(event: any) => handleImage(event, "upload_candidate_aadhar")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     required
@@ -1227,8 +1477,8 @@ const AdmissionForm = () => {
                     type="file"
                     label="Upload DOB Certficate"
                     accept="image/*"
-                    name="dob_certificate"
-                    // onChange={handleImage}
+                    name="upload_dob_certificate"
+                    onChange={(event: any) => handleImage(event, "upload_dob_certificate")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
                     required
@@ -1238,38 +1488,50 @@ const AdmissionForm = () => {
             </MDBox>
           </Card>
         </MDBox>
-        {/* instruction  */}
+        {/* instruction */}
         <MDTypography variant="overline">
           <b>Instruction:</b> Please check the information carefully before submitting. Once
           submitted, the information cannot be changed. Once you are sure about the correctness of
           the information, please click the “Submit” button.
         </MDTypography>
-        {/* button for submit the form  */}
-        <MDBox p={2}>
-          <MDButton variant="gradient" color="info" style={{ marginRight: "10px" }} type="submit">
-            Submit
-          </MDButton>
-          <MDButton
-            variant="gradient"
-            color="info"
-            style={{ marginRight: "10px" }}
-            onClick={handleClearClick}
-          >
-            Cancel
-          </MDButton>
-          <MDButton
-            variant="gradient"
-            color="info"
-            type="submit"
-            style={{ marginRight: "10px" }}
-            onClick={() => navigate("/pages/admission/Fee")}
-          >
-            Proceed To Fee
-          </MDButton>
-        </MDBox>
+        {/* button for submit the form */}
+        <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Grid item mt={2}>
+            <MDButton color="info" variant="contained" type="submit">
+              Submit
+            </MDButton>
+          </Grid>
+          <Grid item mt={2} ml={2}>
+            <MDButton
+              color="dark"
+              variant="contained"
+              type="submit"
+              onClick={() => navigate("/pages/admission/studentAdmission")}
+            >
+              Back
+            </MDButton>
+          </Grid>
+        </Grid>
       </form>
+
+      <Modal title="Success" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Your form is successfully submitted. Do you want to proceed to fee payment?</p>
+      </Modal>
     </DashboardLayout>
   );
 };
 
 export default AdmissionForm;
+
+{
+  /* <Grid item mt={2} ml={2}>
+<MDButton
+  color="info"
+  variant="contained"
+  type="submit"
+  onClick={() => navigate("/pages/admission/Fee")}
+>
+  Proceed To Fee
+</MDButton>
+</Grid> */
+}

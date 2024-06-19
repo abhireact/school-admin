@@ -55,7 +55,7 @@ import TimeTable from "layouts/pages/Attendance/time_table";
 import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/school_admin_sms_configuration";
 import StudentSubject from "layouts/pages/subject/student_subject";
 import SubjectReport from "layouts/pages/subject/subject_report";
-import AdmissionForm from "layouts/pages/admission/new_admimssion";
+import AdmissionForm from "layouts/pages/admission/new_admission";
 import StudentAdmission from "layouts/pages/admission";
 import FormSetting from "layouts/pages/admission/form_setting";
 

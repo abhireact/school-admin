@@ -46,21 +46,22 @@ export const initialValues = {
   country: "", //required
   pin_code: "", //required
 
-  correspondence_line_1: "", //required
-  correspondence_line_2: "",
+  correspondence_address_line_1: "", //required
+  correspondence_address_line_2: "",
   correspondence_district: "", //required
   correspondence_country: "", //required
-  correspondence_pincode: "", //required
+  correspondence_pin_code: "", //required
 
-  alumni: "", //boolean required
+  alumni: false,
   from_year: "",
   to_year: "",
   from_class: "",
   to_class: "",
 
-  siblings: "", //boolean required
-  sibling_name: "", //more than one
-  sibling_class: "", //more than one
+  siblings: false, //boolean required
+  sibling_data: [{ sibling_name: "", sibling_class: "" }],
+  // sibling_name: "", //more than one
+  // sibling_class: "", //more than one
 
   upload_candidate_photo: "", //required
   upload_father_photo: "", //required
