@@ -62,10 +62,8 @@ export default function ManageFeeAmountPerticular() {
   const confirm = async (data: any) => {
     console.log(data, "confirm data");
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/fee_category`, {
-        data: {
-          name: data.name,
-        },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/create_fine`, {
+        data: data,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -105,7 +103,7 @@ export default function ManageFeeAmountPerticular() {
             <Tooltip title="Edit" placement="top">
               <IconButton
                 onClick={() => {
-                  handleClickOpenEdit(index);
+                  handleClickOpenEdit(row);
                 }}
               >
                 <CreateRoundedIcon fontSize="small" color="secondary" />
@@ -158,7 +156,7 @@ export default function ManageFeeAmountPerticular() {
                 </MDButton>
               </Grid>
             </Grid>
-            <DataTable table={feeConcessionData} isSorted={false} canSearch />
+            <DataTable table={feeConcessionData} canSearch />
           </>
         )}
       </Card>
