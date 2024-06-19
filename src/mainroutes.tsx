@@ -35,8 +35,8 @@ import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
 import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
 import EmailSetting from "layouts/pages/notifications/email";
 import FeeCollection from "layouts/pages/fee/fee_collection";
-import SendNotification from "layouts/pages/notifications/email/send_mail";
-import MessageTemplate from "layouts/pages/notifications/message_template";
+import SendNotification from "layouts/pages/notifications/email/send_notification";
+import MessageTemplate from "layouts/pages/notifications/templates/message_template";
 import FineParticular from "layouts/pages/fee/manage_fee/fine";
 import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
@@ -52,9 +52,10 @@ import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
 import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import TimeTable from "layouts/pages/Attendance/time_table";
-import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/school_admin_sms_configuration";
+import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/school_admin_sms_configuration";
 import StudentSubject from "layouts/pages/subject/student_subject";
 import SubjectReport from "layouts/pages/subject/subject_report";
+import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
 import AdmissionForm from "layouts/pages/admission/new_admission";
 import StudentAdmission from "layouts/pages/admission";
 import FormSetting from "layouts/pages/admission/form_setting";
@@ -422,6 +423,18 @@ const routes = [
             key: "smsconfiguration",
             route: "notification/smsconfiguration",
             component: <SMSConfigurationCreateSchoolAdmin />,
+          },
+        ],
+      },
+      {
+        name: "Reports",
+        key: "notification_reports",
+        collapse: [
+          {
+            name: "SMS Status",
+            key: "smsstatusreport",
+            route: "/notification/reports/sms_status_report",
+            component: <SmsStatusReport />,
           },
         ],
       },

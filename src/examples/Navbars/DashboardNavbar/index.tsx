@@ -440,7 +440,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   }
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      academic_year: Cacademic_year || currentAcademic?.academic_year || "2024-2025",
+      academic_year: Cacademic_year || currentAcademic?.academic_year,
     },
     // validationSchema: validationSchema,
     onSubmit: (values, action) => {
@@ -456,7 +456,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
         },
       })
       .then((response) => {
-        setMessage(response.data);
+        setMessage(response.data.reverse());
         //
         const countOddNumbers: number = response.data.reduce((count: any, data: any) => {
           if (!data.status) {
@@ -622,50 +622,50 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
         <Grid container spacing={2} p={2}>
           <Grid item xs={12} sm={10}>
             <MDTypography variant="h6" fontWeight="bold">
-              Subject:{editdata.subject}
+              Subject: {editdata.subject}
               <br />
               <MDTypography variant="button" fontWeight="bold" color="secondary">
-                sender:{editdata.employee_name}
+                Sender: {editdata.employee_name}
               </MDTypography>
             </MDTypography>
           </Grid>
 
           <Grid item xs={12} sm={12}>
             <MDTypography variant="h6" fontWeight="bold">
-              Message:{editdata.description}
+              Message:
+              {<pre style={{ whiteSpace: "pre-wrap" }}>{editdata.description}</pre>}
               <br />
               <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Date:{editdata.created_at}
+                Date: {editdata.created_at}
               </MDTypography>
             </MDTypography>
           </Grid>
-
-          <Grid container p={2}>
-            <Grid item xs={12} sm={6}>
-              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                Attached Files
+          {editdata.file_content_type ? (
+            <Grid item xs={12} sm={12}>
+              <MDTypography variant="button" fontWeight="bold">
+                Attached File:
               </MDTypography>
-              {editdata.file_content_type
-                ? editdata.file_name.map((particular, index) => (
-                    <MDButton
-                      key={index}
-                      onClick={() =>
-                        downloadBase64File(
-                          editdata.file_content_type[index],
-                          editdata.file_name[index]
-                        )
-                      }
-                    >
-                      {editdata.file_name[index]}
-                    </MDButton>
-                  ))
-                : null}
+              <br />
+              {editdata.file_name.map((particular, index) => (
+                <MDButton
+                  key={index}
+                  onClick={() =>
+                    downloadBase64File(editdata.file_content_type[index], editdata.file_name[index])
+                  }
+                >
+                  <MDTypography variant="button" fontWeight="bold">
+                    {index + 1}.
+                  </MDTypography>{" "}
+                  {editdata.file_name[index]}
+                </MDButton>
+              ))}
             </Grid>
-            <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <MDButton color="info" variant="text" onClick={handleClickCloseEdit}>
-                cancel
-              </MDButton>
-            </Grid>
+          ) : null}
+
+          <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <MDButton color="info" variant="text" onClick={handleClickCloseEdit}>
+              cancel
+            </MDButton>
           </Grid>
         </Grid>
       </Dialog>
@@ -697,7 +697,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                       .map((item) => item.academic_year)
                       .concat(currentAcademic ? [currentAcademic.academic_year] : [])
                   )
-                ).filter((option) => option !== currentAcademic?.academic_year)}
+                )}
                 renderInput={(params) => (
                   <MDInput
                     required

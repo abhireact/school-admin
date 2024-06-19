@@ -402,6 +402,7 @@ const Create = (props: any) => {
               <Grid item sm={3} xs={12}>
                 <MDInput
                   type="date"
+                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                   InputLabelProps={{ shrink: true }}
                   placeholder="eg. 2018-19"
                   autoComplete="off"

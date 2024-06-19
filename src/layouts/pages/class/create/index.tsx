@@ -274,6 +274,7 @@ const Create = (props: any) => {
               <MDInput
                 InputLabelProps={{ shrink: true }}
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 sx={{ width: "80%" }}
                 label="Start Date *"
                 variant="standard"
@@ -291,6 +292,7 @@ const Create = (props: any) => {
                 sx={{ width: "80%" }}
                 InputLabelProps={{ shrink: true }}
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 label="End Date *"
                 variant="standard"
                 name="end_date"

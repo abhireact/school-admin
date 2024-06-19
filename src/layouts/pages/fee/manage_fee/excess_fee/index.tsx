@@ -17,7 +17,7 @@ import { useTheme } from "@emotion/react";
 import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { Popconfirm, Tooltip, message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
@@ -88,10 +88,12 @@ const ExcessFee = () => {
   useEffect(() => {
     fetchLateFees();
   }, []);
-  const handleDelete = async (name: any) => {
+
+  const confirm = async (data: any) => {
+    console.log(data, "confirm data");
     try {
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/excess_fee`, {
-        data: name,
+        data: data,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -106,6 +108,11 @@ const ExcessFee = () => {
       const myError = error as Error;
       message.error(error.response.data.detail);
     }
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
   };
   const dataTableData = {
     columns: [
@@ -126,20 +133,29 @@ const ExcessFee = () => {
     rows: data.map((row, index) => ({
       action: (
         <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-            }}
-          >
-            <CreateRoundedIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={() => {
-              handleDelete(row);
-            }}
-          >
-            <DeleteIcon />
+          <Tooltip title="Edit" placement="top">
+            <IconButton
+              onClick={() => {
+                handleOpenupdate(index);
+              }}
+            >
+              <CreateRoundedIcon fontSize="small" color="secondary" />
+            </IconButton>
+          </Tooltip>
+          <IconButton>
+            <Popconfirm
+              title="Delete"
+              description="Are you sure to Delete it ?"
+              placement="topLeft"
+              onConfirm={() => confirm(row)} // Pass index to confirm function
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tooltip title="Delete" placement="top">
+                <DeleteIcon fontSize="small" color="secondary" />
+              </Tooltip>
+            </Popconfirm>
           </IconButton>
         </MDTypography>
       ),

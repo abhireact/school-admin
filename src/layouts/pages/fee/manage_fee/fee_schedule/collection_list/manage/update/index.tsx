@@ -36,7 +36,7 @@ const Update = (props: any) => {
           },
         })
         .then(() => {
-          window.location.reload();
+          // window.location.reload();
           message.success("Updated Successfully!");
 
           handleClose();
@@ -50,12 +50,20 @@ const Update = (props: any) => {
   });
   return (
     <form onSubmit={handleSubmit}>
+      <Grid container p={3}>
+        <Grid item xs={12} sm={6}>
+          <MDTypography variant="h4" fontWeight="bold" color="secondary">
+            Edit Collection Particular{" "}
+          </MDTypography>
+        </Grid>
+      </Grid>
       <MDBox p={4}>
         {" "}
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDInput
-              sx={{ width: "80%" }}
+              sx={{ width: "100%" }}
+              disabled
               variant="standard"
               name="academic_year"
               value={values.academic_year}
@@ -73,7 +81,7 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDInput
-              sx={{ width: "80%" }}
+              sx={{ width: "100%" }}
               variant="standard"
               name="amount"
               type="number"

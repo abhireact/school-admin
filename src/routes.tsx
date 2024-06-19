@@ -13,10 +13,9 @@ import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
-import CreateTemplate from "layouts/pages/notifications/create_message_template";
+import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
-import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 
 import Fee from "layouts/pages/admission/fee_admission";
 import AdmissionForm from "layouts/pages/admission/new_admission";

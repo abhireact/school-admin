@@ -8,11 +8,13 @@ import MDInput from "components/MDInput";
 import Checkbox from "@mui/material/Checkbox";
 import { TimePicker } from "antd";
 import MDBox from "components/MDBox";
-
+import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { Tree } from "antd";
 import type { TreeDataNode, TreeProps } from "antd";
+const token = Cookies.get("token");
+const current_academic_year = Cookies.get("academic_year");
 interface TreeNode {
   title: string;
   key: string;
@@ -23,13 +25,14 @@ interface Class {
   class_name: string;
 }
 const initialValues = {
-  academic_year: "",
+  academic_year: current_academic_year,
   start_time: TimePicker,
   end_time: TimePicker,
   class_number: 0,
   weekdays: [] as string[],
   is_break: false,
 };
+
 export default function ClassTimingCreate() {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
@@ -127,126 +130,118 @@ export default function ClassTimingCreate() {
               </Grid>
             </Grid>
             <Grid container spacing={3} p={2}>
-              <Grid item xs={12} sm={3}>
-                <MDInput
-                  required
-                  type="time"
-                  sx={{ width: "100%" }}
-                  name="start_time"
-                  onChange={handleChange}
-                  value={values.start_time}
-                  label={
+              <Grid item xs={12} sm={8}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <MDInput
+                      disabled
+                      name="academic_year"
+                      sx={{ width: "100%" }}
+                      onChange={handleChange}
+                      value={values.academic_year}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Academic Year
+                        </MDTypography>
+                      }
+                      variant="standard"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <MDInput
+                      required
+                      type="number"
+                      min="1"
+                      max="10"
+                      sx={{ width: "100%" }}
+                      name="class_number"
+                      onChange={handleChange}
+                      value={values.class_number}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Class Number
+                        </MDTypography>
+                      }
+                      variant="standard"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      required
+                      type="time"
+                      sx={{ width: "100%" }}
+                      name="start_time"
+                      onChange={handleChange}
+                      value={values.start_time}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Start Time
+                        </MDTypography>
+                      }
+                      variant="standard"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      required
+                      type="time"
+                      sx={{ width: "100%" }}
+                      name="end_time"
+                      onChange={handleChange}
+                      value={values.end_time}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          End Time
+                        </MDTypography>
+                      }
+                      variant="standard"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Checkbox
+                      checked={values.is_break}
+                      name="is_break"
+                      value="true"
+                      onChange={handleChange}
+                    />
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Start Time
+                      Is Breake
                     </MDTypography>
-                  }
-                  variant="standard"
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <MDInput
-                  required
-                  type="time"
-                  sx={{ width: "100%" }}
-                  name="end_time"
-                  onChange={handleChange}
-                  value={values.end_time}
-                  label={
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      End Time
+                      Select Week Days
                     </MDTypography>
-                  }
-                  variant="standard"
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <MDInput
-                  required
-                  type="number"
-                  min="1"
-                  max="10"
-                  sx={{ width: "100%" }}
-                  name="class_number"
-                  onChange={handleChange}
-                  value={values.class_number}
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Class Number
-                    </MDTypography>
-                  }
-                  variant="standard"
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Checkbox
-                  checked={values.is_break}
-                  name="is_break"
-                  value="true"
-                  onChange={handleChange}
-                />
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Is Breake
-                </MDTypography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Grid item xs={12} sm={8} pb={2}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "academic_year", value } });
-                    }}
-                    options={
-                      classes
-                        ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                        : []
-                    }
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="academic_year"
-                        onChange={handleChange}
-                        value={values.academic_year}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Academic Year
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Select Week Days
-                </MDTypography>
-                <Box display="flex" className="weekDays-selector">
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
-                    <Box
-                      key={index}
-                      onClick={() => handleDayToggle(index)}
-                      sx={{
-                        bgcolor: isChecked(index) ? "#2AD705" : "#dddddd",
-                        color: isChecked(index) ? "#ffffff" : "#000000",
-                        borderRadius: "6px",
-                        width: "40px",
-                        height: "40px",
-                        textAlign: "center",
-                        lineHeight: "40px",
-                        cursor: "pointer",
-                        marginRight: "3px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography variant="h6" fontWeight="bold" color="dark">
-                        {day}
-                      </Typography>
+                    <Box display="flex" className="weekDays-selector">
+                      {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
+                        <Box
+                          key={index}
+                          onClick={() => handleDayToggle(index)}
+                          sx={{
+                            bgcolor: isChecked(index) ? "#2AD705" : "#dddddd",
+                            color: isChecked(index) ? "#ffffff" : "#000000",
+                            borderRadius: "6px",
+                            width: "40px",
+                            height: "40px",
+                            textAlign: "center",
+                            lineHeight: "40px",
+                            cursor: "pointer",
+                            marginRight: "3px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography variant="h6" fontWeight="bold" color="dark">
+                            {day}
+                          </Typography>
+                        </Box>
+                      ))}
                     </Box>
-                  ))}
-                </Box>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6} style={{ maxHeight: "250px", overflowY: "auto" }}>
+              <Grid item xs={12} sm={4}>
                 <MDTypography variant="button" fontWeight="bold" color="secondary">
                   Select Class & sections
                 </MDTypography>

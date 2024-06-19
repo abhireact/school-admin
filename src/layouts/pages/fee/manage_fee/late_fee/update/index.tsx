@@ -14,7 +14,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Icon from "@mui/material/Icon";
 import { useSelector } from "react-redux";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import {
+  FormControlLabel,
+  FormControl,
+  Radio,
+  RadioGroup,
+  Checkbox,
+  IconButton,
+} from "@mui/material";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   fine_name: Yup.string().required("Required *"),
@@ -26,6 +33,8 @@ const Update = (props: any) => {
   const token = Cookies.get("token");
 
   const { setOpen, editData, fetchingData } = props;
+  console.log(props.editData);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -59,6 +68,12 @@ const Update = (props: any) => {
         description: editData.description,
         late_fee_calculation_type: editData.late_fee_calculation_type,
         due_date: editData.due_date,
+        // due_date: [
+        //   {
+        //     day_after_due_date: editData.due_date?.day_after_due_date,
+        //     amount: editData.due_date?.amount,
+        //   },
+        // ],
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -80,14 +95,15 @@ const Update = (props: any) => {
           });
       },
     });
-  const handleAddField = () => {
+
+  const addParticular = () => {
     setFieldValue("due_date", [...values.due_date, { day_after_due_date: "", amount: "" }]);
   };
 
-  const handleRemoveField = (index: number) => {
-    const newDues = [...values.due_date];
-    newDues.splice(index, 1);
-    setFieldValue("due_date", newDues);
+  const removeParticular = (index: number) => {
+    const newparticular = [...values.due_date];
+    newparticular.splice(index, 1);
+    setFieldValue("due_date", newparticular);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -209,7 +225,7 @@ const Update = (props: any) => {
               />
             </Grid>
 
-            <Grid xs={12} sm={8} py={1}>
+            {/* <Grid xs={12} sm={8} py={1}>
               <MDButton
                 onClick={() => {
                   handleAddField();
@@ -270,8 +286,102 @@ const Update = (props: any) => {
                   ) : null}
                 </Grid>
               </>
-            ))}
+            ))} */}
 
+            {values.late_fee_calculation_type &&
+              values.due_date.map((day_after_due_date: any, index: any) => (
+                <Grid item container sm={12} key={index} spacing={3}>
+                  <Grid item xs={12} sm={4} py={1}>
+                    <MDInput
+                      placeholder="Enter Days After Due Date"
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name={`due_date.${index}.day_after_due_date`}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Days After Due Date
+                        </MDTypography>
+                      }
+                      required
+                      value={day_after_due_date.day_after_due_date}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      // error={
+                      //   touched.due_date?.[index]?.day_after_due_date &&
+                      //   Boolean(
+                      //     (errors.due_date as FormikErrors<Particular>[])?.[index]
+                      //       ?.day_after_due_date
+                      //   )
+                      // }
+                      // success={
+                      //   day_after_due_date.day_after_due_date.length > 0 &&
+                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                      // }
+                      // helperText={
+                      //   touched.due_date?.[index]?.day_after_due_date &&
+                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                      // }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} py={1}>
+                    <MDInput
+                      placeholder="Enter Amount"
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name={`due_date.${index}.amount`}
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Amount{" "}
+                        </MDTypography>
+                      }
+                      required
+                      value={day_after_due_date.amount}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      // error={
+                      //   touched.due_date?.[index]?.day_after_due_date &&
+                      //   Boolean(
+                      //     (errors.due_date as FormikErrors<Particular>[])?.[index]
+                      //       ?.day_after_due_date
+                      //   )
+                      // }
+                      // success={
+                      //   day_after_due_date.day_after_due_date.length > 0 &&
+                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                      // }
+                      // helperText={
+                      //   touched.due_date?.[index]?.day_after_due_date &&
+                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                      // }
+                    />
+                  </Grid>
+
+                  <Grid
+                    item
+                    xs={12}
+                    sm={4}
+                    py={1}
+                    mt={2}
+                    // sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    {index == values.due_date.length - 1 && (
+                      <IconButton
+                        onClick={() => addParticular()}
+                        disabled={values.late_fee_calculation_type.toLowerCase() !== "by days"}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    )}
+
+                    <IconButton
+                      onClick={() => removeParticular(index)}
+                      disabled={values.due_date.length === 1}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
             <Grid
               item
               container

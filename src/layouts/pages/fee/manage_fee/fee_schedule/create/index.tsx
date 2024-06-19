@@ -132,6 +132,13 @@ const Create = (props: any) => {
     <>
       <Card>
         <form onSubmit={handleSubmit}>
+          <Grid container>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Create Fee Schedule
+              </MDTypography>
+            </Grid>
+          </Grid>
           <MDBox p={4}>
             <Grid container>
               <Grid item xs={12} sm={4}>
