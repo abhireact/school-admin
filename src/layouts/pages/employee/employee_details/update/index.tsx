@@ -148,7 +148,7 @@ const Update = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "70%" }}
                 variant="standard"
@@ -162,7 +162,7 @@ const Update = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "70%" }}
                 variant="standard"

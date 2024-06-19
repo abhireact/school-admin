@@ -1,19 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React TS - v1.0.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-2-pro-react-ts
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import { Theme } from "@mui/material/styles";
@@ -24,21 +8,16 @@ import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 PRO React context
 import { useMaterialUIController } from "context";
-
-function Sidenav(): JSX.Element {
+interface SidenavItem {
+  icon: string;
+  label: string;
+  href: string;
+}
+function Sidenav(props: any): JSX.Element {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
-  const sidenavItems = [
-    { icon: "person", label: "profile", href: "profile" },
-    { icon: "receipt_long", label: "basic info", href: "basic-info" },
-    { icon: "lock", label: "change password", href: "change-password" },
-    { icon: "security", label: "2FA", href: "2fa" },
-    { icon: "badge", label: "accounts", href: "accounts" },
-    { icon: "campaign", label: "notifications", href: "notifications" },
-    { icon: "settings_applications", label: "sessions", href: "sessions" },
-    { icon: "delete", label: "delete account", href: "delete-account" },
-  ];
+  const sidenavItems: SidenavItem[] = props.item;
 
   const renderSidenavItems = sidenavItems.map(({ icon, label, href }, key) => {
     const itemKey = `item-${key}`;

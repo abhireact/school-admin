@@ -12,13 +12,14 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
+import StudentDetails from "layouts/pages/student/studentdetails";
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
-import CreateTemplate from "layouts/pages/notifications/create_message_template";
+import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
-import SMSConfiguration from "layouts/pages/notifications/sms_configuration";
 import React, { createRef } from "react";
 import Myrbacroutes from "myrbacroutes";
+import Settings from "layouts/pages/account/settings";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -106,6 +107,18 @@ let routes = [
         component: <MYProfile />,
       },
     ],
+  },
+  // {
+  //   name: "Student Info",
+  //   key: "studentdetails",
+  //   route: "/pages/school/studentdetails",
+  //   component: <StudentDetails />,
+  // },
+  {
+    name: "setting",
+    key: "setting",
+    route: "/sidenav/setting",
+    component: <Settings />,
   },
   {
     name: "createfee category",
