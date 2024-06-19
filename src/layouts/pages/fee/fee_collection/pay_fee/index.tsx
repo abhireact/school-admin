@@ -71,7 +71,7 @@ const PayFee = (props: any) => {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [refundcheck, setRefundCheck] = useState(true);
+  const [refundcheck, setRefundCheck] = useState(false);
 
   const token = Cookies.get("token");
 
@@ -299,7 +299,7 @@ const PayFee = (props: any) => {
 
       if (response.status === 200) {
         console.log("Created Employee Successfully");
-        message.success("Data fetched successfully!");
+        message.success("Paid successfully!");
       }
     } catch (error) {
       console.error("Error saving data:", error);
@@ -602,7 +602,7 @@ const PayFee = (props: any) => {
           ),
           balance: (
             <MDTypography variant="h6" color="secondary" fontWeight="bold">
-              {refundcheck == true
+              {refundcheck
                 ? (fineData[0]?.amount ? totals.balance + fineData[0]?.amount : totals.balance) -
                     refundData?.amount || 0
                 : fineData[0]?.amount
@@ -617,9 +617,7 @@ const PayFee = (props: any) => {
           ),
           amount_paying: (
             <MDTypography variant="h6" color="secondary" fontWeight="bold">
-              {refundcheck == true
-                ? totals.amount_paying - refundData?.amount || 0
-                : totals.amount_paying}
+              {refundcheck ? totals.amount_paying - refundData?.amount : totals.amount_paying}
             </MDTypography>
           ),
           excess_amount: (
@@ -636,17 +634,63 @@ const PayFee = (props: any) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card>
-        <Grid container px={3}>
-          <Grid item xs={12} sm={12} mt={2}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Fee Collection
-            </MDTypography>
-          </Grid>
-        </Grid>
+      <>
         <Grid container px={3} display="flex" justifyContent={"center"}>
           <Grid item xs={12} sm={6} display="flex" justifyContent={"center"}>
             <StudentCard data={props.mainData} />
+          </Grid>
+          <Grid item xs={12} sm={6} display="flex" justifyContent={"center"}>
+            <Grid item xs={12} sm={6} py={1}>
+              <MDInput
+                type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: "80%" }}
+                name="collection_date"
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Collection Date{" "}
+                  </MDTypography>
+                }
+                onChange={handleChange}
+                value={values.collection_date}
+                variant="standard"
+                onBlur={handleBlur}
+                error={touched.collection_date && Boolean(errors.collection_date)}
+                success={values.collection_date.length && !errors.collection_date}
+                helperText={touched.collection_date && errors.collection_date}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} py={1}>
+              <Autocomplete
+                sx={{ width: "70%" }}
+                value={values.adm_no_or_fee_code || "School"}
+                onChange={(event, value) => {
+                  handleChange({
+                    target: { name: "adm_no_or_fee_code", value },
+                  });
+                }}
+                options={["School ", "Online", "Bank Details"]}
+                renderInput={(params: any) => (
+                  <MDInput
+                    InputLabelProps={{ shrink: true }}
+                    name="adm_no_or_fee_code"
+                    placeholder="2022-23"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Collected At
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.adm_no_or_fee_code}
+                    {...params}
+                    variant="standard"
+                    error={touched.adm_no_or_fee_code && Boolean(errors.adm_no_or_fee_code)}
+                    helperText={touched.adm_no_or_fee_code && errors.adm_no_or_fee_code}
+                  />
+                )}
+              />
+            </Grid>{" "}
           </Grid>
         </Grid>
         <Grid xs={12} sm={12} py={2}>
@@ -656,27 +700,9 @@ const PayFee = (props: any) => {
             entriesPerPage={false}
             showTotalEntries={false}
           />
-          {/* <Grid display={"flex"} spacing={3} justifyContent={"end"} flexDirection={"row"}>
-            <MDTypography variant="h6" fontWeight="bold" color="secondary">
-              Total Amount Before Concession:
-            </MDTypography>
-            <MDTypography variant="h6" fontWeight="bold" color="secondary" marginLeft={3}>
-              5000
-            </MDTypography>
-          </Grid>
-          <Grid display={"flex"} spacing={3} justifyContent={"end"} flexDirection={"row"}>
-            {" "}
-            <MDTypography variant="h6" fontWeight="bold" color="secondary">
-              Amount paying:
-            </MDTypography>
-            <MDTypography variant="h6" fontWeight="bold" color="secondary" marginLeft={3}>
-              45000
-            </MDTypography>
-          </Grid> */}
         </Grid>
-
         <Grid container px={3}>
-          <Grid item xs={12} sm={4} py={1}>
+          <Grid item xs={12} sm={12} py={1}>
             <FormControl>
               <MDTypography
                 variant="h6"
@@ -689,8 +715,7 @@ const PayFee = (props: any) => {
 
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                // defaultValue="female"
-
+                row
                 name="radio-buttons-group"
               >
                 <FormControlLabel
@@ -710,10 +735,8 @@ const PayFee = (props: any) => {
                   }
                 />
                 <FormControlLabel
-                  // value="male"
                   control={
                     <Radio
-                      // checked={values.payment_details.payment_mode.includes("Addmission No")}
                       onChange={handleChange}
                       name="payment_details.payment_mode"
                       value="By Cheque"
@@ -725,94 +748,6 @@ const PayFee = (props: any) => {
                     </MDTypography>
                   }
                 />
-                {values.payment_details.payment_mode === "By Cheque" ? (
-                  <>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.cheque_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Cheque Number
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.cheque_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.cheque_number && Boolean(errors.cheque_number)}
-                        success={values.cheque_number.length && !errors.cheque_number}
-                        helperText={touched.cheque_number && errors.cheque_number}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.cheque_date"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Date
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.cheque_date}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.cheque_date && Boolean(errors.cheque_date)}
-                        success={values.cheque_date.length && !errors.cheque_date}
-                        helperText={touched.cheque_date && errors.cheque_date}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.bank_branch"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Bankname And Branch
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.bank_branch}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.bank_branch && Boolean(errors.bank_branch)}
-                        success={values.bank_branch.length && !errors.bank_branch}
-                        helperText={touched.bank_branch && errors.bank_branch}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <Autocomplete
-                        sx={{ width: "70%" }}
-                        value={values.cheque_status || "Admission Number"}
-                        onChange={(event, value) => {
-                          handleChange({
-                            target: { name: "payment_details.cheque_status", value },
-                          });
-                        }}
-                        options={["Admission Number", "Fee Code"]}
-                        renderInput={(params: any) => (
-                          <MDInput
-                            InputLabelProps={{ shrink: true }}
-                            name="payment_details.cheque_status"
-                            placeholder="2022-23"
-                            label={
-                              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                Cheque Status
-                              </MDTypography>
-                            }
-                            onChange={handleChange}
-                            value={values.cheque_status}
-                            {...params}
-                            variant="standard"
-                            error={touched.cheque_status && Boolean(errors.cheque_status)}
-                            helperText={touched.cheque_status && errors.cheque_status}
-                          />
-                        )}
-                      />
-                    </Grid>{" "}
-                  </>
-                ) : null}
                 <FormControlLabel
                   // value="male"
                   control={
@@ -828,27 +763,7 @@ const PayFee = (props: any) => {
                       Online Payment
                     </MDTypography>
                   }
-                />
-                {values.payment_details.payment_mode === "Online Payment" ? (
-                  <Grid item xs={12} sm={12} py={1}>
-                    <MDInput
-                      sx={{ width: "80%" }}
-                      name="payment_details.online_transaction_no"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Online Transaction No
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.online_transaction_no}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.online_transaction_no && Boolean(errors.online_transaction_no)}
-                      success={values.online_transaction_no.length && !errors.online_transaction_no}
-                      helperText={touched.online_transaction_no && errors.online_transaction_no}
-                    />
-                  </Grid>
-                ) : null}
+                />{" "}
                 <FormControlLabel
                   // value="male"
                   control={
@@ -865,64 +780,6 @@ const PayFee = (props: any) => {
                     </MDTypography>
                   }
                 />{" "}
-                {values.payment_details.payment_mode === "By Draft" ? (
-                  <>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.draft_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Draft Number
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.draft_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.draft_number && Boolean(errors.draft_number)}
-                        success={values.draft_number.length && !errors.draft_number}
-                        helperText={touched.draft_number && errors.draft_number}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.draft_date"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Date
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.draft_date}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.draft_date && Boolean(errors.draft_date)}
-                        success={values.draft_date.length && !errors.draft_date}
-                        helperText={touched.draft_date && errors.draft_date}
-                      />
-                    </Grid>{" "}
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Bankname And Branch
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>
-                  </>
-                ) : null}
                 <FormControlLabel
                   // value="male"
                   control={
@@ -939,64 +796,6 @@ const PayFee = (props: any) => {
                     </MDTypography>
                   }
                 />
-                {values.payment_details.payment_mode === "By Pos" ? (
-                  <>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Invoice Number
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Bank Name
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Date Of Transaction
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>
-                  </>
-                ) : null}
                 <FormControlLabel
                   // value="male"
                   control={
@@ -1013,132 +812,307 @@ const PayFee = (props: any) => {
                     </MDTypography>
                   }
                 />
-                {values.payment_details.payment_mode === "By Neft" ? (
-                  <>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Cheque No/Transaction Id{" "}
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Bank Name
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>{" "}
-                    <Grid item xs={12} sm={12} py={1}>
-                      <MDInput
-                        sx={{ width: "80%" }}
-                        name="payment_details.admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Date Of Transaction
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>
-                  </>
-                ) : null}
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={4} py={1}>
-            <MDInput
-              type="date"
-              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: "80%" }}
-              name="collection_date"
-              label={
-                <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Collection Date{" "}
-                </MDTypography>
-              }
-              onChange={handleChange}
-              value={values.collection_date}
-              variant="standard"
-              onBlur={handleBlur}
-              error={touched.collection_date && Boolean(errors.collection_date)}
-              success={values.collection_date.length && !errors.collection_date}
-              helperText={touched.collection_date && errors.collection_date}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} py={1}>
-            <Autocomplete
-              sx={{ width: "70%" }}
-              value={values.adm_no_or_fee_code || "School"}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "adm_no_or_fee_code", value },
-                });
-              }}
-              options={["School ", "Online", "Bank Details"]}
-              renderInput={(params: any) => (
+          <Grid item container xs={12} sm={12} py={1}>
+            {values.payment_details.payment_mode === "By Cheque" ? (
+              <>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.cheque_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Cheque Number
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.cheque_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.cheque_number && Boolean(errors.cheque_number)}
+                    success={values.cheque_number.length && !errors.cheque_number}
+                    helperText={touched.cheque_number && errors.cheque_number}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.cheque_date"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Date
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.cheque_date}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.cheque_date && Boolean(errors.cheque_date)}
+                    success={values.cheque_date.length && !errors.cheque_date}
+                    helperText={touched.cheque_date && errors.cheque_date}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.bank_branch"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Bankname And Branch
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.bank_branch}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.bank_branch && Boolean(errors.bank_branch)}
+                    success={values.bank_branch.length && !errors.bank_branch}
+                    helperText={touched.bank_branch && errors.bank_branch}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} py={1}>
+                  <Autocomplete
+                    sx={{ width: "70%" }}
+                    value={values.cheque_status || "Admission Number"}
+                    onChange={(event, value) => {
+                      handleChange({
+                        target: { name: "payment_details.cheque_status", value },
+                      });
+                    }}
+                    options={["Admission Number", "Fee Code"]}
+                    renderInput={(params: any) => (
+                      <MDInput
+                        InputLabelProps={{ shrink: true }}
+                        name="payment_details.cheque_status"
+                        placeholder="2022-23"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Cheque Status
+                          </MDTypography>
+                        }
+                        onChange={handleChange}
+                        value={values.cheque_status}
+                        {...params}
+                        variant="standard"
+                        error={touched.cheque_status && Boolean(errors.cheque_status)}
+                        helperText={touched.cheque_status && errors.cheque_status}
+                      />
+                    )}
+                  />
+                </Grid>{" "}
+              </>
+            ) : null}
+            {values.payment_details.payment_mode === "Online Payment" ? (
+              <Grid item xs={12} sm={3} py={1}>
                 <MDInput
-                  InputLabelProps={{ shrink: true }}
-                  name="adm_no_or_fee_code"
-                  placeholder="2022-23"
+                  sx={{ width: "80%" }}
+                  name="payment_details.online_transaction_no"
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Collected At
+                      Online Transaction No
                     </MDTypography>
                   }
                   onChange={handleChange}
-                  value={values.adm_no_or_fee_code}
-                  {...params}
+                  value={values.online_transaction_no}
                   variant="standard"
-                  error={touched.adm_no_or_fee_code && Boolean(errors.adm_no_or_fee_code)}
-                  helperText={touched.adm_no_or_fee_code && errors.adm_no_or_fee_code}
+                  onBlur={handleBlur}
+                  error={touched.online_transaction_no && Boolean(errors.online_transaction_no)}
+                  success={values.online_transaction_no.length && !errors.online_transaction_no}
+                  helperText={touched.online_transaction_no && errors.online_transaction_no}
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} display={"flex"} justifyContent={"end"}>
-            <MDButton
-              color="info"
-              variant="contained"
-              type="submit"
-              onClick={() => {
-                handleFormSubmit();
-              }}
-            >
-              Submit
-            </MDButton>
+              </Grid>
+            ) : null}
+            {values.payment_details.payment_mode === "By Draft" ? (
+              <>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.draft_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Draft Number
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.draft_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.draft_number && Boolean(errors.draft_number)}
+                    success={values.draft_number.length && !errors.draft_number}
+                    helperText={touched.draft_number && errors.draft_number}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.draft_date"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Date
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.draft_date}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.draft_date && Boolean(errors.draft_date)}
+                    success={values.draft_date.length && !errors.draft_date}
+                    helperText={touched.draft_date && errors.draft_date}
+                  />
+                </Grid>{" "}
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.admission_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Bankname And Branch
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.admission_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.admission_number && Boolean(errors.admission_number)}
+                    success={values.admission_number.length && !errors.admission_number}
+                    helperText={touched.admission_number && errors.admission_number}
+                  />
+                </Grid>
+              </>
+            ) : null}
+            {values.payment_details.payment_mode === "By Pos" ? (
+              <>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.admission_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Invoice Number
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.admission_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.admission_number && Boolean(errors.admission_number)}
+                    success={values.admission_number.length && !errors.admission_number}
+                    helperText={touched.admission_number && errors.admission_number}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.admission_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Bank Name
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.admission_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.admission_number && Boolean(errors.admission_number)}
+                    success={values.admission_number.length && !errors.admission_number}
+                    helperText={touched.admission_number && errors.admission_number}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.admission_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Date Of Transaction
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.admission_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.admission_number && Boolean(errors.admission_number)}
+                    success={values.admission_number.length && !errors.admission_number}
+                    helperText={touched.admission_number && errors.admission_number}
+                  />
+                </Grid>
+              </>
+            ) : null}
+            {values.payment_details.payment_mode === "By Neft" ? (
+              <>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.admission_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Cheque No/Transaction Id{" "}
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.admission_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.admission_number && Boolean(errors.admission_number)}
+                    success={values.admission_number.length && !errors.admission_number}
+                    helperText={touched.admission_number && errors.admission_number}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.admission_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Bank Name
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.admission_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.admission_number && Boolean(errors.admission_number)}
+                    success={values.admission_number.length && !errors.admission_number}
+                    helperText={touched.admission_number && errors.admission_number}
+                  />
+                </Grid>{" "}
+                <Grid item xs={12} sm={3} py={1}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name="payment_details.admission_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Date Of Transaction
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values.admission_number}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.admission_number && Boolean(errors.admission_number)}
+                    success={values.admission_number.length && !errors.admission_number}
+                    helperText={touched.admission_number && errors.admission_number}
+                  />
+                </Grid>
+              </>
+            ) : null}
           </Grid>
         </Grid>
-      </Card>
+        <Grid item xs={12} sm={4} display={"flex"} justifyContent={"end"}>
+          <MDButton
+            color="info"
+            variant="contained"
+            type="submit"
+            onClick={() => {
+              handleFormSubmit();
+            }}
+          >
+            Submit
+          </MDButton>
+        </Grid>
+      </>
     </form>
   );
 };

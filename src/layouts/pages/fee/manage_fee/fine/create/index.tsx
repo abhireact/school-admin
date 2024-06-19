@@ -316,9 +316,8 @@ export default function Create(props: any) {
         <Grid container spacing={3} p={2}>
           <Grid item xs={12} sm={4}>
             <MDInput
-              required
               name="fine_name"
-              sx={{ width: "80%" }}
+              sx={{ width: "100%" }}
               onChange={handleChange}
               value={values.fine_name}
               label={
@@ -336,7 +335,7 @@ export default function Create(props: any) {
           <Grid item xs={12} sm={4}>
             <MDInput
               name="description"
-              sx={{ width: "80%" }}
+              sx={{ width: "100%" }}
               onChange={handleChange}
               value={values.description}
               label={
@@ -353,9 +352,8 @@ export default function Create(props: any) {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDInput
-              required
               name="fine_from"
-              sx={{ width: "80%" }}
+              sx={{ width: "100%" }}
               onChange={handleChange}
               value={values.fine_from}
               label={
@@ -446,7 +444,6 @@ export default function Create(props: any) {
               }
               renderInput={(params) => (
                 <MDInput
-                  required
                   name="academic_year"
                   defaultValue={Cacademic_year}
                   onChange={handleChange}
@@ -467,14 +464,14 @@ export default function Create(props: any) {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Autocomplete
-              sx={{ width: "80%" }}
+              disableClearable
+              sx={{ width: "100%" }}
               onChange={(_event, value) => {
                 handleChange({ target: { name: "account", value } });
               }}
               options={account ? account.map((item: any) => item.account_name) : []}
               renderInput={(params) => (
                 <MDInput
-                  required
                   name="account"
                   onChange={handleChange}
                   value={values.account}
@@ -501,7 +498,7 @@ export default function Create(props: any) {
                 </MDTypography>
               }
               type="number"
-              sx={{ width: "80%" }}
+              sx={{ width: "100%" }}
               name="amount"
               value={values.amount}
               placeholder="Enter Amount"
@@ -557,7 +554,8 @@ export default function Create(props: any) {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
-                  sx={{ width: "80%" }}
+                  disableClearable
+                  sx={{ width: "100%" }}
                   value={values.student_category}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "student_category", value } });
@@ -587,7 +585,8 @@ export default function Create(props: any) {
             <>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
-                  sx={{ width: "80%" }}
+                  disableClearable
+                  sx={{ width: "100%" }}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "class_name", value } });
                   }}
@@ -600,7 +599,6 @@ export default function Create(props: any) {
                   }
                   renderInput={(params) => (
                     <MDInput
-                      required
                       name="class_name"
                       onChange={handleChange}
                       value={values.class_name}
@@ -617,7 +615,8 @@ export default function Create(props: any) {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
-                  sx={{ width: "80%" }}
+                  disableClearable
+                  sx={{ width: "100%" }}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "section_name", value } });
                   }}
@@ -634,7 +633,6 @@ export default function Create(props: any) {
                   }
                   renderInput={(params) => (
                     <MDInput
-                      required
                       name="section_name"
                       onChange={handleChange}
                       value={values.section_name}

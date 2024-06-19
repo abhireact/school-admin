@@ -171,18 +171,17 @@ export default function EditFeeCategory(props: any) {
                 mt={2}
                 // sx={{ display: "flex", justifyContent: "flex-end" }}
               >
-                {index == values.particular_types.length - 1 && (
-                  <IconButton onClick={() => addParticular()}>
-                    <AddIcon />
-                  </IconButton>
-                )}
-
                 <IconButton
                   onClick={() => removeParticular(index)}
                   disabled={values.particular_types.length === 1}
                 >
                   <DeleteIcon />
                 </IconButton>
+                {index == values.particular_types.length - 1 && (
+                  <IconButton onClick={() => addParticular()}>
+                    <AddIcon />
+                  </IconButton>
+                )}
               </Grid>
             </Grid>
           ))}
