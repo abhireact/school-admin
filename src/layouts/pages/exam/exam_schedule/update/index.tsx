@@ -113,6 +113,7 @@ const Update = (props: any) => {
                 sx={{ width: "70%" }}
                 variant="standard"
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 name="date"
                 label={<MDTypography variant="body2">Date</MDTypography>}
                 value={values.date}

@@ -288,6 +288,7 @@ const Create = (props: any) => {
                 variant="standard"
                 name="fine_from"
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -307,6 +308,7 @@ const Create = (props: any) => {
                 variant="standard"
                 name="start_date"
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -326,6 +328,7 @@ const Create = (props: any) => {
                 variant="standard"
                 name="end_date"
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -346,6 +349,7 @@ const Create = (props: any) => {
                 variant="standard"
                 name="due_date"
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">

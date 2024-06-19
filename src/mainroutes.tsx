@@ -4,7 +4,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Icon from "@mui/material/Icon";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
-import StudentDetails from "layouts/pages/student";
+import StudentDetails from "layouts/pages/student/studentdetails";
 import EmployeeProfile from "layouts/pages/employee/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";

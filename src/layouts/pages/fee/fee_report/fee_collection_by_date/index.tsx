@@ -167,6 +167,7 @@ export default function FeeCollectionByDateReport() {
                     <MDInput
                       required
                       type="date"
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       name="start_date"
                       sx={{ width: "100%" }}
                       onChange={handleChange}
@@ -179,6 +180,7 @@ export default function FeeCollectionByDateReport() {
                     <MDInput
                       required
                       type="date"
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       name="end_date"
                       sx={{ width: "100%" }}
                       onChange={handleChange}

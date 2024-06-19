@@ -232,6 +232,7 @@ export default function FeeDefaulterReport() {
                   <Grid item xs={12} sm={4}>
                     <MDInput
                       type="date"
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       sx={{ width: "100%" }}
                       label="select Start Date"
                       variant="standard"
@@ -243,6 +244,7 @@ export default function FeeDefaulterReport() {
                   <Grid item xs={12} sm={4}>
                     <MDInput
                       type="date"
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       sx={{ width: "100%" }}
                       label="select End Date"
                       variant="standard"

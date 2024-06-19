@@ -402,6 +402,7 @@ const Create = (props: any) => {
               <Grid item sm={3} xs={12}>
                 <MDInput
                   type="date"
+                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                   InputLabelProps={{ shrink: true }}
                   placeholder="eg. 2018-19"
                   autoComplete="off"
@@ -616,7 +617,7 @@ const Create = (props: any) => {
                     <>
                       <Grid>
                         <MDInput
-                          type="date" inputMode="none"
+                           type ="date" onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}  inputMode="none"
                           InputLabelProps={{ shrink: true }}
                           required
                           variant="standard"
@@ -638,7 +639,7 @@ const Create = (props: any) => {
                       <Grid>
                         <MDInput
                           required
-                          type="date" inputMode="none"
+                           type ="date" onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}  inputMode="none"
                           InputLabelProps={{ shrink: true }}
                           variant="standard"
                           name={`moduleAccess[${index}].end_date`}

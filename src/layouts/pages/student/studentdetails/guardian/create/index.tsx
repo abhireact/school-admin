@@ -46,7 +46,7 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string(),
   relation: Yup.string(),
 });
-const Create = (props: any) => {
+const CreateGuardian = (props: any) => {
   const { username, guardianData, setCreateOpen, fetchGuardian } = props;
 
   const { values, handleChange, handleBlur, handleSubmit, setFieldValue } = useFormik({
@@ -66,6 +66,8 @@ const Create = (props: any) => {
       mobile_number: "",
       notification: false,
       subscription: false,
+      file_name: "",
+      file_data: "",
     },
 
     validationSchema: validationSchema,
@@ -207,6 +209,7 @@ const Create = (props: any) => {
               <MDInput
                 sx={{ width: "90%" }}
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 variant="standard"
                 name={`date_of_birth`}
@@ -220,7 +223,7 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} key={"qualification"}>
+            {/* <Grid item xs={12} sm={4} key={"qualification"}>
               <MDInput
                 sx={{ width: "90%" }}
                 variant="standard"
@@ -235,6 +238,23 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
+
+            <Grid item xs={12} sm={4} key={"designation"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`designation`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Designation
+                  </MDTypography>
+                }
+                value={values.designation}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid> */}
+
             <Grid item xs={12} sm={4} key={"occupation"}>
               <MDInput
                 sx={{ width: "90%" }}
@@ -250,21 +270,6 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} key={"designation"}>
-              <MDInput
-                sx={{ width: "90%" }}
-                variant="standard"
-                name={`designation`}
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Designation
-                  </MDTypography>
-                }
-                value={values.designation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
             <Grid item xs={12} sm={4} key={"income"}>
               <MDInput
                 sx={{ width: "90%" }}
@@ -272,7 +277,7 @@ const Create = (props: any) => {
                 name={`income`}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Income
+                    Annual Income
                   </MDTypography>
                 }
                 value={values.income}
@@ -326,6 +331,7 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
+            <Grid item xs={12} sm={4}></Grid>
             <Grid item xs={12} sm={4} mt={2} key={"notification"}>
               <FormControl>
                 <RadioGroup
@@ -406,4 +412,4 @@ const Create = (props: any) => {
   );
 };
 
-export default Create;
+export default CreateGuardian;

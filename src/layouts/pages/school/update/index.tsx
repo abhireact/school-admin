@@ -485,6 +485,7 @@ const Update = (props: any) => {
                 autoComplete="off"
                 variant="standard"
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 name="mg_leave_calendar_start_date"
                 label="Leave Calendar Date"
                 value={values.mg_leave_calendar_start_date}
@@ -649,7 +650,7 @@ const Update = (props: any) => {
               container
               xs={12}
               sm={12}
-              sx={{ display: "flex", justifyContent: "space-between" }}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Grid item mt={2}>
                 <MDButton

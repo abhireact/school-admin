@@ -359,6 +359,7 @@ export default function Create(props: any) {
               InputLabelProps={{ shrink: true }}
               name="start_date"
               type="date"
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               onChange={handleChange}
               value={values.start_date}
               label={
@@ -380,6 +381,7 @@ export default function Create(props: any) {
               InputLabelProps={{ shrink: true }}
               name="end_date"
               type="date"
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               onChange={handleChange}
               value={values.end_date}
               label={
@@ -401,6 +403,7 @@ export default function Create(props: any) {
               InputLabelProps={{ shrink: true }}
               name="due_date"
               type="date"
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               onChange={handleChange}
               value={values.due_date}
               label={

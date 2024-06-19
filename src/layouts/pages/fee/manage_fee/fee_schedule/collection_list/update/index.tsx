@@ -145,6 +145,7 @@ const Update = (props: any) => {
           <Grid item xs={12} sm={4}>
             <MDInput
               type="date"
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               sx={{ width: "80%" }}
               variant="standard"
               name="start_date"
@@ -165,6 +166,7 @@ const Update = (props: any) => {
           <Grid item xs={12} sm={4}>
             <MDInput
               type="date"
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               sx={{ width: "80%" }}
               variant="standard"
               name="end_date"
@@ -184,6 +186,7 @@ const Update = (props: any) => {
           <Grid item xs={12} sm={4}>
             <MDInput
               type="date"
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               sx={{ width: "80%" }}
               variant="standard"
               name="end_date"

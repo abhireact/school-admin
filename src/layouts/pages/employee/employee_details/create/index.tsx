@@ -240,6 +240,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "80%" }}
                 variant="standard"
@@ -253,6 +254,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "80%" }}
                 variant="standard"

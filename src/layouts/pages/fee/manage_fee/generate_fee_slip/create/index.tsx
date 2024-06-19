@@ -293,6 +293,7 @@ const Create = (props: any) => {
                     variant="standard"
                     name="fee_slip_date"
                     type="date"
+                    onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                     InputLabelProps={{ shrink: true }}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
