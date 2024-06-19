@@ -99,12 +99,7 @@ const Update = (props: any) => {
   const [classdata, setClassdata] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
   console.log(classdata, "jj");
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.class_name);
-    setFilteredClass(filtereddata);
-  }
+
   const [sectiondata, setsectiondata] = useState([]);
   const [filteredSection, setFilteredSection] = useState([]);
 
@@ -300,6 +295,7 @@ const Update = (props: any) => {
         character_certificate: studentInfo.character_certificate,
         transfer_certificate: studentInfo.transfer_certificate,
         stud_img: null,
+        stud_img_data: null,
         sport_activity: studentInfo.sport_activity,
         extra_curricular: studentInfo.extra_curricular,
         health_record: studentInfo.health_record,
@@ -995,6 +991,9 @@ const Update = (props: any) => {
                 variant="standard"
               />
             </Grid>
+            {values.stud_img_data && (
+              <img src={`data:image/png;base64,${values.stud_img_data}`} alt="Base64 Image" />
+            )}
             <Grid item xs={6} sm={4} mt={3}>
               <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
                 SIBLING

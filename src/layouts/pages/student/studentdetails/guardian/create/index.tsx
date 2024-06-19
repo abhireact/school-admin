@@ -402,7 +402,8 @@ const CreateGuardian = (props: any) => {
             </Grid>
             <Grid item mt={2} ml={2}>
               <MDButton color="info" variant="contained" type="submit">
-                Save
+                Save&nbsp;
+                <SaveIcon />
               </MDButton>
             </Grid>
           </Grid>

@@ -1971,113 +1971,50 @@ const UpdateStudent = (props: any) => {
 
                     <Grid item xs={12} sm={4} style={{ display: "flex", flexDirection: "column" }}>
                       <MDTypography variant="caption" fontWeight="bold">
-                        Is Transfer Certificate Produced ?
+                        Transfer Certificate
                       </MDTypography>
                       <FormControl>
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          row
-                          name="radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={transferCertificate}
-                                onChange={() => setTransferCertificate(!transferCertificate)}
-                              />
-                            }
-                            label={
-                              <MDTypography variant="caption" fontWeight="bold">
-                                Yes
-                              </MDTypography>
-                            }
-                          />
-                        </RadioGroup>
-                        {transferCertificate && (
-                          <MDInput
-                            sx={{ width: "90%" }}
-                            type="file"
-                            accept="image/*"
-                            name="transfer_certificate"
-                            onChange={handleTransferCertificate}
-                            variant="standard"
-                            InputLabelProps={{ shrink: true }}
-                          />
-                        )}
+                        <MDInput
+                          sx={{ width: "90%" }}
+                          type="file"
+                          accept="image/*"
+                          name="transfer_certificate"
+                          onChange={handleTransferCertificate}
+                          variant="standard"
+                          InputLabelProps={{ shrink: true }}
+                        />
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={4} style={{ display: "flex", flexDirection: "column" }}>
                       <MDTypography variant="caption" fontWeight="bold">
-                        Is Character Certificate Produced ?
+                        Character Certificate
                       </MDTypography>
                       <FormControl>
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          row
-                          name="radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={characterCertificate}
-                                onChange={() => setCharacterCertificate(!characterCertificate)}
-                              />
-                            }
-                            label={
-                              <MDTypography variant="caption" fontWeight="bold">
-                                Yes
-                              </MDTypography>
-                            }
-                          />
-                        </RadioGroup>
-                        {characterCertificate && (
-                          <MDInput
-                            sx={{ width: "90%" }}
-                            type="file"
-                            accept="image/*"
-                            name="character_certificate"
-                            onChange={handleCharacterCertificate}
-                            variant="standard"
-                            InputLabelProps={{ shrink: true }}
-                          />
-                        )}
+                        <MDInput
+                          sx={{ width: "90%" }}
+                          type="file"
+                          accept="image/*"
+                          name="character_certificate"
+                          onChange={handleCharacterCertificate}
+                          variant="standard"
+                          InputLabelProps={{ shrink: true }}
+                        />
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={4} style={{ display: "flex", flexDirection: "column" }}>
                       <MDTypography variant="caption" fontWeight="bold">
-                        Is Birth Certificate Produced ?
+                        Birth Certificate
                       </MDTypography>
                       <FormControl>
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          row
-                          name="radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={birthCertificate}
-                                onChange={() => setBirthCertificate(!birthCertificate)}
-                              />
-                            }
-                            label={
-                              <MDTypography variant="caption" fontWeight="bold">
-                                Yes
-                              </MDTypography>
-                            }
-                          />
-                        </RadioGroup>
-                        {birthCertificate && (
-                          <MDInput
-                            sx={{ width: "90%" }}
-                            type="file"
-                            accept="image/*"
-                            name="birth_certificate"
-                            onChange={handleBirthCertificate}
-                            variant="standard"
-                            InputLabelProps={{ shrink: true }}
-                          />
-                        )}
+                        <MDInput
+                          sx={{ width: "90%" }}
+                          type="file"
+                          accept="image/*"
+                          name="birth_certificate"
+                          onChange={handleBirthCertificate}
+                          variant="standard"
+                          InputLabelProps={{ shrink: true }}
+                        />
                       </FormControl>
                     </Grid>
                   </>

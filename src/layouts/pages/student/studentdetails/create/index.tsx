@@ -25,6 +25,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import Sidenav from "layouts/pages/account/settings/components/Sidenav";
+import { fetchStudent } from "layouts/pages/redux/dataSlice";
+import { useDispatch } from "react-redux";
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
@@ -101,6 +103,7 @@ interface FormValues {
 }
 
 const Create = (props: any) => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { classes, account, studentcategory } = useSelector((state: any) => state);
 
@@ -389,7 +392,8 @@ const Create = (props: any) => {
               .then(() => {
                 setLoading(false);
                 handleClose();
-                message.success(" Student Created successfully!");
+                dispatch(fetchStudent() as any);
+                message.success("Student Created Successfully!");
                 action.resetForm();
               })
               .catch((error: any) => {
@@ -640,7 +644,9 @@ const Create = (props: any) => {
             item={[
               { icon: "person", label: "Student Info", href: "1" },
               { icon: "family_restroom", label: "Guardian Info", href: "2" },
+              { icon: "call", label: "Contact Info", href: "5" },
               { icon: "sports_martial_arts", label: "Activities", href: "3" },
+              { icon: "gite", label: "Address", href: "4" },
             ]}
             brandName={""}
             routes={[]}
@@ -653,12 +659,7 @@ const Create = (props: any) => {
                 <MDBox p={4}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                      <MDTypography
-                        color="secondary"
-                        variant="body2"
-                        fontWeight="bold"
-                        fontSize="18px"
-                      >
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                         STUDENT DETAILS
                       </MDTypography>
                     </Grid>
@@ -816,7 +817,7 @@ const Create = (props: any) => {
                             variant="standard"
                             onBlur={handleBlur}
                             error={touched.academic_year && Boolean(errors.academic_year)}
-                            success={values.academic_year.length && !errors.academic_year}
+                            success={values.academic_year && !errors.academic_year}
                             helperText={touched.academic_year && errors.academic_year}
                           />
                         )}
@@ -852,7 +853,7 @@ const Create = (props: any) => {
                             variant="standard"
                             onBlur={handleBlur}
                             error={touched.class_name && Boolean(errors.class_name)}
-                            success={values.class_name.length && !errors.class_name}
+                            success={values.class_name && !errors.class_name}
                             helperText={touched.class_name && errors.class_name}
                           />
                         )}
@@ -892,7 +893,7 @@ const Create = (props: any) => {
                             variant="standard"
                             onBlur={handleBlur}
                             error={touched.section_name && Boolean(errors.section_name)}
-                            success={values.section_name.length && !errors.section_name}
+                            success={values.section_name && !errors.section_name}
                             helperText={touched.section_name && errors.section_name}
                           />
                         )}
@@ -1195,7 +1196,7 @@ const Create = (props: any) => {
                             variant="standard"
                             onBlur={handleBlur}
                             error={touched.gender && Boolean(errors.gender)}
-                            success={values.gender.length && !errors.gender}
+                            success={values.gender && !errors.gender}
                             helperText={touched.gender && errors.gender}
                           />
                         )}
@@ -1250,12 +1251,7 @@ const Create = (props: any) => {
                 <MDBox p={4}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                      <MDTypography
-                        color="secondary"
-                        variant="body2"
-                        fontWeight="bold"
-                        fontSize="18px"
-                      >
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                         SIBLING
                       </MDTypography>
                     </Grid>
@@ -1307,7 +1303,7 @@ const Create = (props: any) => {
                             variant="standard"
                             onBlur={handleBlur}
                             error={touched.sibling_class && Boolean(errors.sibling_class)}
-                            success={values.sibling_class.length && !errors.sibling_class}
+                            success={values.sibling_class && !errors.sibling_class}
                             helperText={touched.sibling_class && errors.sibling_class}
                           />
                         )}
@@ -1346,7 +1342,7 @@ const Create = (props: any) => {
                             variant="standard"
                             onBlur={handleBlur}
                             error={touched.sibling_section && Boolean(errors.sibling_section)}
-                            success={values.sibling_section.length && !errors.sibling_section}
+                            success={values.sibling_section && !errors.sibling_section}
                             helperText={touched.sibling_section && errors.sibling_section}
                           />
                         )}
@@ -1448,14 +1444,9 @@ const Create = (props: any) => {
             <Grid item sm={12}>
               <Card>
                 <MDBox p={4}>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={2} id="5">
                     <Grid item xs={12} sm={12}>
-                      <MDTypography
-                        color="secondary"
-                        variant="body2"
-                        fontWeight="bold"
-                        fontSize="18px"
-                      >
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                         CONTACT DETAILS
                       </MDTypography>
                     </Grid>
@@ -1523,12 +1514,7 @@ const Create = (props: any) => {
                 <MDBox p={4}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12} id="guardian-info">
-                      <MDTypography
-                        color="secondary"
-                        variant="body2"
-                        fontWeight="bold"
-                        fontSize="18px"
-                      >
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                         GUARDIAN INFO
                       </MDTypography>
                     </Grid>
@@ -2037,14 +2023,9 @@ const Create = (props: any) => {
             <Grid item sm={12} id="5">
               <Card>
                 <MDBox p={4}>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={2} id="4">
                     <Grid item xs={12} sm={12}>
-                      <MDTypography
-                        color="secondary"
-                        variant="body2"
-                        fontWeight="bold"
-                        fontSize="18px"
-                      >
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                         ADDRESS
                       </MDTypography>
                     </Grid>
@@ -2323,12 +2304,7 @@ const Create = (props: any) => {
                 <MDBox p={4}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                      <MDTypography
-                        color="secondary"
-                        variant="body2"
-                        fontWeight="bold"
-                        fontSize="18px"
-                      >
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                         PREVIOUS EDUCATION
                       </MDTypography>
                     </Grid>
@@ -2573,19 +2549,14 @@ const Create = (props: any) => {
                     </>
                   </Grid>
                 </MDBox>
-              </Card>{" "}
+              </Card>
             </Grid>
             <Grid item sm={12} id="3">
               <Card>
                 <MDBox p={4}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                      <MDTypography
-                        color="secondary"
-                        variant="body2"
-                        fontWeight="bold"
-                        fontSize="18px"
-                      >
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                         ACTIVITIES
                       </MDTypography>
                     </Grid>
@@ -2660,14 +2631,7 @@ const Create = (props: any) => {
               </Card>
             </Grid>
 
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              py={2}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
-              mr={5}
-            >
+            <Grid item xs={12} sm={12} py={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Grid item mr={2}>
                 <MDButton
                   color="dark"

@@ -149,7 +149,7 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Student Info",
+        name: "Student Details",
         key: "studentdetails",
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,

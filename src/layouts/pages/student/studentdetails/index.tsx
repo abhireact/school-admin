@@ -111,8 +111,8 @@ const Student = () => {
       if (response.status === 200) {
         message.success("Deleted successFully");
         // Filter out the deleted user from the data
-        const updatedData = data.filter((row: any) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        // Update the state with the new data
+        fetchStudents();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
@@ -208,7 +208,7 @@ const Student = () => {
   const handleShowPage = () => {
     setShowpage(!showpage);
   };
-  student.filter((info: any) => info.academic_year == values.academic_year);
+  // student.filter((info: any) => info.academic_year == values.academic_year);
   return (
     <BaseLayout>
       {showpage ? (
@@ -248,7 +248,8 @@ const Student = () => {
                           value={values.academic_year}
                           onChange={(_event, value) => {
                             handleChange({ target: { name: "academic_year", value } });
-                            setData(data.filter((info: any) => info.academic_year == value));
+                            let infodata = data.filter((info: any) => info.academic_year == value);
+                            setData(infodata);
                             setFieldValue("class_name", "");
                             setFieldValue("section_name", "");
                           }}
@@ -271,7 +272,7 @@ const Student = () => {
                               variant="standard"
                               onBlur={handleBlur}
                               error={touched.academic_year && Boolean(errors.academic_year)}
-                              success={values.academic_year.length && !errors.academic_year}
+                              success={values.academic_year && !errors.academic_year}
                               helperText={touched.academic_year && errors.academic_year}
                             />
                           )}
@@ -309,7 +310,7 @@ const Student = () => {
                               variant="standard"
                               onBlur={handleBlur}
                               error={touched.class_name && Boolean(errors.class_name)}
-                              success={values.class_name.length && !errors.class_name}
+                              success={values.class_name && !errors.class_name}
                               helperText={touched.class_name && errors.class_name}
                             />
                           )}
@@ -348,7 +349,7 @@ const Student = () => {
                               variant="standard"
                               onBlur={handleBlur}
                               error={touched.section_name && Boolean(errors.section_name)}
-                              success={values.section_name.length && !errors.section_name}
+                              success={values.section_name && !errors.section_name}
                               helperText={touched.section_name && errors.section_name}
                             />
                           )}
