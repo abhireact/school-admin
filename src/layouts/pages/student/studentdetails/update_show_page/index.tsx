@@ -557,7 +557,9 @@ const Update = (props: any) => {
             item={[
               { icon: "person", label: "Student Info", href: "1" },
               { icon: "family_restroom", label: "Guardian Info", href: "2" },
+              { icon: "call", label: "Contact Info", href: "5" },
               { icon: "sports_martial_arts", label: "Activities", href: "3" },
+              { icon: "gite", label: "Address", href: "4" },
             ]}
             brandName={""}
             routes={[]}
@@ -568,7 +570,7 @@ const Update = (props: any) => {
           <Grid item sm={12} id="1">
             <Card>
               <MDBox p={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={12} sm={6}>
                     <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                       STUDENT DETAILS
@@ -817,7 +819,7 @@ const Update = (props: any) => {
           <Grid item sm={12}>
             <Card>
               <MDBox p={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={12} sm={6}>
                     <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                       SIBLING
@@ -917,7 +919,7 @@ const Update = (props: any) => {
           <Grid item sm={12}>
             <Card>
               <MDBox p={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1} id="5">
                   <Grid item xs={12} sm={6}>
                     <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                       CONTACT DETAILS
@@ -977,7 +979,7 @@ const Update = (props: any) => {
           <Grid item sm={12} id="2">
             <Card>
               <MDBox p={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={12} sm={6} id="guardian-info">
                     <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                       GUARDIAN INFO
@@ -1256,7 +1258,7 @@ const Update = (props: any) => {
           <Grid item sm={12}>
             <Card>
               <MDBox p={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1} id="4">
                   <Grid item xs={12} sm={6}>
                     <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                       ADDRESS
@@ -1437,7 +1439,7 @@ const Update = (props: any) => {
           <Grid item sm={12}>
             <Card>
               <MDBox p={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={12} sm={6}>
                     <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                       PREVIOUS EDUCATION
@@ -1525,7 +1527,7 @@ const Update = (props: any) => {
           <Grid item sm={12} id="3">
             <Card>
               <MDBox p={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={12} sm={6}>
                     <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
                       ACTIVITIES

@@ -100,13 +100,16 @@ const UpdateGuardian = (props: any) => {
       mobile_notification: guardianData.notification,
       email_subscription: guardianData.subscription,
       email_notification: guardianData.notification,
+      login_access: false,
+      primary_contact: false,
     },
 
     validationSchema: validationSchema,
     enableReinitialize: true,
     onSubmit: (values, action) => {
+      const { login_access, primary_contact, ...sendValues } = values;
       axios
-        .put(`${process.env.REACT_APP_BASE_URL}/mg_guardian/retrive`, values, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_guardian/retrive`, sendValues, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
@@ -120,6 +123,25 @@ const UpdateGuardian = (props: any) => {
         })
         .catch((error) => {
           message.error("Error on updating Guardian!");
+        });
+      let guardianaccess = {
+        user_name: guardianData.user_name,
+        login_access: login_access,
+        primary_contact: primary_contact,
+      };
+      axios
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_guardian/manage`, [guardianaccess], {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          console.log("Updating Guardian Access");
+          message.success("Updated Guardian Access");
+        })
+        .catch((error) => {
+          message.error("Error while granting Guardian Access");
         });
 
       action.resetForm();
@@ -358,7 +380,7 @@ const UpdateGuardian = (props: any) => {
               />
             </Grid>
             <Grid item xs={12} sm={4}></Grid>
-            <Grid item xs={12} sm={4} mt={2} key={"notification"}>
+            <Grid item xs={12} sm={3} mt={2}>
               <FormControl>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
@@ -382,7 +404,7 @@ const UpdateGuardian = (props: any) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={4} mt={2} key={"subscription"}>
+            <Grid item xs={12} sm={3} mt={2}>
               <FormControl>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
@@ -406,8 +428,56 @@ const UpdateGuardian = (props: any) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
+            <Grid item xs={12} sm={3} mt={2}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  row
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.login_access}
+                        name={`login_access`}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={
+                      <MDTypography variant="button" fontWeight="bold">
+                        Login Access
+                      </MDTypography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={3} mt={2}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  row
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.primary_contact}
+                        name={`primary_contact`}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={
+                      <MDTypography variant="button" fontWeight="bold">
+                        Primary Contact
+                      </MDTypography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
           </Grid>
-
+          <Grid container></Grid>
           <Grid container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item mt={2}>
               <MDButton
@@ -422,7 +492,8 @@ const UpdateGuardian = (props: any) => {
             </Grid>
             <Grid item mt={2} ml={2}>
               <MDButton color="info" variant="contained" type="submit">
-                Save
+                Save&nbsp;
+                <SaveIcon />
               </MDButton>
             </Grid>
           </Grid>
