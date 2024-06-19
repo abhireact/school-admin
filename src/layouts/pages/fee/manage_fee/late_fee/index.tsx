@@ -20,7 +20,7 @@ import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import ManageSchedule from "./manageschedule";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { Popconfirm, message } from "antd";
 import { useSelector } from "react-redux";
 
 const token = Cookies.get("token");
@@ -99,6 +99,31 @@ const LateFine = () => {
   useEffect(() => {
     fetchLateFees();
   }, []);
+  const confirm = async (data: any) => {
+    console.log(data, "confirm data");
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/late_fee`, {
+        data: data,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        message.success("Deleted successFully");
+        fetchLateFees();
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      const myError = error as Error;
+      message.error(error.response.data.detail);
+    }
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/late_fee`, {
@@ -142,18 +167,24 @@ const LateFine = () => {
                 handleOpenupdate(index);
               }}
             >
-              <CreateRoundedIcon />
+              <CreateRoundedIcon fontSize="small" color="secondary" />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete">
-            <IconButton
-              onClick={() => {
-                handleDelete(row);
-              }}
+          <IconButton>
+            <Popconfirm
+              title="Delete"
+              description="Are you sure to Delete it ?"
+              placement="topLeft"
+              onConfirm={() => confirm(row)} // Pass index to confirm function
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
             >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+              <Tooltip title="Delete" placement="top">
+                <DeleteIcon fontSize="small" color="secondary" />
+              </Tooltip>
+            </Popconfirm>
+          </IconButton>
 
           <Tooltip title="Manage Schedule">
             <IconButton
@@ -161,7 +192,7 @@ const LateFine = () => {
                 handleManageSchedule(index);
               }}
             >
-              <BuildIcon />
+              <BuildIcon fontSize="small" color="secondary" />
             </IconButton>
           </Tooltip>
         </>

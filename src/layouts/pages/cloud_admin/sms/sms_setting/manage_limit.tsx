@@ -56,6 +56,7 @@ export default function ManageLimit(props: any) {
             })
             .catch((error) => {
               console.error("Error fetching data:", error);
+              message.error(error.response.data.detail);
             });
         }
       },

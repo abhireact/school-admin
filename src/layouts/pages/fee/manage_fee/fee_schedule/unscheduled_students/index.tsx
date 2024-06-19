@@ -27,7 +27,7 @@ const validationSchema = Yup.object().shape({
     .required("Required"),
 
   academic_year: Yup.string()
-    .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
 });
 const UnscheduledStudents = (props: any) => {

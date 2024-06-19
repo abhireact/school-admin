@@ -28,20 +28,18 @@ import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
-import Admin from "layouts/pages/school/create";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
 import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
 import FeeConcessionReport from "layouts/pages/fee/fee_report/fee_concession_report";
 import EmailSetting from "layouts/pages/notifications/email";
 import FeeCollection from "layouts/pages/fee/fee_collection";
-import SendNotification from "layouts/pages/notifications/email/send_mail";
-import MessageTemplate from "layouts/pages/notifications/message_template";
+import SendNotification from "layouts/pages/notifications/email/send_notification";
+import MessageTemplate from "layouts/pages/notifications/templates/message_template";
 import FineParticular from "layouts/pages/fee/manage_fee/fine";
 import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import StudentPromotion from "layouts/pages/student/student_promotion";
-import ExportStudentPage from "layouts/pages/student/export_student_data";
 import Subject from "layouts/pages/subject/subjectdetails";
 import SectionSubject from "layouts/pages/subject/section_subject";
 import EmployeeSubject from "layouts/pages/subject/subject_teacher";
@@ -52,10 +50,12 @@ import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
 import WeekDays from "layouts/pages/employee/week_days";
 import ClassTiming from "layouts/pages/employee/class_timing";
-import SmsConfiguration from "layouts/pages/notifications/sms_configuration_show";
-import CreateStudentID from "layouts/pages/student/studentID_card/create";
+import TimeTable from "layouts/pages/Attendance/time_table";
+import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/school_admin_sms_configuration";
 import StudentSubject from "layouts/pages/subject/student_subject";
 import SubjectReport from "layouts/pages/subject/subject_report";
+import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
+import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-portal_status";
 
 const routes = [
   {
@@ -324,6 +324,12 @@ const routes = [
         route: "attendance/class_timing",
         component: <ClassTiming />,
       },
+      {
+        name: "Time Table",
+        key: "time_table",
+        route: "attendance/time_table",
+        component: <TimeTable />,
+      },
     ],
   },
   {
@@ -413,7 +419,25 @@ const routes = [
             name: "SMS Configuration",
             key: "smsconfiguration",
             route: "notification/smsconfiguration",
-            component: <SmsConfiguration />,
+            component: <SMSConfigurationCreateSchoolAdmin />,
+          },
+        ],
+      },
+      {
+        name: "Reports",
+        key: "notification_reports",
+        collapse: [
+          {
+            name: "SMS Status",
+            key: "smsstatusreport",
+            route: "/notification/reports/sms_status_report",
+            component: <SmsStatusReport />,
+          },
+          {
+            name: "Intra-portal Status",
+            key: "intraportalstatusreport",
+            route: "/notification/reports/intra-portal_status_report",
+            component: <IntraPortalStatusReport />,
           },
         ],
       },
@@ -424,7 +448,7 @@ const routes = [
         component: <SendNotification />,
       },
       {
-        name: "Message Template",
+        name: "Template Setting",
         key: "message_template",
         route: "pages/notification/message_template",
         component: <MessageTemplate />,

@@ -28,15 +28,20 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import DataTable from "examples/Tables/DataTable";
 
 const token = Cookies.get("token");
-const initialValues = {
-  academic_year: "",
-  class_name: "",
-};
+const current_academic_year = Cookies.get("academic_year");
+
 export default function ClassTiming() {
   const [timingData, setTimingData] = useState([]);
   const { classes, account, studentcategory, student } = useSelector((state: any) => state);
+  const initialValues = {
+    academic_year: current_academic_year,
+    class_name: classes
+      .filter((item: any) => item.academic_year === current_academic_year)
+      .map((item: any) => item.class_name)[0],
+  };
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues,
     // Uncomment and ensure createschema is correctly defined
@@ -57,7 +62,7 @@ export default function ClassTiming() {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_class_timing/filter_by_wing", {
+      .post("http://10.0.20.200:8000/mg_class_timing/filter_by_class", values, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -72,18 +77,29 @@ export default function ClassTiming() {
         console.error("Error fetching data:", error);
       });
   }, [values.class_name]);
-  const feeConcessionData = {
-    //
+  const class_timing = {
+    //[
+    //   {
+    //     "wing_name": "string",
+    //     "weekday": "string",
+    //     "class_time_name": "string",
+    //     "start_time": "string",
+    //     "end_time": "string",
+    //     "is_break": true,
+    //     "class_name": "string",
+    //     "academic_year": "string"
+    //   }
+    // ]
     columns: [
-      { Header: "WEEK DAY", accessor: "week_day" },
+      { Header: "DAY", accessor: "week_day" },
       { Header: "NAME", accessor: "name" },
       { Header: "START TIME", accessor: "start_time" },
       { Header: "END TIME", accessor: "end_time" },
       { Header: "ACtion", accessor: "action" },
     ],
     rows: timingData.map((row, index) => ({
-      week_day: row.week_day,
-      name: row.name,
+      week_day: row.weekday,
+      name: row.class_time_name,
       start_time: row.start_time,
       end_time: row.end_time,
       action: (
@@ -105,82 +121,92 @@ export default function ClassTiming() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <MDBox p={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} mt={2}>
-              <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Class Timing
-              </MDTypography>
-            </Grid>
-            <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <MDButton
-                variant="outlined"
-                color="info"
-                onClick={() => navigate("/attendance/create_class_timing")}
-              >
-                + Create Class Timing
-              </MDButton>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={4}>
-              <Autocomplete
-                onChange={(_event, value) => {
-                  handleChange({ target: { name: "academic_year", value } });
-                }}
-                options={
-                  classes ? Array.from(new Set(classes.map((item: any) => item.academic_year))) : []
-                }
-                renderInput={(params) => (
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={12}>
+          <Card>
+            <MDBox p={3}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} mt={2}>
+                  <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                    Class Timing
+                  </MDTypography>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  mt={2}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <MDButton
+                    variant="outlined"
+                    color="info"
+                    onClick={() => navigate("/attendance/create_class_timing")}
+                  >
+                    + Create Class Timing
+                  </MDButton>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={4}>
                   <MDInput
-                    required
+                    disabled
+                    sx={{ width: "100%" }}
                     name="academic_year"
-                    onChange={handleChange}
                     value={values.academic_year}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
                         Academic Year
                       </MDTypography>
                     }
-                    {...params}
                     variant="standard"
                   />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Autocomplete
-                onChange={(_event, value) => {
-                  handleChange({ target: { name: "class_name", value } });
-                }}
-                options={
-                  values.academic_year !== ""
-                    ? classes
-                        .filter((item: any) => item.academic_year === values.academic_year)
-                        .map((item: any) => item.class_name)
-                    : []
-                }
-                renderInput={(params) => (
-                  <MDInput
-                    required
-                    name="class_name"
-                    onChange={handleChange}
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Autocomplete
                     value={values.class_name}
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Class
-                      </MDTypography>
+                    onChange={(_event, value) => {
+                      handleChange({ target: { name: "class_name", value } });
+                    }}
+                    options={
+                      values.academic_year !== ""
+                        ? classes
+                            .filter((item: any) => item.academic_year === values.academic_year)
+                            .map((item: any) => item.class_name)
+                        : []
                     }
-                    {...params}
-                    variant="standard"
+                    renderInput={(params) => (
+                      <MDInput
+                        required
+                        name="class_name"
+                        onChange={handleChange}
+                        value={values.class_name}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Class
+                          </MDTypography>
+                        }
+                        {...params}
+                        variant="standard"
+                      />
+                    )}
                   />
-                )}
-              />
-            </Grid>
-          </Grid>
-        </MDBox>
-      </Card>
+                </Grid>
+              </Grid>
+            </MDBox>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={12}>
+          <Card>
+            <DataTable
+              table={class_timing}
+              isSorted={false}
+              showTotalEntries={false}
+              canSearch={true}
+            />
+          </Card>
+        </Grid>
+      </Grid>
     </DashboardLayout>
   );
 }

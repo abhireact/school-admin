@@ -15,6 +15,8 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
+const Cacademic_year = Cookies.get("academic_year");
+console.log(Cacademic_year, "Cacademic_year");
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
 
@@ -109,7 +111,7 @@ const FeeCertificate = (props: any) => {
 
       class_name: "",
 
-      academic_year: "",
+      academic_year: Cacademic_year,
 
       section_name: "",
       financial_year: "",
@@ -263,7 +265,9 @@ const FeeCertificate = (props: any) => {
               <Grid item xs={12} sm={4} py={1}>
                 <Autocomplete
                   sx={{ width: "70%" }}
-                  value={values.academic_year}
+                  value={values.academic_year || Cacademic_year}
+                  disabled
+                  defaultValue={Cacademic_year}
                   onChange={(event, value) => {
                     handleChange({
                       target: { name: "academic_year", value },
@@ -282,7 +286,7 @@ const FeeCertificate = (props: any) => {
                         </MDTypography>
                       }
                       onChange={handleChange}
-                      value={values.academic_year}
+                      value={values.academic_year || Cacademic_year}
                       {...params}
                       variant="standard"
                       error={touched.academic_year && Boolean(errors.academic_year)}

@@ -42,53 +42,60 @@ function removeProperty(data: any) {
 }
 const validationSchema = Yup.object().shape({
   start_date: Yup.date()
-    .required("Required *")
-    .test("year-range", "Incorrect format", function (value) {
+    .required("Start Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
       if (value) {
-        const year = value.getFullYear();
-        return year >= 2000 && year <= 3000;
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
       }
       return true;
     }),
   end_date: Yup.date()
-    .required("Required *")
+    .required("End Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
+      if (value) {
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
+      }
+      return true;
+    })
     .test(
       "endDateGreaterThanOrEqualToStartDate",
-      "End date should  be greater than or equal to start date",
+      "End date should be greater than or equal to start date",
       function (value) {
-        if (value) {
-          const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
-        }
         const { start_date } = this.parent;
-        return !start_date || value.getTime() >= start_date.getTime();
+        return start_date ? value.getTime() >= start_date.getTime() : true;
       }
     ),
-  due_date: Yup.date()
-    .required("Required *")
-    .test(
-      "dueDateValidation",
-      "Due date should be equal to or between start date and end date",
-      function (value) {
-        if (value) {
-          const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
-        }
-        const { start_date, end_date } = this.parent;
-        return (
-          start_date &&
-          value.getTime() >= start_date.getTime() &&
-          end_date &&
-          value.getTime() <= end_date.getTime()
-        );
-      }
-    ),
+  // due_date: Yup.date()
+  //   .required("Due Date is required")
+  //   .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
+  //     if (value) {
+  //       const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+  //       return dateRegex.test(value.toLocaleDateString());
+  //     }
+  //     return true;
+  //   })
+  //   .test(
+  //     "dueDateValidation",
+  //     "Due date should be equal to or between start date and end date",
+  //     function (value) {
+  //       const { start_date, end_date } = this.parent;
+  //       return (
+  //         start_date &&
+  //         value.getTime() >= start_date.getTime() &&
+  //         end_date &&
+  //         value.getTime() <= end_date.getTime()
+  //       );
+  //     }
+  //   ),
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
-    .required("Required *"),
-  category_name: Yup.string().required("Required *"),
-  fee_particular_name: Yup.string().required("Required *"),
-  name: Yup.string().required("Required *"),
+    .required("Academic Year is required"),
+  category_name: Yup.string().required("Category Name is required"),
+  fee_particular_name: Yup.string().required("Fee Particular Name is required"),
+  name: Yup.string().required(" Collection Name is required"),
+  fine_name: Yup.string().required("Late Fine Name is required"),
 });
 const Create = (props: any) => {
   const token = Cookies.get("token");
@@ -248,12 +255,19 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
+        <Grid container p={3}>
+          <Grid item xs={12} sm={6}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Create Fee Schedule
+            </MDTypography>
+          </Grid>
+        </Grid>
         <MDBox p={4}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <Autocomplete
                 disableClearable
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.category_name}
                 onChange={(event, value) => {
                   handleChange({
@@ -288,7 +302,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <Autocomplete
                 disableClearable
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.fee_particular_name}
                 onChange={(event, value) => {
                   handleChange({
@@ -317,7 +331,7 @@ const Create = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="name"
                 label={
@@ -338,7 +352,7 @@ const Create = (props: any) => {
                 type="date"
                 onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="start_date"
                 value={values.start_date}
@@ -358,7 +372,7 @@ const Create = (props: any) => {
                 type="date"
                 onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="end_date"
                 value={values.end_date}
@@ -369,6 +383,7 @@ const Create = (props: any) => {
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
+                inputProps={{ min: values.start_date }}
                 error={touched.end_date && Boolean(errors.end_date)}
                 helperText={touched.end_date && errors.end_date}
               />
@@ -378,7 +393,7 @@ const Create = (props: any) => {
                 type="date"
                 onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 variant="standard"
                 name="due_date"
                 value={values.due_date}
@@ -389,6 +404,7 @@ const Create = (props: any) => {
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
+                inputProps={{ max: values.end_date, min: values.start_date }}
                 error={touched.due_date && Boolean(errors.due_date)}
                 helperText={touched.due_date && errors.due_date}
               />
@@ -398,7 +414,7 @@ const Create = (props: any) => {
                 disableClearable
                 disabled
                 defaultValue={Cacademic_year}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {
                   handleChange({
@@ -429,7 +445,7 @@ const Create = (props: any) => {
             <Grid item xs={6} sm={4}>
               <Autocomplete
                 disableClearable
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 value={values.fine_name}
                 onChange={(event, value) => {
                   handleChange({

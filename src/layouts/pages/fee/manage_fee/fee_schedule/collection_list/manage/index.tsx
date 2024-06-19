@@ -109,7 +109,7 @@ const ManageSchedule = (props: any) => {
         }
       );
       if (response.status === 200) {
-        window.location.reload();
+        // window.location.reload();
         message.success("Generated SuccessFully");
         // Filter out the deleted user from the data
       }
@@ -143,7 +143,7 @@ const ManageSchedule = (props: any) => {
         }
       );
       if (response.status === 200) {
-        window.location.reload();
+        // window.location.reload();
         message.success("Deleted successFully");
         // Filter out the deleted user from the data
       }
@@ -310,7 +310,7 @@ const ManageSchedule = (props: any) => {
                                 handleGenerateSchedule(index);
                               }}
                             >
-                              <AddIcon />
+                              <AddIcon fontSize="small" color="secondary" />
                             </IconButton>
                           </Tooltip>
                         ) : (
@@ -323,11 +323,11 @@ const ManageSchedule = (props: any) => {
                                     handleOpenupdate(index);
                                   }}
                                 >
-                                  <CreateRoundedIcon />
+                                  <CreateRoundedIcon fontSize="small" color="secondary" />
                                 </IconButton>
                               ) : (
                                 <IconButton disabled>
-                                  <CreateRoundedIcon />
+                                  <CreateRoundedIcon fontSize="small" />
                                 </IconButton>
                               )}
                             </Tooltip>
@@ -338,11 +338,11 @@ const ManageSchedule = (props: any) => {
                                     handleDelete(index);
                                   }}
                                 >
-                                  <DeleteIcon />
+                                  <DeleteIcon fontSize="small" color="secondary" />
                                 </IconButton>
                               ) : (
                                 <IconButton disabled>
-                                  <DeleteIcon />
+                                  <DeleteIcon fontSize="small" />
                                 </IconButton>
                               )}
                             </Tooltip>

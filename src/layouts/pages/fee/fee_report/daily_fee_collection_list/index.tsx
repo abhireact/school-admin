@@ -132,7 +132,7 @@ export default function FeeCollectionListReport() {
                     <MDInput
                       required
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                       name="date"
                       sx={{ width: "100%" }}
                       onChange={handleChange}

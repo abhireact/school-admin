@@ -485,7 +485,7 @@ const Update = (props: any) => {
                 autoComplete="off"
                 variant="standard"
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 name="mg_leave_calendar_start_date"
                 label="Leave Calendar Date"
                 value={values.mg_leave_calendar_start_date}

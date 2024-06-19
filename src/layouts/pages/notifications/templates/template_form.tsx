@@ -12,8 +12,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 const token = Cookies.get("token");
 export default function CreateTemplateForm(props: any) {
+  const [moduleName, setModuleName] = useState([]);
+  const [vendorName, setvendorName] = useState([]);
+  console.log(props.data, "props data in template");
   const initialValues = props.data
     ? props.data
     : {
@@ -63,6 +67,7 @@ export default function CreateTemplateForm(props: any) {
             .then((response) => {
               if (response.status === 200) {
                 message.success(response.data.message);
+                action.resetForm();
               }
             })
             .catch((error) => {
@@ -71,6 +76,36 @@ export default function CreateTemplateForm(props: any) {
         }
       },
     });
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.200:8000/mg_templates/modules", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setModuleName(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get("http://10.0.20.200:8000/mg_templates/vendor_name", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setvendorName(response.data.map((item: any) => item.vendor_name));
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   return (
     <form onSubmit={handleSubmit}>
       <Card>
@@ -85,13 +120,14 @@ export default function CreateTemplateForm(props: any) {
           <Grid container spacing={3} p={2}>
             <Grid item xs={12} sm={4}>
               <Autocomplete
+                value={values.module_name}
                 onChange={(_event, value) => {
                   handleChange({ target: { name: "module_name", value } });
                 }}
-                options={["CLASSES"]}
+                options={moduleName}
                 renderInput={(params) => (
                   <MDInput
-                    // required
+                    required
                     name="module_name"
                     onChange={handleChange}
                     value={values.module_name}
@@ -108,19 +144,20 @@ export default function CreateTemplateForm(props: any) {
             </Grid>
             <Grid item xs={12} sm={4}>
               <Autocomplete
+                value={values.vendor}
                 onChange={(_event, value) => {
                   handleChange({ target: { name: "vendor", value } });
                 }}
-                options={["SMS WORLD"]}
+                options={vendorName}
                 renderInput={(params) => (
                   <MDInput
-                    // required
+                    required
                     name="vendor"
                     onChange={handleChange}
                     value={values.vendor}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Vender
+                        Vendor
                       </MDTypography>
                     }
                     {...params}
@@ -131,6 +168,7 @@ export default function CreateTemplateForm(props: any) {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     SMS Activity
@@ -146,6 +184,7 @@ export default function CreateTemplateForm(props: any) {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     P ID
@@ -161,6 +200,7 @@ export default function CreateTemplateForm(props: any) {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Template ID
@@ -176,6 +216,7 @@ export default function CreateTemplateForm(props: any) {
             </Grid>
             <Grid item xs={12} sm={12}>
               <MDInput
+                required
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Message
@@ -205,65 +246,59 @@ export default function CreateTemplateForm(props: any) {
             </MDButton>
           </Grid>
         </Grid>
-        <Grid
-          container
-          px={3}
-          pb={2}
-          sx={{ display: "flex", justifyContent: "flex-center" }}
-          mt={1}
-        >
+        <Grid container p={3}>
           <Grid item xs={12} sm={12}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+            <MDTypography variant="button" color="secondary">
               Defination of Terms
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+          <Grid item xs={12} sm={3}>
+            <MDTypography variant="caption" color="secondary">
               [$User_ID]
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={8}>
-            <MDTypography variant="button">User ID of SMS Recipient</MDTypography>
+            <MDTypography variant="caption">User ID of SMS Recipient</MDTypography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+          <Grid item xs={12} sm={3}>
+            <MDTypography variant="caption" color="secondary">
               [$User_name]
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={8}>
-            <MDTypography variant="button">Name of SMS Recipient</MDTypography>
+            <MDTypography variant="caption">Name of SMS Recipient</MDTypography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+          <Grid item xs={12} sm={3}>
+            <MDTypography variant="caption" color="secondary">
               [$Current_date]
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={8}>
-            <MDTypography variant="button">Currrent Date</MDTypography>
+            <MDTypography variant="caption">Currrent Date</MDTypography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+          <Grid item xs={12} sm={3}>
+            <MDTypography variant="caption" color="secondary">
               [$School_name]
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={8}>
-            <MDTypography variant="button">School Name</MDTypography>
+            <MDTypography variant="caption">School Name</MDTypography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+          <Grid item xs={12} sm={3}>
+            <MDTypography variant="caption" color="secondary">
               [$Child_name]
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={8}>
-            <MDTypography variant="button">Child name</MDTypography>
+            <MDTypography variant="caption">Child name</MDTypography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="h6" color="secondary">
+          <Grid item xs={12} sm={3}>
+            <MDTypography variant="caption" color="secondary">
               [$Amount]
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={8}>
-            <MDTypography variant="button">Amount</MDTypography>
+            <MDTypography variant="caption">Amount</MDTypography>
           </Grid>
         </Grid>
       </Card>

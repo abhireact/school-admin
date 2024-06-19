@@ -379,6 +379,7 @@ export default function CreateFeeParicularAmount() {
                     </MDTypography>
                   }
                   sx={{ width: "100%" }}
+                  required
                   name="amount"
                   value={values.amount}
                   placeholder="Enter Amount"
@@ -440,6 +441,7 @@ export default function CreateFeeParicularAmount() {
                       }
                       renderInput={(params) => (
                         <MDInput
+                          required
                           name="student_category"
                           onChange={handleChange}
                           value={values.student_category}

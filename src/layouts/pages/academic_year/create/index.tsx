@@ -146,7 +146,7 @@ const Create = (props: any) => {
               <Grid item xs={12} sm={4}>
                 <MDInput
                   type="date"
-                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                   sx={{ width: "100%" }}
                   variant="standard"
                   name={`academic.${index}.start_date`}
@@ -177,7 +177,7 @@ const Create = (props: any) => {
               <Grid item xs={12} sm={4}>
                 <MDInput
                   type="date"
-                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                   sx={{ width: "100%" }}
                   variant="standard"
                   name={`academic.${index}.end_date`}

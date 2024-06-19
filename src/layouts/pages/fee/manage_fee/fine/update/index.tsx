@@ -16,38 +16,44 @@ const token = Cookies.get("token");
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   start_date: Yup.date()
-    .required("Required *")
-    .test("year-range", "Incorrect format", function (value) {
+    .required("Start Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
       if (value) {
-        const year = value.getFullYear();
-        return year >= 2000 && year <= 3000;
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
       }
       return true;
     }),
   end_date: Yup.date()
-    .required("Required *")
+    .required("End Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
+      if (value) {
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
+      }
+      return true;
+    })
     .test(
       "endDateGreaterThanOrEqualToStartDate",
-      "End date should  be greater than or equal to start date",
+      "End date should be greater than or equal to start date",
       function (value) {
-        if (value) {
-          const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
-        }
         const { start_date } = this.parent;
-        return !start_date || value.getTime() >= start_date.getTime();
+        return start_date ? value.getTime() >= start_date.getTime() : true;
       }
     ),
   due_date: Yup.date()
-    .required("Required *")
+    .required("Due Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
+      if (value) {
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
+      }
+      return true;
+    })
     .test(
       "dueDateValidation",
       "Due date should be equal to or between start date and end date",
       function (value) {
-        if (value) {
-          const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
-        }
         const { start_date, end_date } = this.parent;
         return (
           start_date &&
@@ -57,6 +63,10 @@ const validationSchema = Yup.object().shape({
         );
       }
     ),
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
+    .required("Academic Year is required"),
+  fine_name: Yup.string().required(" Fine Name is required"),
 });
 export default function Update(props: any) {
   const { editData, handleClose } = props;
@@ -274,7 +284,7 @@ export default function Update(props: any) {
                 InputLabelProps={{ shrink: true }}
                 name="start_date"
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 onChange={handleChange}
                 value={values.start_date}
                 label={
@@ -296,7 +306,7 @@ export default function Update(props: any) {
                 InputLabelProps={{ shrink: true }}
                 name="end_date"
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 onChange={handleChange}
                 value={values.end_date}
                 label={
@@ -318,7 +328,7 @@ export default function Update(props: any) {
                 InputLabelProps={{ shrink: true }}
                 name="due_date"
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                 onChange={handleChange}
                 value={values.due_date}
                 label={

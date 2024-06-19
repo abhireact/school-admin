@@ -46,8 +46,10 @@ export default function FeeDefaulterReport() {
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
+  const Cacademic_year = Cookies.get("academic_year");
+  console.log(Cacademic_year, "Cacademic_year");
   let initialValues = {
-    academic_year: "",
+    academic_year: Cacademic_year,
     start_date: Date,
     end_date: Date,
   };
@@ -204,6 +206,8 @@ export default function FeeDefaulterReport() {
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
+                      defaultValue={Cacademic_year}
+                      disabled
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "academic_year", value } });
                       }}
@@ -217,7 +221,7 @@ export default function FeeDefaulterReport() {
                           required
                           name="academic_year"
                           onChange={handleChange}
-                          value={values.academic_year}
+                          value={values.academic_year || Cacademic_year}
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
                               Academic Year
@@ -232,7 +236,7 @@ export default function FeeDefaulterReport() {
                   <Grid item xs={12} sm={4}>
                     <MDInput
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                       sx={{ width: "100%" }}
                       label="select Start Date"
                       variant="standard"
@@ -244,7 +248,7 @@ export default function FeeDefaulterReport() {
                   <Grid item xs={12} sm={4}>
                     <MDInput
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                       sx={{ width: "100%" }}
                       label="select End Date"
                       variant="standard"

@@ -167,7 +167,7 @@ export default function FeeCollectionByDateReport() {
                     <MDInput
                       required
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                       name="start_date"
                       sx={{ width: "100%" }}
                       onChange={handleChange}
@@ -180,7 +180,7 @@ export default function FeeCollectionByDateReport() {
                     <MDInput
                       required
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
                       name="end_date"
                       sx={{ width: "100%" }}
                       onChange={handleChange}
