@@ -46,7 +46,7 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string(),
   relation: Yup.string(),
 });
-const Update = (props: any) => {
+const UpdateGuardian = (props: any) => {
   const { guardianData, fetchData, setOpen, fetchGuardian } = props;
   const [guardianInfo, setGuardianInfo] = useState({});
   useEffect(() => {
@@ -96,10 +96,10 @@ const Update = (props: any) => {
       country: guardianData.country,
       pin_code: guardianData.pin_code,
       guardian_img: null,
-      mobile_subscription: guardianData.mobile_subscription,
-      mobile_notification: guardianData.mobile_notification,
-      email_subscription: guardianData.email_subscription,
-      email_notification: guardianData.email_notification,
+      mobile_subscription: guardianData.subscription,
+      mobile_notification: guardianData.notification,
+      email_subscription: guardianData.subscription,
+      email_notification: guardianData.notification,
     },
 
     validationSchema: validationSchema,
@@ -153,142 +153,258 @@ const Update = (props: any) => {
         <MDBox p={4} pb={1}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
-              <MDTypography variant="h4">Update Guardian Information</MDTypography>
+              <MDTypography variant="h4">Update Guardian </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4}>
               <MDInput
                 required
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">First Name</MDTypography>}
-                name="first_name"
+                name={`first_name`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    First Name
+                  </MDTypography>
+                }
                 value={values.first_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4} key={"middle_name"}>
               <MDInput
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Middle Name</MDTypography>}
-                name="middle_name"
+                name={`middle_name`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Middle Name
+                  </MDTypography>
+                }
                 value={values.middle_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4} key={"last_name"}>
               <MDInput
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Last Name</MDTypography>}
-                name="last_name"
+                name={`last_name`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Last Name
+                  </MDTypography>
+                }
                 value={values.last_name}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4} key={"relation"}>
               <MDInput
-                sx={{ width: "80%" }}
+                required
+                sx={{ width: "90%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Relation</MDTypography>}
-                name="relation"
+                name={`relation`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Relation
+                  </MDTypography>
+                }
                 value={values.relation}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4} key={"email_id"}>
               <MDInput
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
-                label={<MDTypography variant="body2">Occupation</MDTypography>}
-                name="occupation"
-                value={values.occupation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <MDInput
-                sx={{ width: "80%" }}
-                variant="standard"
-                label={<MDTypography variant="body2">Annual Income</MDTypography>}
-                name="income"
-                value={values.income}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <MDInput
-                sx={{ width: "80%" }}
-                variant="standard"
-                label={<MDTypography variant="body2">Education</MDTypography>}
-                name="education"
-                value={values.education}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <MDInput
-                sx={{ width: "80%" }}
-                variant="standard"
-                label={<MDTypography variant="body2">Aadhaar Number</MDTypography>}
-                name="adharnumber"
-                value={values.adharnumber}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <MDInput
-                sx={{ width: "80%" }}
-                variant="standard"
-                label={<MDTypography variant="body2">Mobile Number</MDTypography>}
-                name="mobile_number"
-                value={values.mobile_number}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <MDInput
-                sx={{ width: "80%" }}
-                variant="standard"
-                label={<MDTypography variant="body2">Email</MDTypography>}
-                name="email"
+                name={`email_id`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Email
+                  </MDTypography>
+                }
                 value={values.email_id}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4} key={"dob"}>
               <MDInput
+                sx={{ width: "90%" }}
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-                sx={{ width: "80%" }}
-                variant="standard"
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
-                label={<MDTypography variant="body2">Date Of Birth</MDTypography>}
-                name="dob"
+                variant="standard"
+                name={`dob`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Date Of Birth
+                  </MDTypography>
+                }
                 value={values.dob}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={6} sm={4} mt={2}>
+            {/* <Grid item xs={12} sm={4} key={"qualification"}>
               <MDInput
-                type="file"
-                accept="image/*"
-                name="guardian_img"
-                onChange={handleImage}
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="standard"
+                name={`qualification`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Qualification
+                  </MDTypography>
+                }
+                value={values.qualification}
+                onChange={handleChange}
                 onBlur={handleBlur}
               />
+            </Grid>  
+
+            <Grid item xs={12} sm={4} key={"designation"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`designation`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Designation
+                  </MDTypography>
+                }
+                value={values.designation}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid> */}
+            <Grid item xs={12} sm={4} key={"occupation"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`occupation`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Occupation
+                  </MDTypography>
+                }
+                value={values.occupation}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} key={"income"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`income`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Annual Income
+                  </MDTypography>
+                }
+                value={values.income}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} key={"education"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`education`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Education
+                  </MDTypography>
+                }
+                value={values.education}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} key={"adharnumber"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`adharnumber`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Aadhar Number
+                  </MDTypography>
+                }
+                value={values.adharnumber}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} key={"mobile_number"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`mobile_number`}
+                required
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Mobile Number
+                  </MDTypography>
+                }
+                value={values.mobile_number}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}></Grid>
+            <Grid item xs={12} sm={4} mt={2} key={"notification"}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  row
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.email_notification}
+                        name={`email_notification`}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={
+                      <MDTypography variant="button" fontWeight="bold">
+                        Notification
+                      </MDTypography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={4} mt={2} key={"subscription"}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  row
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.email_subscription}
+                        name={`email_subscription`}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={
+                      <MDTypography variant="button" fontWeight="bold">
+                        Subscription
+                      </MDTypography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
             </Grid>
           </Grid>
 
@@ -316,4 +432,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default UpdateGuardian;

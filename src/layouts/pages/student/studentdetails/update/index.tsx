@@ -11,8 +11,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import UpdateGuardian from "./guardian/update";
-import CreateGuardian from "./guardian/create";
+import UpdateGuardian from "../guardian/update";
+import CreateGuardian from "../guardian/create";
 
 import Tooltip from "@mui/material/Tooltip";
 import {

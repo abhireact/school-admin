@@ -12,6 +12,7 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
+import StudentDetails from "layouts/pages/student/studentdetails";
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
@@ -107,6 +108,12 @@ let routes = [
       },
     ],
   },
+  // {
+  //   name: "Student Info",
+  //   key: "studentdetails",
+  //   route: "/pages/school/studentdetails",
+  //   component: <StudentDetails />,
+  // },
   {
     name: "setting",
     key: "setting",
