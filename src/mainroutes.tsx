@@ -55,6 +55,7 @@ import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/s
 import StudentSubject from "layouts/pages/subject/student_subject";
 import SubjectReport from "layouts/pages/subject/subject_report";
 import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
+import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-portal_status";
 
 const routes = [
   {
@@ -431,6 +432,12 @@ const routes = [
             key: "smsstatusreport",
             route: "/notification/reports/sms_status_report",
             component: <SmsStatusReport />,
+          },
+          {
+            name: "Intra-portal Status",
+            key: "intraportalstatusreport",
+            route: "/notification/reports/intra-portal_status_report",
+            component: <IntraPortalStatusReport />,
           },
         ],
       },

@@ -18,6 +18,7 @@ import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
 import React, { createRef } from "react";
 import Myrbacroutes from "myrbacroutes";
+import Settings from "layouts/pages/account/settings";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -105,6 +106,12 @@ let routes = [
         component: <MYProfile />,
       },
     ],
+  },
+  {
+    name: "setting",
+    key: "setting",
+    route: "/sidenav/setting",
+    component: <Settings />,
   },
   {
     name: "createfee category",
