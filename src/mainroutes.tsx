@@ -4,7 +4,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Icon from "@mui/material/Icon";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
-import StudentDetails from "layouts/pages/student";
+import StudentDetails from "layouts/pages/student/studentdetails";
 import EmployeeProfile from "layouts/pages/employee/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -56,6 +56,7 @@ import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/s
 import StudentSubject from "layouts/pages/subject/student_subject";
 import SubjectReport from "layouts/pages/subject/subject_report";
 import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
+import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-portal_status";
 import AdmissionForm from "layouts/pages/admission/new_admission";
 import StudentAdmission from "layouts/pages/admission";
 import FormSetting from "layouts/pages/admission/form_setting";
@@ -152,7 +153,7 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Student Info",
+        name: "Student Details",
         key: "studentdetails",
         route: "/pages/school/studentdetails",
         component: <StudentDetails />,
@@ -435,6 +436,12 @@ const routes = [
             key: "smsstatusreport",
             route: "/notification/reports/sms_status_report",
             component: <SmsStatusReport />,
+          },
+          {
+            name: "Intra-portal Status",
+            key: "intraportalstatusreport",
+            route: "/notification/reports/intra-portal_status_report",
+            component: <IntraPortalStatusReport />,
           },
         ],
       },

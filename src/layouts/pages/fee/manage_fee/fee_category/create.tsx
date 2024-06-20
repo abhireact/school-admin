@@ -98,6 +98,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDInput from "components/MDInput";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
 const token = Cookies.get("token");
 interface Particular {
   particular_name: string;
@@ -109,6 +110,7 @@ interface FormValues {
   particular_types: Particular[];
 }
 export default function CreateFeeCategory(props: any) {
+  const navigate = useNavigate();
   const initialValues = {
     name: "",
     description: "",
@@ -245,18 +247,17 @@ export default function CreateFeeCategory(props: any) {
                   mt={2}
                   // sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  {index == values.particular_types.length - 1 && (
-                    <IconButton onClick={() => addParticular()}>
-                      <AddIcon />
-                    </IconButton>
-                  )}
-
                   <IconButton
                     onClick={() => removeParticular(index)}
                     disabled={values.particular_types.length === 1}
                   >
                     <DeleteIcon />
                   </IconButton>
+                  {index == values.particular_types.length - 1 && (
+                    <IconButton onClick={() => addParticular()}>
+                      <AddIcon />
+                    </IconButton>
+                  )}
                 </Grid>
               </React.Fragment>
             ))}
@@ -287,11 +288,11 @@ export default function CreateFeeCategory(props: any) {
 
           <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
             <Grid item>
-              <Link href="fee_category" variant="body2">
-                <MDButton color="dark" variant="contained">
-                  Back
-                </MDButton>
-              </Link>
+              {/* <Link href="fee_category" variant="body2"> */}
+              <MDButton color="dark" variant="contained" onClick={() => navigate("/fee_category")}>
+                Back
+              </MDButton>
+              {/* </Link> */}
             </Grid>
             <Grid item ml={2}>
               <MDButton color="info" variant="contained" type="submit" onClick={handleFormSubmit}>

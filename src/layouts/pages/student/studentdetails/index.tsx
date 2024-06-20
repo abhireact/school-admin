@@ -16,7 +16,7 @@ import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Update from "./update";
+import Update from "./update_show_page";
 import Create from "./create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
@@ -37,30 +37,11 @@ const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required"),
   section_name: Yup.string().required("Required"),
 });
-
+const cookies_academic_year = Cookies.get("academic_year");
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 const Student = () => {
   const [rbacData, setRbacData] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [academicdata, setAcademicdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
-  function filterDataByAcdName(data: any, acdName: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === acdName)
-      .map((item: any) => item.class_name);
-    setFilteredClass(filtereddata);
-  }
-  const [filteredSection, setFilteredSection] = useState([]);
-  function filterSectionData(class_name: any) {
-    console.log(classdata, "class data");
-    let filtereddata = classdata
-      .filter(
-        (item: any) => item.class_name === class_name && item.academic_year === values.academic_year
-      )
-      .map((item: any) => item.section_data);
 
-    console.log(filtereddata, "filter section Data");
-    setFilteredSection(filtereddata);
-  }
   const fetchRbac = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
@@ -77,41 +58,10 @@ const Student = () => {
       console.error(error);
     }
   };
-  useEffect(() => {
-    fetchRbac();
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setAcademicdata(response.data);
 
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_class`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-        filterDataByAcdName(response.data, "2024-2025");
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [token]);
   //End
-  const [data, setData] = useState([]);
+  const { classes, student } = useSelector((state: any) => state);
+  const [data, setData] = useState(student);
 
   //Update Dialog Box Start
   const [username, setUsername] = useState(null);
@@ -161,8 +111,8 @@ const Student = () => {
       if (response.status === 200) {
         message.success("Deleted successFully");
         // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        // Update the state with the new data
+        fetchStudents();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
@@ -181,29 +131,21 @@ const Student = () => {
       { Header: "Action", accessor: "action" },
     ],
 
-    rows: data.map((row, index) => ({
+    rows: data.map((row: any, index: any) => ({
       admission_number: row.admission_number,
       user_id: row.user_id,
 
       action: (
         <MDTypography variant="p">
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "studentdetailsupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <Tooltip title="Edit Student" placement="top">
-                  <CreateRoundedIcon />
-                </Tooltip>
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
+          <IconButton
+            onClick={() => {
+              handleOpenupdate(index);
+            }}
+          >
+            <Tooltip title="Manage Student" placement="top">
+              <AccountBoxIcon />
+            </Tooltip>
+          </IconButton>
 
           <IconButton
             onClick={() => {
@@ -230,7 +172,7 @@ const Student = () => {
   const { values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
-        academic_year: "",
+        academic_year: cookies_academic_year,
         class_name: "",
         section_name: "",
       },
@@ -266,6 +208,7 @@ const Student = () => {
   const handleShowPage = () => {
     setShowpage(!showpage);
   };
+  // student.filter((info: any) => info.academic_year == values.academic_year);
   return (
     <BaseLayout>
       {showpage ? (
@@ -286,22 +229,14 @@ const Student = () => {
                     </MDTypography>
                   </Grid>
                   <Grid item pt={2} pr={2}>
-                    {rbacData ? (
-                      rbacData?.find((element: string) => element === "studentdetailscreate") ? (
-                        <MDButton
-                          variant="outlined"
-                          color="info"
-                          type="submit"
-                          onClick={handleShowPage}
-                        >
-                          + Create New Student
-                        </MDButton>
-                      ) : (
-                        ""
-                      )
-                    ) : (
-                      ""
-                    )}
+                    <MDButton
+                      variant="outlined"
+                      color="info"
+                      type="submit"
+                      onClick={handleShowPage}
+                    >
+                      + Create New Student
+                    </MDButton>
                   </Grid>
                 </Grid>{" "}
                 <form onSubmit={handleSubmit}>
@@ -309,33 +244,35 @@ const Student = () => {
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={4}>
                         <Autocomplete
-                          sx={{ width: "100%" }}
                           disableClearable
                           value={values.academic_year}
-                          onChange={(event, value) => {
-                            handleChange({
-                              target: { name: "academic_year", value },
-                            });
-                            filterDataByAcdName(classdata, value);
+                          onChange={(_event, value) => {
+                            handleChange({ target: { name: "academic_year", value } });
+                            let infodata = data.filter((info: any) => info.academic_year == value);
+                            setData(infodata);
+                            setFieldValue("class_name", "");
+                            setFieldValue("section_name", "");
                           }}
-                          options={academicdata.map((acd) => acd.academic_year)}
-                          renderInput={(params: any) => (
+                          options={
+                            classes
+                              ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                              : []
+                          }
+                          renderInput={(params) => (
                             <MDInput
-                              InputLabelProps={{ shrink: true }}
                               name="academic_year"
-                              placeholder="eg. 2022-2023"
+                              //onChange={handleChange}
+                              value={values.academic_year}
                               label={
                                 <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                  Academic Year *
+                                  Academic Year
                                 </MDTypography>
                               }
-                              onChange={handleChange}
-                              value={values.academic_year}
                               {...params}
                               variant="standard"
                               onBlur={handleBlur}
                               error={touched.academic_year && Boolean(errors.academic_year)}
-                              success={values.academic_year.length && !errors.academic_year}
+                              success={values.academic_year && !errors.academic_year}
                               helperText={touched.academic_year && errors.academic_year}
                             />
                           )}
@@ -343,35 +280,37 @@ const Student = () => {
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Autocomplete
-                          sx={{ width: "100%" }}
                           disableClearable
                           value={values.class_name}
-                          onChange={
-                            filteredClass.length >= 1
-                              ? (event, value) => {
-                                  handleChange({
-                                    target: { name: "class_name", value },
-                                  });
-                                  filterSectionData(value);
-                                }
-                              : undefined
+                          onChange={(_event, value) => {
+                            handleChange({ target: { name: "class_name", value } });
+                            setFieldValue("section_name", "");
+                          }}
+                          options={
+                            values.academic_year !== ""
+                              ? classes
+                                  .filter(
+                                    (item: any) => item.academic_year === values.academic_year
+                                  )
+                                  .map((item: any) => item.class_name)
+                              : []
                           }
-                          options={filteredClass}
-                          renderInput={(params: any) => (
+                          renderInput={(params) => (
                             <MDInput
-                              InputLabelProps={{ shrink: true }}
+                              required
                               name="class_name"
+                              // onChange={handleChange}
+                              value={values.class_name}
                               label={
                                 <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                  Class Name *
+                                  Class
                                 </MDTypography>
                               }
-                              onChange={handleChange}
-                              value={values.class_name}
                               {...params}
                               variant="standard"
+                              onBlur={handleBlur}
                               error={touched.class_name && Boolean(errors.class_name)}
-                              success={values.class_name.length && !errors.class_name}
+                              success={values.class_name && !errors.class_name}
                               helperText={touched.class_name && errors.class_name}
                             />
                           )}
@@ -379,40 +318,38 @@ const Student = () => {
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Autocomplete
-                          sx={{ width: "100%" }}
                           disableClearable
                           value={values.section_name}
-                          onChange={
-                            filteredSection.length >= 1
-                              ? (event, value) => {
-                                  handleChange({
-                                    target: { name: "section_name", value },
-                                  });
-                                }
-                              : undefined
-                          }
+                          onChange={(_event, value) => {
+                            handleChange({ target: { name: "section_name", value } });
+                          }}
                           options={
-                            filteredSection[0]
-                              ? filteredSection[0].map(
-                                  (sectiondata: any) => sectiondata.section_name
-                                )
+                            values.class_name !== ""
+                              ? classes
+                                  .filter(
+                                    (item: any) =>
+                                      item.academic_year === values.academic_year &&
+                                      item.class_name === values.class_name
+                                  )[0]
+                                  .section_data.map((item: any) => item.section_name)
                               : []
                           }
-                          renderInput={(params: any) => (
+                          renderInput={(params) => (
                             <MDInput
-                              InputLabelProps={{ shrink: true }}
+                              required
                               name="section_name"
+                              //  onChange={handleChange}
+                              value={values.section_name}
                               label={
                                 <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                  Section Name *
+                                  Section
                                 </MDTypography>
                               }
-                              onChange={handleChange}
-                              value={values.section_name}
                               {...params}
                               variant="standard"
+                              onBlur={handleBlur}
                               error={touched.section_name && Boolean(errors.section_name)}
-                              success={values.section_name.length && !errors.section_name}
+                              success={values.section_name && !errors.section_name}
                               helperText={touched.section_name && errors.section_name}
                             />
                           )}

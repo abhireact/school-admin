@@ -260,7 +260,7 @@ export default function StudentSectionChange() {
               >
                 <Grid item>
                   <MDButton
-                    color="dark"
+                    color="info"
                     variant="contained"
                     onClick={() => {
                       handleShowData();

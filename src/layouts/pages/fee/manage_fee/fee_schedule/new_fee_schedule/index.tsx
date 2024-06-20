@@ -67,28 +67,28 @@ const validationSchema = Yup.object().shape({
         return start_date ? value.getTime() >= start_date.getTime() : true;
       }
     ),
-  // due_date: Yup.date()
-  //   .required("Due Date is required")
-  //   .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
-  //     if (value) {
-  //       const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-  //       return dateRegex.test(value.toLocaleDateString());
-  //     }
-  //     return true;
-  //   })
-  //   .test(
-  //     "dueDateValidation",
-  //     "Due date should be equal to or between start date and end date",
-  //     function (value) {
-  //       const { start_date, end_date } = this.parent;
-  //       return (
-  //         start_date &&
-  //         value.getTime() >= start_date.getTime() &&
-  //         end_date &&
-  //         value.getTime() <= end_date.getTime()
-  //       );
-  //     }
-  //   ),
+  due_date: Yup.date()
+    .required("Due Date is required")
+    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
+      if (value) {
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        return dateRegex.test(value.toLocaleDateString());
+      }
+      return true;
+    })
+    .test(
+      "dueDateValidation",
+      "Due date should be equal to or between start date and end date",
+      function (value) {
+        const { start_date, end_date } = this.parent;
+        return (
+          start_date &&
+          value.getTime() >= start_date.getTime() &&
+          end_date &&
+          value.getTime() <= end_date.getTime()
+        );
+      }
+    ),
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Academic Year is required"),
@@ -350,7 +350,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "100%" }}
                 variant="standard"
@@ -370,7 +370,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "100%" }}
                 variant="standard"
@@ -391,7 +391,7 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 sx={{ width: "100%" }}
                 variant="standard"

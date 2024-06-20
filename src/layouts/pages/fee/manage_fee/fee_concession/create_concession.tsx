@@ -179,7 +179,7 @@ export default function CreateConcession() {
             item.section_name === values.section_name
         )
         .map((item: any) => ({
-          title: `${item.first_name} ${item.middle_name} ${item.last_name}`,
+          title: `${item.first_name} ${item.middle_name} ${item.last_name}(${item.user_id})`,
           key: item.user_id,
         }));
     }

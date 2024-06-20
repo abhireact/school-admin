@@ -70,6 +70,9 @@ const validationSchema = Yup.object().shape({
 });
 export default function Update(props: any) {
   const { editData, handleClose } = props;
+
+  console.log(editData, "editData");
+
   const initialValues = {
     fine_name: editData.fine_name,
     description: editData.description,
@@ -197,43 +200,92 @@ export default function Update(props: any) {
                 required
                 sx={{ width: "80%" }}
                 InputLabelProps={{ shrink: true }}
-                name="user_id"
+                name="account_name"
                 disabled
                 onChange={handleChange}
-                value={values.user_id}
+                value={values.account_name}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Admission No.
+                    Account Name
                   </MDTypography>
                 }
                 variant="standard"
                 onBlur={handleBlur}
-                error={touched.user_id && Boolean(errors.user_id)}
-                success={values.user_id && !errors.user_id}
-                helperText={touched.user_id && errors.user_id}
+                error={touched.account_name && Boolean(errors.account_name)}
+                success={values.account_name && !errors.account_name}
+                helperText={touched.account_name && errors.account_name}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <MDInput
-                required
-                sx={{ width: "80%" }}
-                InputLabelProps={{ shrink: true }}
-                name="student_name"
-                disabled
-                onChange={handleChange}
-                value={values.student_name}
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Student Name
-                  </MDTypography>
-                }
-                variant="standard"
-                onBlur={handleBlur}
-                error={touched.student_name && Boolean(errors.student_name)}
-                success={values.student_name && !errors.student_name}
-                helperText={touched.student_name && errors.student_name}
-              />
-            </Grid>
+            {values.student_category == null || values.student_category == "" ? (
+              <>
+                {" "}
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    required
+                    sx={{ width: "80%" }}
+                    InputLabelProps={{ shrink: true }}
+                    name="user_id"
+                    disabled
+                    onChange={handleChange}
+                    value={values.user_id}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Admission No.
+                      </MDTypography>
+                    }
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.user_id && Boolean(errors.user_id)}
+                    success={values.user_id && !errors.user_id}
+                    helperText={touched.user_id && errors.user_id}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    required
+                    sx={{ width: "80%" }}
+                    InputLabelProps={{ shrink: true }}
+                    name="student_name"
+                    disabled
+                    onChange={handleChange}
+                    value={values.student_name}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Student Name
+                      </MDTypography>
+                    }
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched.student_name && Boolean(errors.student_name)}
+                    success={values.student_name && !errors.student_name}
+                    helperText={touched.student_name && errors.student_name}
+                  />
+                </Grid>
+              </>
+            ) : (
+              <Grid item xs={12} sm={4}>
+                <MDInput
+                  required
+                  sx={{ width: "80%" }}
+                  InputLabelProps={{ shrink: true }}
+                  name="student_category"
+                  disabled
+                  onChange={handleChange}
+                  value={values.student_category}
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Category Name
+                    </MDTypography>
+                  }
+                  variant="standard"
+                  onBlur={handleBlur}
+                  error={touched.student_category && Boolean(errors.student_category)}
+                  success={values.student_category && !errors.student_category}
+                  helperText={touched.student_category && errors.student_category}
+                />
+              </Grid>
+            )}
+
             <Grid item xs={12} sm={4}>
               <MDInput
                 required
@@ -279,67 +331,63 @@ export default function Update(props: any) {
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                required
-                sx={{ width: "80%" }}
-                InputLabelProps={{ shrink: true }}
-                name="start_date"
                 type="date"
                 onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: "100%" }}
+                variant="standard"
+                name="start_date"
                 value={values.start_date}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Start Date
                   </MDTypography>
                 }
-                variant="standard"
+                onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.start_date && Boolean(errors.start_date)}
-                success={values.start_date && !errors.start_date}
                 helperText={touched.start_date && errors.start_date}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                required
-                sx={{ width: "80%" }}
-                InputLabelProps={{ shrink: true }}
-                name="end_date"
                 type="date"
                 onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: "100%" }}
+                variant="standard"
+                name="end_date"
                 value={values.end_date}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     End Date
                   </MDTypography>
                 }
-                variant="standard"
+                onChange={handleChange}
                 onBlur={handleBlur}
+                inputProps={{ min: values.start_date }}
                 error={touched.end_date && Boolean(errors.end_date)}
-                success={values.end_date && !errors.end_date}
                 helperText={touched.end_date && errors.end_date}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
-                required
-                sx={{ width: "80%" }}
-                InputLabelProps={{ shrink: true }}
-                name="due_date"
                 type="date"
                 onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: "100%" }}
+                variant="standard"
+                name="due_date"
                 value={values.due_date}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Due Date
                   </MDTypography>
                 }
-                variant="standard"
+                onChange={handleChange}
                 onBlur={handleBlur}
+                inputProps={{ max: values.end_date, min: values.start_date }}
                 error={touched.due_date && Boolean(errors.due_date)}
-                success={values.due_date && !errors.due_date}
                 helperText={touched.due_date && errors.due_date}
               />
             </Grid>

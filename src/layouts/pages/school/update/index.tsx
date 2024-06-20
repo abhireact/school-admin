@@ -650,7 +650,7 @@ const Update = (props: any) => {
               container
               xs={12}
               sm={12}
-              sx={{ display: "flex", justifyContent: "space-between" }}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Grid item mt={2}>
                 <MDButton
