@@ -4,7 +4,8 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Icon from "@mui/material/Icon";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
-import StudentDetails from "layouts/pages/student/studentdetails";
+import StudentDetails from "layouts/pages/student/student_details";
+import StudentArchive from "layouts/pages/student/student_archive";
 import EmployeeProfile from "layouts/pages/employee/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -155,9 +156,16 @@ const routes = [
       {
         name: "Student Details",
         key: "studentdetails",
-        route: "/pages/school/studentdetails",
+        route: "/student/student_details",
         component: <StudentDetails />,
       },
+      {
+        name: "Student Archive",
+        key: "studentarchive",
+        route: "/student/student_archive",
+        component: <StudentArchive />,
+      },
+
       {
         name: "Student Promotion",
         key: "studentpromotion",
@@ -173,27 +181,28 @@ const routes = [
       {
         name: "Caste",
         key: "caste",
-        route: "/pages/school/caste",
+        route: "/student/caste",
         component: <Caste />,
       },
       {
         name: "Caste Category",
         key: "castecategory",
-        route: "/pages/school/castecategory",
+        route: "/student/castecategory",
         component: <CasteCategory />,
       },
       {
         name: "Student Category",
         key: "studentcategory",
-        route: "/pages/school/studentcategory",
+        route: "/student/studentcategory",
         component: <StudentCategory />,
       },
       {
         name: "House Details",
         key: "housedetails",
-        route: "/pages/school/housedetails",
+        route: "/student/housedetails",
         component: <HouseDetails />,
       },
+
       // {
       //   name: "Student ID Card",
       //   key: "student_id",

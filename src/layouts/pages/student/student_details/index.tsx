@@ -21,7 +21,7 @@ import Create from "./create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -42,24 +42,6 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 const Student = () => {
   const [rbacData, setRbacData] = useState([]);
 
-  const fetchRbac = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        console.log("rbac user", response.data);
-        setRbacData(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  //End
   const { classes, student } = useSelector((state: any) => state);
   const [data, setData] = useState(student);
 
@@ -109,7 +91,7 @@ const Student = () => {
         },
       });
       if (response.status === 200) {
-        message.success("Deleted successFully");
+        message.success("Deleted SuccessFully");
         // Filter out the deleted user from the data
         // Update the state with the new data
         fetchStudents();
@@ -146,16 +128,22 @@ const Student = () => {
               <AccountBoxIcon />
             </Tooltip>
           </IconButton>
-
-          <IconButton
-            onClick={() => {
-              handleDelete(row.user_id);
-            }}
-          >
-            <Tooltip title="Delete Student" placement="top">
-              <DeleteIcon />
-            </Tooltip>
+          <IconButton>
+            <Popconfirm
+              title="Delete"
+              description="Are you sure to Delete it ?"
+              placement="topLeft"
+              onConfirm={() => handleDelete(row.user_id)} // Pass index to confirm function
+              // onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tooltip title="Delete" placement="top">
+                <DeleteIcon />
+              </Tooltip>
+            </Popconfirm>
           </IconButton>
+          ;
         </MDTypography>
       ),
 
@@ -248,10 +236,6 @@ const Student = () => {
                           value={values.academic_year}
                           onChange={(_event, value) => {
                             handleChange({ target: { name: "academic_year", value } });
-                            let infodata = data.filter((info: any) => info.academic_year == value);
-                            setData(infodata);
-                            setFieldValue("class_name", "");
-                            setFieldValue("section_name", "");
                           }}
                           options={
                             classes

@@ -11,8 +11,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import UpdateGuardian from "../guardian/update";
-import CreateGuardian from "../guardian/create";
+
+import editStudentImage from "./assetss/edit_student.png";
 
 import Tooltip from "@mui/material/Tooltip";
 import {
@@ -22,6 +22,7 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
+  Avatar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -33,7 +34,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import MDAvatar from "components/MDAvatar";
-import UpdateStudent from "./update_student";
+
 import Sidenav from "layouts/pages/account/settings/components/Sidenav";
 
 const validationSchema = Yup.object().shape({
@@ -74,6 +75,9 @@ const Update = (props: any) => {
   const { username, setOpenupdate, fetchData } = props;
   const [studentInfo, setStudentInfo] = useState<any>({});
   const [guardianInfo, setGuardianInfo] = useState([]);
+
+  const [studentAvailable, setStudentAvailable] = useState(false);
+  const [guardianAvailable, setGuardianAvailable] = useState(false);
 
   const fetchGuardian = () => {
     axios
@@ -319,7 +323,7 @@ const Update = (props: any) => {
             },
           })
           .then(() => {
-            message.success("Student Updated successfully!");
+            message.success("Student Updated Successfully!");
             //fetchData();
             handleClose();
           })
@@ -508,7 +512,7 @@ const Update = (props: any) => {
         },
       });
       if (response.status === 200) {
-        message.success("Deleted successFully");
+        message.success("Deleted SuccessFully");
         // Filter out the deleted user from the data
         fetchGuardian();
       }
@@ -524,33 +528,27 @@ const Update = (props: any) => {
   const handleDialogbox = () => {
     setDialogbox(false);
   };
+  const [imageSrc, setImageSrc] = useState("");
+
+  useEffect(() => {
+    const base64ImageString = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...";
+
+    try {
+      // This checks if the Base64 string can be decoded
+      const isValidBase64 =
+        btoa(atob(base64ImageString.split(",")[1])) === base64ImageString.split(",")[1];
+      if (isValidBase64) {
+        setImageSrc(base64ImageString);
+      } else {
+        console.error("Invalid Base64 string");
+      }
+    } catch (error) {
+      console.error("Failed to decode Base64 string:", error);
+    }
+  }, []);
 
   return (
     <>
-      <Dialog open={createOpen} onClose={handleCloseCreate} maxWidth="md">
-        <CreateGuardian
-          setCreateOpen={setCreateOpen}
-          username={username}
-          fetchGuardian={fetchGuardian}
-        />
-      </Dialog>
-      <Dialog open={open} onClose={handleCloseGuardian} maxWidth="md">
-        <UpdateGuardian
-          guardianData={guardianData}
-          setOpen={setOpen}
-          fetchData={fetchData}
-          fetchGuardian={fetchGuardian}
-        />
-      </Dialog>
-      <Dialog open={dialogbox} onClose={handleDialogbox} maxWidth="md">
-        <UpdateStudent
-          dialogNumber={dialogNumber}
-          handleClose={handleDialogbox}
-          username={username}
-          setOpenupdate={setOpenupdate}
-          fetchData={fetchData}
-        />
-      </Dialog>
       <Grid container spacing={3}>
         <Grid item>
           <Sidenav
@@ -576,18 +574,22 @@ const Update = (props: any) => {
                       STUDENT DETAILS
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDAvatar
-                      bgColor="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setDialogbox(true);
-                        setDialogNumber(1);
-                      }}
-                      // variant="circle"
-                    >
-                      <ModeEditOutlineIcon />
-                    </MDAvatar>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  ></Grid>
+                  <Grid item xs={12} sm={12}>
+                    {imageSrc ? (
+                      <img src={imageSrc} alt="Base64 Image" />
+                    ) : (
+                      <Avatar
+                        alt="student"
+                        src="./assests/edit_student.png"
+                        sx={{ width: 84, height: 84 }}
+                      />
+                    )}
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -613,7 +615,7 @@ const Update = (props: any) => {
                     <MDTypography variant="body2" fontWeight="bold">
                       {values.first_name}
                     </MDTypography>
-                  </Grid>{" "}
+                  </Grid>
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="body2" fontWeight="bold">
                       {values.middle_name}
@@ -825,19 +827,12 @@ const Update = (props: any) => {
                       SIBLING
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDAvatar
-                      bgColor="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setDialogbox(true);
-                        setDialogNumber(2);
-                      }}
-                      // variant="circle"
-                    >
-                      <ModeEditOutlineIcon />
-                    </MDAvatar>
-                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  ></Grid>
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
                       Sibling Name
@@ -925,18 +920,12 @@ const Update = (props: any) => {
                       CONTACT DETAILS
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDAvatar
-                      bgColor="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setDialogbox(true);
-                        setDialogNumber(3);
-                      }}
-                    >
-                      <ModeEditOutlineIcon />
-                    </MDAvatar>
-                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  ></Grid>
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
                       Mobile Number
@@ -952,7 +941,7 @@ const Update = (props: any) => {
                       Email
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to make it 4 columns */}
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="body2" fontWeight="bold">
@@ -969,7 +958,7 @@ const Update = (props: any) => {
                       {values.email}
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to make it 4 columns */}
                 </Grid>
               </MDBox>
@@ -999,28 +988,22 @@ const Update = (props: any) => {
                         </MDTypography>
                       </Grid>
 
-                      <Grid item xs={12} sm={3} py={1} key={index + "delete"}>
-                        {guardianInfo.length > 1 && (
-                          <Tooltip title="Delete Guardian" placement="top">
-                            <IconButton
-                              onClick={() => handleDeleteGuardian(guardianinfo.user_name)}
-                            >
-                              {guardianinfo.guardian_user_name}
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      </Grid>
-                      <Grid item xs={12} sm={3} py={1} key={index + "edit"}>
-                        <MDAvatar
-                          bgColor="secondary"
-                          size="sm"
-                          onClick={() => handleOpenGuardian(guardianinfo)}
-                          // variant="circle"
-                        >
-                          <ModeEditOutlineIcon />
-                        </MDAvatar>
-                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={3}
+                        py={1}
+                        key={index + "delete"}
+                        sx={{ display: "flex", justifyContent: "flex-end" }}
+                      ></Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={3}
+                        py={1}
+                        key={index + "edit"}
+                        sx={{ display: "flex", justifyContent: "flex-end" }}
+                      ></Grid>
                       <Grid item xs={12} sm={4} key={index + "first_name"}>
                         <MDInput
                           sx={{ width: "100%" }}
@@ -1193,46 +1176,6 @@ const Update = (props: any) => {
                         />
                       </Grid>
                       <Grid item xs={12} sm={4} key={index + "SPACE"}></Grid>
-                      {/* <Grid item xs={12} mt={2} sm={4} key={index + "notification"}>
-                  <FormControl>
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      row
-                      name="radio-buttons-group"
-                    >
-                      <FormControlLabel
-                        control={
-                          <Checkbox checked={guardianinfo.notification} onChange={handleChange} />
-                        }
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Notification
-                          </MDTypography>
-                        }
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} mt={2} sm={4} key={index + "subscription"}>
-                  <FormControl>
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      row
-                      name="radio-buttons-group"
-                    >
-                      <FormControlLabel
-                        control={
-                          <Checkbox checked={guardianinfo.subscription} onChange={handleChange} />
-                        }
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Subscription
-                          </MDTypography>
-                        }
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>    <Grid item xs={12} sm={4} key={index + "space"}></Grid>*/}
 
                       <Grid item xs={12} sm={4} key={index + "login_access"} mt={2}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1246,11 +1189,6 @@ const Update = (props: any) => {
                       </Grid>
                     </>
                   ))}
-                  <Grid item xs={12} sm={12}>
-                    <MDButton color="dark" onClick={() => handleOpenCreate()}>
-                      ADD Guardian +
-                    </MDButton>
-                  </Grid>
                 </Grid>
               </MDBox>
             </Card>
@@ -1264,18 +1202,12 @@ const Update = (props: any) => {
                       ADDRESS
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDAvatar
-                      bgColor="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setDialogbox(true);
-                        setDialogNumber(5);
-                      }}
-                    >
-                      <ModeEditOutlineIcon />
-                    </MDAvatar>
-                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  ></Grid>
                   <Grid item xs={12} sm={12}>
                     <MDTypography
                       color="secondary"
@@ -1336,9 +1268,9 @@ const Update = (props: any) => {
                       Country
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="body2" fontWeight="bold">
@@ -1350,9 +1282,9 @@ const Update = (props: any) => {
                       {values.country}
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
                   <Grid item xs={12} sm={12}>
                     <MDTypography
@@ -1414,9 +1346,9 @@ const Update = (props: any) => {
                       Country
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="body2" fontWeight="bold">
@@ -1428,9 +1360,9 @@ const Update = (props: any) => {
                       {values.pr_country}
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
-                  <Grid item xs={12} sm={3}></Grid>{" "}
+                  <Grid item xs={12} sm={3}></Grid>
                   {/* Add an empty Grid item to maintain 4-column layout */}
                 </Grid>
               </MDBox>
@@ -1445,18 +1377,12 @@ const Update = (props: any) => {
                       PREVIOUS EDUCATION
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDAvatar
-                      bgColor="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setDialogbox(true);
-                        setDialogNumber(6);
-                      }}
-                    >
-                      <ModeEditOutlineIcon />
-                    </MDAvatar>
-                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  ></Grid>
 
                   <Grid item xs={6} sm={3}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -1522,7 +1448,7 @@ const Update = (props: any) => {
                   </Grid>
                 </Grid>
               </MDBox>
-            </Card>{" "}
+            </Card>
           </Grid>
           <Grid item sm={12} id="3">
             <Card>
@@ -1533,18 +1459,12 @@ const Update = (props: any) => {
                       ACTIVITIES
                     </MDTypography>
                   </Grid>
-                  <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDAvatar
-                      bgColor="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setDialogbox(true);
-                        setDialogNumber(7);
-                      }}
-                    >
-                      <ModeEditOutlineIcon />
-                    </MDAvatar>
-                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  ></Grid>
                 </Grid>
               </MDBox>
             </Card>
@@ -1564,12 +1484,6 @@ const Update = (props: any) => {
             Back
           </MDButton>
         </Grid>
-        {/* <Grid item>
-            <MDButton color="info" variant="contained" type="submit">
-              Save &nbsp;
-              <SaveIcon />
-            </MDButton>
-          </Grid> */}
       </Grid>
     </>
   );
