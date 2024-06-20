@@ -317,7 +317,7 @@ const UpdateStudent = (props: any) => {
             },
           })
           .then(() => {
-            message.success("Student Updated successfully!");
+            message.success("Student Updated Successfully!");
             //fetchData();
             props.handleClose();
           })
@@ -506,7 +506,7 @@ const UpdateStudent = (props: any) => {
         },
       });
       if (response.status === 200) {
-        message.success("Deleted successFully");
+        message.success("Deleted SuccessFully");
         // Filter out the deleted user from the data
         fetchGuardian();
       }

@@ -12,7 +12,7 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
-import StudentDetails from "layouts/pages/student/studentdetails";
+import StudentDetails from "layouts/pages/student/student_details";
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
@@ -47,7 +47,7 @@ console.log(rendered, "rendered component");
 
 try {
   if (token) {
-    const response = await axios.get("http://10.0.20.200:8000/mg_rbac_current_user", {
+    const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
