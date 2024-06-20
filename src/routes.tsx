@@ -22,6 +22,9 @@ import AdmissionForm from "layouts/pages/admission/new_admission";
 import AddDate from "layouts/pages/admission/form_setting/add_date";
 import Myrbacroutes from "myrbacroutes";
 import FormSetting from "layouts/pages/admission/form_setting";
+import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configuration";
+import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
+import Pdf from "layouts/pages/Mindcompdf/Pdf";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -108,6 +111,12 @@ let routes = [
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
       },
+      {
+        name: "Pdf Report",
+        key: "pdfreport",
+        route: "pages/fee/pdfreport",
+        component: <Pdf />,
+      },
     ],
   },
   {
@@ -182,6 +191,12 @@ let routes = [
     key: "add_date",
     route: "/pages/admission/add_date",
     component: <AddDate />,
+  },
+  {
+    name: "Manage Sub Template",
+    key: "manage_sub_template",
+    route: "/pages/admission/formsetting/manage_sub_template",
+    component: <ManageSubTemplate />,
   },
 ];
 

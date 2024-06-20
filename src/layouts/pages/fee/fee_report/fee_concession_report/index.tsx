@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useFormik } from "formik";
@@ -18,6 +18,9 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 const token = Cookies.get("token");
 import { useSelector } from "react-redux";
+import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
+import { useReactToPrint } from "react-to-print";
+
 const Cacademic_year = Cookies.get("academic_year");
 console.log(Cacademic_year, "Cacademic_year");
 interface FeeConcessionInterface {
@@ -109,10 +112,26 @@ export default function FeeConcessionReport() {
     });
 
   console.log(feeConcessionReportData, "concession DAtaa");
+  const tableRef = useRef();
+  const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  const handlePrint = useReactToPrint({
+    content: () => tableRef.current,
+  });
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <form onSubmit={handleSubmit}>
+        <MDBox>
+          <MDBox ref={tableRef}>
+            <PdfGenerator
+              data={feeConcessionReportData.rows}
+              hiddenText={hiddenText}
+              isPdfMode={true}
+            />
+          </MDBox>
+          <MDButton onClick={handlePrint}>Print</MDButton>
+        </MDBox>
+
         <Grid container>
           <Grid item xs={12} sm={12}>
             <Card>

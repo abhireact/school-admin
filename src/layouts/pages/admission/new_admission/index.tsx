@@ -1506,7 +1506,9 @@ const AdmissionForm = () => {
               color="dark"
               variant="contained"
               type="submit"
+              // onClick={() => navigate("/pages/admission/Fee")}
               onClick={() => navigate("/pages/admission/studentAdmission")}
+              // navigate("/pages/admission/Fee");
             >
               Back
             </MDButton>
@@ -1522,16 +1524,3 @@ const AdmissionForm = () => {
 };
 
 export default AdmissionForm;
-
-{
-  /* <Grid item mt={2} ml={2}>
-<MDButton
-  color="info"
-  variant="contained"
-  type="submit"
-  onClick={() => navigate("/pages/admission/Fee")}
->
-  Proceed To Fee
-</MDButton>
-</Grid> */
-}

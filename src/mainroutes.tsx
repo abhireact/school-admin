@@ -590,16 +590,16 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Admission",
-        key: "admissionpage",
-        route: "pages/admission/studentAdmission",
-        component: <StudentAdmission />,
-      },
-      {
         name: "Form Setting",
         key: "formsetting",
         route: "pages/admission/formsetting",
         component: <FormSetting />,
+      },
+      {
+        name: "Admission",
+        key: "admissionpage",
+        route: "pages/admission/studentAdmission",
+        component: <StudentAdmission />,
       },
     ],
   },
