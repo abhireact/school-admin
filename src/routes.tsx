@@ -17,9 +17,16 @@ import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
-import React, { createRef } from "react";
+
+import Fee from "layouts/pages/admission/fee_admission";
+import AdmissionForm from "layouts/pages/admission/new_admission";
+import AddDate from "layouts/pages/admission/form_setting/add_date";
 import Myrbacroutes from "myrbacroutes";
 import Settings from "layouts/pages/account/settings";
+import FormSetting from "layouts/pages/admission/form_setting";
+import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configuration";
+import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
+import Pdf from "layouts/pages/Mindcompdf/Pdf";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -106,6 +113,12 @@ let routes = [
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
       },
+      {
+        name: "Pdf Report",
+        key: "pdfreport",
+        route: "pages/fee/pdfreport",
+        component: <Pdf />,
+      },
     ],
   },
   // {
@@ -126,6 +139,7 @@ let routes = [
     route: "/fee/create_fee_category",
     component: <CreateFeeCategory />,
   },
+
   {
     name: "create fee amount perticular",
     key: "createfeeamountperticular",
@@ -167,6 +181,36 @@ let routes = [
     key: "createclasstiming",
     route: "attendance/create_class_timing",
     component: <ClassTimingCreate />,
+  },
+  {
+    name: "Sms Configuration",
+    key: "sms_configuration",
+    route: "notification/sms_configuration",
+    component: <SMSConfiguration />,
+  },
+  {
+    name: "Admission Fee",
+    key: "admission_fee",
+    route: "/pages/admission/fee",
+    component: <Fee />,
+  },
+  {
+    name: "New Admission",
+    key: "new_admission",
+    route: "/pages/admission/AdmissionForm",
+    component: <AdmissionForm />,
+  },
+  {
+    name: "Add Date",
+    key: "add_date",
+    route: "/pages/admission/add_date",
+    component: <AddDate />,
+  },
+  {
+    name: "Manage Sub Template",
+    key: "manage_sub_template",
+    route: "/pages/admission/formsetting/manage_sub_template",
+    component: <ManageSubTemplate />,
   },
 ];
 

@@ -14,6 +14,10 @@ import { useDispatch, useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Myrbacroutes from "myrbacroutes";
+import StudentIDCard from "../student/studentID_card";
+import StudentIDCard2 from "../student/studentID_card/index2";
+import StudentIDCard3 from "../student/studentID_card/index3";
+import MyDataTableComponent from "./test2";
 // import Table from "./component/Table";
 
 const MyDashboard = () => {
@@ -41,7 +45,7 @@ const MyDashboard = () => {
       <DashboardNavbar />
       <Grid container spacing={2} display={"flex"} justifyContent="center">
         <h1>My Dashboard </h1>
-        {renderedComponent}
+        {/* {renderedComponent} */}
         {/* <Grid item xs={12} sm={5}>
           <StudentIDCard />{" "}
         </Grid>
@@ -52,7 +56,7 @@ const MyDashboard = () => {
           <StudentIDCard3 />{" "}
         </Grid> */}
       </Grid>
-      {/* <MyDataTableComponent />{" "} */}
+      <MyDataTableComponent />{" "}
     </DashboardLayout>
   );
 };

@@ -28,6 +28,7 @@ import LateFee from "layouts/pages/fee/manage_fee/late_fee";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
@@ -57,6 +58,9 @@ import StudentSubject from "layouts/pages/subject/student_subject";
 import SubjectReport from "layouts/pages/subject/subject_report";
 import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
 import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-portal_status";
+import AdmissionForm from "layouts/pages/admission/new_admission";
+import StudentAdmission from "layouts/pages/admission";
+import FormSetting from "layouts/pages/admission/form_setting";
 
 const routes = [
   {
@@ -587,6 +591,31 @@ const routes = [
             component: <FeeDefaulterReport />,
           },
         ],
+      },
+    ],
+  },
+
+  {
+    type: "collapse",
+    name: "Admission",
+    key: "admissionfolder",
+    icon: (
+      <Icon fontSize="medium">
+        <BookOnlineIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Form Setting",
+        key: "formsetting",
+        route: "pages/admission/formsetting",
+        component: <FormSetting />,
+      },
+      {
+        name: "Admission",
+        key: "admissionpage",
+        route: "pages/admission/studentAdmission",
+        component: <StudentAdmission />,
       },
     ],
   },

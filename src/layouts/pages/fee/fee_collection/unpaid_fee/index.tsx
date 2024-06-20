@@ -91,14 +91,14 @@ const UnPaidFees = (props: any) => {
   };
   return (
     <>
-      <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
+      {/* <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
         <MDTypography variant="h6">UnPaid Fees</MDTypography>
         <Tooltip title="UnPaid Fees" placement="bottom" arrow>
           <MDButton variant="outlined" color="secondary" size="small" circular iconOnly>
             <Icon>priority_high</Icon>
           </MDButton>
         </Tooltip>
-      </MDBox>{" "}
+      </MDBox>{" "} */}
       <Grid container px={3} display="flex" justifyContent={"center"}>
         <Grid item xs={12} sm={6} display="flex" justifyContent={"center"}>
           <StudentCard data={props.mainData} />

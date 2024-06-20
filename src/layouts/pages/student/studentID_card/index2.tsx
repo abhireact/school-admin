@@ -17,7 +17,7 @@ function StudentIDCard2(props: any): JSX.Element {
 
   return (
     <Card sx={{ height: "100%", width: "100%" }}>
-      <Grid container spacing={3} justifyContent="center">
+      {/* <Grid container spacing={3} justifyContent="center">
         <Grid
           item
           xs={12}
@@ -49,7 +49,7 @@ function StudentIDCard2(props: any): JSX.Element {
             Phone.No-8176063900
           </MDTypography>
         </Grid>
-      </Grid>
+      </Grid> */}
       <Grid container p={2}>
         <Grid item xs={12} sm={5} pl={1} ml={1}>
           <MDAvatar
