@@ -1,0 +1,12 @@
+/* src/components/PdfGenerator.css */
+
+.hidden-text {
+  display: none;
+}
+
+/* Ensures that the hidden text is visible when printing */
+@media print {
+  .hidden-text {
+    display: block;
+  }
+}
