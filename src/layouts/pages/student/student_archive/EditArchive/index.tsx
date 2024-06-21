@@ -10,7 +10,7 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
-
+import SaveIcon from "@mui/icons-material/Save";
 import axios from "axios";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
@@ -42,7 +42,7 @@ const EditArchive = (props: any) => {
   const { values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
-        reason_id: editData.reason_id,
+        reason_id: "",
         archive_date: editData.archive_date,
       },
       validationSchema: validationSchema,
@@ -68,8 +68,6 @@ const EditArchive = (props: any) => {
           .catch((error: any) => {
             message.error(error.response.data.detail);
           });
-
-        action.resetForm();
       },
     });
   useEffect(() => {
@@ -96,12 +94,12 @@ const EditArchive = (props: any) => {
     <form onSubmit={handleSubmit}>
       <MDBox pt={4} px={4} pb={1}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
               Reason *
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={8}>
             <Autocomplete
               sx={{ width: "100%" }}
               disableClearable
@@ -131,13 +129,13 @@ const EditArchive = (props: any) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
               Archive Date *
             </MDTypography>
           </Grid>
 
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={8}>
             <MDInput
               type="date"
               required
@@ -168,7 +166,8 @@ const EditArchive = (props: any) => {
             </Grid>
             <Grid item mt={2} ml={2}>
               <MDButton color="info" variant="contained" type="submit">
-                Save
+                Save&nbsp;
+                <SaveIcon />
               </MDButton>
             </Grid>
           </Grid>

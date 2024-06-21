@@ -13,6 +13,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 const token = Cookies.get("token");
+import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 const validationSchema = Yup.object().shape({
@@ -378,9 +379,10 @@ export default function StudentPromotion() {
                   </MDButton>
                 </Grid>
                 {data.length > 0 && (
-                  <Grid item mr={8}>
+                  <Grid item>
                     <MDButton color="info" variant="contained" type="submit">
-                      Save
+                      Save&nbsp;
+                      <SaveIcon />
                     </MDButton>
                   </Grid>
                 )}
@@ -410,13 +412,20 @@ export default function StudentPromotion() {
                               textAlign: "left",
                             }}
                           >
-                            SELECT:
-                            <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
-                              All
-                            </MDButton>
+                            SELECT: &nbsp;
                             <MDButton
                               color="info"
-                              variant="text"
+                              size="small"
+                              variant="outlined"
+                              onClick={() => handleSelectAll()}
+                            >
+                              All
+                            </MDButton>
+                            &nbsp; &nbsp;
+                            <MDButton
+                              color="info"
+                              size="small"
+                              variant="outlined"
                               onClick={() => handleSelectNone()}
                             >
                               None
@@ -436,7 +445,8 @@ export default function StudentPromotion() {
                                 </td>
 
                                 <td>
-                                  <Checkbox
+                                  <input
+                                    type="checkbox"
                                     checked={item.is_selected}
                                     onChange={() => handleCheckboxChange(index)}
                                   />

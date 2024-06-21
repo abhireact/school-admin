@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
+import SaveIcon from "@mui/icons-material/Save";
 const token = Cookies.get("token");
 import * as Yup from "yup";
 
@@ -24,10 +25,11 @@ const validationSchema = Yup.object().shape({
   archive_date: Yup.date().required("Required *"),
   reason_id: Yup.string().required("Required *"),
 });
+const cookies_academic_year = Cookies.get("academic_year");
 export default function StudentArchive(props: any) {
   const [data, setData] = useState([]);
   const initialValues = {
-    academic_year: "",
+    academic_year: cookies_academic_year,
     class_name: "",
     section_name: "",
     reason_id: "",
@@ -82,7 +84,7 @@ export default function StudentArchive(props: any) {
           })
           .then(() => {
             action.resetForm();
-
+            props.setShowpage(false);
             message.success("Student Archived Successfully");
           })
           .catch((error: any) => {
@@ -152,12 +154,16 @@ export default function StudentArchive(props: any) {
       <Card>
         <MDBox p={4}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={6}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
                 Student Archive
               </MDTypography>
             </Grid>
-
+            <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <MDButton color="dark" variant="contained" onClick={() => props.setShowpage(false)}>
+                Back
+              </MDButton>
+            </Grid>
             <Grid item xs={12} sm={4}>
               <Autocomplete
                 disableClearable
@@ -337,9 +343,10 @@ export default function StudentArchive(props: any) {
                 </MDButton>
               </Grid>
               {data.length > 0 && (
-                <Grid item mr={8}>
+                <Grid item>
                   <MDButton color="info" variant="contained" type="submit">
-                    Save
+                    Save&nbsp;
+                    <SaveIcon />
                   </MDButton>
                 </Grid>
               )}
@@ -369,11 +376,22 @@ export default function StudentArchive(props: any) {
                             textAlign: "left",
                           }}
                         >
-                          SELECT:
-                          <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
+                          SELECT: &nbsp;
+                          <MDButton
+                            color="info"
+                            size="small"
+                            variant="outlined"
+                            onClick={() => handleSelectAll()}
+                          >
                             All
                           </MDButton>
-                          <MDButton color="info" variant="text" onClick={() => handleSelectNone()}>
+                          &nbsp; &nbsp;
+                          <MDButton
+                            color="info"
+                            size="small"
+                            variant="outlined"
+                            onClick={() => handleSelectNone()}
+                          >
                             None
                           </MDButton>
                         </td>

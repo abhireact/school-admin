@@ -36,7 +36,7 @@ import { useSelector } from "react-redux";
 import MDAvatar from "components/MDAvatar";
 
 import Sidenav from "layouts/pages/account/settings/components/Sidenav";
-
+const cookies_academic_year = Cookies.get("academic_year");
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")

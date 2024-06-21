@@ -143,7 +143,6 @@ const Student = () => {
               </Tooltip>
             </Popconfirm>
           </IconButton>
-          ;
         </MDTypography>
       ),
 
