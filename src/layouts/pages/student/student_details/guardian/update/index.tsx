@@ -100,8 +100,8 @@ const UpdateGuardian = (props: any) => {
       mobile_notification: guardianData.notification,
       email_subscription: guardianData.subscription,
       email_notification: guardianData.notification,
-      login_access: false,
-      primary_contact: false,
+      login_access: guardianData.login_access,
+      primary_contact: guardianData.primary_contact,
     },
 
     validationSchema: validationSchema,
@@ -138,13 +138,13 @@ const UpdateGuardian = (props: any) => {
         })
         .then(() => {
           console.log("Updating Guardian Access");
-          message.success("Updated Guardian Access");
+          // message.success("Updated Guardian Access");
         })
         .catch((error) => {
-          message.error("Error while granting Guardian Access");
+          console.error("Error while granting Guardian Access");
         });
 
-      action.resetForm();
+     // action.resetForm();
     },
   });
 
