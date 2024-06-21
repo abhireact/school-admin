@@ -10,12 +10,13 @@ import Icon from "@mui/material/Icon";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 const token = Cookies.get("token");
 import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { fetchStudent } from "layouts/pages/redux/dataSlice";
 const validationSchema = Yup.object().shape({
   to_class: Yup.string().required("Required *"),
   to_section: Yup.string().required("Required *"),
@@ -28,7 +29,33 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
 });
+function isGreaterYearRange(input: any, reference: any) {
+  const [startYearInput, endYearInput] = input.split("-").map(Number);
+  const [startYearRef, endYearRef] = reference.split("-").map(Number);
+
+  // Check if the input years are greater than the reference years
+  if (startYearInput > startYearRef) {
+    return true;
+  } else {
+    return false;
+  }
+}
+function isSmallerYearRange(input: any, reference: any) {
+  const [startYearInput, endYearInput] = input.split("-").map(Number);
+  if (!reference) {
+    return true;
+  }
+  const [startYearRef, endYearRef] = reference.split("-").map(Number);
+
+  // Check if the input years are greater than the reference years
+  if (startYearInput < startYearRef) {
+    return true;
+  } else {
+    return false;
+  }
+}
 export default function StudentPromotion() {
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const initialValues = {
     from_academic: "",
@@ -67,7 +94,8 @@ export default function StudentPromotion() {
           })
           .then(() => {
             action.resetForm();
-
+            setData([]);
+            dispatch(fetchStudent() as any);
             message.success("Student Promoted Successfully");
           })
           .catch((error: any) => {
@@ -150,7 +178,12 @@ export default function StudentPromotion() {
                   disableClearable
                   value={values.from_academic}
                   onChange={(_event, value) => {
-                    handleChange({ target: { name: "from_academic", value } });
+                    let smallerAcademicYear = isSmallerYearRange(value, values.to_academic);
+                    if (smallerAcademicYear) {
+                      handleChange({ target: { name: "from_academic", value } });
+                    } else {
+                      message.error("should be smaller than to Academic Year");
+                    }
                   }}
                   options={
                     classes
@@ -258,7 +291,14 @@ export default function StudentPromotion() {
                   disableClearable
                   value={values.to_academic}
                   onChange={(_event, value) => {
-                    handleChange({ target: { name: "to_academic", value } });
+                    console.log(value, "grater");
+                    let greaterAcademicYear = isGreaterYearRange(value, values.from_academic);
+                    console.log(greaterAcademicYear, "true or false");
+                    if (greaterAcademicYear) {
+                      handleChange({ target: { name: "to_academic", value } });
+                    } else {
+                      message.error("should be greater than to Academic Year");
+                    }
                   }}
                   options={
                     classes
@@ -280,7 +320,7 @@ export default function StudentPromotion() {
                       variant="standard"
                       onBlur={handleBlur}
                       error={touched.to_academic && Boolean(errors.to_academic)}
-                      success={values.to_academic.length && !errors.to_academic}
+                      success={values.to_academic && !errors.to_academic}
                       helperText={touched.to_academic && errors.to_academic}
                     />
                   )}
@@ -400,19 +440,44 @@ export default function StudentPromotion() {
                         <tr>
                           <td
                             style={{
-                              fontSize: "18px",
+                              padding: "10px",
                               textAlign: "left",
+                              border: "1px solid #f0f2f5",
                             }}
                           >
-                            AVAILABLE STUDENTS
+                            <MDTypography
+                              variant="caption"
+                              fontWeight="bold"
+                              color="secondary"
+                              style={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              AVAILABLE STUDENTS
+                            </MDTypography>
                           </td>
                           <td
                             style={{
-                              fontSize: "18px",
+                              padding: "10px",
                               textAlign: "left",
+                              border: "1px solid #f0f2f5",
                             }}
                           >
-                            SELECT: &nbsp;
+                            <MDTypography
+                              variant="caption"
+                              fontWeight="bold"
+                              color="secondary"
+                              style={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              SELECT:
+                            </MDTypography>
+                            &nbsp;
                             <MDButton
                               color="info"
                               size="small"
@@ -437,14 +502,34 @@ export default function StudentPromotion() {
                         {data?.length > 0
                           ? data?.map((item: any, index: any) => (
                               <tr key={index + item.user_id}>
-                                <td style={{ textAlign: "left" }}>
-                                  <MDTypography variant="button" fontWeight="bold">
-                                    {item.admission_number} {item.user_id} {item.first_name}
+                                <td
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                    border: "1px solid #f0f2f5",
+                                  }}
+                                >
+                                  <MDTypography
+                                    variant="caption"
+                                    fontWeight="bold"
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                    }}
+                                  >
+                                    {item.user_id} {item.first_name}
                                     {item.middle_name} {item.last_name}
                                   </MDTypography>
                                 </td>
 
-                                <td>
+                                <td
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "start",
+                                    border: "1px solid #f0f2f5",
+                                  }}
+                                >
                                   <input
                                     type="checkbox"
                                     checked={item.is_selected}

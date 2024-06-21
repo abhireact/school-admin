@@ -1184,6 +1184,7 @@ const Create = (props: any) => {
                         options={["Male", "Female"]}
                         renderInput={(params: any) => (
                           <MDInput
+                            required
                             InputLabelProps={{ shrink: true }}
                             name="gender"
                             label={
