@@ -34,7 +34,7 @@ function Header(): JSX.Element {
   const handleSetVisible = () => setVisible(!visible);
 
   return (
-    <Card id="profile">
+    <Card>
       <MDBox p={2}>
         <Grid container spacing={3} alignItems="center">
           <Grid item>

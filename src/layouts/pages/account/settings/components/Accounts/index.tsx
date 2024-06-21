@@ -53,7 +53,7 @@ function Accounts(): JSX.Element {
   const handleSetAsana2FA = () => setAsana2FA(!asana2FA);
 
   return (
-    <Card id="accounts">
+    <Card>
       <MDBox p={3} lineHeight={1}>
         <MDBox mb={1}>
           <MDTypography variant="h4">Accounts</MDTypography>

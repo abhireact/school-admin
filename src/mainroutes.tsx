@@ -56,7 +56,8 @@ import StudentSubject from "layouts/pages/subject/student_subject";
 import SubjectReport from "layouts/pages/subject/subject_report";
 import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
 import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-portal_status";
-
+import StudentAttendance from "layouts/pages/Attendance/student";
+const college = true;
 const routes = [
   {
     type: "collapse",
@@ -85,7 +86,7 @@ const routes = [
 
   {
     type: "collapse",
-    name: "School",
+    name: `${college ? "College" : "School"}`,
     key: "school",
     icon: (
       <Icon fontSize="medium">
@@ -100,7 +101,7 @@ const routes = [
       //   component: <School />,
       // },
       {
-        name: "School Information",
+        name: `${college ? "College Information" : "School Information"}`,
         key: "schoolinfo",
         route: "pages/school/schoolinfo",
         component: <SchoolInfo />,
@@ -329,6 +330,12 @@ const routes = [
         key: "time_table",
         route: "attendance/time_table",
         component: <TimeTable />,
+      },
+      {
+        name: "Student Attendance",
+        key: "student_attendance",
+        route: "attendance/student_attendance",
+        component: <StudentAttendance />,
       },
     ],
   },

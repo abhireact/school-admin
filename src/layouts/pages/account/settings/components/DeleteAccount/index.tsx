@@ -23,7 +23,7 @@ import MDButton from "components/MDButton";
 
 function DeleteAccount(): JSX.Element {
   return (
-    <Card id="delete-account">
+    <Card>
       <MDBox
         pr={3}
         display="flex"

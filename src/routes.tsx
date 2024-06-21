@@ -19,6 +19,7 @@ import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
 import React, { createRef } from "react";
 import Myrbacroutes from "myrbacroutes";
 import Settings from "layouts/pages/account/settings";
+import StudentAttendance from "layouts/pages/Attendance/student";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -106,6 +107,12 @@ let routes = [
         component: <MYProfile />,
       },
     ],
+  },
+  {
+    name: "Student Attendance",
+    key: "student_attendance",
+    route: "attendance/student_attendance",
+    component: <StudentAttendance />,
   },
   {
     name: "setting",

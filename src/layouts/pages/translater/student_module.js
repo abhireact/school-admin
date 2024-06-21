@@ -1,0 +1,83 @@
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+
+// Configuration for i18next
+i18n.use(initReactI18next).init({
+  resources: {
+    en: {
+      translation: {
+        greeting: "Hello!",
+        save: "Save",
+        cancel: "cancel",
+        Modules: "Modules",
+        Code: "Code",
+        Status: "Status",
+        validationType: "Validation Type",
+        dataType: "DataType",
+        createValueset: "Create Valueset",
+        typehere: "Type here...",
+        Prospective: "Prospective",
+        Concurrent: "Concurrent",
+        Retrospective: "Retrospective",
+        Revalidation: "Revalidation",
+        Boolean: "Boolean",
+        Date: " Date",
+        structs: "structs",
+        enums: "enums",
+        Char: "Char",
+        desc: "Description",
+        value: "Value",
+        enp: "entries per page",
+        valueset: "valueset",
+        action: "Action",
+        search: "Search",
+        sortorder: "Sort Order",
+        saveall: "Save All",
+        add: "Add",
+        name: "Name",
+        rowno: "No. of rows",
+      },
+    },
+    ar: {
+      translation: {
+        greeting: "مرحبا!",
+        save: "يحفظ",
+        cancel: "يلغي",
+        Modules: "الوحدات",
+        Code: "مجموعة القيم",
+        Status: "حالة",
+        typehere: "أكتب هنا...",
+        validationType: "نوع التحقق",
+        dataType: "نوع البيانات",
+        createValueset: "قم بإنشاء مجموعة القيم",
+        Prospective: "مأمول",
+        Concurrent: "منافس",
+        Retrospective: "بأثر رجعي",
+        Revalidation: "إعادة التحقق",
+        Boolean: "قيمة منطقية",
+        Date: " Date",
+        structs: "structs",
+        enums: "enums",
+        Char: "Char",
+        desc: "وصف",
+        value: "قيمة",
+        enp: "إدخالات في كل صفحة",
+        valueset: "مجموعة القيم",
+        action: "فعل",
+        search: "يبحث",
+        sortorder: "امر ترتيب",
+        saveall: "احفظ الكل",
+        add: "يضيف",
+        name: "اسم",
+        rowno: "عدد الصفوف",
+      },
+    },
+  },
+  fallbackLng: "en",
+  lng: "en",
+  interpolation: {
+    escapeValue: false, // React already escapes the values, so no need for additional escaping
+  },
+});
+
+export default i18n;
