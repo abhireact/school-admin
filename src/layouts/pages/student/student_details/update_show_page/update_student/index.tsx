@@ -977,6 +977,7 @@ const UpdateStudent = (props: any) => {
                       options={["Male", "Female"]}
                       renderInput={(params: any) => (
                         <MDInput
+                          required
                           name="gender"
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">

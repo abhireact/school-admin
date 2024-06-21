@@ -364,19 +364,44 @@ export default function StudentArchive(props: any) {
                       <tr>
                         <td
                           style={{
-                            fontSize: "18px",
+                            padding: "10px",
                             textAlign: "left",
+                            border: "1px solid #f0f2f5",
                           }}
                         >
-                          AVAILABLE STUDENTS
+                          <MDTypography
+                            variant="caption"
+                            fontWeight="bold"
+                            color="secondary"
+                            style={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            AVAILABLE STUDENTS
+                          </MDTypography>
                         </td>
                         <td
                           style={{
-                            fontSize: "18px",
+                            padding: "10px",
                             textAlign: "left",
+                            border: "1px solid #f0f2f5",
                           }}
                         >
-                          SELECT: &nbsp;
+                          <MDTypography
+                            variant="caption"
+                            fontWeight="bold"
+                            color="secondary"
+                            style={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            SELECT:
+                          </MDTypography>
+                          &nbsp;
                           <MDButton
                             color="info"
                             size="small"
@@ -401,15 +426,36 @@ export default function StudentArchive(props: any) {
                       {data?.length > 0
                         ? data?.map((item: any, index: any) => (
                             <tr key={index + item.user_id}>
-                              <td style={{ textAlign: "left" }}>
-                                <MDTypography variant="button" fontWeight="bold">
-                                  {item.admission_number} {item.user_id} {item.first_name}
+                              <td
+                                style={{
+                                  padding: "10px",
+                                  textAlign: "left",
+                                  border: "1px solid #f0f2f5",
+                                }}
+                              >
+                                <MDTypography
+                                  variant="caption"
+                                  fontWeight="bold"
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {item.user_id} {item.first_name}
                                   {item.middle_name} {item.last_name}
                                 </MDTypography>
                               </td>
 
-                              <td>
-                                <Checkbox
+                              <td
+                                style={{
+                                  padding: "10px",
+                                  textAlign: "start",
+                                  border: "1px solid #f0f2f5",
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
                                   checked={item.is_selected}
                                   onChange={() => handleCheckboxChange(index)}
                                 />

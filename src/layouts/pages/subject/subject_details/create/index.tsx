@@ -5,13 +5,14 @@ import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
+import Icon from "@mui/material/Icon";
 import { message } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import { FormControlLabel, FormControl, Radio, RadioGroup } from "@mui/material";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
@@ -70,7 +71,6 @@ const Create = (props: any) => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        {" "}
         <MDBox p={4}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
@@ -81,11 +81,12 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "80%" }}
+                required
                 variant="standard"
                 name="subject_name"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Subject Name *
+                    Subject Name
                   </MDTypography>
                 }
                 value={values.subject_name}
@@ -99,11 +100,12 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "80%" }}
+                required
                 variant="standard"
                 name="subject_code"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Subject Code *
+                    Subject Code
                   </MDTypography>
                 }
                 value={values.subject_code}
@@ -128,10 +130,11 @@ const Create = (props: any) => {
                 renderInput={(params: any) => (
                   <MDInput
                     InputLabelProps={{ shrink: true }}
+                    required
                     name="scoring_type"
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Scoring Type *
+                        Scoring Type
                       </MDTypography>
                     }
                     value={values.scoring_type}
@@ -149,12 +152,13 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "80%" }}
+                required
                 type="number"
                 variant="standard"
                 name="max_weekly_class"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Max Weekly Class *
+                    Max Weekly Class
                   </MDTypography>
                 }
                 value={values.max_weekly_class}
@@ -168,12 +172,13 @@ const Create = (props: any) => {
             <Grid item xs={12} sm={4}>
               <MDInput
                 sx={{ width: "80%" }}
+                required
                 type="number"
                 variant="standard"
                 name="no_of_classes"
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    No. of Classes *
+                    No. of Classes
                   </MDTypography>
                 }
                 value={values.no_of_classes}
@@ -203,33 +208,40 @@ const Create = (props: any) => {
                 helperText={touched.index && errors.index}
               />
             </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
+            <Grid item xs={6} sm={2.5}>
               <MDTypography variant="button" fontWeight="bold" color="secondary">
                 Core Subject
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
+            <Grid item xs={6} sm={1.5}>
+              <input
+                type="checkbox"
                 checked={values.is_core_subject}
                 onChange={handleChange}
                 name="is_core_subject"
               />
             </Grid>
-            <Grid item xs={6} sm={2.5} mt={4}>
+            <Grid item xs={6} sm={2.5}>
               <MDTypography variant="button" fontWeight="bold" color="secondary">
                 Lab Subject
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox checked={values.is_lab} onChange={handleChange} name="is_lab" />
+            <Grid item xs={6} sm={1.5}>
+              <input
+                type="checkbox"
+                checked={values.is_lab}
+                onChange={handleChange}
+                name="is_lab"
+              />
             </Grid>{" "}
-            <Grid item xs={6} sm={2.5} mt={4}>
+            <Grid item xs={6} sm={2.5}>
               <MDTypography variant="button" fontWeight="bold" color="secondary">
                 Extra-curricular Subject
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
+            <Grid item xs={6} sm={1.5}>
+              <input
+                type="checkbox"
                 checked={values.is_extra_curricular}
                 onChange={handleChange}
                 name="is_extra_curricular"
@@ -249,11 +261,12 @@ const Create = (props: any) => {
                 renderInput={(params) => (
                   <MDInput
                     name="academic_year"
+                    required
                     //onChange={handleChange}
                     value={values.academic_year}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Academic Year *
+                        Academic Year
                       </MDTypography>
                     }
                     {...params}
@@ -284,11 +297,12 @@ const Create = (props: any) => {
                 renderInput={(params) => (
                   <MDInput
                     name="class_name"
+                    required
                     // onChange={handleChange}
                     value={values.class_name}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Class Name *
+                        Class Name
                       </MDTypography>
                     }
                     {...params}
@@ -321,7 +335,7 @@ const Create = (props: any) => {
               </Grid>
               <Grid item ml={2} mt={4}>
                 <MDButton color="info" variant="contained" type="submit">
-                  Save
+                  Save &nbsp;<Icon>save</Icon>
                 </MDButton>
               </Grid>
             </Grid>

@@ -10,12 +10,13 @@ import Icon from "@mui/material/Icon";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SaveIcon from "@mui/icons-material/Save";
 import MDBox from "components/MDBox";
 const token = Cookies.get("token");
 import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { fetchStudent } from "layouts/pages/redux/dataSlice";
 const validationSchema = Yup.object().shape({
   to_section_name: Yup.string().required("Required *"),
   class_name: Yup.string().required("Required *"),
@@ -27,6 +28,7 @@ const validationSchema = Yup.object().shape({
 });
 export default function StudentSectionChange() {
   const [data, setData] = useState([]);
+  const dispatch = useDispatch();
   const initialValues = {
     academic_year: "",
     class_name: "",
@@ -64,7 +66,7 @@ export default function StudentSectionChange() {
           })
           .then(() => {
             action.resetForm();
-
+            setData([]);
             message.success("Student Section Changed Successfully");
           })
           .catch((error: any) => {
@@ -105,6 +107,7 @@ export default function StudentSectionChange() {
       })
       .catch((error: any) => {
         setData([]);
+        dispatch(fetchStudent() as any);
         console.log(error, "error");
         message.error(error.response.data.detail);
       });
@@ -129,6 +132,7 @@ export default function StudentSectionChange() {
     );
     console.log(data, "change checkbox");
   };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -363,19 +367,44 @@ export default function StudentSectionChange() {
                         <tr>
                           <td
                             style={{
-                              fontSize: "18px",
+                              padding: "10px",
                               textAlign: "left",
+                              border: "1px solid #f0f2f5",
                             }}
                           >
-                            AVAILABLE STUDENTS
+                            <MDTypography
+                              variant="caption"
+                              fontWeight="bold"
+                              color="secondary"
+                              style={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              AVAILABLE STUDENTS
+                            </MDTypography>
                           </td>
                           <td
                             style={{
-                              fontSize: "18px",
+                              padding: "10px",
                               textAlign: "left",
+                              border: "1px solid #f0f2f5",
                             }}
                           >
-                            SELECT: &nbsp;
+                            <MDTypography
+                              variant="caption"
+                              fontWeight="bold"
+                              color="secondary"
+                              style={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              SELECT:
+                            </MDTypography>
+                            &nbsp;
                             <MDButton
                               color="info"
                               size="small"
@@ -400,14 +429,34 @@ export default function StudentSectionChange() {
                         {data?.length > 0
                           ? data?.map((item: any, index: any) => (
                               <tr key={index + item.user_id}>
-                                <td style={{ textAlign: "left" }}>
-                                  <MDTypography variant="button" fontWeight="bold">
-                                    {item.admission_number} {item.user_id} {item.first_name}
+                                <td
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "left",
+                                    border: "1px solid #f0f2f5",
+                                  }}
+                                >
+                                  <MDTypography
+                                    variant="caption"
+                                    fontWeight="bold"
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                    }}
+                                  >
+                                    {item.user_id} {item.first_name}
                                     {item.middle_name} {item.last_name}
                                   </MDTypography>
                                 </td>
 
-                                <td>
+                                <td
+                                  style={{
+                                    padding: "10px",
+                                    textAlign: "start",
+                                    border: "1px solid #f0f2f5",
+                                  }}
+                                >
                                   <input
                                     type="checkbox"
                                     checked={item.is_selected}

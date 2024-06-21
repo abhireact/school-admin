@@ -11,8 +11,8 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmployeeType from "layouts/pages/employee/employee_type";
 import EmployeeInfo from "layouts/pages/employee/employee_details";
-import Academic from "layouts/pages/academic_year";
-import Class from "layouts/pages/class";
+import Academic from "layouts/pages/school/school_academic_year";
+import Class from "layouts/pages/school/school_class";
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee/department";
 import PortraitIcon from "@mui/icons-material/Portrait";
@@ -42,9 +42,9 @@ import FineParticular from "layouts/pages/fee/manage_fee/fine";
 import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
 import StudentPromotion from "layouts/pages/student/student_promotion";
-import Subject from "layouts/pages/subject/subjectdetails";
+import SubjectDetails from "layouts/pages/subject/subject_details";
 import SectionSubject from "layouts/pages/subject/section_subject";
-import EmployeeSubject from "layouts/pages/subject/subject_teacher";
+import SubjectTeacher from "layouts/pages/subject/subject_teacher";
 import StudentSectionChange from "layouts/pages/student/student_section_change";
 
 //EXAMINATION module
@@ -156,50 +156,50 @@ const routes = [
       {
         name: "Student Details",
         key: "studentdetails",
-        route: "/student/student_details",
+        route: "student/student_details",
         component: <StudentDetails />,
       },
       {
         name: "Student Archive",
         key: "studentarchive",
-        route: "/student/student_archive",
+        route: "student/student_archive",
         component: <StudentArchive />,
       },
 
       {
         name: "Student Promotion",
         key: "studentpromotion",
-        route: "/student/student_promoton",
+        route: "student/student_promoton",
         component: <StudentPromotion />,
       },
       {
         name: "Student Section Change",
         key: "studentsectionchange",
-        route: "/student/student_section_change",
+        route: "student/student_section_change",
         component: <StudentSectionChange />,
       },
       {
         name: "Caste",
         key: "caste",
-        route: "/student/caste",
+        route: "student/caste",
         component: <Caste />,
       },
       {
         name: "Caste Category",
         key: "castecategory",
-        route: "/student/castecategory",
+        route: "student/castecategory",
         component: <CasteCategory />,
       },
       {
         name: "Student Category",
         key: "studentcategory",
-        route: "/student/studentcategory",
+        route: "student/studentcategory",
         component: <StudentCategory />,
       },
       {
         name: "House Details",
         key: "housedetails",
-        route: "/student/housedetails",
+        route: "student/housedetails",
         component: <HouseDetails />,
       },
 
@@ -224,32 +224,32 @@ const routes = [
     collapse: [
       {
         name: "Subject Details",
-        key: "subjectdetails",
-        route: "pages/subject/subjectdetails",
-        component: <Subject />,
+        key: "subject_details",
+        route: "subject/subject_details",
+        component: <SubjectDetails />,
       },
       {
         name: "Subject Teacher",
-        key: "employeesubject",
-        route: "pages/subject/employeesubject",
-        component: <EmployeeSubject />,
+        key: "subject_teacher",
+        route: "subject/subject_teacher",
+        component: <SubjectTeacher />,
       },
       {
         name: "Section Subject",
-        key: "sectionsubject",
-        route: "pages/subject/sectionsubject",
+        key: "section_subject",
+        route: "subject/section_subject",
         component: <SectionSubject />,
       },
       {
         name: "Student Subject",
         key: "student_subject",
-        route: "pages/subject/student_subject",
+        route: "subject/student_subject",
         component: <StudentSubject />,
       },
       {
         name: "Subject Report",
         key: "subject_report",
-        route: "pages/subject/subject_report",
+        route: "subject/subject_report",
         component: <SubjectReport />,
       },
     ],
@@ -358,34 +358,34 @@ const routes = [
       {
         name: "Employee Info",
         key: "employee_info",
-        route: "pages/employee/employee_info",
+        route: "employee/employee_info",
         component: <EmployeeInfo />,
       },
 
       {
         name: "Employee Grade",
         key: "employee_grade",
-        route: "pages/employee/employee_grade",
+        route: "employee/employee_grade",
         component: <EmpGrade />,
       },
 
       {
         name: "Employee Profile",
         key: "employee_profile",
-        route: "pages/employee/employee_profile",
+        route: "employee/employee_profile",
         component: <EmployeeProfile />,
       },
       {
         name: "Employee Type",
         key: "employee_type",
-        route: "pages/employee/employee_type",
+        route: "employee/employee_type",
         component: <EmployeeType />,
       },
 
       {
         name: "Department",
         key: "department",
-        route: "pages/employee/department",
+        route: "employee/department",
         component: <Department />,
       },
       {
