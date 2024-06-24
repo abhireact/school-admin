@@ -593,13 +593,17 @@ const Update = (props: any) => {
                       <ModeEditOutlineIcon />
                     </MDAvatar>
                   </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <Avatar
-                      alt="student"
-                      src={studentInfo.stud_img_data}
-                      sx={{ width: 84, height: 84 }}
-                    />
-                  </Grid>
+                  {studentInfo.stud_img_data ? (
+                    <Grid item xs={12} sm={12}>
+                      <Avatar
+                        alt="student"
+                        src={studentInfo.stud_img_data}
+                        sx={{ width: 84, height: 84 }}
+                      />
+                    </Grid>
+                  ) : (
+                    <></>
+                  )}
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
                       First Name
