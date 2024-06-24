@@ -11,7 +11,7 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import { FormControlLabel, FormControl, Radio, RadioGroup } from "@mui/material";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
@@ -197,8 +197,9 @@ const Update = (props: any) => {
                 Core Subject
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
+            <Grid item xs={6} sm={1.5} mt={4}>
+              <input
+                type="checkbox"
                 checked={values.is_core_subject}
                 onChange={handleChange}
                 name="is_core_subject"
@@ -209,16 +210,22 @@ const Update = (props: any) => {
                 Lab Subject
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox checked={values.is_lab} onChange={handleChange} name="is_lab" />
+            <Grid item xs={6} sm={1.5} mt={4}>
+              <input
+                type="checkbox"
+                checked={values.is_lab}
+                onChange={handleChange}
+                name="is_lab"
+              />
             </Grid>
             <Grid item xs={6} sm={2.5} mt={4}>
               <MDTypography variant="button" fontWeight="bold" color="secondary">
                 Extra-curricular Subject
               </MDTypography>
             </Grid>
-            <Grid item xs={6} sm={1.5} mt={3}>
-              <Checkbox
+            <Grid item xs={6} sm={1.5} mt={4}>
+              <input
+                type="checkbox"
                 checked={values.is_extra_curricular}
                 onChange={handleChange}
                 name="is_extra_curricular"

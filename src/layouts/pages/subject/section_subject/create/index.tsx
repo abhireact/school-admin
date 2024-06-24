@@ -110,42 +110,77 @@ const Create = (props: any) => {
                       <tr>
                         <td
                           style={{
-                            fontSize: "18px",
+                            padding: "10px",
                             textAlign: "left",
+                            border: "1px solid #f0f2f5",
                           }}
-                          rowSpan={2}
                         >
-                          SUBJECT
+                          <MDTypography
+                            variant="caption"
+                            fontWeight="bold"
+                            color="secondary"
+                            style={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            SUBJECT
+                          </MDTypography>
                         </td>
                         <td
                           style={{
-                            fontSize: "18px",
+                            padding: "10px",
                             textAlign: "left",
+                            border: "1px solid #f0f2f5",
                           }}
-                          rowSpan={2}
                         >
-                          TEACHER
+                          <MDTypography
+                            variant="caption"
+                            fontWeight="bold"
+                            color="secondary"
+                            style={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            TEACHER
+                          </MDTypography>
                         </td>
                         <td
                           style={{
-                            fontSize: "18px",
-                            textAlign: "center",
+                            padding: "10px",
+                            textAlign: "left",
+                            border: "1px solid #f0f2f5",
                           }}
-                          rowSpan={2}
                         >
-                          SELECT
+                          <MDTypography
+                            variant="caption"
+                            fontWeight="bold"
+                            color="secondary"
+                            style={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            SELECT:
+                          </MDTypography>
+                          &nbsp;
                           <MDButton
                             color="info"
                             size="small"
-                            variant="text"
+                            variant="outlined"
                             onClick={() => handleSelectAll()}
                           >
                             All
                           </MDButton>
+                          &nbsp; &nbsp;
                           <MDButton
                             color="info"
                             size="small"
-                            variant="text"
+                            variant="outlined"
                             onClick={() => handleSelectNone()}
                           >
                             None
@@ -157,12 +192,32 @@ const Create = (props: any) => {
                       {data?.length > 0
                         ? data?.map((item: any, index: any) => (
                             <tr key={index + item.subject_name}>
-                              <td style={{ textAlign: "left" }}>
-                                <MDTypography variant="button" fontWeight="bold">
+                              <td
+                                style={{
+                                  padding: "10px",
+                                  textAlign: "left",
+                                  border: "1px solid #f0f2f5",
+                                }}
+                              >
+                                <MDTypography
+                                  variant="caption"
+                                  fontWeight="bold"
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
                                   {item.subject_name}
                                 </MDTypography>
                               </td>
-                              <td style={{ textAlign: "left" }}>
+                              <td
+                                style={{
+                                  padding: "10px",
+                                  textAlign: "start",
+                                  border: "1px solid #f0f2f5",
+                                }}
+                              >
                                 <Autocomplete
                                   disableClearable
                                   sx={{ width: "100%" }}
@@ -217,8 +272,15 @@ const Create = (props: any) => {
                                   )}
                                 />
                               </td>
-                              <td style={{ textAlign: "center" }}>
-                                <Checkbox
+                              <td
+                                style={{
+                                  padding: "10px",
+                                  textAlign: "start",
+                                  border: "1px solid #f0f2f5",
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
                                   checked={item.is_selected}
                                   onChange={() => handleCheckboxChange(index)}
                                 />

@@ -69,7 +69,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const UpdateStudent = (props: any) => {
-  const { username, setOpenupdate, fetchData, dialogNumber } = props;
+  const { username, setOpenupdate, fetchStudentInfo, dialogNumber } = props;
   const [studentInfo, setStudentInfo] = useState<any>({});
   const [guardianInfo, setGuardianInfo] = useState([]);
 
@@ -93,7 +93,7 @@ const UpdateStudent = (props: any) => {
         console.error("Error fetching guardian data:", error);
       });
   };
-  const fetchStudentInfo = () => {
+  const fetchStudentByUsername = () => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_URL}/mg_student/retrive`,
@@ -118,7 +118,7 @@ const UpdateStudent = (props: any) => {
 
   useEffect(() => {
     fetchGuardian();
-    fetchStudentInfo();
+    fetchStudentByUsername();
   }, []);
   const [guardianData, setGuardianData] = useState({});
 
@@ -318,7 +318,7 @@ const UpdateStudent = (props: any) => {
           })
           .then(() => {
             message.success("Student Updated Successfully!");
-            //fetchData();
+            fetchStudentInfo();
             props.handleClose();
           })
           .catch((error: any) => {

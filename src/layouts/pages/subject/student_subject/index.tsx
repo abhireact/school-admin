@@ -13,6 +13,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 const token = Cookies.get("token");
+
 import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 const validationSchema = Yup.object().shape({
@@ -22,10 +23,11 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
 });
+let cookies_academic_year = Cookies.get("academic_year");
 export default function StudentSectionChange() {
   const [data, setData] = useState([]);
   const initialValues = {
-    academic_year: "",
+    academic_year: cookies_academic_year,
     class_name: "",
     section_name: "",
     student_data: [] as any[],
@@ -56,8 +58,8 @@ export default function StudentSectionChange() {
           })
           .then(() => {
             action.resetForm();
-
-            message.success("Student Section Changed Successfully");
+            setData([]);
+            message.success("Student Subject Assigned Successfully");
           })
           .catch((error: any) => {
             console.log(error, "error");
@@ -149,6 +151,7 @@ export default function StudentSectionChange() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  value={values.academic_year}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "academic_year", value } });
                   }}
@@ -270,9 +273,9 @@ export default function StudentSectionChange() {
                   </MDButton>
                 </Grid>
                 {data.length > 0 && (
-                  <Grid item mr={8}>
+                  <Grid item>
                     <MDButton color="info" variant="contained" type="submit">
-                      Save
+                      Save &nbsp;<Icon>save</Icon>
                     </MDButton>
                   </Grid>
                 )}
