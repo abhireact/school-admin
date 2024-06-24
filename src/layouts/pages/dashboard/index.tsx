@@ -14,9 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Myrbacroutes from "myrbacroutes";
-import StudentIDCard from "../student/studentID_card";
-import StudentIDCard2 from "../student/studentID_card/index2";
-import StudentIDCard3 from "../student/studentID_card/index3";
+
 import MyDataTableComponent from "./test2";
 // import Table from "./component/Table";
 

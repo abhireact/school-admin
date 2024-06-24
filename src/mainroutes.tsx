@@ -4,24 +4,24 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Icon from "@mui/material/Icon";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
-import StudentDetails from "layouts/pages/student/student_details";
-import StudentArchive from "layouts/pages/student/student_archive";
-import EmployeeProfile from "layouts/pages/employee/employee_profile";
+import StudentDetails from "layouts/pages/student_details/student";
+import StudentArchive from "layouts/pages/student_details/student_archive";
+import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import EmployeeType from "layouts/pages/employee/employee_type";
-import EmployeeInfo from "layouts/pages/employee/employee_details";
+import EmployeeType from "layouts/pages/employee_details/employee_type";
+import EmployeeDetails from "layouts/pages/employee_details";
 import Academic from "layouts/pages/school/school_academic_year";
 import Class from "layouts/pages/school/school_class";
 import Wings from "layouts/pages/school/school_wings";
-import Department from "layouts/pages/employee/department";
+import Department from "layouts/pages/employee_details/department";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import BadgeIcon from "@mui/icons-material/Badge";
-import EmpGrade from "layouts/pages/employee/employee_grade";
-import Caste from "layouts/pages/student/caste";
-import CasteCategory from "layouts/pages/student/caste_category";
-import StudentCategory from "layouts/pages/student/student_category";
-import HouseDetails from "layouts/pages/student/house_details";
+import EmpGrade from "layouts/pages/employee_details/employee_grade";
+import Caste from "layouts/pages/student_details/caste";
+import CasteCategory from "layouts/pages/student_details/caste_category";
+import StudentCategory from "layouts/pages/student_details/student_category";
+import HouseDetails from "layouts/pages/student_details/house_details";
 import SchoolAccount from "layouts/pages/school/school_account";
 import ExcessFee from "layouts/pages/fee/manage_fee/excess_fee";
 import LateFee from "layouts/pages/fee/manage_fee/late_fee";
@@ -41,26 +41,27 @@ import MessageTemplate from "layouts/pages/notifications/templates/message_templ
 import FineParticular from "layouts/pages/fee/manage_fee/fine";
 import FeeDefaulterReport from "layouts/pages/fee/fee_report/fee_defaulter";
 import FeeReceipt from "layouts/pages/fee/manage_fee/generate_fee_slip";
-import StudentPromotion from "layouts/pages/student/student_promotion";
-import SubjectDetails from "layouts/pages/subject/subject_details";
-import SectionSubject from "layouts/pages/subject/section_subject";
-import SubjectTeacher from "layouts/pages/subject/subject_teacher";
-import StudentSectionChange from "layouts/pages/student/student_section_change";
+import StudentPromotion from "layouts/pages/student_details/student_promotion";
+import SubjectDetails from "layouts/pages/subject_details/subject";
+import SectionSubject from "layouts/pages/subject_details/section_subject";
+import SubjectTeacher from "layouts/pages/subject_details/subject_teacher";
+import StudentSectionChange from "layouts/pages/student_details/student_section_change";
 
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
-import AssignClassTeacher from "layouts/pages/employee/asign_class_teacher";
-import WeekDays from "layouts/pages/employee/week_days";
-import ClassTiming from "layouts/pages/employee/class_timing";
+import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
+import WeekDays from "layouts/pages/employee_details/week_days";
+import ClassTiming from "layouts/pages/employee_details/class_timing";
 import TimeTable from "layouts/pages/Attendance/time_table";
 import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/school_admin_sms_configuration";
-import StudentSubject from "layouts/pages/subject/student_subject";
-import SubjectReport from "layouts/pages/subject/subject_report";
+import StudentSubject from "layouts/pages/subject_details/student_subject";
+import SubjectReport from "layouts/pages/subject_details/subject_report";
 import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
 import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-portal_status";
 import AdmissionForm from "layouts/pages/admission/new_admission";
 import StudentAdmission from "layouts/pages/admission";
 import FormSetting from "layouts/pages/admission/form_setting";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 
 const routes = [
   {
@@ -356,10 +357,10 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Employee Info",
-        key: "employee_info",
-        route: "employee/employee_info",
-        component: <EmployeeInfo />,
+        name: "Employee Details",
+        key: "employee_details",
+        route: "employee/employee_details",
+        component: <EmployeeDetails />,
       },
 
       {
