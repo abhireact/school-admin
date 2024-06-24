@@ -26,7 +26,6 @@ import {
   Avatar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
@@ -531,23 +530,6 @@ const Update = (props: any) => {
   };
   const [imageSrc, setImageSrc] = useState("");
 
-  useEffect(() => {
-    const base64ImageString = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...";
-
-    try {
-      // This checks if the Base64 string can be decoded
-      const isValidBase64 =
-        btoa(atob(base64ImageString.split(",")[1])) === base64ImageString.split(",")[1];
-      if (isValidBase64) {
-        setImageSrc(base64ImageString);
-      } else {
-        console.error("Invalid Base64 string");
-      }
-    } catch (error) {
-      console.error("Failed to decode Base64 string:", error);
-    }
-  }, []);
-
   return (
     <>
       <Dialog open={createOpen} onClose={handleCloseCreate} maxWidth="md">
@@ -561,7 +543,6 @@ const Update = (props: any) => {
         <UpdateGuardian
           guardianData={guardianData}
           setOpen={setOpen}
-          fetchData={fetchData}
           fetchGuardian={fetchGuardian}
         />
       </Dialog>
@@ -571,7 +552,7 @@ const Update = (props: any) => {
           handleClose={handleDialogbox}
           username={username}
           setOpenupdate={setOpenupdate}
-          fetchData={fetchData}
+          fetchStudentInfo={fetchStudentInfo}
         />
       </Dialog>
       <Grid container spacing={3}>
@@ -612,17 +593,17 @@ const Update = (props: any) => {
                       <ModeEditOutlineIcon />
                     </MDAvatar>
                   </Grid>
-                  <Grid item xs={12} sm={12}>
-                    {imageSrc ? (
-                      <img src={imageSrc} alt="Base64 Image" />
-                    ) : (
+                  {studentInfo.stud_img_data ? (
+                    <Grid item xs={12} sm={12}>
                       <Avatar
                         alt="student"
-                        src="./assests/edit_student.png"
+                        src={studentInfo.stud_img_data}
                         sx={{ width: 84, height: 84 }}
                       />
-                    )}
-                  </Grid>
+                    </Grid>
+                  ) : (
+                    <></>
+                  )}
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
                       First Name

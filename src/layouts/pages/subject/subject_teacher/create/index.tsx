@@ -1,6 +1,7 @@
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import Icon from "@mui/material/Icon";
 import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
@@ -107,10 +108,30 @@ const Create = (props: any) => {
       <Card>
         <MDBox p={4}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={12} pt={2} pl={2}>
+            <Grid item xs={12} sm={6} pt={2} pl={2}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
                 {employeedata.employee_name}&apos;s Subjects
               </MDTypography>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              pt={2}
+              pl={2}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              {!(data.length > 0) && (
+                <MDButton
+                  color="dark"
+                  variant="contained"
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
+                  Back
+                </MDButton>
+              )}
             </Grid>
             <Grid item xs={12} sm={4}>
               <Autocomplete
@@ -126,11 +147,12 @@ const Create = (props: any) => {
                 renderInput={(params) => (
                   <MDInput
                     name="academic_year"
+                    required
                     //onChange={handleChange}
                     value={values.academic_year}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Academic Year *
+                        Academic Year
                       </MDTypography>
                     }
                     {...params}
@@ -161,11 +183,12 @@ const Create = (props: any) => {
                 renderInput={(params) => (
                   <MDInput
                     name="class_name"
+                    required
                     // onChange={handleChange}
                     value={values.class_name}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Class Name *
+                        Class Name
                       </MDTypography>
                     }
                     {...params}
@@ -178,20 +201,30 @@ const Create = (props: any) => {
                 )}
               />
             </Grid>
-            <Grid item container xs={12} sm={4} sx={{ display: "flex", justifyContent: "center" }}>
-              <Grid item>
-                <MDButton
-                  color="info"
-                  variant="contained"
-                  onClick={() => {
-                    handleShowData();
-                  }}
-                >
-                  Show Data
+            <Grid
+              item
+              container
+              xs={12}
+              sm={12}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <MDButton
+                color="info"
+                variant="contained"
+                onClick={() => {
+                  handleShowData();
+                }}
+              >
+                Show Data
+              </MDButton>
+              {data.length > 0 && (
+                <MDButton color="info" variant="contained" type="submit">
+                  Save &nbsp;<Icon>save</Icon>
                 </MDButton>
-              </Grid>
+              )}
             </Grid>
-          </Grid>{" "}
+          </Grid>
+
           <Grid item xs={12} sm={12} m={4}>
             {data.length > 0 && (
               <div style={{ maxHeight: "400px", overflowY: "auto", position: "relative" }}>
@@ -202,23 +235,59 @@ const Create = (props: any) => {
                     <tr>
                       <td
                         style={{
-                          fontSize: "18px",
+                          padding: "10px",
                           textAlign: "left",
+                          border: "1px solid #f0f2f5",
                         }}
                       >
-                        AVAILABLE SUBJECTS
+                        <MDTypography
+                          variant="caption"
+                          fontWeight="bold"
+                          color="secondary"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          AVAILABLE SUBJECTS
+                        </MDTypography>
                       </td>
                       <td
                         style={{
-                          fontSize: "18px",
+                          padding: "10px",
                           textAlign: "left",
+                          border: "1px solid #f0f2f5",
                         }}
                       >
-                        SELECT:
-                        <MDButton color="info" variant="text" onClick={() => handleSelectAll()}>
+                        <MDTypography
+                          variant="caption"
+                          fontWeight="bold"
+                          color="secondary"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          SELECT:
+                        </MDTypography>
+                        &nbsp;
+                        <MDButton
+                          color="info"
+                          size="small"
+                          variant="outlined"
+                          onClick={() => handleSelectAll()}
+                        >
                           All
                         </MDButton>
-                        <MDButton color="info" variant="text" onClick={() => handleSelectNone()}>
+                        &nbsp; &nbsp;
+                        <MDButton
+                          color="info"
+                          size="small"
+                          variant="outlined"
+                          onClick={() => handleSelectNone()}
+                        >
                           None
                         </MDButton>
                       </td>
@@ -228,14 +297,35 @@ const Create = (props: any) => {
                     {data?.length > 0
                       ? data?.map((item: any, index: any) => (
                           <tr key={index + item.subject_name}>
-                            <td style={{ textAlign: "left" }}>
-                              <MDTypography variant="button" fontWeight="bold">
+                            <td
+                              style={{
+                                padding: "10px",
+                                textAlign: "left",
+                                border: "1px solid #f0f2f5",
+                              }}
+                            >
+                              <MDTypography
+                                variant="caption"
+                                fontWeight="bold"
+                                style={{
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                }}
+                              >
                                 {item.subject_name}
                               </MDTypography>
                             </td>
 
-                            <td>
-                              <Checkbox
+                            <td
+                              style={{
+                                padding: "10px",
+                                textAlign: "start",
+                                border: "1px solid #f0f2f5",
+                              }}
+                            >
+                              <input
+                                type="checkbox"
                                 checked={item.is_selected}
                                 onChange={() => handleCheckboxChange(index)}
                               />
@@ -248,26 +338,21 @@ const Create = (props: any) => {
               </div>
             )}
           </Grid>
-          <Grid container xs={12} sm={12} sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Grid item mt={4}>
-              <MDButton
-                color="dark"
-                variant="contained"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Back
-              </MDButton>
-            </Grid>{" "}
-            {data.length > 0 && (
-              <Grid item mr={8} mt={4}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Save
+          {data.length > 0 && (
+            <Grid container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid item mt={2}>
+                <MDButton
+                  color="dark"
+                  variant="contained"
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
+                  Back
                 </MDButton>
               </Grid>
-            )}
-          </Grid>
+            </Grid>
+          )}
         </MDBox>
       </Card>
     </form>
