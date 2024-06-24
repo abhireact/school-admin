@@ -589,6 +589,7 @@ const Update = (props: any) => {
             <Grid item sm={4} xs={12}>
               <Autocomplete
                 sx={{ width: "90%" }}
+                disableClearable
                 onChange={(event, value) => {
                   handleChange({
                     target: { name: "state", value },
