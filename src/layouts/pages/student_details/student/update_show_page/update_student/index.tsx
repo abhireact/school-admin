@@ -244,7 +244,7 @@ const UpdateStudent = (props: any) => {
         mother_tongue: studentInfo.mother_tongue || "",
         pen_number: studentInfo.pen_number || "",
         house_details: studentInfo.house_details || "",
-        student_category: studentInfo.student_category || "",
+        quota: studentInfo.quota || "",
         caste_category: studentInfo.caste_category || "",
         caste: studentInfo.caste || "",
         address_line1: studentInfo.address_line1 || "",
@@ -259,7 +259,7 @@ const UpdateStudent = (props: any) => {
         pr_city: studentInfo.pr_city || "",
         pr_state: studentInfo.pr_state || "",
         pr_country: studentInfo.pr_country || "",
-        quota: studentInfo.quota || "",
+
         mobile_number: studentInfo.mobile_number || "",
         alt_phone_number: studentInfo.alt_phone_number || "",
         email: studentInfo.email || "",
@@ -892,28 +892,28 @@ const UpdateStudent = (props: any) => {
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
                       sx={{ width: "100%" }}
-                      value={values.student_category}
+                      value={values.quota}
                       onChange={(event, value) => {
                         handleChange({
-                          target: { name: "student_category", value },
+                          target: { name: "quota", value },
                         });
                       }}
                       disableClearable
                       options={studentcategoryData.map((acd) => acd.category_name)}
                       renderInput={(params: any) => (
                         <MDInput
-                          name="student_category"
+                          name="quota"
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Student Category
+                              Quota
                             </MDTypography>
                           }
                           onChange={handleChange}
-                          value={values.student_category}
+                          value={values.quota}
                           {...params}
                           variant="standard"
-                          error={touched.student_category && Boolean(errors.student_category)}
-                          helperText={touched.student_category && errors.student_category}
+                          error={touched.quota && Boolean(errors.quota)}
+                          helperText={touched.quota && errors.quota}
                         />
                       )}
                     />

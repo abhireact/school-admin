@@ -84,7 +84,7 @@ const Create = (props: any) => {
           })
           .then(() => {
             message.success("Created successfully!");
-
+            handleClose();
             fetchData();
           })
           .catch((error: any) => {
@@ -203,27 +203,6 @@ const Create = (props: any) => {
                     (errors.academic as FormikErrors<Academic>[])?.[index]?.end_date
                   }
                 />
-              </Grid>
-
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                mt={2}
-                sx={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                {index == values.academic.length - 1 && (
-                  <IconButton onClick={() => addAcademic()}>
-                    <AddIcon />
-                  </IconButton>
-                )}
-
-                <IconButton
-                  onClick={() => removeAcademic(index)}
-                  disabled={values.academic.length === 1}
-                >
-                  <DeleteIcon />
-                </IconButton>
               </Grid>
             </React.Fragment>
           ))}
