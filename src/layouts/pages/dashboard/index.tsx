@@ -18,6 +18,8 @@ import StudentIDCard from "../student/studentID_card";
 import StudentIDCard2 from "../student/studentID_card/index2";
 import StudentIDCard3 from "../student/studentID_card/index3";
 import MyDataTableComponent from "./test2";
+import FeeCollectionListReport from "../fee/fee_report/daily_fee_collection_list";
+import FeeCollectionReport from "../fee/fee_report/fee_collection_report";
 // import Table from "./component/Table";
 
 const MyDashboard = () => {
@@ -41,8 +43,9 @@ const MyDashboard = () => {
   const renderedComponent = <Myrbacroutes />;
   // console.log("Rendered component data:", renderedComponent);
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
+    // <DashboardLayout>
+    //   <DashboardNavbar />
+    <>
       <Grid container spacing={2} display={"flex"} justifyContent="center">
         <h1>My Dashboard </h1>
         {/* {renderedComponent} */}
@@ -56,8 +59,11 @@ const MyDashboard = () => {
           <StudentIDCard3 />{" "}
         </Grid> */}
       </Grid>
-      <MyDataTableComponent />{" "}
-    </DashboardLayout>
+      {/* <MyDataTableComponent />{" "} */}
+      {/* <FeeCollectionListReport /> */}
+      <FeeCollectionReport />
+      {/* </DashboardLayout> */}
+    </>
   );
 };
 

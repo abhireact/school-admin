@@ -202,7 +202,7 @@ const Create = (props: any) => {
                   <MDInput
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Late Fee Calculatin Type
+                        Late Fee Calculation Type
                       </MDTypography>
                     }
                     InputLabelProps={{ shrink: true }}

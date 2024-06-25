@@ -3,10 +3,114 @@
 .hidden-text {
   display: none;
 }
-
+.display-flex{
+  display: flex;
+  flex-direction: column;
+}
 /* Ensures that the hidden text is visible when printing */
 @media print {
   .hidden-text {
     display: block;
   }
+}
+.pdf-container {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  position: relative;
+  padding: 40px; /* Add padding here */
+  box-sizing: border-box; /* Ensure padding doesn't affect overall size */
+}
+.pdf-content {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.9); /* Adjust opacity as needed */
+}
+
+.additional-info {
+  margin-bottom: 20px;
+}
+
+.additional-info p {
+  margin: 5px 0;
+}
+
+.pdf-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.pdf-table th,
+.pdf-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.pdf-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.pdf-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.pdf-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.cell-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cell-list li {
+  margin-bottom: 5px;
+}
+
+.pdf-child-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.pdf-child-table th, .pdf-child-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.pdf-child-table th {
+  background-color: #f2f2f2;
+}
+.extra-data {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.left-data, .right-data {
+  width: 48%; /* Adjust as needed */
+}
+
+.left-data p, .right-data p {
+  margin: 5px 0;
+}
+
+.extra-data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.extra-data-table th, .extra-data-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.extra-data-table th {
+  background-color: #f2f2f2;
 }

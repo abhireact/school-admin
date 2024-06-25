@@ -455,7 +455,7 @@
 
 // export default MyDataTableComponent;
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
@@ -464,8 +464,16 @@ import { Grid } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useFormik } from "formik";
+import { useReactToPrint } from "react-to-print";
+import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
+import PdfGenerator from "../Mindcompdf/PdfGenerator";
+import { usePDF } from "react-to-pdf";
+import HeaderPdf from "../Mindcompdf/HeaderPdf";
 
 const MyDataTableComponent = () => {
+  const { toPDF, targetRef } = usePDF({ filename: "demo.pdf" });
+
   let { values, handleChange, handleSubmit, setFieldValue, touched, errors, handleBlur } =
     useFormik({
       initialValues: {
@@ -944,15 +952,52 @@ const MyDataTableComponent = () => {
     }),
     [flattenedData, selectedRows, selectAll]
   );
-
+  const tableRef = useRef();
+  // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  const handlePrint = useReactToPrint({
+    content: () => tableRef.current,
+  });
   return (
-    <DataTable
-      table={dataTableData}
-      isSorted={false}
-      entriesPerPage={false}
-      showTotalEntries={false}
-      importbtn
-    />
+    <>
+      {/* <MDBox ref={tableRef}>
+        <PdfGenerator
+          data={dataTableData.rows}
+          dataShown="fcnnjdj"
+          // hiddenText={hiddenText}
+          isPdfMode={true}
+          hiddenText={""}
+        />
+      </MDBox>
+      <MDBox>
+        <MDButton onClick={handlePrint}>Print</MDButton>
+      </MDBox>
+       */}
+      <MDButton variant="gradient" color="info" onClick={() => toPDF()}>
+        Print pdf
+      </MDButton>
+      <MDBox ref={targetRef}>
+        <HeaderPdf isPdfMode={true} />
+        <MDTypography variant="h6" color="primary">
+          Fee Concession Report
+        </MDTypography>
+        <Grid container spacing={3} sm={12}>
+          {" "}
+          <Grid item sm={12}>
+            <MDTypography>Name:Hariom</MDTypography>
+          </Grid>
+          <Grid item sm={12}>
+            <MDTypography>Class:VII A</MDTypography>
+          </Grid>
+        </Grid>
+        <DataTable
+          table={dataTableData}
+          isSorted={false}
+          entriesPerPage={false}
+          showTotalEntries={false}
+          importbtn
+        />
+      </MDBox>
+    </>
   );
 };
 

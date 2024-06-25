@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useFormik } from "formik";
@@ -19,6 +19,8 @@ import { useSelector } from "react-redux";
 
 import { Tree } from "antd";
 import type { TreeDataNode, TreeProps } from "antd";
+import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
+import { useReactToPrint } from "react-to-print";
 
 const token = Cookies.get("token");
 
@@ -188,10 +190,25 @@ export default function FeeDefaulterReport() {
       remaining_amount: row.amount_paying,
     })),
   };
+  const tableRef = useRef();
+  const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  const handlePrint = useReactToPrint({
+    content: () => tableRef.current,
+  });
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <form onSubmit={handleSubmit}>
+        <MDBox ref={tableRef}>
+          <PdfGenerator
+            data={feeDefaulter.rows}
+            hiddenText={hiddenText}
+            isPdfMode={true}
+            additionalInfo={undefined}
+          />
+        </MDBox>
+        <MDButton onClick={handlePrint}>Print</MDButton>
+
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12}>
             <Card>
