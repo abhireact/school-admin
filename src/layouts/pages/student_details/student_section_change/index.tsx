@@ -348,7 +348,7 @@ export default function StudentSectionChange() {
                 {data.length > 0 && (
                   <Grid item>
                     <MDButton color="info" variant="contained" type="submit">
-                      Save&nbsp;
+                      Submit&nbsp;
                       <SaveIcon />
                     </MDButton>
                   </Grid>

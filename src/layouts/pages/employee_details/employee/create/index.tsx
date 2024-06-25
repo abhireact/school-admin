@@ -18,8 +18,6 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 const token = Cookies.get("token");
 
 const Create = (props: any) => {
-  const [referred, setReferred] = useState(false);
-
   const { handleClose, fetchData } = props;
   const validationSchema = Yup.object().shape({
     employee_dob: Yup.date()
@@ -34,8 +32,9 @@ const Create = (props: any) => {
     admission_number: Yup.string(),
     fee_code: Yup.string(),
     first_name: Yup.string().required("Required *"),
-
+    middle_name: Yup.string(),
     last_name: Yup.string(),
+    aadhar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format"),
     mobile_number: Yup.string()
       .matches(/^[0-9]{10}$/, "Incorrect Format")
       .required("Required *"),
@@ -110,7 +109,7 @@ const Create = (props: any) => {
         console.error("Error fetching data:", error);
       });
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_employee_positions`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_role`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -134,16 +133,17 @@ const Create = (props: any) => {
         last_name: "",
         gender: "",
         employee_dob: "",
-        empoy_profile: "",
+        role_name: "",
         employee_category: "",
         employee_department: "",
         job_title: "",
         qualification: "",
         total_yrs_experience: 0,
         total_month_experience: 0,
+        max_no_of_class: 0,
         employee_type: "",
         ltc_applicable: false,
-        employee_grade: "None",
+        employee_grade: "",
         status: "",
         aadhar_number: "",
 
@@ -151,10 +151,10 @@ const Create = (props: any) => {
         esi_number: "",
         una_number: "",
         phone_number: "",
-        employee_notification: "",
-        employee_subscription: "",
-        employee_email_notificaton: "",
-        employee_email_subscription: "",
+        employee_notification: false,
+        employee_subscription: false,
+        employee_email_notificaton: false,
+        employee_email_subscription: false,
         emergency_contact_name: "",
         emergency_contact_number: "",
         hobby: "",
@@ -162,7 +162,6 @@ const Create = (props: any) => {
         sport_activity_files: [],
         extra_curricular: "",
         extra_curricular_files: [],
-
         bank_name: "",
         account_name: "",
         branch_name: "",
@@ -171,6 +170,7 @@ const Create = (props: any) => {
         mother_name: "",
         father_name: "",
         blood_group: "",
+        is_refered: false,
         refered_by: "",
         designation: "",
         address_line1: "",
@@ -190,22 +190,28 @@ const Create = (props: any) => {
         mobile_number: "",
         email: "",
         employee_img: null,
+        language: [],
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         setLoading(true);
         let dob = values.employee_dob;
-        let sendData = { ...values };
+        let sendData = {
+          ...values,
+          total_yrs_experience: values.total_yrs_experience.toString(),
+          total_month_experience: values.total_month_experience.toString(),
+        };
         axios
           .post(`${process.env.REACT_APP_BASE_URL}/mg_employees`, sendData, {
             headers: {
-              "Content-Type": "multipart/form-data",
+              "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           })
           .then(() => {
             setLoading(false);
             fetchData();
+            handleClose();
             message.success("Created Successfully!");
             action.resetForm();
           })
@@ -242,7 +248,11 @@ const Create = (props: any) => {
 
       // Check file type
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("employee_img", e.target.files[0]);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFieldValue("employee_img", reader.result); // Set Base64 string
+        };
+        reader.readAsDataURL(file);
       } else {
         message.error("Please select a valid PNG, JPEG, or HEIC image.");
         e.target.value = "";
@@ -250,13 +260,14 @@ const Create = (props: any) => {
       }
     }
   };
-  const handleSportActivity = (e: { target: { files: any[] } }) => {
+  const handleSportActivity = (e: any) => {
     const file = e.target.files[0];
 
     if (file) {
       // Check file size (5 MB limit)
       if (file.size > 5 * 1024 * 1024) {
         message.error("File size exceeds 5 MB limit.");
+        e.target.value = "";
         return;
       }
 
@@ -264,18 +275,22 @@ const Create = (props: any) => {
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
         // setFieldValue("stud_img", e.target.files[0]);
         values.sport_activity_files.push(e.target.files[0]);
+        setFieldValue("sport_activity", file.name);
       } else {
         message.error("Please select a valid PNG, JPEG, or HEIC image.");
+        e.target.value = "";
+        return;
       }
     }
   };
-  const handleExtraCurricular = (e: { target: { files: any[] } }) => {
+  const handleExtraCurricular = (e: any) => {
     const file = e.target.files[0];
 
     if (file) {
       // Check file size (5 MB limit)
       if (file.size > 5 * 1024 * 1024) {
         message.error("File size exceeds 5 MB limit.");
+        e.target.value = "";
         return;
       }
 
@@ -283,8 +298,11 @@ const Create = (props: any) => {
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
         // setFieldValue("stud_img", e.target.files[0]);
         values.extra_curricular_files.push(e.target.files[0]);
+        setFieldValue("extra_curricular", file.name);
       } else {
         message.error("Please select a valid PNG, JPEG, or HEIC image.");
+        e.target.value = "";
+        return;
       }
     }
   };
@@ -299,6 +317,7 @@ const Create = (props: any) => {
               { icon: "call", label: "Contact Info", href: "2" },
               { icon: "account_balance", label: "Account Info", href: "3" },
               { icon: "gite", label: "Address", href: "4" },
+              { icon: "sports_martial_arts", label: "Activities", href: "5" },
             ]}
             brandName={""}
             routes={[]}
@@ -407,6 +426,7 @@ const Create = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                       <MDInput
+                        required
                         type="date"
                         onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                         InputLabelProps={{ shrink: true }}
@@ -522,6 +542,25 @@ const Create = (props: any) => {
                         type="number"
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Max Class Per Day
+                          </MDTypography>
+                        }
+                        name="max_no_of_class"
+                        value={values.max_no_of_class}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.max_no_of_class && Boolean(errors.max_no_of_class)}
+                        helperText={touched.max_no_of_class && errors.max_no_of_class}
+                        success={values.max_no_of_class && !errors.max_no_of_class}
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        variant="standard"
+                        type="number"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
                             Total Year Experience
                           </MDTypography>
                         }
@@ -553,6 +592,24 @@ const Create = (props: any) => {
                         }
                         helperText={touched.total_month_experience && errors.total_month_experience}
                         success={values.total_month_experience && !errors.total_month_experience}
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        variant="standard"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Aadhar Number
+                          </MDTypography>
+                        }
+                        name="aadhar_number"
+                        value={values.aadhar_number}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.aadhar_number && Boolean(errors.aadhar_number)}
+                        helperText={touched.aadhar_number && errors.aadhar_number}
+                        success={values.aadhar_number && !errors.aadhar_number}
                       />
                     </Grid>
                     <Grid item xs={6} sm={4}>
@@ -670,6 +727,7 @@ const Create = (props: any) => {
                           <MDInput
                             InputLabelProps={{ shrink: true }}
                             name="employee_department"
+                            required
                             label={
                               <MDTypography variant="button" fontWeight="bold" color="secondary">
                                 Department
@@ -701,6 +759,7 @@ const Create = (props: any) => {
                         options={empCategory?.map((info: any) => info.category_name)}
                         renderInput={(params: any) => (
                           <MDInput
+                            required
                             InputLabelProps={{ shrink: true }}
                             name="employee_category"
                             label={
@@ -723,29 +782,30 @@ const Create = (props: any) => {
                       <Autocomplete
                         disableClearable
                         sx={{ width: "90%" }}
-                        value={values.empoy_profile}
+                        value={values.role_name}
                         onChange={(event, value) => {
                           handleChange({
-                            target: { name: "empoy_profile", value },
+                            target: { name: "role_name", value },
                           });
                         }}
-                        options={empProfile?.map((info: any) => info.position_name)}
+                        options={empProfile?.map((info: any) => info.role_name)}
                         renderInput={(params: any) => (
                           <MDInput
+                            required
                             InputLabelProps={{ shrink: true }}
-                            name="empoy_profile"
+                            name="role_name"
                             label={
                               <MDTypography variant="button" fontWeight="bold" color="secondary">
                                 Employee Profile
                               </MDTypography>
                             }
-                            value={values.empoy_profile}
+                            value={values.role_name}
                             {...params}
                             variant="standard"
                             onBlur={handleBlur}
-                            error={touched.empoy_profile && Boolean(errors.empoy_profile)}
-                            success={values.empoy_profile && !errors.empoy_profile}
-                            helperText={touched.empoy_profile && errors.empoy_profile}
+                            error={touched.role_name && Boolean(errors.role_name)}
+                            success={values.role_name && !errors.role_name}
+                            helperText={touched.role_name && errors.role_name}
                           />
                         )}
                       />
@@ -763,6 +823,7 @@ const Create = (props: any) => {
                         options={empType?.map((info: any) => info.employee_type)}
                         renderInput={(params: any) => (
                           <MDInput
+                            required
                             InputLabelProps={{ shrink: true }}
                             name="employee_type"
                             label={
@@ -791,9 +852,10 @@ const Create = (props: any) => {
                             target: { name: "employee_grade", value },
                           });
                         }}
-                        options={empGrade?.map((info: any) => info.employee_grade)}
+                        options={empGrade?.map((info: any) => info.grade_name)}
                         renderInput={(params: any) => (
                           <MDInput
+                            required
                             InputLabelProps={{ shrink: true }}
                             name="employee_grade"
                             label={
@@ -813,38 +875,95 @@ const Create = (props: any) => {
                       />
                     </Grid>
 
-                    <Grid item xs={6} sm={4}>
-                      <MDInput
-                        sx={{ width: "90%" }}
-                        variant="standard"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Hobby
-                          </MDTypography>
-                        }
-                        name="hobby"
-                        value={values.hobby}
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.ltc_applicable}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.hobby && Boolean(errors.hobby)}
-                        helperText={touched.hobby && errors.hobby}
-                        success={values.hobby && !errors.hobby}
+                        name="ltc_applicable"
                       />
-                    </Grid>
-                    <Grid item xs={6} sm={2} mt={2}>
-                      <MDTypography variant="body2" fontWeight="bold">
-                        Upload Image
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        LTC Applicable
                       </MDTypography>
                     </Grid>
-                    <Grid item xs={12} sm={4} mt={2}>
-                      <MDInput
-                        sx={{ width: "90%" }}
-                        type="file"
-                        accept="image/*"
-                        name="employee_img"
-                        onChange={handleImage}
-                        variant="standard"
-                      />
+                    {values.is_refered ? (
+                      <>
+                        <Grid item xs={6} sm={4}>
+                          <MDInput
+                            sx={{ width: "90%" }}
+                            variant="standard"
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Referred By
+                              </MDTypography>
+                            }
+                            name="refered_by"
+                            value={values.refered_by}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.refered_by && Boolean(errors.refered_by)}
+                            helperText={touched.refered_by && errors.refered_by}
+                            success={values.refered_by && !errors.refered_by}
+                          />
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <MDInput
+                            sx={{ width: "90%" }}
+                            variant="standard"
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Designation
+                              </MDTypography>
+                            }
+                            name="designation"
+                            value={values.designation}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.designation && Boolean(errors.designation)}
+                            helperText={touched.designation && errors.designation}
+                            success={values.designation && !errors.designation}
+                          />
+                        </Grid>
+                      </>
+                    ) : (
+                      <Grid item xs={12} sm={4} mt={2}>
+                        <input
+                          type="checkbox"
+                          checked={values.is_refered}
+                          onChange={handleChange}
+                          name="is_refered"
+                        />
+                        &nbsp;
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Referred
+                        </MDTypography>
+                      </Grid>
+                    )}
+
+                    <Grid
+                      item
+                      xs={12}
+                      sm={4.1}
+                      container
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <Grid item>
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Upload Image
+                        </MDTypography>
+                      </Grid>
+
+                      <Grid item>
+                        <MDInput
+                          sx={{ width: "90%" }}
+                          type="file"
+                          accept="image/*"
+                          name="employee_img"
+                          onChange={handleImage}
+                          variant="standard"
+                        />
+                      </Grid>
                     </Grid>
                   </Grid>
                 </MDBox>
@@ -1311,6 +1430,70 @@ const Create = (props: any) => {
                   </Grid>
                 </MDBox>
               </Card>{" "}
+            </Grid>
+            <Grid item sm={12} id="5">
+              <Card>
+                <MDBox p={4}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12}>
+                      <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
+                        ACTIVITIES
+                      </MDTypography>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Sport Activity
+                      </MDTypography>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        type="file"
+                        accept="image/*"
+                        name="sport_activity_files"
+                        onChange={handleSportActivity}
+                        variant="standard"
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={3}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Extra Curricular
+                      </MDTypography>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        type="file"
+                        accept="image/*"
+                        name="extra_curricular_files"
+                        onChange={handleExtraCurricular}
+                        variant="standard"
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={6}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        variant="standard"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Hobbies
+                          </MDTypography>
+                        }
+                        name="hobby"
+                        value={values.hobby}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.hobby && Boolean(errors.hobby)}
+                        helperText={touched.hobby && errors.hobby}
+                        success={values.hobby && !errors.hobby}
+                      />
+                    </Grid>
+                  </Grid>
+                </MDBox>
+              </Card>
             </Grid>
             <Grid item xs={12} sm={12} py={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Grid item mr={2}>

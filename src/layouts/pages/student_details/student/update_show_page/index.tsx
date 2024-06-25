@@ -10,11 +10,8 @@ import { message } from "antd";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
 import UpdateGuardian from "../guardian/update";
 import CreateGuardian from "../guardian/create";
-import editStudentImage from "./assetss/edit_student.png";
-
 import Tooltip from "@mui/material/Tooltip";
 import {
   FormControlLabel,
@@ -27,10 +24,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-
-import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import MDAvatar from "components/MDAvatar";
@@ -250,7 +244,7 @@ const Update = (props: any) => {
         mother_tongue: studentInfo.mother_tongue || "",
         pen_number: studentInfo.pen_number || "",
         house_details: studentInfo.house_details || "",
-        qouta: studentInfo.qouta || "",
+
         caste_category: studentInfo.caste_category || "",
         caste: studentInfo.caste || "",
         address_line1: studentInfo.address_line1 || "",
@@ -332,174 +326,6 @@ const Update = (props: any) => {
           });
       },
     });
-  const handleImage = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("stud_img", e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-  const [transferCertificate, setTransferCertificate] = useState(false);
-  const handleTransferCertificate = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("transfer_certificate", e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-  const [characterCertificate, setCharacterCertificate] = useState(false);
-  const handleCharacterCertificate = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("character_certificate", e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-
-  const [birthCertificate, setBirthCertificate] = useState(false);
-  const handleBirthCertificate = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        setFieldValue("birth_certificate", e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-  const handleSportActivity = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.sport_activity_files.push(e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-  const handleExtraCurricular = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.extra_curricular_files.push(e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-  const handleHealthRecord = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.health_record_files.push(e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-  const handleClassRecord = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.class_record_files.push(e.target.files[0]);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-      }
-    }
-  };
-  const [checkAddress, setCheckedAddress] = useState(false);
-  const handleCheckAddress = () => {
-    setCheckedAddress(!checkAddress);
-    if (!checkAddress) {
-      setFieldValue("pr_address_line1", values.address_line1);
-      setFieldValue("pr_address_lin2", values.address_line2);
-
-      setFieldValue("pr_pin_code", values.pin_code);
-      setFieldValue("pr_city", values.city);
-      setFieldValue("pr_state", values.state);
-      setFieldValue("pr_country", values.country);
-    }
-  };
-  const [previousEducation, setPreviousEducation] = useState(false);
-  console.log(casteData, "caste dataaaaaa");
-  const [activityRecord, setActivityRecord] = useState(false);
 
   const handleDeleteGuardian = async (name: any) => {
     console.log(name, "guardian delete data");
@@ -522,13 +348,12 @@ const Update = (props: any) => {
       message.error(error.response.data.detail);
     }
   };
-  const [editstudentdetails, setEditstudentdetails] = useState(false);
+
   const [dialogNumber, setDialogNumber] = useState(0);
   const [dialogbox, setDialogbox] = useState(false);
   const handleDialogbox = () => {
     setDialogbox(false);
   };
-  const [imageSrc, setImageSrc] = useState("");
 
   return (
     <>
@@ -776,7 +601,7 @@ const Update = (props: any) => {
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Qouta
+                      Quota
                     </MDTypography>
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -796,7 +621,7 @@ const Update = (props: any) => {
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <MDTypography variant="body2" fontWeight="bold">
-                      {values.qouta}
+                      {values.quota}
                     </MDTypography>
                   </Grid>
                   <Grid item xs={12} sm={3}>

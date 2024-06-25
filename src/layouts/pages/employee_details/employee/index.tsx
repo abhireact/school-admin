@@ -10,8 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Create from "./employee/create";
-import Update from "./employee/update";
+import Create from "./create";
+import Update from "./show_update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
 import { Card, useMediaQuery } from "@mui/material";
@@ -183,7 +183,7 @@ const Employee = () => {
           <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
             <Grid item pt={2} pl={2}>
               <MDTypography variant="h4" color="secondary" fontWeight="bold">
-                Employee Information
+                Employee List
               </MDTypography>
             </Grid>
             {rbacData &&
