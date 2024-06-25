@@ -95,7 +95,7 @@ const validationSchema = Yup.object().shape({
   category_name: Yup.string().required("Category Name is required"),
   fee_particular_name: Yup.string().required("Fee Particular Name is required"),
   name: Yup.string().required(" Collection Name is required"),
-  fine_name: Yup.string().required("Late Fine Name is required"),
+  // fine_name: Yup.string().required("Late Fine Name is required"),
 });
 const Create = (props: any) => {
   const token = Cookies.get("token");

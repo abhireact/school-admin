@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, LegacyRef, forwardRef } from "react";
 import * as XLSX from "xlsx";
 
 // react-table components
@@ -26,7 +26,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Icon from "@mui/material/Icon";
 import Autocomplete from "@mui/material/Autocomplete";
-
+import ReactDOMServer from "react-dom/server";
 // Material Dashboard 2 PRO React TS components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -42,6 +42,7 @@ import MDButton from "components/MDButton";
 import React from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import HeaderPdf from "layouts/pages/Mindcompdf/HeaderPdf";
 
 // Declaring props types for DataTable
 interface Props {
@@ -70,6 +71,13 @@ interface TableRow {
   [key: string]: any; // Define the shape of your table rows here
 }
 // eslint-disable-next-line
+
+interface PdfGeneratorProps {
+  data: Array<Record<string, any>> | string;
+  hiddenText: string;
+  dataShown: string;
+  isPdfMode: boolean;
+}
 
 function DataTable({
   entriesPerPage,
@@ -189,11 +197,22 @@ function DataTable({
     // Set up table headers and rows
     const tableHeaders = table.columns.map((column) => column.Header);
     const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
+
     const tableRows = table.rows.map((row) => {
       // Get the keys from the first row of the input data
       const keys = Object.keys(table.rows[0]);
       // Map the keys to the corresponding values in the current row
-      return keys.map((key) => row[key]);
+      return keys.map((key) => {
+        const value = row[key];
+        // Check if the value is an object
+        if (typeof value === "object" && value !== null) {
+          // If it's an object, convert it to a string using JSON.stringify
+          return JSON.stringify(value);
+        } else {
+          // Otherwise, return the value as is
+          return value;
+        }
+      });
     });
 
     // Flatten each individual row before passing to autoTable
@@ -208,6 +227,78 @@ function DataTable({
     // Save the PDF file
     doc.save("table.pdf");
   };
+  // const handleGeneratePDF = () => {
+  //   const doc = new jsPDF();
+
+  //   // Add the header content
+  //   const headerContent = ReactDOMServer.renderToStaticMarkup(<HeaderPdf isPdfMode={false} />);
+  //   doc.setFontSize(18);
+  //   const pageWidth = doc.internal.pageSize.getWidth();
+  //   const textWidth =
+  //     (doc.getStringUnitWidth(headerContent) * doc.internal.getFontSize()) /
+  //     doc.internal.scaleFactor;
+  //   const x = (pageWidth - textWidth) / 2;
+  //   doc.text(headerContent, x, 20);
+
+  //   // Set up table headers and rows
+  //   const tableHeaders = table.columns.map((column) => column.Header);
+  //   const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
+  //   const tableRows = table.rows.map((row) => {
+  //     // Get the keys from the first row of the input data
+  //     const keys = Object.keys(table.rows[0]);
+  //     // Map the keys to the corresponding values in the current row
+  //     return keys.map((key) => row[key]);
+  //   });
+
+  //   // Flatten each individual row before passing to autoTable
+  //   const flattenedTableRows = tableRows.map((row) => row.flat());
+
+  //   // Add some spacing between the header and the table
+  //   doc.setFontSize(12);
+  //   const startY = 40;
+
+  //   // Add the table to the PDF document
+  //   autoTable(doc, {
+  //     head: [filteredTableHeaders],
+  //     body: flattenedTableRows, // Pass flattenedTableRows as an array of arrays
+  //     startY: startY,
+  //   });
+
+  //   // Save the PDF file
+  //   doc.save("table.pdf");
+  // };
+  const PdfGenerator = forwardRef<HTMLDivElement, PdfGeneratorProps>(
+    ({ data, hiddenText, isPdfMode, dataShown }, ref) => {
+      return (
+        <div ref={ref as LegacyRef<HTMLDivElement>} className="hidden-text">
+          {isPdfMode && <HeaderPdf isPdfMode={true} />}
+          {Array.isArray(data) && data.length > 0 ? (
+            <table border={1}>
+              <thead>
+                <tr>
+                  {Object.keys(data[0]).map((key) => (
+                    <th key={key}>{key}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => (
+                  <tr key={index}>
+                    {Object.values(item).map((value, idx) => (
+                      <td key={idx}>{String(value)}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>{typeof data === "string" ? data : "No data available"}</p>
+          )}
+          <div className="hidden-text">{hiddenText}</div>
+        </div>
+      );
+    }
+  );
   // excel generation
   const downloadXLSX = (tableData: TableRow[]) => {
     // Filter out the "Action" column header and its corresponding data
