@@ -20,24 +20,20 @@ const token = Cookies.get("token");
 const Update = (props: any) => {
   const { handleClose, username, fetchData, dialogNumber } = props;
   const validationSchema = Yup.object().shape({
-    employee_dob: Yup.date()
-      .test("year-range", "Incorrect format", function (value) {
-        if (value) {
-          const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
-        }
-        return true;
-      })
-      .required("Required *"),
+    employee_dob: Yup.date().test("year-range", "Incorrect format", function (value) {
+      if (value) {
+        const year = value.getFullYear();
+        return year >= 2000 && year <= 3000;
+      }
+      return true;
+    }),
     admission_number: Yup.string(),
     fee_code: Yup.string(),
-    first_name: Yup.string().required("Required *"),
+    first_name: Yup.string(),
     middle_name: Yup.string(),
     last_name: Yup.string(),
     aadhaar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format"),
-    mobile_number: Yup.string()
-      .matches(/^[0-9]{10}$/, "Incorrect Format")
-      .required("Required *"),
+    mobile_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
 
     email: Yup.string().email("Incorrect Format"),
@@ -148,9 +144,7 @@ const Update = (props: any) => {
       });
     fetchEmployeeInfo();
   }, []);
-  const [referred, setReferred] = useState(
-    employeeInfo.refered_by || employeeInfo.designation ? true : false
-  );
+
   const { values, handleChange, handleBlur, handleSubmit, setFieldValue, touched, errors } =
     useFormik({
       initialValues: {
@@ -171,7 +165,7 @@ const Update = (props: any) => {
         max_no_of_class: employeeInfo.max_no_of_class || 0,
         employee_type: employeeInfo.employee_type || "",
         ltc_applicable: employeeInfo.ltc_applicable || false,
-        employee_grade: employeeInfo.employee_grade || "None",
+        employee_grade: employeeInfo.employee_grade || "",
         status: employeeInfo.status || "",
         aadhar_number: employeeInfo.aadhar_number || "",
 
@@ -246,6 +240,7 @@ const Update = (props: any) => {
           })
           .catch((error: any) => {
             setLoading(false);
+            handleClose();
             message.error(error.response.data.detail);
           });
       },
