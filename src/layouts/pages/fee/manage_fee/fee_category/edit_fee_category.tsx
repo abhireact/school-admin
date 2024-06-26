@@ -124,7 +124,7 @@ export default function EditFeeCategory(props: any) {
             </Grid>
           </Grid>
           <MDTypography variant="h6" fontWeight="bold" color="secondary">
-            Existing Perticulars
+            Existing Particulars
           </MDTypography>
           <Grid container spacing={3} p={2}>
             {values.existing_perticular.map((particular: any, index: React.Key) => (
