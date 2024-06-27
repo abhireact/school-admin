@@ -10,12 +10,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import FormField from "layouts/pages/account/components/FormField";
+import { fetchClasses } from "layouts/pages/redux/dataSlice";
 const cookies_academic_year = Cookies.get("academic_year");
 const Create = (props: any) => {
   const token = Cookies.get("token");
+  const dispatch = useDispatch();
   const [academicdata, setAcademicdata] = useState([]);
   const { handleShowPage, fetchData } = props;
   const handleClose = () => {
@@ -123,7 +125,8 @@ const Create = (props: any) => {
         )
         .then(() => {
           console.log("create successfully");
-          message.success(" Created successfully!");
+          message.success(" Created Successfully!");
+          dispatch(fetchClasses() as any);
           fetchData();
         })
         .catch(() => {

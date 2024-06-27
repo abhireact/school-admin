@@ -1,0 +1,120 @@
+/* src/components/PdfGenerator.css */
+
+.report-hidden-text {
+  display: none;
+}
+.report-display-flex {
+  display: flex;
+  flex-direction: column;
+}
+/* Ensures that the hidden text is visible when printing */
+@media print {
+  .report-hidden-text {
+    display: block;
+  }
+}
+.report-pdf-container {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  position: relative;
+  padding: 40px; /* Add padding here */
+  box-sizing: border-box; /* Ensure padding doesn't affect overall size */
+}
+.report-pdf-content {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.9); /* Adjust opacity as needed */
+}
+
+.report-additional-info {
+  margin-bottom: 20px;
+}
+
+.report-additional-info p {
+  margin: 5px 0;
+}
+
+.report-pdf-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.report-pdf-table th,
+.report-pdf-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.report-pdf-table th {
+  background-color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.report-pdf-table tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.report-pdf-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.report-cell-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.report-cell-list li {
+  margin-bottom: 5px;
+}
+
+.report-pdf-child-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.report-pdf-child-table th,
+.report-pdf-child-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.report-pdf-child-table th {
+  background-color: #f2f2f2;
+}
+.report-extra-data {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.report-left-data,
+.report-right-data {
+  width: 48%; /* Adjust as needed */
+}
+
+.report-left-data p,
+.report-right-data p {
+  margin: 5px 0;
+}
+
+.report-extra-data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-extra-data-table th,
+.report-extra-data-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.report-extra-data-table th {
+  background-color: #f2f2f2;
+}
