@@ -6,7 +6,8 @@ import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
 import StudentDetails from "layouts/pages/student_details/student";
 import StudentArchive from "layouts/pages/student_details/student_archive";
-import StudentClassListReport from "layouts/pages/student_details/student_classlist_report";
+import StudentClassListReport from "layouts/pages/student_details/student_report/student_classlist_report";
+import ExportStudentData from "layouts/pages/student_details/student_report/export_student_data";
 import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -182,10 +183,23 @@ const routes = [
         component: <StudentSectionChange />,
       },
       {
-        name: "Student Class List Report",
-        key: "student_classlist_report",
-        route: "student/student_classlist_report",
-        component: <StudentClassListReport />,
+        name: "Student Report",
+        key: "student_report",
+        icon: <Icon fontSize="medium">S</Icon>,
+        collapse: [
+          {
+            name: "Student Class List Report",
+            key: "classlist_report",
+            route: "student/student_classlist_report",
+            component: <StudentClassListReport />,
+          },
+          {
+            name: "Export Student Data",
+            key: "export_data",
+            route: "student/student_export_report",
+            component: <ExportStudentData />,
+          },
+        ],
       },
       {
         name: "Caste",
@@ -211,13 +225,6 @@ const routes = [
         route: "student/housedetails",
         component: <HouseDetails />,
       },
-
-      // {
-      //   name: "Student ID Card",
-      //   key: "student_id",
-      //   route: "/pages/school/student_id",
-      //   component: <CreateStudentID />,
-      // },
     ],
   },
 
@@ -263,30 +270,7 @@ const routes = [
       },
     ],
   },
-  // {
-  //   type: "collapse",
-  //   name: "Exam Setting",
-  //   key: "exam",
-  //   icon: (
-  //     <Icon fontSize="medium">
-  //       <EditNoteIcon />
-  //     </Icon>
-  //   ),
-  //   collapse: [
-  //     {
-  //       name: "Subject Info",
-  //       key: "subjectinfo",
-  //       route: "pages/subject/subjectinfo",
-  //       component: <Subject />,
-  //     },
-  //     {
-  //       name: "Sub-Subject",
-  //       key: "subsubject",
-  //       route: "pages/subject/subsubject",
-  //       component: <SubSubject />,
-  //     },
-  //   ],
-  // },
+
   {
     type: "collapse",
     name: "Exam Setting",

@@ -19,7 +19,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useReactToPrint } from "react-to-print";
 import { fetchStudent } from "layouts/pages/redux/dataSlice";
 import * as XLSX from "xlsx";
-import PdfGenerator from "layouts/pages/student_details/abhi_pdf/PdfGenerator";
+import PdfGenerator from "layouts/pages/student_details/student_pdf/PdfGenerator";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   section_name: Yup.string().required("Required *"),
@@ -28,6 +28,7 @@ const validationSchema = Yup.object().shape({
     .required("Required *"),
 });
 
+let cookies_academic_year = Cookies.get("academic_year");
 interface StudentData {
   roll_number: string;
   student_name: string;
@@ -97,7 +98,7 @@ function sortData(data: any, sortColumns: any) {
 export default function StudentReport() {
   const [data, setData] = useState([]);
   const initialValues = {
-    academic_year: "",
+    academic_year: cookies_academic_year,
     class_name: "",
     section_name: "",
     no_of_empty_columns: 0,
@@ -252,7 +253,7 @@ export default function StudentReport() {
                       variant="standard"
                       onBlur={handleBlur}
                       error={touched.academic_year && Boolean(errors.academic_year)}
-                      success={values.academic_year.length && !errors.academic_year}
+                      success={values.academic_year && !errors.academic_year}
                       helperText={touched.academic_year && errors.academic_year}
                     />
                   )}
@@ -289,7 +290,7 @@ export default function StudentReport() {
                       variant="standard"
                       onBlur={handleBlur}
                       error={touched.class_name && Boolean(errors.class_name)}
-                      success={values.class_name.length && !errors.class_name}
+                      success={values.class_name && !errors.class_name}
                       helperText={touched.class_name && errors.class_name}
                     />
                   )}
@@ -329,7 +330,7 @@ export default function StudentReport() {
                       variant="standard"
                       onBlur={handleBlur}
                       error={touched.section_name && Boolean(errors.section_name)}
-                      success={values.section_name.length && !errors.section_name}
+                      success={values.section_name && !errors.section_name}
                       helperText={touched.section_name && errors.section_name}
                     />
                   )}
@@ -489,7 +490,7 @@ export default function StudentReport() {
                     handleChange({
                       target: { name: "no_of_empty_columns", value },
                     });
-                    // if (selectedColumns.length + value <= MaxSelectedColumns) {
+                    // if (selectedColumns + value <= MaxSelectedColumns) {
                     //   handleChange({
                     //     target: { name: "no_of_empty_columns", value },
                     //   });
@@ -558,18 +559,18 @@ export default function StudentReport() {
                   )}
                 </Grid>
               </Grid>
-              <MDBox ref={tableRef}>
-                <PdfGenerator
-                  emptycolumns={values.no_of_empty_columns}
-                  data={data}
-                  hiddenText={hiddenText}
-                  isPdfMode={true}
-                  additionalInfo={undefined}
-                />
-              </MDBox>
             </Grid>
           </MDBox>
         </Card>
+        <div ref={tableRef}>
+          <PdfGenerator
+            emptycolumns={values.no_of_empty_columns}
+            data={data}
+            hiddenText={hiddenText}
+            isPdfMode={true}
+            additionalInfo={undefined}
+          />
+        </div>
       </form>
     </DashboardLayout>
   );
