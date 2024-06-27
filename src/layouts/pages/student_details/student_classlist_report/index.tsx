@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import FormField from "layouts/pages/account/components/FormField";
 import { useFormik } from "formik";
@@ -16,7 +16,10 @@ const token = Cookies.get("token");
 import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { useReactToPrint } from "react-to-print";
 import { fetchStudent } from "layouts/pages/redux/dataSlice";
+import * as XLSX from "xlsx";
+import PdfGenerator from "layouts/pages/student_details/abhi_pdf/PdfGenerator";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   section_name: Yup.string().required("Required *"),
@@ -90,6 +93,7 @@ function sortData(data: any, sortColumns: any) {
     return 0;
   });
 }
+
 export default function StudentReport() {
   const [data, setData] = useState([]);
   const initialValues = {
@@ -135,9 +139,9 @@ export default function StudentReport() {
           setData([]);
           return;
         }
-        let archive_or_unarchive = response.data.filter(
-          (student: any) => student.is_archive === values.is_archive
-        );
+        let archive_or_unarchive = values.is_archive
+          ? response.data
+          : response.data.filter((student: any) => student.is_archive === false);
         let filteredColumnsData = filterData(archive_or_unarchive, selectedColumns);
         console.log(filteredColumnsData, "filtered columnsData");
         let sortedData = sortData(filteredColumnsData, sortColumns);
@@ -154,19 +158,20 @@ export default function StudentReport() {
 
   const [selectedColumns, setSelectedColumns] = useState([]);
 
-  let MaxSelectedColumns = 5;
+  // let MaxSelectedColumns = 6;
   const handleColumnChange = (key: keyof StudentData) => {
-    if (selectedColumns.length >= 5 && !selectedColumns.includes(key)) {
-      message.error("You can select up to 5 columns.");
-      return;
-    }
+    // if (
+    //   selectedColumns.length + values.no_of_empty_columns >= MaxSelectedColumns &&
+    //   !selectedColumns.includes(key)
+    // ) {
+    //   message.error(`You can select up to ${MaxSelectedColumns} columns.`);
+    //   return;
+    // }
     setSelectedColumns((prevSelectedColumns) => {
       if (prevSelectedColumns.includes(key)) {
         return prevSelectedColumns.filter((col) => col !== key);
       } else {
-        return prevSelectedColumns.length < MaxSelectedColumns
-          ? [...prevSelectedColumns, key]
-          : prevSelectedColumns;
+        return [...prevSelectedColumns, key];
       }
     });
 
@@ -184,6 +189,25 @@ export default function StudentReport() {
       }
     });
     console.log(sortColumns, "sort columns");
+  };
+  const tableRef = useRef();
+  const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  const handlePrint = useReactToPrint({
+    content: () => tableRef.current,
+  });
+  const [isExporting, setIsExporting] = useState(false);
+  const exportToExcel = () => {
+    // Convert data to worksheet
+    setIsExporting(true);
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    // Create workbook and add the worksheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Students");
+
+    // Generate Excel file and trigger download
+    XLSX.writeFile(wb, "students_data.xlsx");
+    setIsExporting(false);
   };
   return (
     <DashboardLayout>
@@ -335,7 +359,7 @@ export default function StudentReport() {
                       <tr>
                         <td
                           style={{
-                            padding: "5px",
+                            padding: "2px",
                             textAlign: "left",
                             border: "1px solid #f0f2f5",
                           }}
@@ -355,7 +379,7 @@ export default function StudentReport() {
                         </td>
                         <td
                           style={{
-                            padding: "5px",
+                            padding: "2px",
                             textAlign: "left",
                             border: "1px solid #f0f2f5",
                           }}
@@ -401,7 +425,7 @@ export default function StudentReport() {
                           <td
                             key={col.key}
                             style={{
-                              padding: "5px",
+                              padding: "2px",
                               textAlign: "left",
                               border: "1px solid #f0f2f5",
                             }}
@@ -422,7 +446,7 @@ export default function StudentReport() {
                           <td
                             key={col.key}
                             style={{
-                              padding: "5px",
+                              padding: "2px",
                               textAlign: "left",
                               border: "1px solid #f0f2f5",
                             }}
@@ -465,6 +489,14 @@ export default function StudentReport() {
                     handleChange({
                       target: { name: "no_of_empty_columns", value },
                     });
+                    // if (selectedColumns.length + value <= MaxSelectedColumns) {
+                    //   handleChange({
+                    //     target: { name: "no_of_empty_columns", value },
+                    //   });
+                    // } else {
+                    //   message.error(`You can select up to ${MaxSelectedColumns} columns.`);
+                    //   return;
+                    // }
                   }}
                   options={[0, 1, 2, 3, 4, 5]}
                   renderInput={(params: any) => (
@@ -506,15 +538,35 @@ export default function StudentReport() {
                     Show Data
                   </MDButton>
                 </Grid>
-                {data.length > 0 && (
-                  <Grid item>
-                    <MDButton color="info" variant="contained" type="submit">
-                      Submit&nbsp;
-                      <SaveIcon />
-                    </MDButton>
-                  </Grid>
-                )}
+                <Grid item>
+                  {data.length > 0 && (
+                    <>
+                      <MDButton color="info" onClick={handlePrint}>
+                        Generate PDF &nbsp;<Icon>picture_as_pdf</Icon>
+                      </MDButton>
+                      &nbsp;&nbsp;
+                      <MDButton
+                        variant="contained"
+                        disabled={data.length < 1}
+                        color="dark"
+                        type="submit"
+                        onClick={exportToExcel}
+                      >
+                        {isExporting ? "Exporting..." : "Export to Excel"}
+                      </MDButton>
+                    </>
+                  )}
+                </Grid>
               </Grid>
+              <MDBox ref={tableRef}>
+                <PdfGenerator
+                  emptycolumns={values.no_of_empty_columns}
+                  data={data}
+                  hiddenText={hiddenText}
+                  isPdfMode={true}
+                  additionalInfo={undefined}
+                />
+              </MDBox>
             </Grid>
           </MDBox>
         </Card>

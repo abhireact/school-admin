@@ -13,7 +13,8 @@ import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmployeeType from "layouts/pages/employee_details/employee_type";
 import EmployeeDetails from "layouts/pages/employee_details/employee";
 import Academic from "layouts/pages/school/school_academic_year";
-import Class from "layouts/pages/school/school_class";``
+import Class from "layouts/pages/school/school_class";
+``;
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee_details/department";
 import PortraitIcon from "@mui/icons-material/Portrait";
