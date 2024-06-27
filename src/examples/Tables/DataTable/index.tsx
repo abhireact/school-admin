@@ -72,13 +72,6 @@ interface TableRow {
 }
 // eslint-disable-next-line
 
-interface PdfGeneratorProps {
-  data: Array<Record<string, any>> | string;
-  hiddenText: string;
-  dataShown: string;
-  isPdfMode: boolean;
-}
-
 function DataTable({
   entriesPerPage,
   canSearch,
@@ -194,10 +187,18 @@ function DataTable({
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
 
+    // Add header
+    doc.setFontSize(18);
+    doc.text("Your Header Text", 14, 15);
+    doc.setFontSize(12); // Reset font size for the rest of the document
+
+    // Add a line under the header
+    doc.setLineWidth(0.5);
+    doc.line(14, 20, 196, 20);
+
     // Set up table headers and rows
     const tableHeaders = table.columns.map((column) => column.Header);
     const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
-
     const tableRows = table.rows.map((row) => {
       // Get the keys from the first row of the input data
       const keys = Object.keys(table.rows[0]);
@@ -220,6 +221,7 @@ function DataTable({
 
     // Add the table to the PDF document
     autoTable(doc, {
+      startY: 30, // Start the table below the header
       head: [filteredTableHeaders],
       body: flattenedTableRows, // Pass flattenedTableRows as an array of arrays
     });
@@ -230,75 +232,45 @@ function DataTable({
   // const handleGeneratePDF = () => {
   //   const doc = new jsPDF();
 
-  //   // Add the header content
-  //   const headerContent = ReactDOMServer.renderToStaticMarkup(<HeaderPdf isPdfMode={false} />);
+  //   // Add header
   //   doc.setFontSize(18);
-  //   const pageWidth = doc.internal.pageSize.getWidth();
-  //   const textWidth =
-  //     (doc.getStringUnitWidth(headerContent) * doc.internal.getFontSize()) /
-  //     doc.internal.scaleFactor;
-  //   const x = (pageWidth - textWidth) / 2;
-  //   doc.text(headerContent, x, 20);
+  //   doc.text("Your Header Text", 14, 15);
+  //   doc.setFontSize(12); // Reset font size for the rest of the document
+
+  //   // Add a line under the header
+  //   doc.setLineWidth(0.5);
+  //   doc.line(14, 20, 196, 20);
 
   //   // Set up table headers and rows
   //   const tableHeaders = table.columns.map((column) => column.Header);
   //   const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
+
   //   const tableRows = table.rows.map((row) => {
-  //     // Get the keys from the first row of the input data
   //     const keys = Object.keys(table.rows[0]);
-  //     // Map the keys to the corresponding values in the current row
-  //     return keys.map((key) => row[key]);
+  //     return keys.map((key) => {
+  //       const value = row[key];
+  //       if (typeof value === "object" && value !== null) {
+  //         return JSON.stringify(value);
+  //       } else {
+  //         return value;
+  //       }
+  //     });
   //   });
 
   //   // Flatten each individual row before passing to autoTable
   //   const flattenedTableRows = tableRows.map((row) => row.flat());
 
-  //   // Add some spacing between the header and the table
-  //   doc.setFontSize(12);
-  //   const startY = 40;
-
   //   // Add the table to the PDF document
   //   autoTable(doc, {
+  //     startY: 30, // Start the table below the header
   //     head: [filteredTableHeaders],
-  //     body: flattenedTableRows, // Pass flattenedTableRows as an array of arrays
-  //     startY: startY,
+  //     body: flattenedTableRows,
   //   });
 
   //   // Save the PDF file
   //   doc.save("table.pdf");
   // };
-  const PdfGenerator = forwardRef<HTMLDivElement, PdfGeneratorProps>(
-    ({ data, hiddenText, isPdfMode, dataShown }, ref) => {
-      return (
-        <div ref={ref as LegacyRef<HTMLDivElement>} className="hidden-text">
-          {isPdfMode && <HeaderPdf isPdfMode={true} />}
-          {Array.isArray(data) && data.length > 0 ? (
-            <table border={1}>
-              <thead>
-                <tr>
-                  {Object.keys(data[0]).map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((item, index) => (
-                  <tr key={index}>
-                    {Object.values(item).map((value, idx) => (
-                      <td key={idx}>{String(value)}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p>{typeof data === "string" ? data : "No data available"}</p>
-          )}
-          <div className="hidden-text">{hiddenText}</div>
-        </div>
-      );
-    }
-  );
+
   // excel generation
   const downloadXLSX = (tableData: TableRow[]) => {
     // Filter out the "Action" column header and its corresponding data
@@ -354,29 +326,6 @@ function DataTable({
               <MDTypography variant="caption" color="secondary">
                 &nbsp;&nbsp;Entries per page
               </MDTypography>
-              {/* <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={() => setAnchorEl(null)}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem onClick={handleGeneratePDF}>PDF</MenuItem>
-                <MenuItem onClick={() => downloadXLSX(table.rows)}>XSL</MenuItem>
-              </Menu>
-              <MDButton
-                variant="gradient"
-                color="info"
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                <DownloadIcon />
-              </MDButton> */}
             </MDBox>
           )}
           {importbtn && (

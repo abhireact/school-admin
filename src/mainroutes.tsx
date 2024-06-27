@@ -27,7 +27,7 @@ import ExcessFee from "layouts/pages/fee/manage_fee/excess_fee";
 import LateFee from "layouts/pages/fee/manage_fee/late_fee";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
-import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
+import FeeRegister from "layouts/pages/fee/fee_report/fee_register";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
@@ -483,6 +483,7 @@ const routes = [
     component: <FeeReceipt />,
   },
 
+  // Fee
   {
     type: "collapse",
     name: "Fee",

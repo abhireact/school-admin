@@ -15,54 +15,9 @@ import { message } from "antd";
 const token = Cookies.get("token");
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
-  start_date: Yup.date()
-    .required("Start Date is required")
-    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
-      if (value) {
-        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-        return dateRegex.test(value.toLocaleDateString());
-      }
-      return true;
-    }),
-  end_date: Yup.date()
-    .required("End Date is required")
-    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
-      if (value) {
-        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-        return dateRegex.test(value.toLocaleDateString());
-      }
-      return true;
-    })
-    .test(
-      "endDateGreaterThanOrEqualToStartDate",
-      "End date should be greater than or equal to start date",
-      function (value) {
-        const { start_date } = this.parent;
-        return start_date ? value.getTime() >= start_date.getTime() : true;
-      }
-    ),
-  due_date: Yup.date()
-    .required("Due Date is required")
-    .test("dateFormat", "Invalid date format. Please use dd/mm/yyyy", (value) => {
-      if (value) {
-        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-        return dateRegex.test(value.toLocaleDateString());
-      }
-      return true;
-    })
-    .test(
-      "dueDateValidation",
-      "Due date should be equal to or between start date and end date",
-      function (value) {
-        const { start_date, end_date } = this.parent;
-        return (
-          start_date &&
-          value.getTime() >= start_date.getTime() &&
-          end_date &&
-          value.getTime() <= end_date.getTime()
-        );
-      }
-    ),
+  start_date: Yup.date().required("Start Date is required"),
+  end_date: Yup.date().required("End Date is required"),
+  due_date: Yup.date().required("Due Date is required"),
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Academic Year is required"),

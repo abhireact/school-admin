@@ -351,6 +351,7 @@ import {
 import MYAccount from "layouts/pages/authentication/myaccount";
 import { useFormik } from "formik";
 import MDButton from "components/MDButton";
+import { Popconfirm } from "antd";
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -376,6 +377,8 @@ interface Notification {
 function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [message, setMessage] = useState([]);
   const [editopen, setEditOpen] = useState(false);
+  const [popconfirmVisible, setPopconfirmVisible] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
   const [unread, setUnread] = useState(0);
   const [editdata, setEditdata] = useState<Notification>({
     created_at: "",
@@ -680,15 +683,18 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
-              {/* <MDInput label="Search here" /> */}
+            <MDBox pr={3}>
               <Autocomplete
                 fullWidth
-                sx={{ width: "100%" }}
+                sx={{ width: "150%" }}
+                disableClearable
+                size="small"
                 defaultValue={currentAcademic?.academic_year}
                 value={values.academic_year || currentAcademic?.academic_year}
                 onChange={(_event, value) => {
-                  handleChange({ target: { name: "academic_year", value } });
+                  // Instead of directly calling handleChange, open the Popconfirm
+                  setSelectedValue(value);
+                  setPopconfirmVisible(true);
                 }}
                 options={Array.from(
                   new Set(
@@ -707,10 +713,27 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                     value={values.academic_year || currentAcademic?.academic_year}
                     label={"Academic Year"}
                     {...params}
-                    // variant="standard"
                   />
                 )}
               />
+              <Popconfirm
+                title="Confirm Selection"
+                placement="bottomLeft"
+                description="Are you sure you want to change the academic year?"
+                open={popconfirmVisible}
+                onConfirm={() => {
+                  handleChange({ target: { name: "academic_year", value: selectedValue } });
+                  setPopconfirmVisible(false);
+                  window.location.reload();
+                }}
+                onCancel={() => {
+                  setPopconfirmVisible(false);
+                }}
+                okText="Yes"
+                cancelText="No"
+              >
+                {/* <div style={{ display: "none" }}></div> */}
+              </Popconfirm>
             </MDBox>
             <MDBox color={light ? "white" : "inherit"}>
               <IconButton sx={navbarIconButton} size="medium" disableRipple>

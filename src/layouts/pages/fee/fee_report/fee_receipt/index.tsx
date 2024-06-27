@@ -15,12 +15,17 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
 import { useReactToPrint } from "react-to-print";
-
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Modal } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 const token = Cookies.get("token");
 import { useSelector } from "react-redux";
 import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
+import StudentCard from "../../fee_collection/student_card";
 const Cacademic_year = Cookies.get("academic_year");
 console.log(Cacademic_year, "Cacademic_year");
+const { confirm } = Modal;
+
 interface FeeReceiptInterface {
   columns: { Header: string; accessor: string }[];
   rows: {
@@ -87,6 +92,8 @@ interface AllReceiptData {
   payment_details: PaymentDetails;
 }
 export default function FeeReceiptReport() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [receiptNo, setReceiptNo] = useState();
   const [studentdata, setStudentdata] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const { classes, student } = useSelector((state: any) => state);
@@ -101,6 +108,7 @@ export default function FeeReceiptReport() {
     class_name: "",
     section_name: "",
     student: "",
+    reason: "",
   };
   const tableRef = useRef();
   const hiddenText = "This is computer generated fee receipt and no signature required.";
@@ -191,7 +199,7 @@ export default function FeeReceiptReport() {
           })
           .then((response) => {
             console.log(response.data, "responcedata");
-
+            action.resetForm();
             const feeReceiptData = {
               columns: [
                 { Header: "RECEIPT NO", accessor: "receipt_no" },
@@ -224,15 +232,22 @@ export default function FeeReceiptReport() {
                   paid_amount: data.paid_amount,
                   mod_of_payment: data.mode_of_payment,
                   generate_pdf: (
-                    <Tooltip title="Download Pdf" placement="top">
-                      <IconButton
-                        onClick={() => {
-                          handlePrint(data.receipt_number);
-                        }}
-                      >
-                        <FileDownloadIcon />
-                      </IconButton>
-                    </Tooltip>
+                    <>
+                      <Tooltip title="Download reciept" placement="top">
+                        <IconButton
+                          onClick={() => {
+                            handlePrint(data.receipt_number);
+                          }}
+                        >
+                          <FileDownloadIcon fontSize="small" color="secondary" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete" placement="top">
+                        <IconButton onClick={() => showModal(data.receipt_number)}>
+                          <DeleteIcon fontSize="small" color="secondary" />
+                        </IconButton>
+                      </Tooltip>
+                    </>
                   ),
                 })
               ),
@@ -246,6 +261,40 @@ export default function FeeReceiptReport() {
       },
     });
   console.log(feereceiptReportData, "concession DAtaa");
+
+  // Delete Logic
+  const showModal = (receipt_no: any) => {
+    setReceiptNo(receipt_no);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    console.log(receiptNo, values.reason, "ok");
+
+    axios
+      .delete(`http://10.0.20.200:8000/fee_receipts/receipt_no`, {
+        data: {
+          reason: values.reason,
+          receipt_no: receiptNo,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        message.success("Deleted Successfully");
+        setIsModalOpen(false);
+        window.location.reload();
+      })
+      .catch((error: any) => {
+        message.error(error.response.data.detail);
+      });
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const filteredStudentData = useMemo(() => {
     if (values.academic_year && values.class_name && values.section_name) {
@@ -298,6 +347,36 @@ export default function FeeReceiptReport() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Modal
+        title="Are You Sure to Delete this !"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Grid item xs={12} sm={10}>
+          <Autocomplete
+            onChange={(_event, value) => {
+              handleChange({ target: { name: "reason", value } });
+            }}
+            options={["Invalid Amount", "Invalid Date", "Invalid Cheque/DD number", "Other"]}
+            renderInput={(params) => (
+              <MDInput
+                required
+                name="reason"
+                onChange={handleChange}
+                value={values.reason}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Select Reason
+                  </MDTypography>
+                }
+                {...params}
+                variant="standard"
+              />
+            )}
+          />
+        </Grid>
+      </Modal>
       {pdfData !== null ? (
         <>
           <MDBox ref={tableRef} className="hidden-text">
@@ -331,7 +410,7 @@ export default function FeeReceiptReport() {
                 <Grid container>
                   <Grid item xs={12} sm={6}>
                     <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                      Fee Receipt Report
+                      Fee Reciept Report
                     </MDTypography>
                   </Grid>
                 </Grid>
@@ -340,6 +419,7 @@ export default function FeeReceiptReport() {
                     <Autocomplete
                       disabled
                       defaultValue={Cacademic_year}
+                      // value={values.academic_year || Cacademic_year}
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "academic_year", value } });
                       }}
@@ -474,6 +554,7 @@ export default function FeeReceiptReport() {
                     isSorted={false}
                     entriesPerPage={false}
                     showTotalEntries={false}
+                    canSearch
                   />
                 </MDBox>
               </Card>
