@@ -6,6 +6,7 @@ import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
 import StudentDetails from "layouts/pages/student_details/student";
 import StudentArchive from "layouts/pages/student_details/student_archive";
+import StudentClassListReport from "layouts/pages/student_details/student_classlist_report";
 import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -13,6 +14,7 @@ import EmployeeType from "layouts/pages/employee_details/employee_type";
 import EmployeeDetails from "layouts/pages/employee_details/employee";
 import Academic from "layouts/pages/school/school_academic_year";
 import Class from "layouts/pages/school/school_class";
+``;
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee_details/department";
 import PortraitIcon from "@mui/icons-material/Portrait";
@@ -178,6 +180,12 @@ const routes = [
         key: "studentsectionchange",
         route: "student/student_section_change",
         component: <StudentSectionChange />,
+      },
+      {
+        name: "Student Class List Report",
+        key: "student_classlist_report",
+        route: "student/student_classlist_report",
+        component: <StudentClassListReport />,
       },
       {
         name: "Caste",
