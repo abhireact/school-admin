@@ -240,7 +240,7 @@ const Wing = () => {
                   </MDButton>
                   &nbsp; &nbsp; &nbsp;
                   <MDButton variant="contained" color="info" onClick={handleFileInputClick}>
-                    Upload&nbsp;
+                    Import&nbsp;
                     <FileUploadIcon />
                   </MDButton>
                   <input

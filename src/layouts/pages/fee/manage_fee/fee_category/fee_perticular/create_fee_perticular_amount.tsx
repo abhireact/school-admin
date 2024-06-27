@@ -441,7 +441,6 @@ export default function CreateFeeParicularAmount() {
                       }
                       renderInput={(params) => (
                         <MDInput
-                          required
                           name="student_category"
                           onChange={handleChange}
                           value={values.student_category}

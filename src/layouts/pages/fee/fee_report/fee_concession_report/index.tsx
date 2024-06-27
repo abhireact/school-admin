@@ -113,7 +113,7 @@ export default function FeeConcessionReport() {
 
   console.log(feeConcessionReportData, "concession DAtaa");
   const tableRef = useRef();
-  const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
   const handlePrint = useReactToPrint({
     content: () => tableRef.current,
   });
@@ -122,13 +122,6 @@ export default function FeeConcessionReport() {
       <DashboardNavbar />
       <form onSubmit={handleSubmit}>
         <MDBox>
-          <MDBox ref={tableRef}>
-            <PdfGenerator
-              data={feeConcessionReportData.rows}
-              hiddenText={hiddenText}
-              isPdfMode={true}
-            />
-          </MDBox>
           <MDButton onClick={handlePrint}>Print</MDButton>
         </MDBox>
 
@@ -262,6 +255,15 @@ export default function FeeConcessionReport() {
           <Grid item xs={12} sm={12} pt={2}>
             {feeConcessionReportData.rows.length > 0 ? (
               <Card>
+                <MDBox ref={tableRef} className="hidden-text">
+                  <PdfGenerator
+                    data={feeConcessionReportData.rows}
+                    // hiddenText={hiddenText}
+                    isPdfMode={true}
+                    hiddenText={""}
+                    additionalInfo={undefined}
+                  />
+                </MDBox>
                 <MDBox p={3}>
                   <DataTable
                     table={feeConcessionReportData}
