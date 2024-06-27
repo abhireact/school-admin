@@ -27,6 +27,9 @@ import FormSetting from "layouts/pages/admission/form_setting";
 import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configuration";
 import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
+import ShowAdmission from "layouts/pages/admission/show";
+import Try from "layouts/pages/admission/form_setting/manage_sub_template/try";
+import EditAdmission from "layouts/pages/admission/update";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -211,6 +214,18 @@ let routes = [
     key: "manage_sub_template",
     route: "/pages/admission/formsetting/manage_sub_template",
     component: <ManageSubTemplate />,
+  },
+  {
+    name: "Show Admission",
+    key: "show_admission",
+    route: "/pages/admission/show_admission",
+    component: <ShowAdmission />,
+  },
+  {
+    name: "Edit Admission",
+    key: "edit_admission",
+    route: "/pages/admission/edit_admission",
+    component: <EditAdmission />,
   },
 ];
 

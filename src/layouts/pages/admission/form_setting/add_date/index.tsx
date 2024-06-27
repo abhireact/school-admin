@@ -58,7 +58,7 @@ const AddDate = () => {
       validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.200:8000/admissions/settings", values, {
+          .post(`${process.env.REACT_APP_BASE_URL}/admissions/settings`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,

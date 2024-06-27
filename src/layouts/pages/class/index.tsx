@@ -110,6 +110,7 @@ const Class = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
+
   const [managepage, setManagepage] = useState(false);
 
   const [manageSection, setManageSection] = useState([]);

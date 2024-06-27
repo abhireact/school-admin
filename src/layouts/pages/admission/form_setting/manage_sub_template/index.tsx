@@ -8,10 +8,13 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import EditableCell from "./edittable";
 import MDButton from "components/MDButton";
+import axios from "axios";
+import Cookies from "js-cookie";
 
+const token = Cookies.get("token");
 const ManageSubTemplate = () => {
   const location = useLocation();
-  const { templateData } = location.state || {};
+  const { templateData, postedData } = location.state || {};
   const navigate = useNavigate();
 
   const [rows, setRows] = useState(
@@ -49,7 +52,7 @@ const ManageSubTemplate = () => {
       Cell: ({ cell: { value }, row: { index } }: any) => (
         <EditableCell
           value={rows[index].status}
-          onChange={(newValue: any) => handleCellChange(index, "status", newValue)} // Update status field
+          onChange={(newValue: any) => handleCellChange(index, "select", newValue)}
           type="checkbox"
         />
       ),
@@ -190,6 +193,32 @@ const ManageSubTemplate = () => {
     },
   ];
 
+  const handleSubmit = async () => {
+    const data = {
+      academic_year: postedData.academic_year,
+      start_date: postedData.start_date,
+      end_date: postedData.end_date,
+      details: rows,
+    };
+
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_BASE_URL}/admissions/settings_detail`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      // Handle error (e.g., show an error message)
+    }
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -220,7 +249,7 @@ const ManageSubTemplate = () => {
             </MDButton>
           </Grid>
           <Grid item ml={2} mr={2}>
-            <MDButton color="info" variant="contained" type="submit">
+            <MDButton color="info" variant="contained" type="submit" onClick={handleSubmit}>
               Submit
             </MDButton>
           </Grid>
