@@ -4,7 +4,8 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Icon from "@mui/material/Icon";
 import Roles from "layouts/pages/rbac/roles";
 import SchoolInfo from "layouts/pages/school";
-import StudentDetails from "layouts/pages/student";
+import StudentDetails from "layouts/pages/student/student_details";
+import StudentArchive from "layouts/pages/student/student_archive";
 import EmployeeProfile from "layouts/pages/employee/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -27,6 +28,7 @@ import LateFee from "layouts/pages/fee/manage_fee/late_fee";
 import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register_wtihout_paymentmode";
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
@@ -57,7 +59,32 @@ import SubjectReport from "layouts/pages/subject/subject_report";
 import SmsStatusReport from "layouts/pages/notifications/reports/sms_status";
 import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-portal_status";
 import StudentAttendance from "layouts/pages/Attendance/student";
-const college = true;
+import FormSetting from "layouts/pages/admission/form_setting";
+import StudentAdmission from "layouts/pages/admission";
+import StudentAttendanceReport from "layouts/pages/Attendance/reports/student_attendance_report";
+import StudentAttendanceDateWiseReport from "layouts/pages/Attendance/reports/student_date_wise";
+import Consolidiration from "layouts/pages/Attendance/reports/consolidiration";
+import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_attendance";
+import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
+import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
+// Define your variables
+const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
+const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
+
+// Translation dictionary
+const translater = {
+  hi: {
+    College: "कॉलेज",
+    School: "स्कूल",
+    school_information: "स्कूल सूचना",
+  },
+  en: {
+    College: "College",
+    School: "School",
+    school_information: "School Information",
+  },
+};
+
 const routes = [
   {
     type: "collapse",
@@ -86,7 +113,7 @@ const routes = [
 
   {
     type: "collapse",
-    name: `${college ? "College" : "School"}`,
+    name: translater[languagee][collegee],
     key: "school",
     icon: (
       <Icon fontSize="medium">
@@ -101,7 +128,7 @@ const routes = [
       //   component: <School />,
       // },
       {
-        name: `${college ? "College Information" : "School Information"}`,
+        name: translater[languagee].school_information,
         key: "schoolinfo",
         route: "pages/school/schoolinfo",
         component: <SchoolInfo />,
@@ -150,11 +177,18 @@ const routes = [
     ),
     collapse: [
       {
-        name: "Student Info",
+        name: "Student Details",
         key: "studentdetails",
-        route: "/pages/school/studentdetails",
+        route: "/student/student_details",
         component: <StudentDetails />,
       },
+      {
+        name: "Student Archive",
+        key: "studentarchive",
+        route: "/student/student_archive",
+        component: <StudentArchive />,
+      },
+
       {
         name: "Student Promotion",
         key: "studentpromotion",
@@ -170,27 +204,28 @@ const routes = [
       {
         name: "Caste",
         key: "caste",
-        route: "/pages/school/caste",
+        route: "/student/caste",
         component: <Caste />,
       },
       {
         name: "Caste Category",
         key: "castecategory",
-        route: "/pages/school/castecategory",
+        route: "/student/castecategory",
         component: <CasteCategory />,
       },
       {
         name: "Student Category",
         key: "studentcategory",
-        route: "/pages/school/studentcategory",
+        route: "/student/studentcategory",
         component: <StudentCategory />,
       },
       {
         name: "House Details",
         key: "housedetails",
-        route: "/pages/school/housedetails",
+        route: "/student/housedetails",
         component: <HouseDetails />,
       },
+
       // {
       //   name: "Student ID Card",
       //   key: "student_id",
@@ -334,8 +369,56 @@ const routes = [
       {
         name: "Student Attendance",
         key: "student_attendance",
-        route: "attendance/student_attendance",
+        route: "attendance/take_student_attendance",
         component: <StudentAttendance />,
+      },
+      {
+        name: "Reports",
+        key: "attendance_reports",
+        collapse: [
+          {
+            name: "Student Attendance Report",
+            key: "student_attendance_report",
+            route: "attendance/report/student_attendance",
+            component: <StudentAttendanceReport />,
+          },
+          {
+            name: "Student Attendance Date Wise",
+            key: "student_attendance_dateWise_report",
+            route: "attendance/report/student_attendance_dateWise_report",
+            component: <StudentAttendanceDateWiseReport />,
+          },
+          {
+            name: "Student Consolidate",
+            key: "student_consolidate",
+            route: "attendance/report/student_consolidate",
+            component: <Consolidiration />,
+          },
+        ],
+      },
+      {
+        name: "Employee Attendance",
+        key: "employee_attendance",
+        collapse: [
+          {
+            name: "Employee Attendance",
+            key: "employee_atendance",
+            route: "attendance/employee_attendance",
+            component: <EmployeeAttendance />,
+          },
+          {
+            name: "Take Attendance",
+            key: "take_atendance",
+            route: "attendance/take_employee_attendance",
+            component: <TakeAttandance />,
+          },
+          {
+            name: "My Attendance",
+            key: "my_atendance",
+            route: "attendance/my_attendance",
+            component: <MYAttandance />,
+          },
+        ],
       },
     ],
   },
@@ -585,6 +668,31 @@ const routes = [
             component: <FeeDefaulterReport />,
           },
         ],
+      },
+    ],
+  },
+
+  {
+    type: "collapse",
+    name: "Admission",
+    key: "admissionfolder",
+    icon: (
+      <Icon fontSize="medium">
+        <BookOnlineIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Form Setting",
+        key: "formsetting",
+        route: "pages/admission/formsetting",
+        component: <FormSetting />,
+      },
+      {
+        name: "Admission",
+        key: "admissionpage",
+        route: "pages/admission/studentAdmission",
+        component: <StudentAdmission />,
       },
     ],
   },

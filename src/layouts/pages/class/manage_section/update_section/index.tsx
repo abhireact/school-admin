@@ -124,7 +124,7 @@ const UpdateSection = (props: any) => {
               variant="standard"
               name="start_date"
               type="date"
-              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               value={values.start_date}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -142,7 +142,7 @@ const UpdateSection = (props: any) => {
               sx={{ width: "65%" }}
               variant="standard"
               type="date"
-              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+              onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
               name="end_date"
               value={values.end_date}
               onChange={handleChange}

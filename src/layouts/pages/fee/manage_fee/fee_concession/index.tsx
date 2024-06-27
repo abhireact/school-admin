@@ -93,7 +93,7 @@ export default function FeeConcession() {
       { Header: "CONCESSION NAME", accessor: "name" },
       { Header: "CLASS & SECTION", accessor: "section" },
       { Header: "FEE CATEGORY", accessor: "fee_category" },
-      { Header: "QUOTA", accessor: "quota" },
+      { Header: "Admission No.", accessor: "admission_number" },
       { Header: "STUDENT NAME", accessor: "student" },
       { Header: "CONCESSION", accessor: "concession" },
       { Header: "ACTIONS", accessor: "action" },
@@ -103,7 +103,7 @@ export default function FeeConcession() {
       name: data.name,
       section: `${data.class_name}-${data.section_name}`,
       fee_category: data.fee_category,
-      quota: data.quota == null ? "" : data.quota,
+      admission_number: data?.admission_number == null ? "" : data?.admission_number,
       student: `${data.student_first_name} ${
         data.student_middle_name ? data.student_middle_name : ""
       } ${data.student_last_name ? data.student_last_name : ""}`,
@@ -280,9 +280,10 @@ export default function FeeConcession() {
               <Card>
                 <DataTable
                   table={feeConcessionData}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  // isSorted={false}
+                  // entriesPerPage={false}
+                  // showTotalEntries={false}
+                  canSearch
                 />
               </Card>
             ) : null}

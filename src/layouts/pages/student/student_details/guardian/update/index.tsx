@@ -30,8 +30,8 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import DataTable from "examples/Tables/DataTable";
 import Dialog from "@mui/material/Dialog";
-const token = Cookies.get("token");
 import * as Yup from "yup";
+const token = Cookies.get("token");
 const validationSchema = Yup.object().shape({
   date_of_birth: Yup.date().test("year-range", "Incorrect format", function (value: any) {
     if (value) {
@@ -46,54 +46,105 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string(),
   relation: Yup.string(),
 });
-const Create = (props: any) => {
-  const { username, guardianData, setCreateOpen, fetchGuardian } = props;
+const UpdateGuardian = (props: any) => {
+  const { guardianData, fetchData, setOpen, fetchGuardian } = props;
+  const [guardianInfo, setGuardianInfo] = useState({});
+  useEffect(() => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASE_URL}/mg_guardian/retrive`,
+        {
+          guardian_user_name: guardianData.user_name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setGuardianInfo(response.data);
+        console.log(response.data, "edit guardian data ");
+      })
+      .catch(() => {
+        message.error("Error on adding Guardian!");
+      });
+  }, []);
 
   const { values, handleChange, handleBlur, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
-      first_name: "",
-      middle_name: "",
-      last_name: "",
-      relation: "",
-      email_id: "",
-      date_of_birth: "",
-      qualification: "",
-      occupation: "",
-      designation: "",
-      income: "",
-      education: "",
-      aadhar_number: "",
-      mobile_number: "",
-      notification: false,
-      subscription: false,
+      user_name: guardianData.user_name,
+      first_name: guardianData.first_name,
+      middle_name: guardianData.middle_name,
+      last_name: guardianData.last_name,
+      relation: guardianData.relationship,
+      dob: guardianData.dob,
+      occupation: guardianData.occupation,
+      income: guardianData.income,
+      education: guardianData.education,
+      adharnumber: guardianData.adhar_number,
+      mobile_number: guardianData.mobile_number,
+      _number: guardianData._number,
+      email_id: guardianData.email,
+      address_line1: guardianData.address_line1,
+      address_line2: guardianData.address_line2,
+      street: guardianData.street,
+      landmark: guardianData.landmark,
+      city: guardianData.city,
+      state: guardianData.state,
+      country: guardianData.country,
+      pin_code: guardianData.pin_code,
+      guardian_img: null,
+      mobile_subscription: guardianData.subscription,
+      mobile_notification: guardianData.notification,
+      email_subscription: guardianData.subscription,
+      email_notification: guardianData.notification,
+      login_access: false,
+      primary_contact: false,
     },
 
     validationSchema: validationSchema,
     enableReinitialize: true,
     onSubmit: (values, action) => {
-      const guardianDetails = {
-        student_data: {
-          user_name: username,
-        },
-        guardian_data: [values],
+      const { login_access, primary_contact, ...sendValues } = values;
+      axios
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_guardian/retrive`, sendValues, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          console.log("gettting guardian info ");
+          fetchGuardian();
+          message.success("Guardian Info Updated ");
+          setOpen(false);
+        })
+        .catch((error) => {
+          message.error("Error on updating Guardian!");
+        });
+      let guardianaccess = {
+        user_name: guardianData.user_name,
+        login_access: login_access,
+        primary_contact: primary_contact,
       };
       axios
-        .post(`${process.env.REACT_APP_BASE_URL}/mg_guardian`, guardianDetails, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_guardian/manage`, [guardianaccess], {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
         .then(() => {
-          console.log("guardian created for this student ");
-          message.success("Guardian Added SuccessFully");
-          fetchGuardian();
-          action.resetForm();
-          setCreateOpen(false);
+          console.log("Updating Guardian Access");
+          message.success("Updated Guardian Access");
         })
-        .catch((error: any) => {
-          message.error(error.response.data.detail);
+        .catch((error) => {
+          message.error("Error while granting Guardian Access");
         });
+
+      action.resetForm();
     },
   });
 
@@ -124,7 +175,7 @@ const Create = (props: any) => {
         <MDBox p={4} pb={1}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
-              <MDTypography variant="h4">Add Guardian </MDTypography>
+              <MDTypography variant="h4">Update Guardian </MDTypography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <MDInput
@@ -203,25 +254,25 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} key={"date_of_birth"}>
+            <Grid item xs={12} sm={4} key={"dob"}>
               <MDInput
                 sx={{ width: "90%" }}
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 InputLabelProps={{ shrink: true }}
                 variant="standard"
-                name={`date_of_birth`}
+                name={`dob`}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Date Of Birth
                   </MDTypography>
                 }
-                value={values.date_of_birth}
+                value={values.dob}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} key={"qualification"}>
+            {/* <Grid item xs={12} sm={4} key={"qualification"}>
               <MDInput
                 sx={{ width: "90%" }}
                 variant="standard"
@@ -235,7 +286,23 @@ const Create = (props: any) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-            </Grid>
+            </Grid>  
+
+            <Grid item xs={12} sm={4} key={"designation"}>
+              <MDInput
+                sx={{ width: "90%" }}
+                variant="standard"
+                name={`designation`}
+                label={
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Designation
+                  </MDTypography>
+                }
+                value={values.designation}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </Grid> */}
             <Grid item xs={12} sm={4} key={"occupation"}>
               <MDInput
                 sx={{ width: "90%" }}
@@ -251,21 +318,6 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} key={"designation"}>
-              <MDInput
-                sx={{ width: "90%" }}
-                variant="standard"
-                name={`designation`}
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Designation
-                  </MDTypography>
-                }
-                value={values.designation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
             <Grid item xs={12} sm={4} key={"income"}>
               <MDInput
                 sx={{ width: "90%" }}
@@ -273,7 +325,7 @@ const Create = (props: any) => {
                 name={`income`}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Income
+                    Annual Income
                   </MDTypography>
                 }
                 value={values.income}
@@ -296,17 +348,17 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} key={"aadhar_number"}>
+            <Grid item xs={12} sm={4} key={"adharnumber"}>
               <MDInput
                 sx={{ width: "90%" }}
                 variant="standard"
-                name={`aadhar_number`}
+                name={`adharnumber`}
                 label={
                   <MDTypography variant="button" fontWeight="bold" color="secondary">
                     Aadhar Number
                   </MDTypography>
                 }
-                value={values.aadhar_number}
+                value={values.adharnumber}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -327,7 +379,8 @@ const Create = (props: any) => {
                 onBlur={handleBlur}
               />
             </Grid>
-            <Grid item xs={12} sm={4} mt={2} key={"notification"}>
+            <Grid item xs={12} sm={4}></Grid>
+            <Grid item xs={12} sm={3} mt={2}>
               <FormControl>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
@@ -337,8 +390,8 @@ const Create = (props: any) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={values.notification}
-                        name={`notification`}
+                        checked={values.email_notification}
+                        name={`email_notification`}
                         onChange={handleChange}
                       />
                     }
@@ -351,7 +404,7 @@ const Create = (props: any) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={4} mt={2} key={"subscription"}>
+            <Grid item xs={12} sm={3} mt={2}>
               <FormControl>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
@@ -361,8 +414,8 @@ const Create = (props: any) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={values.subscription}
-                        name={`subscription`}
+                        checked={values.email_subscription}
+                        name={`email_subscription`}
                         onChange={handleChange}
                       />
                     }
@@ -375,21 +428,63 @@ const Create = (props: any) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
+            <Grid item xs={12} sm={3} mt={2}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  row
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.login_access}
+                        name={`login_access`}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={
+                      <MDTypography variant="button" fontWeight="bold">
+                        Login Access
+                      </MDTypography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={3} mt={2}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  row
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.primary_contact}
+                        name={`primary_contact`}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={
+                      <MDTypography variant="button" fontWeight="bold">
+                        Primary Contact
+                      </MDTypography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
           </Grid>
-
-          <Grid
-            container
-            xs={12}
-            sm={12}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-            py={2}
-          >
+          <Grid container></Grid>
+          <Grid container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item mt={2}>
               <MDButton
                 color="dark"
                 variant="contained"
                 onClick={() => {
-                  setCreateOpen(false);
+                  setOpen(false);
                 }}
               >
                 Back
@@ -397,7 +492,8 @@ const Create = (props: any) => {
             </Grid>
             <Grid item mt={2} ml={2}>
               <MDButton color="info" variant="contained" type="submit">
-                Save
+                Save&nbsp;
+                <SaveIcon />
               </MDButton>
             </Grid>
           </Grid>
@@ -407,4 +503,4 @@ const Create = (props: any) => {
   );
 };
 
-export default Create;
+export default UpdateGuardian;

@@ -12,14 +12,23 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
+import StudentDetails from "layouts/pages/student/student_details";
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee/class_timing";
 import ClassTimingCreate from "layouts/pages/employee/class_timing/create";
-import React, { createRef } from "react";
+
+import Fee from "layouts/pages/admission/fee_admission";
+import AdmissionForm from "layouts/pages/admission/new_admission";
+import AddDate from "layouts/pages/admission/form_setting/add_date";
 import Myrbacroutes from "myrbacroutes";
 import Settings from "layouts/pages/account/settings";
 import StudentAttendance from "layouts/pages/Attendance/student";
+import FormSetting from "layouts/pages/admission/form_setting";
+import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configuration";
+import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
+import Pdf from "layouts/pages/Mindcompdf/Pdf";
+import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -47,7 +56,7 @@ console.log(rendered, "rendered component");
 
 try {
   if (token) {
-    const response = await axios.get("http://10.0.20.200:8000/mg_rbac_current_user", {
+    const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -106,13 +115,31 @@ let routes = [
         route: "/pages/authentication/myprofile",
         component: <MYProfile />,
       },
+      {
+        name: "Pdf Report",
+        key: "pdfreport",
+        route: "pages/fee/pdfreport",
+        component: <Pdf />,
+      },
     ],
   },
+  // {
+  //   name: "Student Info",
+  //   key: "studentdetails",
+  //   route: "/pages/school/studentdetails",
+  //   component: <StudentDetails />,
+  // },
   {
     name: "Student Attendance",
     key: "student_attendance",
     route: "attendance/student_attendance",
     component: <StudentAttendance />,
+  },
+  {
+    name: "My Attendance",
+    key: "my_atendance",
+    route: "attendance/my_attendance",
+    component: <MYAttandance />,
   },
   {
     name: "setting",
@@ -126,6 +153,7 @@ let routes = [
     route: "/fee/create_fee_category",
     component: <CreateFeeCategory />,
   },
+
   {
     name: "create fee amount perticular",
     key: "createfeeamountperticular",
@@ -167,6 +195,36 @@ let routes = [
     key: "createclasstiming",
     route: "attendance/create_class_timing",
     component: <ClassTimingCreate />,
+  },
+  {
+    name: "Sms Configuration",
+    key: "sms_configuration",
+    route: "notification/sms_configuration",
+    component: <SMSConfiguration />,
+  },
+  {
+    name: "Admission Fee",
+    key: "admission_fee",
+    route: "/pages/admission/fee",
+    component: <Fee />,
+  },
+  {
+    name: "New Admission",
+    key: "new_admission",
+    route: "/pages/admission/AdmissionForm",
+    component: <AdmissionForm />,
+  },
+  {
+    name: "Add Date",
+    key: "add_date",
+    route: "/pages/admission/add_date",
+    component: <AddDate />,
+  },
+  {
+    name: "Manage Sub Template",
+    key: "manage_sub_template",
+    route: "/pages/admission/formsetting/manage_sub_template",
+    component: <ManageSubTemplate />,
   },
 ];
 

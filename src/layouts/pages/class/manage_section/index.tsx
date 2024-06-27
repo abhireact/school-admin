@@ -267,7 +267,7 @@ const ManageSection = (props: any) => {
                       InputLabelProps={{ shrink: true }}
                       disabled
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       sx={{ width: "80%" }}
                       variant="standard"
                       name={`sectiondata[${index}].start_date`}
@@ -284,7 +284,7 @@ const ManageSection = (props: any) => {
                       InputLabelProps={{ shrink: true }}
                       disabled
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       sx={{ width: "80%" }}
                       variant="standard"
                       name={`sectiondata[${index}].end_date`}
@@ -371,7 +371,7 @@ const ManageSection = (props: any) => {
                       <MDInput
                         InputLabelProps={{ shrink: true }}
                         type="date"
-                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                         sx={{ width: "80%" }}
                         variant="standard"
                         name={`section[${index}].start_date`}
@@ -401,7 +401,7 @@ const ManageSection = (props: any) => {
                       <MDInput
                         InputLabelProps={{ shrink: true }}
                         type="date"
-                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                         sx={{ width: "80%" }}
                         variant="standard"
                         name={`section[${index}].end_date`}

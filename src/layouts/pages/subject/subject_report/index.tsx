@@ -2,27 +2,28 @@ import React, { useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import FormField from "layouts/pages/account/components/FormField";
 import { useFormik } from "formik";
-import { Grid, Card, Link, Autocomplete, Checkbox } from "@mui/material";
+import { Grid, Card, Link, Autocomplete, Checkbox, Tooltip } from "@mui/material";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
-import Icon from "@mui/material/Icon";
+import * as XLSX from "xlsx";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 const token = Cookies.get("token");
 import * as Yup from "yup";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import DataTable from "examples/Tables/DataTable";
 const validationSchema = Yup.object().shape({
-  to_section_name: Yup.string().required("Required *"),
   class_name: Yup.string().required("Required *"),
   section_name: Yup.string().required("Required *"),
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required *"),
-  select_fees: Yup.string().required("Required *"),
 });
 export default function SubjectReport() {
   const [data, setData] = useState([]);
@@ -42,27 +43,27 @@ export default function SubjectReport() {
       enableReinitialize: true,
       onSubmit: async (values, action) => {
         console.log("submit");
-        const sendData = data
-          .filter((info: any) => info.is_selected)
-          .map((info: any) => info.user_id);
-        console.log(sendData);
-        if (sendData.length < 1) {
-          message.error("No Student is Selected");
-          return;
-        }
-        const sendValue = { ...values, user_name: sendData };
+
+        let { academic_year } = values;
+        const sendValue = { academic_year };
 
         axios
-          .post(`${process.env.REACT_APP_BASE_URL}/mg_student/change_section`, sendValue, {
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_subject/subject_report`, sendValue, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           })
-          .then(() => {
-            action.resetForm();
-
-            message.success("Student Section Changed Successfully");
+          .then((response) => {
+            //action.resetForm();
+            //message.success("Student Section Changed Successfully");
+            console.log(response.data, "Subject Info");
+            setData(
+              response.data.filter(
+                (item: any) =>
+                  item.class_name == values.class_name && item.section_name == values.section_name
+              )
+            );
           })
           .catch((error: any) => {
             console.log(error, "error");
@@ -70,40 +71,96 @@ export default function SubjectReport() {
           });
       },
     });
+  const dataTableData = {
+    columns: [
+      { Header: "Subject Name", accessor: "subject_name" },
+      { Header: "Subject Code", accessor: "subject_code" },
 
-  const handleShowData = () => {
-    const sendData = {
-      academic_year: values.academic_year,
+      { Header: "Class Name", accessor: "class_name" },
+      { Header: "Class Code", accessor: "class_code" },
+      { Header: "Section Name", accessor: "section_name" },
+      { Header: "Employee Name", accessor: "employee_name" },
+    ],
 
-      class_name: values.class_name,
-      section_name: values.section_name,
-    };
-    axios
-      .post(`${process.env.REACT_APP_BASE_URL}/mg_student/search`, sendData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data, "Subject for this  Academic Year,Class and Section");
-        if (response.data.length < 1) {
-          setData([]);
-          message.error("No Subject found  for this Academic Year ,Class and Section ");
-        }
-        let studentData = response.data.map((selection: any, i: number) => ({
-          ...selection,
-          is_selected: false,
-        }));
-        setData(studentData);
-      })
-      .catch((error: any) => {
-        setData([]);
-        console.log(error, "error");
-        message.error(error.response.data.detail);
-      });
+    rows: data.map((row, index) => ({
+      subject_code: row.subject_code,
+      subject_name: row.subject_name,
+
+      class_name: row.class_name,
+      class_code: row.class_code,
+      section_name: row.section_name,
+      employee_name: row.employee_name,
+    })),
   };
+  const [isExporting, setIsExporting] = useState(false);
+  const handleExport = () => {
+    setIsExporting(true);
 
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    XLSX.writeFile(workbook, `subject_report.xlsx`, { bookType: "xlsx", type: "binary" });
+
+    setIsExporting(false);
+    console.log("export excel data", data);
+  };
+  const [isPdf, setIsPdf] = useState(false);
+
+  // const downloadPDF = () => {
+  //   const doc = new jsPDF();
+  //   const maxRowsPerPage = 10; // Set the maximum number of rows per page
+
+  //   // Create an HTML table string
+  //   let tableHtml = `<table>
+  //     <thead>
+  //       <tr>
+  //         <th>Academic Year</th>
+  //         <th>Class Name</th>
+  //         <th>Class Code</th>
+  //         <th>Section Name</th>
+  //         <th>Subject Name</th>
+  //         <th>Subject Code</th>
+  //         <th>Employee Name</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody>`;
+
+  //   // Add table rows
+  //   data.forEach((row) => {
+  //     tableHtml += `<tr>
+  //       <td>${row.academic_year}</td>
+  //       <td>${row.class_name}</td>
+  //       <td>${row.class_code}</td>
+  //       <td>${row.section_name}</td>
+  //       <td>${row.subject_name}</td>
+  //       <td>${row.subject_code}</td>
+  //       <td>${row.employee_name}</td>
+  //     </tr>`;
+  //   });
+
+  //   tableHtml += `</tbody></table>`;
+
+  //   doc.autoTable({
+  //     html: tableHtml,
+  //     startY: 20,
+  //     styles: { halign: "left", fontSize: 8 },
+  //     margin: { horizontal: 7 },
+  //     didDrawPage: (dataArgsPages) => {
+  //       const str = `Page ${dataArgsPages.pageCount}`;
+  //       doc.text(str, dataArgsPages.settings.margin.left, doc.internal.pageSize.getHeight() - 5);
+  //     },
+  //     headStyles: { fillColor: [0, 0, 0] },
+  //     footStyles: { fillColor: [0, 0, 0] },
+  //     didParseCell: (data) => {
+  //       if (data.row.index % 2 === 0) {
+  //         data.cell.styles.fillColor = [230, 230, 230];
+  //       }
+  //     },
+  //     maxRowsPerPage: maxRowsPerPage, // Set the maximum number of rows per page
+  //   });
+  //   doc.save("table.pdf");
+  // };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -211,7 +268,7 @@ export default function SubjectReport() {
                       value={values.section_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          From Section
+                          Section Name
                         </MDTypography>
                       }
                       {...params}
@@ -233,24 +290,50 @@ export default function SubjectReport() {
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
                 <Grid item>
-                  <MDButton
-                    color="info"
-                    variant="contained"
-                    onClick={() => {
-                      handleShowData();
-                    }}
-                  >
+                  <MDButton color="info" variant="contained" type="submit">
                     Show Data
                   </MDButton>
                 </Grid>
-                {data.length > 0 && (
-                  <Grid item mr={8}>
-                    <MDButton color="info" variant="contained" type="submit">
-                      Save
-                    </MDButton>
-                  </Grid>
-                )}
               </Grid>
+              {data.length > 0 && (
+                <>
+                  <DataTable table={dataTableData} canSearch />
+                  <Grid
+                    item
+                    container
+                    xs={12}
+                    sm={12}
+                    sx={{ display: "flex", justifyContent: "flex-start" }}
+                    mr={2}
+                  >
+                    {" "}
+                    <Grid item mr={2}>
+                      <MDButton
+                        variant="contained"
+                        color="info"
+                        onClick={() => {
+                          handleExport();
+                        }}
+                        disable={isExporting}
+                      >
+                        Generate Excel
+                      </MDButton>
+                    </Grid>
+                    <Grid item mr={2}>
+                      <MDButton
+                        variant="contained"
+                        color="info"
+                        // onClick={() => {
+                        //   downloadPDF();
+                        // }}
+                        disabled={isPdf}
+                      >
+                        Generate PDF
+                      </MDButton>
+                    </Grid>
+                  </Grid>
+                </>
+              )}
             </Grid>
           </MDBox>
         </Card>

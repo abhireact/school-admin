@@ -148,7 +148,7 @@ const Create = (props: any) => {
             <Grid item sm={4} xs={4}>
               <Autocomplete
                 disableClearable
-                //disabled
+                disabled
                 sx={{ width: "80%" }}
                 value={values.academic_year}
                 onChange={(event, value) => {
@@ -274,7 +274,7 @@ const Create = (props: any) => {
               <MDInput
                 InputLabelProps={{ shrink: true }}
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 sx={{ width: "80%" }}
                 label="Start Date *"
                 variant="standard"
@@ -292,7 +292,7 @@ const Create = (props: any) => {
                 sx={{ width: "80%" }}
                 InputLabelProps={{ shrink: true }}
                 type="date"
-                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                 label="End Date *"
                 variant="standard"
                 name="end_date"
