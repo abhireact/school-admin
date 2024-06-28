@@ -150,7 +150,7 @@ export default function ManageFeeAmountPerticular() {
             </Link>
           </Grid>
         </Grid>
-        <DataTable table={feeConcessionData} isSorted={false} />
+        <DataTable table={feeConcessionData} canSearch />
       </Card>
     </DashboardLayout>
   );

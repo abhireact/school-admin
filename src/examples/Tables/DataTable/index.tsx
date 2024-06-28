@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, LegacyRef, forwardRef } from "react";
 import * as XLSX from "xlsx";
 
 // react-table components
@@ -26,7 +26,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Icon from "@mui/material/Icon";
 import Autocomplete from "@mui/material/Autocomplete";
-
+import ReactDOMServer from "react-dom/server";
 // Material Dashboard 2 PRO React TS components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -42,6 +42,7 @@ import MDButton from "components/MDButton";
 import React from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import HeaderPdf from "layouts/pages/Mindcompdf/HeaderPdf";
 
 // Declaring props types for DataTable
 interface Props {
@@ -186,6 +187,15 @@ function DataTable({
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
 
+    // Add header
+    doc.setFontSize(18);
+    doc.text("Your Header Text", 14, 15);
+    doc.setFontSize(12); // Reset font size for the rest of the document
+
+    // Add a line under the header
+    doc.setLineWidth(0.5);
+    doc.line(14, 20, 196, 20);
+
     // Set up table headers and rows
     const tableHeaders = table.columns.map((column) => column.Header);
     const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
@@ -193,7 +203,17 @@ function DataTable({
       // Get the keys from the first row of the input data
       const keys = Object.keys(table.rows[0]);
       // Map the keys to the corresponding values in the current row
-      return keys.map((key) => row[key]);
+      return keys.map((key) => {
+        const value = row[key];
+        // Check if the value is an object
+        if (typeof value === "object" && value !== null) {
+          // If it's an object, convert it to a string using JSON.stringify
+          return JSON.stringify(value);
+        } else {
+          // Otherwise, return the value as is
+          return value;
+        }
+      });
     });
 
     // Flatten each individual row before passing to autoTable
@@ -201,6 +221,7 @@ function DataTable({
 
     // Add the table to the PDF document
     autoTable(doc, {
+      startY: 30, // Start the table below the header
       head: [filteredTableHeaders],
       body: flattenedTableRows, // Pass flattenedTableRows as an array of arrays
     });
@@ -208,6 +229,48 @@ function DataTable({
     // Save the PDF file
     doc.save("table.pdf");
   };
+  // const handleGeneratePDF = () => {
+  //   const doc = new jsPDF();
+
+  //   // Add header
+  //   doc.setFontSize(18);
+  //   doc.text("Your Header Text", 14, 15);
+  //   doc.setFontSize(12); // Reset font size for the rest of the document
+
+  //   // Add a line under the header
+  //   doc.setLineWidth(0.5);
+  //   doc.line(14, 20, 196, 20);
+
+  //   // Set up table headers and rows
+  //   const tableHeaders = table.columns.map((column) => column.Header);
+  //   const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
+
+  //   const tableRows = table.rows.map((row) => {
+  //     const keys = Object.keys(table.rows[0]);
+  //     return keys.map((key) => {
+  //       const value = row[key];
+  //       if (typeof value === "object" && value !== null) {
+  //         return JSON.stringify(value);
+  //       } else {
+  //         return value;
+  //       }
+  //     });
+  //   });
+
+  //   // Flatten each individual row before passing to autoTable
+  //   const flattenedTableRows = tableRows.map((row) => row.flat());
+
+  //   // Add the table to the PDF document
+  //   autoTable(doc, {
+  //     startY: 30, // Start the table below the header
+  //     head: [filteredTableHeaders],
+  //     body: flattenedTableRows,
+  //   });
+
+  //   // Save the PDF file
+  //   doc.save("table.pdf");
+  // };
+
   // excel generation
   const downloadXLSX = (tableData: TableRow[]) => {
     // Filter out the "Action" column header and its corresponding data
@@ -263,29 +326,6 @@ function DataTable({
               <MDTypography variant="caption" color="secondary">
                 &nbsp;&nbsp;Entries per page
               </MDTypography>
-              {/* <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={() => setAnchorEl(null)}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem onClick={handleGeneratePDF}>PDF</MenuItem>
-                <MenuItem onClick={() => downloadXLSX(table.rows)}>XSL</MenuItem>
-              </Menu>
-              <MDButton
-                variant="gradient"
-                color="info"
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                <DownloadIcon />
-              </MDButton> */}
             </MDBox>
           )}
           {importbtn && (

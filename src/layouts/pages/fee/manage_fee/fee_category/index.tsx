@@ -188,6 +188,7 @@ export default function FeeConcession(props: any) {
           isSorted={false}
           entriesPerPage={false}
           showTotalEntries={false}
+          canSearch
         />
       </Card>
     </DashboardLayout>
