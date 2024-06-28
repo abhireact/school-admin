@@ -30,7 +30,7 @@ import selectData from "layouts/pages/account/settings/components/BasicInfo/data
 
 function BasicInfo(): JSX.Element {
   return (
-    <Card id="basic-info" sx={{ overflow: "visible" }}>
+    <Card sx={{ overflow: "visible" }}>
       <MDBox p={3}>
         <MDTypography variant="h4">Basic Info</MDTypography>
       </MDBox>

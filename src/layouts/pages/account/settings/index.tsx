@@ -21,33 +21,44 @@ function Settings(): JSX.Element {
       <MDBox mt={4}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={3}>
-            <Sidenav />
+            <Sidenav
+              item={[
+                { icon: "person", label: "profile", href: "profile" },
+                { icon: "receipt_long", label: "basic info", href: "basic-info" },
+                { icon: "lock", label: "change password", href: "change-password" },
+                { icon: "security", label: "2FA", href: "2fa" },
+                { icon: "badge", label: "accounts", href: "accounts" },
+                { icon: "campaign", label: "notifications", href: "notifications" },
+                { icon: "settings_applications", label: "sessions", href: "sessions" },
+                { icon: "delete", label: "delete account", href: "delete-account" },
+              ]}
+            />
           </Grid>
           <Grid item xs={12} lg={9}>
             <MDBox mb={3}>
               <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="profile">
                   <Header />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="basic-info">
                   <BasicInfo />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="change-password">
                   <ChangePassword />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="2fa">
                   <Authentication />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="accounts">
                   <Accounts />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="notifications">
                   <Notifications />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="sessions">
                   <Sessions />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="delete-account">
                   <DeleteAccount />
                 </Grid>
               </Grid>

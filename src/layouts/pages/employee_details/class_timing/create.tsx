@@ -6,13 +6,15 @@ import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import Checkbox from "@mui/material/Checkbox";
-import { TimePicker } from "antd";
+import { TimePicker, message } from "antd";
 import MDBox from "components/MDBox";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { Tree } from "antd";
 import type { TreeDataNode, TreeProps } from "antd";
+import axios from "axios";
+import { item } from "examples/Sidenav/styles/sidenavItem";
 const token = Cookies.get("token");
 const current_academic_year = Cookies.get("academic_year");
 interface TreeNode {
@@ -55,13 +57,26 @@ export default function ClassTimingCreate() {
       const submit_value = {
         academic_year: values.academic_year,
         class_name: class_check,
-        weekdays: selectedDays,
-        class_time_name: values.class_number,
+        weekdays: selectedDays.map((item) => item.toString()),
+        class_time_name: values.class_number.toString(),
         start_time: values.start_time,
         end_time: values.end_time,
         is_break: values.is_break,
       };
-      console.log(submit_value, "llllkkk");
+
+      axios
+        .post("http://10.0.20.200:8000/mg_class_timing", submit_value, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          message.success(response.data.message);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
     },
   });
 

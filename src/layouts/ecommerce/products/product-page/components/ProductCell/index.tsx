@@ -1,19 +1,4 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React TS - v1.0.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-2-pro-react-ts
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// Material Dashboard 2 PRO React TS components
+import React from "react";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
@@ -22,17 +7,21 @@ import MDAvatar from "components/MDAvatar";
 interface Props {
   image: string;
   name: string;
+  borderColor?: string; // Optional prop for border color
 }
 
-function ProductCell({ image, name }: Props): JSX.Element {
+function ProductCell({ image, name, borderColor }: Props): JSX.Element {
   return (
     <MDBox display="flex" alignItems="center" pr={2}>
-      <MDBox mr={2}>
-        <MDAvatar src={image} alt={name} />
-      </MDBox>
-      <MDTypography variant="button" fontWeight="medium">
-        {name}
-      </MDTypography>
+      <MDAvatar
+        src={image}
+        alt={name}
+        style={{
+          border: `5px solid ${borderColor || "green"}`,
+          borderRadius: "50%",
+        }}
+        size="xl"
+      />
     </MDBox>
   );
 }

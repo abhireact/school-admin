@@ -29,7 +29,7 @@ import TableCell from "layouts/pages/account/settings/components/TableCell";
 
 function Notifications(): JSX.Element {
   return (
-    <Card id="notifications">
+    <Card>
       <MDBox p={3} lineHeight={1}>
         <MDBox mb={1}>
           <MDTypography variant="h4">Notifications</MDTypography>

@@ -23,10 +23,12 @@ import AdmissionForm from "layouts/pages/admission/new_admission";
 import AddDate from "layouts/pages/admission/form_setting/add_date";
 import Myrbacroutes from "myrbacroutes";
 import Settings from "layouts/pages/account/settings";
+import StudentAttendance from "layouts/pages/Attendance/student";
 import FormSetting from "layouts/pages/admission/form_setting";
 import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configuration";
 import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
+import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -127,6 +129,18 @@ let routes = [
   //   route: "/pages/school/studentdetails",
   //   component: <StudentDetails />,
   // },
+  {
+    name: "Student Attendance",
+    key: "student_attendance",
+    route: "attendance/student_attendance",
+    component: <StudentAttendance />,
+  },
+  {
+    name: "My Attendance",
+    key: "my_atendance",
+    route: "attendance/my_attendance",
+    component: <MYAttandance />,
+  },
   {
     name: "setting",
     key: "setting",
