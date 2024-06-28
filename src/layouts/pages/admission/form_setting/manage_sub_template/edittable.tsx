@@ -20,7 +20,7 @@ const EditableCell: React.FC<EditableCellProps> = ({ value, onChange, type, opti
         options={options}
         value={value}
         onChange={(event, newValue) => onChange(newValue)}
-        renderInput={(params) => <TextField {...params} variant="outlined" size="small" />}
+        renderInput={(params) => <MDInput {...params} variant="outlined" size="small" />}
         disableClearable
       />
     );
