@@ -2,7 +2,7 @@ import React, { forwardRef, LegacyRef } from "react";
 import HeaderPdf from "./HeaderPdf";
 import "./PdfGenerator.css";
 import MDTypography from "components/MDTypography";
-import StudentCard from "./studentCard";
+
 import Grid from "@mui/material/Grid";
 
 interface ExtraDataConfig {
@@ -32,19 +32,7 @@ const formatKey = (key: string) => {
 };
 
 const PdfGenerator = forwardRef<HTMLDivElement, PdfGeneratorProps>(
-  (
-    {
-      data,
-      hiddenText,
-      isPdfMode,
-      additionalInfo,
-      extraData,
-      emptycolumns = 0,
-      profilepdf = false,
-      handleProfilepdf,
-    },
-    ref
-  ) => {
+  ({ data, hiddenText, isPdfMode, additionalInfo, extraData, emptycolumns = 0 }, ref) => {
     const renderCellContent = (value: any) => {
       if (typeof value === "object" && value !== null) {
         return (
@@ -105,76 +93,63 @@ const PdfGenerator = forwardRef<HTMLDivElement, PdfGeneratorProps>(
         </div>
       </div>
     );
-    const renderProfilePage = (item: Record<string, any>, index: number) => (
-      <div key={index} className="profile-page">
-        <Grid my={2}>
-          <StudentCard data={item} />
-        </Grid>
-      </div>
-    );
 
     return (
       <div ref={ref as LegacyRef<HTMLDivElement>} className="report-pdf-container">
-        {profilepdf && Array.isArray(data) ? (
-          data.map((item, index) => renderProfilePage(item, index))
-        ) : (
-          <>
-            {isPdfMode && <HeaderPdf isPdfMode={true} />}
-            {additionalInfo && renderAdditionalInfo()}
-            {Array.isArray(data) && data.length > 0 ? (
-              <table className="report-pdf-table">
-                <thead>
-                  <tr>
-                    {Object.keys(data[0]).map((key) => (
-                      <th key={key}>
-                        <MDTypography
-                          color="secondary"
-                          variant="button"
-                          fontWeight="bold"
-                          style={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          {formatKey(key).toUpperCase()}
-                        </MDTypography>
-                      </th>
-                    ))}
-                    {[...Array(emptycolumns)].map((_, index) => (
-                      <th key={`empty-header-${index}`}></th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((item, index) => (
-                    <tr key={index}>
-                      {Object.values(item).map((value, idx) => (
-                        <td key={idx}>
-                          <MDTypography color="secondary" variant="caption" fontWeight="bold">
-                            {renderCellContent(value)}
-                          </MDTypography>
-                        </td>
-                      ))}
-                      {[...Array(emptycolumns)].map((_, index) => (
-                        <td key={`empty-${index}`}></td>
-                      ))}
-                    </tr>
+        {isPdfMode && <HeaderPdf isPdfMode={true} />}
+        {additionalInfo && renderAdditionalInfo()}
+        {Array.isArray(data) && data.length > 0 ? (
+          <table className="report-pdf-table">
+            <thead>
+              <tr>
+                {Object.keys(data[0]).map((key) => (
+                  <th key={key}>
+                    <MDTypography
+                      color="secondary"
+                      variant="button"
+                      fontWeight="bold"
+                      style={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {formatKey(key).toUpperCase()}
+                    </MDTypography>
+                  </th>
+                ))}
+                {[...Array(emptycolumns)].map((_, index) => (
+                  <th key={`empty-header-${index}`}></th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={index}>
+                  {Object.values(item).map((value, idx) => (
+                    <td key={idx}>
+                      <MDTypography color="secondary" variant="caption" fontWeight="bold">
+                        {renderCellContent(value)}
+                      </MDTypography>
+                    </td>
                   ))}
-                </tbody>
-              </table>
-            ) : (
-              <p>{typeof data === "string" ? data : "No Data Available"}</p>
-            )}
-            {extraData && renderExtraData()}
-            <div
-              style={{ justifyContent: "center", textAlign: "center" }}
-              className="report-hidden-text"
-            >
-              {hiddenText}
-            </div>
-          </>
+                  {[...Array(emptycolumns)].map((_, index) => (
+                    <td key={`empty-${index}`}></td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>{typeof data === "string" ? data : "No Data Available"}</p>
         )}
+        {extraData && renderExtraData()}
+        <div
+          style={{ justifyContent: "center", textAlign: "center" }}
+          className="report-hidden-text"
+        >
+          {hiddenText}
+        </div>
       </div>
     );
   }

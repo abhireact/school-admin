@@ -19,7 +19,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useReactToPrint } from "react-to-print";
 import { fetchStudent } from "layouts/pages/redux/dataSlice";
 import * as XLSX from "xlsx";
-import PdfGenerator from "layouts/pages/student_details/student_pdf/PdfGenerator";
+import StudentCardPDF from "layouts/pages/student_details/student_card_pdf";
+import TablePdfGenerator from "layouts/pages/student_details/student_table_pdf";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   section_name: Yup.string().required("Required *"),
@@ -313,14 +314,16 @@ export default function ExportStudentData() {
           </MDBox>
         </Card>
         <div ref={tableRef}>
-          <PdfGenerator
-            data={data}
-            hiddenText={hiddenText}
-            isPdfMode={true}
-            additionalInfo={undefined}
-            profilepdf={profilepdf}
-            handleProfilepdf={handleProfilepdf}
-          />
+          {profilepdf ? (
+            <StudentCardPDF data={data} />
+          ) : (
+            <TablePdfGenerator
+              data={data}
+              hiddenText={hiddenText}
+              isPdfMode={true}
+              additionalInfo={undefined}
+            />
+          )}
         </div>
       </form>
     </DashboardLayout>

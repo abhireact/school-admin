@@ -1299,24 +1299,11 @@ const Create = (props: any) => {
                     </Grid>
 
                     <Grid item xs={12} sm={12}>
-                      <FormControl>
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          row
-                          name="radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            control={
-                              <Checkbox checked={checkAddress} onChange={handleCheckAddress} />
-                            }
-                            label={
-                              <MDTypography variant="button" fontWeight="bold" color="secondary">
-                                Same as Current Address
-                              </MDTypography>
-                            }
-                          />
-                        </RadioGroup>
-                      </FormControl>
+                      <input type="checkbox" checked={checkAddress} onChange={handleCheckAddress} />
+                      &nbsp;&nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Same as Current Address
+                      </MDTypography>
                     </Grid>
 
                     <Grid item xs={12} sm={4}>
