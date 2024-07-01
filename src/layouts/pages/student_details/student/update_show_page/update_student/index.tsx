@@ -31,8 +31,9 @@ import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 
 import SaveIcon from "@mui/icons-material/Save";
 import * as Yup from "yup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MDAvatar from "components/MDAvatar";
+import { fetchStudent } from "layouts/pages/redux/dataSlice";
 
 const validationSchema = Yup.object().shape({
   academic_year: Yup.string()
@@ -70,6 +71,7 @@ const validationSchema = Yup.object().shape({
 
 const UpdateStudent = (props: any) => {
   const { username, setOpenupdate, fetchStudentInfo, dialogNumber } = props;
+  const dispatch = useDispatch();
   const [studentInfo, setStudentInfo] = useState<any>({});
   const [guardianInfo, setGuardianInfo] = useState([]);
 
@@ -320,6 +322,7 @@ const UpdateStudent = (props: any) => {
             message.success("Student Updated Successfully!");
             fetchStudentInfo();
             props.handleClose();
+            dispatch(fetchStudent() as any);
           })
           .catch((error: any) => {
             message.error(error.response.data.detail);
