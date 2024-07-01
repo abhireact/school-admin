@@ -10,12 +10,12 @@ import Icon from "@mui/material/Icon";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 import SaveIcon from "@mui/icons-material/Save";
 const token = Cookies.get("token");
 import * as Yup from "yup";
-
+import { fetchStudent } from "layouts/pages/redux/dataSlice";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   section_name: Yup.string().required("Required *"),
@@ -36,7 +36,7 @@ export default function StudentArchive(props: any) {
     archive_date: "",
     user_name: [] as string[], // Array to store particulars
   };
-
+  let dispatch = useDispatch();
   const { classes, account, studentcategory } = useSelector((state: any) => state);
   const [reasonsdata, setReasonsdata] = useState([]);
   useEffect(() => {
@@ -85,7 +85,9 @@ export default function StudentArchive(props: any) {
           .then(() => {
             action.resetForm();
             props.setShowpage(false);
+            props.fetchData();
             message.success("Student Archived Successfully");
+            dispatch(fetchStudent() as any);
           })
           .catch((error: any) => {
             console.log(error, "error");
@@ -473,4 +475,7 @@ export default function StudentArchive(props: any) {
       </Card>
     </form>
   );
+}
+function useDipstach() {
+  throw new Error("Function not implemented.");
 }
