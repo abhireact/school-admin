@@ -21,7 +21,7 @@ import PreviewIcon from "@mui/icons-material/Preview";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message, Popconfirm } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import BaseLayout from "layouts/pages/account/components/BaseLayout";
@@ -34,17 +34,19 @@ const validationSchema = Yup.object().shape({
   academic_year: Yup.string()
     .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
     .required("Required"),
-  class_name: Yup.string().required("Required"),
-  section_name: Yup.string().required("Required"),
+  class_name: Yup.string(),
+  section_name: Yup.string(),
 });
 const cookies_academic_year = Cookies.get("academic_year");
 
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import Create from "./create";
+import { fetchStudent } from "layouts/pages/redux/dataSlice";
 const StudentArchive = () => {
   const [rbacData, setRbacData] = useState([]);
 
   const { classes } = useSelector((state: any) => state);
+  let dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [username, setUsername] = useState(null);
   //Update Dialog Box Start
@@ -76,27 +78,6 @@ const StudentArchive = () => {
     setOpenedit(false);
   };
 
-  const fetchArchiveStudents = () => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/student_archive`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setData(response.data.filter((info: any) => info.academic_year == cookies_academic_year));
-        console.log(response.data);
-      })
-      .catch((error) => {
-        setData([]);
-        message.error(error.response.data.detail);
-        console.error("Error fetching data:", error);
-      });
-  };
-  useEffect(() => {
-    fetchArchiveStudents();
-  }, []);
   const handleArchive = async (name: any) => {
     try {
       const response = await axios.post(
@@ -111,12 +92,11 @@ const StudentArchive = () => {
       );
       if (response.status === 200) {
         message.success("Archived SuccessFully");
-        // Filter out the deleted user from the data
-        // Update the state with the new data
         fetchArchiveStudents();
+        dispatch(fetchStudent() as any);
       }
     } catch (error: any) {
-      console.error("Error deleting task:", error);
+      console.error("Error while doing Unarchive:", error);
 
       message.error(error.response.data.detail);
     }
@@ -189,39 +169,39 @@ const StudentArchive = () => {
         section_name: "",
       },
       validationSchema: validationSchema,
-      onSubmit: (values, action) => {
-        let getAcademic_year = values.academic_year;
-        let getClass_name = values.class_name;
-        let getSection_name = values.section_name;
-
-        axios
-          .get(`${process.env.REACT_APP_BASE_URL}/student_archive`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setData(
-              response.data.filter(
-                (info: any) =>
-                  info.class_name == getClass_name &&
-                  info.section_name == getSection_name &&
-                  info.academic_year == getAcademic_year
-              )
-            );
-            console.log(response.data);
-          })
-          .catch((error: any) => {
-            setData([]);
-            message.error(error.response.data.detail);
-          });
-      },
+      onSubmit: (values, action) => {},
     });
   const [showpage, setShowpage] = useState(false);
   const handleShowPage = () => {
     setShowpage(!showpage);
   };
+  const fetchArchiveStudents = () => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/student_archive`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        let archivedata = response.data
+          ?.filter((item: any) => item.academic_year === values.academic_year)
+          ?.filter((item: any) => !values.class_name || item.class_name === values.class_name)
+          ?.filter(
+            (item: any) => !values.section_name || item.section_name === values.section_name
+          );
+        setData(archivedata);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        setData([]);
+        message.error(error.response.data.detail);
+        console.error("Error fetching data:", error);
+      });
+  };
+  useEffect(() => {
+    fetchArchiveStudents();
+  }, [values]);
   // student.filter((info: any) => info.academic_year == values.academic_year);
   return (
     <BaseLayout>
@@ -232,11 +212,7 @@ const StudentArchive = () => {
       ) : (
         <>
           {openupdate && username ? (
-            <ShowStudent
-              setOpenupdate={setOpenupdate}
-              username={username}
-              fetchData={fetchArchiveStudents}
-            />
+            <ShowStudent setOpenupdate={setOpenupdate} fetchData={fetchArchiveStudents} />
           ) : (
             <>
               <Card>
@@ -266,6 +242,8 @@ const StudentArchive = () => {
                           value={values.academic_year}
                           onChange={(_event, value) => {
                             handleChange({ target: { name: "academic_year", value } });
+                            setFieldValue("class_name", "");
+                            setFieldValue("section_name", "");
                           }}
                           options={
                             classes
@@ -311,7 +289,6 @@ const StudentArchive = () => {
                           }
                           renderInput={(params) => (
                             <MDInput
-                              required
                               name="class_name"
                               // onChange={handleChange}
                               value={values.class_name}
@@ -350,7 +327,6 @@ const StudentArchive = () => {
                           }
                           renderInput={(params) => (
                             <MDInput
-                              required
                               name="section_name"
                               //  onChange={handleChange}
                               value={values.section_name}
@@ -375,14 +351,16 @@ const StudentArchive = () => {
                         sm={12}
                         ml={2}
                         sx={{ display: "flex", justifyContent: "flex-start" }}
-                      >
-                        <MDButton color="info" variant="contained" type="submit">
-                          Show Data
-                        </MDButton>
-                      </Grid>
+                      ></Grid>
                     </Grid>
-                    {data.length > 0 && (
+                    {data?.length > 0 ? (
                       <DataTable canSearch={true} isSorted={false} table={dataTableData} />
+                    ) : (
+                      <MDBox my={4}>
+                        <MDTypography variant="button" color="error">
+                          No Student Data is Available For this Academic Year/Wing/Class/Section
+                        </MDTypography>
+                      </MDBox>
                     )}
                   </MDBox>
                 </form>

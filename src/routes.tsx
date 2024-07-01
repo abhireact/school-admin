@@ -17,7 +17,6 @@ import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee_details/class_timing";
 import ClassTimingCreate from "layouts/pages/employee_details/class_timing/create";
-
 import Fee from "layouts/pages/admission/fee_admission";
 import AdmissionForm from "layouts/pages/admission/new_admission";
 import AddDate from "layouts/pages/admission/form_setting/add_date";
@@ -29,6 +28,7 @@ import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configura
 import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
+import CreateStudent from "layouts/pages/student_details/student/create";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -123,12 +123,13 @@ let routes = [
       },
     ],
   },
-  // {
-  //   name: "Student Info",
-  //   key: "studentdetails",
-  //   route: "/pages/school/studentdetails",
-  //   component: <StudentDetails />,
-  // },
+  {
+    name: "create student",
+    key: "create_student",
+    route: "student/create_student",
+    component: <CreateStudent />,
+  },
+
   {
     name: "Student Attendance",
     key: "student_attendance",
