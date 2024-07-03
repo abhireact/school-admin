@@ -64,6 +64,7 @@ import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-p
 import StudentAttendance from "layouts/pages/Attendance/student";
 import FormSetting from "layouts/pages/admission/form_setting";
 import StudentAdmission from "layouts/pages/admission";
+import StudentAdmissionReport from "layouts/pages/student_details/student_report/student_admission_report";
 import StudentAttendanceReport from "layouts/pages/Attendance/reports/student_attendance_report";
 import StudentAttendanceDateWiseReport from "layouts/pages/Attendance/reports/student_date_wise";
 import Consolidiration from "layouts/pages/Attendance/reports/consolidiration";
@@ -212,15 +213,21 @@ const routes = [
         collapse: [
           {
             name: "Student Class List Report",
-            key: "classlist_report",
+            key: "student_classlist_report",
             route: "student/student_classlist_report",
             component: <StudentClassListReport />,
           },
           {
             name: "Export Student Data",
-            key: "export_data",
+            key: "student_export_data",
             route: "student/student_export_report",
             component: <ExportStudentData />,
+          },
+          {
+            name: "Student Admission Report",
+            key: "student_admission_report",
+            route: "student/student_admission_report",
+            component: <StudentAdmissionReport />,
           },
         ],
       },
