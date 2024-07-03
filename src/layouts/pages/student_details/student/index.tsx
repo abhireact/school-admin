@@ -61,29 +61,6 @@ const Student = () => {
     setUsername(main_data.user_id);
   };
 
-  const handleCloseupdate = () => {
-    setOpenupdate(false);
-  }; //End
-
-  const fetchStudents = () => {
-    axios
-      .post(`${process.env.REACT_APP_BASE_URL}/mg_student/search`, values, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        message.error(error.response.data.detail);
-        console.error("Error fetching data:", error);
-      });
-  };
-
   const handleDelete = async (name: any) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_student`, {

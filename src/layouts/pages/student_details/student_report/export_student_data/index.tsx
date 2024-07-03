@@ -64,6 +64,7 @@ export default function ExportStudentData() {
     academic_year: cookies_academic_year,
     class_name: "",
     section_name: "",
+
     // Array to store particulars
   };
 
