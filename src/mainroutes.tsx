@@ -8,6 +8,7 @@ import StudentDetails from "layouts/pages/student_details/student";
 import StudentArchive from "layouts/pages/student_details/student_archive";
 import StudentClassListReport from "layouts/pages/student_details/student_report/student_classlist_report";
 import ExportStudentData from "layouts/pages/student_details/student_report/export_student_data";
+import StudentOverview from "layouts/pages/student_details/student_report/overview_student_data";
 import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -15,7 +16,6 @@ import EmployeeType from "layouts/pages/employee_details/employee_type";
 import EmployeeDetails from "layouts/pages/employee_details/employee";
 import Academic from "layouts/pages/school/school_academic_year";
 import Class from "layouts/pages/school/school_class";
-``;
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee_details/department";
 import PortraitIcon from "@mui/icons-material/Portrait";
@@ -49,7 +49,6 @@ import SubjectDetails from "layouts/pages/subject_details/subject";
 import SectionSubject from "layouts/pages/subject_details/section_subject";
 import SubjectTeacher from "layouts/pages/subject_details/subject_teacher";
 import StudentSectionChange from "layouts/pages/student_details/student_section_change";
-
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
@@ -89,6 +88,7 @@ const translater = {
   },
 };
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import StudentPhotoUpload from "layouts/pages/student_details/student_bulk_upload";
 import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_report";
 
 const routes = [
@@ -197,21 +197,40 @@ const routes = [
 
       {
         name: "Student Promotion",
-        key: "studentpromotion",
+        key: "student_promotion",
         route: "student/student_promoton",
         component: <StudentPromotion />,
       },
       {
         name: "Student Section Change",
-        key: "studentsectionchange",
+        key: "student_section_change",
         route: "student/student_section_change",
         component: <StudentSectionChange />,
+      },
+      {
+        name: "Student Photo Upload",
+        key: "student_photo_upload",
+        route: "student/student_photo_upload",
+        component: <StudentPhotoUpload />,
       },
       {
         name: "Student Report",
         key: "student_report",
         icon: <Icon fontSize="medium">S</Icon>,
         collapse: [
+          {
+            name: "Overview of Student Data ",
+            key: "student_overview",
+            route: "student/student_overview",
+            component: <StudentOverview />,
+          },
+          {
+            name: "Student Admission Report",
+            key: "student_admission_report",
+            route: "student/student_admission_report",
+            component: <StudentAdmissionReport />,
+          },
+
           {
             name: "Student Class List Report",
             key: "student_classlist_report",
@@ -223,12 +242,6 @@ const routes = [
             key: "student_export_data",
             route: "student/student_export_report",
             component: <ExportStudentData />,
-          },
-          {
-            name: "Student Admission Report",
-            key: "student_admission_report",
-            route: "student/student_admission_report",
-            component: <StudentAdmissionReport />,
           },
         ],
       },
