@@ -89,6 +89,7 @@ const translater = {
   },
 };
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_report";
 
 const routes = [
   {
@@ -633,37 +634,43 @@ const routes = [
 
         collapse: [
           {
-            name: "Fee Register without Payment Mode",
+            name: "Fee Register",
             key: "feeregister",
             route: "pages/fee/feeregister",
             component: <FeeRegister />,
           },
           {
-            name: "Fee Certificate",
-            key: "feecertificate",
-            route: "pages/fee/feecertificate",
-            component: <FeeCertificate />,
+            name: "Fee Collection",
+            key: "fee_collection_report",
+            route: "pages/fee/fee_collection_report",
+            component: <FeeCollectionReport />,
           },
+          // {
+          //   name: "Fee Certificate",
+          //   key: "feecertificate",
+          //   route: "pages/fee/feecertificate",
+          //   component: <FeeCertificate />,
+          // },
+          // {
+          //   name: "Student Certificate",
+          //   key: "studentcertificate",
+          //   route: "pages/fee/studentcertificate",
+          //   component: <StudentCertificate />,
+          // },
           {
-            name: "Student Certificate",
-            key: "studentcertificate",
-            route: "pages/fee/studentcertificate",
-            component: <StudentCertificate />,
-          },
-          {
-            name: "Fee Receipt Report",
+            name: "Fee Receipt ",
             key: "feereceiptreport",
             route: "/fee/reports/feereceiptreport",
             component: <FeeReceiptReport />,
           },
           {
-            name: "Fee Concession Report",
+            name: "Fee Concession ",
             key: "feeconcessionreport",
             route: "/fee/reports/feeconcessionreport",
             component: <FeeConcessionReport />,
           },
           {
-            name: "Fee Defaulter Report",
+            name: "Fee Defaulter ",
             key: "feedefaulterreport",
             route: "/fee/reports/feedefaulterreport",
             component: <FeeDefaulterReport />,

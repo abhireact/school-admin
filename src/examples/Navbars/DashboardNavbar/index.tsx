@@ -352,6 +352,7 @@ import MYAccount from "layouts/pages/authentication/myaccount";
 import { useFormik } from "formik";
 import MDButton from "components/MDButton";
 import { Popconfirm } from "antd";
+import { useSelector } from "react-redux";
 
 // Declaring prop types for DashboardNavbar
 interface Props {
@@ -378,6 +379,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [message, setMessage] = useState([]);
   const [editopen, setEditOpen] = useState(false);
   const [popconfirmVisible, setPopconfirmVisible] = useState(false);
+
   const [selectedValue, setSelectedValue] = useState(null);
   const [unread, setUnread] = useState(0);
   const [editdata, setEditdata] = useState<Notification>({
@@ -403,6 +405,9 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   const [openMenu, setOpenMenu] = useState<any>(false);
   const route = useLocation().pathname.split("/").slice(1);
   const [data, setData] = useState([]);
+  const rdata = useSelector((state: any) => state);
+  console.log(rdata, "rdata");
+
   const FetchAcademicYear = () => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/mg_accademic_year`, {
@@ -428,13 +433,14 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
   console.log(Cacademic_year, "Cacademic_year");
   let today = new Date().toISOString().split("T")[0];
 
-  const currentAcademic = data.find((item) => {
-    const startDate = new Date(item.start_date);
-    const endDate = new Date(item.end_date);
-    const currentDate = new Date(today);
-
-    return currentDate >= startDate && currentDate <= endDate;
-  });
+  const currentAcademic = rdata?.academicyear?.find(
+    (item: { start_date: string | number | Date; end_date: string | number | Date }) => {
+      const startDate = new Date(item.start_date);
+      const endDate = new Date(item.end_date);
+      const currentDate = new Date(today);
+      return currentDate >= startDate && currentDate <= endDate;
+    }
+  );
 
   if (currentAcademic) {
     console.log("Current Academic Year:", currentAcademic?.academic_year);
