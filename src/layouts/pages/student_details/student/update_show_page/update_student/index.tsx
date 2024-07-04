@@ -1000,7 +1000,7 @@ const UpdateStudent = (props: any) => {
                   </Grid>
                   <Grid item xs={12} sm={2} mt={2}>
                     <MDTypography variant="body2" color="secondary" fontWeight="bold">
-                      {values.stud_img ? "Change Image" : "Upload Image"}
+                      {studentInfo.stud_img_data ? "Change Image" : "Upload Image"}
                     </MDTypography>
                   </Grid>
                   <Grid item xs={12} sm={4} mt={2}>

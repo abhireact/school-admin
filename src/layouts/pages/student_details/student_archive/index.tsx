@@ -212,7 +212,11 @@ const StudentArchive = () => {
       ) : (
         <>
           {openupdate && username ? (
-            <ShowStudent setOpenupdate={setOpenupdate} fetchData={fetchArchiveStudents} />
+            <ShowStudent
+              setOpenupdate={setOpenupdate}
+              username={username}
+              fetchData={fetchArchiveStudents}
+            />
           ) : (
             <>
               <Card>

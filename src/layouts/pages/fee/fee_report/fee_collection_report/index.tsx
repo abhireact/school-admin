@@ -327,7 +327,6 @@ const FeeCollectionReport = (props: any) => {
       <DashboardNavbar />
       <Card>
         <form onSubmit={handleSubmit}>
-          {" "}
           <Grid container p={2}>
             <Grid item xs={12} sm={6}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
@@ -367,7 +366,7 @@ const FeeCollectionReport = (props: any) => {
                         }
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Daily{" "}
+                            Daily
                           </MDTypography>
                         }
                       />
@@ -383,7 +382,7 @@ const FeeCollectionReport = (props: any) => {
                         }
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Monthly{" "}
+                            Monthly
                           </MDTypography>
                         }
                       />
@@ -399,7 +398,7 @@ const FeeCollectionReport = (props: any) => {
                         }
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Date{" "}
+                            Date
                           </MDTypography>
                         }
                       />

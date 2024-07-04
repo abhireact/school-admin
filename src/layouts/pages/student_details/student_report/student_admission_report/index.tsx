@@ -330,7 +330,7 @@ export default function FeeDefaulterReport() {
                 sm={12}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                <Grid item mt={2}>
+                <Grid item>
                   <MDButton color="info" variant="contained" type="submit">
                     Show Data
                   </MDButton>
