@@ -655,7 +655,7 @@ const FeeCollection = (props: any) => {
               ) : (
                 "     <NoDataMessage />"
               )} */}
-              <DataTable table={dataTableData} importbtn />
+              <DataTable table={dataTableData} selectColumnBtn importbtn />
             </Grid>
           </MDBox>
         </form>
