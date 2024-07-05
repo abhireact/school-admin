@@ -12,16 +12,15 @@ export default function StudentCard(props: any): JSX.Element {
     <Grid m={4}>
       <Card sx={{ height: "100%", width: "70%" }}>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} sm={5} pl={1} ml={1}>
-            <MDAvatar
-              src={
-                "https://demos.creative-tim.com/material-dashboard-pro-react/static/media/bruce-mars.8a606c4a6dab54c9ceff.jpg"
-              }
-              alt="profile-image"
-              size="xxl"
-              shadow="sm"
-            />
-          </Grid>
+          <MDAvatar
+            src={
+              "https://demos.creative-tim.com/material-dashboard-pro-react/static/media/bruce-mars.8a606c4a6dab54c9ceff.jpg"
+            }
+            alt="profile-image"
+            size="xxl"
+            shadow="sm"
+          />
+          <Grid item xs={12} sm={5} pl={1} ml={1}></Grid>
           <Grid
             item
             xs={12}

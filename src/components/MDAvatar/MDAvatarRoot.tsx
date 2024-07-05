@@ -37,8 +37,8 @@ export default styled(Avatar)(({ theme, ownerState }: { theme?: Theme | any; own
   switch (size) {
     case "xs":
       sizeValue = {
-        width: pxToRem(24),
-        height: pxToRem(24),
+        width: pxToRem(34),
+        height: pxToRem(34),
         fontSize: fontSize.xs,
       };
       break;

@@ -3,13 +3,20 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
-import { TreeSelect, message } from "antd";
+import { Spin, TreeSelect, message } from "antd";
 import { useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 
 import { useSelector } from "react-redux";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Autocomplete } from "@mui/material";
+import {
+  FormControlLabel,
+  FormControl,
+  Radio,
+  RadioGroup,
+  Autocomplete,
+  Button,
+} from "@mui/material";
 import * as Yup from "yup";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -53,22 +60,22 @@ interface RowData {
   amount?: number;
 }
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required(),
-  start_date: Yup.string().required(),
-  date: Yup.string().required(),
-  end_date: Yup.string().required(),
-  month: Yup.string().required(),
-  mode_of_payment: Yup.string().required(),
-  deposite_at: Yup.string().required(),
-  based_on: Yup.string().required(),
+  // name: Yup.string().required(),
+  // start_date: Yup.string().required(),
+  // date: Yup.string().required(),
+  // end_date: Yup.string().required(),
+  // month: Yup.string().required(),
+  // mode_of_payment: Yup.string().required(),
+  // deposite_at: Yup.string().required(),
+  // based_on: Yup.string().required(),
   // Add any additional validation rules as needed
 });
 
-const FeeCollectionReport = (props: any) => {
+const FeeCollectionReport = () => {
   const [controller] = useMaterialUIController();
-
+  const [isLoading, setIsLoading] = useState(false);
   const token = Cookies.get("token");
-  const { wings, academicyear, classes, student } = useSelector((state: any) => state);
+  const { wings, academicyear, student } = useSelector((state: any) => state);
   console.log(wings, academicyear, student, "redux Data");
   let today = new Date().toISOString().split("T")[0];
   const currentMonthFormatted = `${new Date().getFullYear()}-${(new Date().getMonth() + 1)
@@ -77,8 +84,8 @@ const FeeCollectionReport = (props: any) => {
   const Cacademic_year = Cookies.get("academic_year");
   console.log(Cacademic_year, "Cacademic_year");
   const [collectionData, setCollectionData] = useState([]);
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
-    useFormik<FormValues>({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik<FormValues>(
+    {
       initialValues: {
         name: "",
         start_date: today,
@@ -90,20 +97,19 @@ const FeeCollectionReport = (props: any) => {
         based_on: "Daily",
       },
       validationSchema: validationSchema,
-      onSubmit: (values, action) => {
+      onSubmit: async (values, action) => {
         console.log(values, "values");
         const MstartDate = values.month ? `${values.month}-01` : "";
         const MendDate = values.month
           ? (() => {
               const year = parseInt(values.month.split("-")[0]);
               const month = parseInt(values.month.split("-")[1]);
-              // Create a date for the first day of the next month
               const nextMonth = new Date(year, month, 1);
-              // Subtract one day to get the last day of the current month
               nextMonth.setDate(nextMonth.getDate());
-              return nextMonth.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+              return nextMonth.toISOString().split("T")[0];
             })()
           : "";
+
         const formvalue = {
           academic_year: Cacademic_year,
           start_date:
@@ -121,58 +127,36 @@ const FeeCollectionReport = (props: any) => {
           payment_mode: values.mode_of_payment,
           collected_at: values.deposite_at,
         };
-        axios
-          .post("http://10.0.20.200:8000/fee_receipts/fee_collection_list", formvalue, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            message.success(" Fetched Data Successfully!");
-            setCollectionData(response.data);
-            action.resetForm();
-          })
-          .catch((error) => {
-            message.error(error.response.data.detail || "Error on fetching data !");
-          });
+
+        setIsLoading(true);
+
+        try {
+          const response = await axios.post(
+            "http://10.0.20.200:8000/fee_receipts/fee_collection_list",
+            formvalue,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          message.success("Fetched Data Successfully!");
+          setCollectionData(response.data);
+          action.resetForm();
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          message.error("Error on fetching data!");
+        } finally {
+          setIsLoading(false);
+        }
       },
-    });
+    }
+  );
+
   console.log(student, "student data");
   console.log(values, "value");
-
-  const [value, setValue] = useState([]);
-
-  const onChange = (newValue: string[]) => {
-    console.log("onChange ", newValue);
-    setValue(newValue);
-  };
-  const tProps = {
-    treeData: [
-      {
-        title: "primary",
-        value: "primary",
-        key: "1",
-      },
-      {
-        title: "secondary",
-        value: "secondary",
-        key: "2",
-      },
-      {
-        title: "pre primary",
-        value: "pre primary",
-        key: "3",
-      },
-    ],
-    value,
-    onChange,
-    treeCheckable: true,
-    placeholder: "Please select",
-    style: {
-      width: "100%",
-    },
-  };
 
   const getColumnsWithData = (data: RowData[]) => {
     if (data.length === 0) return [];
@@ -326,263 +310,262 @@ const FeeCollectionReport = (props: any) => {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <form onSubmit={handleSubmit}>
-          {" "}
-          <Grid container p={2}>
-            <Grid item xs={12} sm={6}>
-              <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Fee Collection Report
-              </MDTypography>
+        <Spin spinning={isLoading}>
+          <form onSubmit={handleSubmit}>
+            {" "}
+            <Grid container p={2}>
+              <Grid item xs={12} sm={6}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  Fee Collection Report
+                </MDTypography>
+              </Grid>
             </Grid>
-          </Grid>
-          <MDBox p={3}>
-            <Grid container>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
-                  <FormControl>
-                    <MDTypography
-                      variant="h5"
-                      fontWeight="bold"
-                      color="secondary"
-                      // sx={{ marginLeft: "20px" }}
-                    >
-                      Based On:
-                    </MDTypography>
+            <MDBox p={3}>
+              <Grid container>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={12} py={1} display="flex" justifyContent="flex-center">
+                    <FormControl>
+                      <MDTypography
+                        variant="h5"
+                        fontWeight="bold"
+                        color="secondary"
+                        // sx={{ marginLeft: "20px" }}
+                      >
+                        Based On:
+                      </MDTypography>
 
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      row
-                      name="based_on"
-                      defaultValue="Daily"
-                    >
-                      <FormControlLabel
-                        //   value="female"
-                        control={
-                          <Radio
-                            // checked={values.based_on.includes("Daily")}
-                            onChange={handleChange}
-                            name="based_on"
-                            value="Daily"
-                          />
-                        }
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Daily{" "}
-                          </MDTypography>
-                        }
-                      />
-                      <FormControlLabel
-                        // value="male"
-                        control={
-                          <Radio
-                            // checked={values.based_on.includes("Addmission No")}
-                            onChange={handleChange}
-                            name="based_on"
-                            value="Monthly"
-                          />
-                        }
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Monthly{" "}
-                          </MDTypography>
-                        }
-                      />
-                      <FormControlLabel
-                        // value="male"
-                        control={
-                          <Radio
-                            // checked={values.based_on.includes("Addmission No")}
-                            onChange={handleChange}
-                            name="based_on"
-                            value="Date"
-                          />
-                        }
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Date{" "}
-                          </MDTypography>
-                        }
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-                {/* <Grid item xs={12} sm={6}>
+                      <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        row
+                        name="based_on"
+                        defaultValue="Daily"
+                      >
+                        <FormControlLabel
+                          //   value="female"
+                          control={
+                            <Radio
+                              // checked={values.based_on.includes("Daily")}
+                              onChange={handleChange}
+                              name="based_on"
+                              value="Daily"
+                            />
+                          }
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Daily{" "}
+                            </MDTypography>
+                          }
+                        />
+                        <FormControlLabel
+                          // value="male"
+                          control={
+                            <Radio
+                              // checked={values.based_on.includes("Addmission No")}
+                              onChange={handleChange}
+                              name="based_on"
+                              value="Monthly"
+                            />
+                          }
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Monthly{" "}
+                            </MDTypography>
+                          }
+                        />
+                        <FormControlLabel
+                          // value="male"
+                          control={
+                            <Radio
+                              // checked={values.based_on.includes("Addmission No")}
+                              onChange={handleChange}
+                              name="based_on"
+                              value="Date"
+                            />
+                          }
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Date{" "}
+                            </MDTypography>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                  {/* <Grid item xs={12} sm={6}>
                   <MDTypography variant="button">Select Wings</MDTypography>
                   <TreeSelect {...tProps} size="large" />
                 </Grid> */}
-                {values.based_on == "Daily" ? (
+                  {values.based_on == "Daily" ? (
+                    <Grid item xs={12} sm={3}>
+                      <MDInput
+                        type="date"
+                        sx={{ width: "100%" }}
+                        InputLabelProps={{ shrink: true }}
+                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                        name="date"
+                        onChange={handleChange}
+                        value={values.date}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Select Date
+                          </MDTypography>
+                        }
+                        variant="standard"
+                        onBlur={handleBlur}
+                        error={touched.date && Boolean(errors.date)}
+                        helperText={touched.date && errors.date}
+                      />
+                    </Grid>
+                  ) : values.based_on == "Monthly" ? (
+                    <Grid item xs={12} sm={3}>
+                      <MDInput
+                        type="month"
+                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ width: "100%" }}
+                        variant="standard"
+                        name="month"
+                        value={values.month}
+                        inputProps={{
+                          min: "2024-04", // This sets the minimum to January 2000
+                        }}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Select Month
+                          </MDTypography>
+                        }
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.month && Boolean(errors.month)}
+                        helperText={touched.month && errors.month}
+                      />
+                    </Grid>
+                  ) : (
+                    <>
+                      <Grid item xs={12} sm={3}>
+                        <MDInput
+                          type="date"
+                          onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                          InputLabelProps={{ shrink: true }}
+                          sx={{ width: "100%" }}
+                          variant="standard"
+                          name="start_date"
+                          value={values.start_date}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Start Date
+                            </MDTypography>
+                          }
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={touched.start_date && Boolean(errors.start_date)}
+                          helperText={touched.start_date && errors.start_date}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={3}>
+                        <MDInput
+                          type="date"
+                          onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                          InputLabelProps={{ shrink: true }}
+                          sx={{ width: "100%" }}
+                          variant="standard"
+                          name="end_date"
+                          value={values.end_date}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              End Date
+                            </MDTypography>
+                          }
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          inputProps={{ min: values.start_date }}
+                          error={touched.end_date && Boolean(errors.end_date)}
+                          helperText={touched.end_date && errors.end_date}
+                        />
+                      </Grid>
+                    </>
+                  )}
                   <Grid item xs={12} sm={3}>
-                    <MDInput
-                      required
-                      type="date"
-                      sx={{ width: "100%" }}
-                      InputLabelProps={{ shrink: true }}
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-                      name="date"
-                      onChange={handleChange}
-                      value={values.date}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Date
-                        </MDTypography>
-                      }
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.date && Boolean(errors.date)}
-                      helperText={touched.date && errors.date}
-                    />
-                  </Grid>
-                ) : values.based_on == "Monthly" ? (
-                  <Grid item xs={12} sm={3}>
-                    <MDInput
-                      type="month"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
-                      InputLabelProps={{ shrink: true }}
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      name="month"
-                      value={values.month}
-                      inputProps={{
-                        min: "2024-04", // This sets the minimum to January 2000
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "mode_of_payment", value } });
                       }}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Month
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.month && Boolean(errors.month)}
-                      helperText={touched.month && errors.month}
+                      options={[
+                        "By Cash",
+                        "By Cheque",
+                        "Online Payment",
+                        "By Draft",
+                        "By Pos",
+                        "By Neft",
+                      ]}
+                      renderInput={(params) => (
+                        <MDInput
+                          name="mode_of_payment"
+                          onChange={handleChange}
+                          value={values.mode_of_payment}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Mode of Payment
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
                     />
                   </Grid>
-                ) : (
-                  <>
-                    <Grid item xs={12} sm={3}>
-                      <MDInput
-                        type="date"
-                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: "100%" }}
-                        variant="standard"
-                        name="start_date"
-                        value={values.start_date}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Start Date
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.start_date && Boolean(errors.start_date)}
-                        helperText={touched.start_date && errors.start_date}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <MDInput
-                        type="date"
-                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: "100%" }}
-                        variant="standard"
-                        name="end_date"
-                        value={values.end_date}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            End Date
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        inputProps={{ min: values.start_date }}
-                        error={touched.end_date && Boolean(errors.end_date)}
-                        helperText={touched.end_date && errors.end_date}
-                      />
-                    </Grid>
-                  </>
-                )}
-                <Grid item xs={12} sm={3}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "mode_of_payment", value } });
-                    }}
-                    options={[
-                      "By Cash",
-                      "By Cheque",
-                      "Online Payment",
-                      "By Draft",
-                      "By Pos",
-                      "By Neft",
-                    ]}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="mode_of_payment"
-                        onChange={handleChange}
-                        value={values.mode_of_payment}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Mode of Payment
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "deposite_at", value } });
-                    }}
-                    options={["All", "School", "Online"]}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="deposite_at"
-                        onChange={handleChange}
-                        value={values.deposite_at}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Deposited At
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
+                  <Grid item xs={12} sm={3}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "deposite_at", value } });
+                      }}
+                      options={["All", "School", "Online"]}
+                      renderInput={(params) => (
+                        <MDInput
+                          name="deposite_at"
+                          onChange={handleChange}
+                          value={values.deposite_at}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Deposited At
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
-              <Grid item ml={2}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Show Data
-                </MDButton>
+              <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
+                <Grid item ml={2}>
+                  <MDButton color="info" variant="contained" type="submit">
+                    Show Data
+                  </MDButton>
+                </Grid>
               </Grid>
-            </Grid>
-            {collectionData.length > 0 ? (
-              <MDBox>
-                <MDButton onClick={handlePrint}>Print</MDButton>
-              </MDBox>
-            ) : null}
-            {collectionData.length > 0 ? (
-              <Grid container mt={2}>
-                <MDBox ref={tableRef} className="hidden-text">
-                  <PdfGenerator
-                    data={cleanDataForPdf(dataTableData).rows}
-                    isPdfMode={true}
-                    hiddenText={""}
-                    additionalInfo={undefined}
-                  />
+              {collectionData.length > 0 ? (
+                <MDBox>
+                  <MDButton onClick={handlePrint}>Print</MDButton>
                 </MDBox>
-                <DataTable table={dataTableData} isSorted={false} canSearch />
-              </Grid>
-            ) : null}
-          </MDBox>
-        </form>
+              ) : null}
+              {collectionData.length > 0 ? (
+                <Grid container mt={2}>
+                  <MDBox ref={tableRef} className="hidden-text">
+                    <PdfGenerator
+                      data={cleanDataForPdf(dataTableData).rows}
+                      isPdfMode={true}
+                      hiddenText={""}
+                      additionalInfo={undefined}
+                    />
+                  </MDBox>
+                  <DataTable table={dataTableData} isSorted={false} canSearch selectColumnBtn />
+                </Grid>
+              ) : null}
+            </MDBox>
+          </form>
+        </Spin>
       </Card>
     </DashboardLayout>
   );

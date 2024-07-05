@@ -441,8 +441,10 @@ function CoverLogin(): JSX.Element {
         // dispatch(setMyRbac(myrbac)); // Dispatch the setToken action
 
         navigate("/dashboards/analytics");
-        // window.location.reload();
-        message.success("Login Successful");
+        setTimeout(() => {
+          window.location.reload();
+          message.success("Login Successful");
+        }, 0);
       } else {
         message.error("Invalid email or password");
       }

@@ -103,7 +103,7 @@ const PaidFees = (props: any) => {
           <StudentCard data={props.mainData} />
         </Grid>
       </Grid>
-      <DataTable table={dataTableData} />
+      <DataTable table={dataTableData} selectColumnBtn />
     </>
   );
 };

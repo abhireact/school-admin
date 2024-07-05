@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { Spin, message } from "antd";
 import { useSelector } from "react-redux";
 
 import { Tree } from "antd";
@@ -42,8 +42,9 @@ interface TreeNode {
   children?: TreeNode[];
 }
 export default function FeeDefaulterReport() {
-  const [result, setResult] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [defaultData, setDefaultData] = useState([]);
+  const [result, setResult] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
@@ -74,28 +75,37 @@ export default function FeeDefaulterReport() {
               section_name: sectionValue,
             };
           });
+
         const submit_value = {
           class_data: checkedSectionKeys,
           fee_categories: [] as any[],
           start_date: values.start_date,
           end_date: values.end_date,
         };
-        console.log(submit_value, "submit valyuuuee");
-        axios
-          .post("http://10.0.20.200:8000/fee_defaulter", submit_value, {
+
+        console.log(submit_value, "submit value");
+
+        setIsLoading(true);
+
+        try {
+          const response = await axios.post("http://10.0.20.200:8000/fee_defaulter", submit_value, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          })
-          .then((response) => {
-            setDefaultData(response.data);
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
           });
+
+          setDefaultData(response.data);
+          message.success("Fee defaulter data fetched successfully!");
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          message.error("Error fetching fee defaulter data. Please try again.");
+        } finally {
+          setIsLoading(false);
+        }
       },
     });
+
   const { classes, account, studentcategory } = useSelector((state: any) => state);
 
   useEffect(() => {
@@ -178,7 +188,7 @@ export default function FeeDefaulterReport() {
       { Header: "REMAINING AMOUNT", accessor: "remaining_amount" },
     ],
     rows: defaultData.map((row: any, index: any) => ({
-      sl_no: index,
+      sl_no: index + 1,
       admission_no: row.admission_number,
       class_section: `${row.class_name} ${row.section_name}`,
       student_name: row.student_name,
@@ -198,133 +208,142 @@ export default function FeeDefaulterReport() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <form onSubmit={handleSubmit}>
-        <MDBox ref={tableRef}>
-          <PdfGenerator
-            data={feeDefaulter.rows}
-            hiddenText={hiddenText}
-            isPdfMode={true}
-            additionalInfo={undefined}
-          />
-        </MDBox>
-        <MDButton onClick={handlePrint}>Print</MDButton>
+      <Spin spinning={isLoading}>
+        <form onSubmit={handleSubmit}>
+          <MDBox ref={tableRef} className="hidden-text">
+            <PdfGenerator
+              data={feeDefaulter.rows}
+              hiddenText={hiddenText}
+              isPdfMode={true}
+              additionalInfo={undefined}
+            />
+          </MDBox>
+          <MDButton onClick={handlePrint}>Print</MDButton>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={12}>
-            <Card>
-              <Grid xs={12} sm={12} p={2}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={12}>
-                    <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                      Fee Defaulter Report
-                    </MDTypography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>
+              <Card>
+                <Grid xs={12} sm={12} p={2}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={12}>
+                      <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                        Fee Defaulter Report
+                      </MDTypography>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      defaultValue={Cacademic_year}
-                      disabled
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "academic_year", value } });
-                      }}
-                      options={
-                        classes
-                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          required
-                          name="academic_year"
-                          onChange={handleChange}
-                          value={values.academic_year || Cacademic_year}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Academic Year
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <MDInput
-                      type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-                      sx={{ width: "100%" }}
-                      label="select Start Date"
-                      variant="standard"
-                      name="start_date"
-                      value={values.start_date}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <MDInput
-                      type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
-                      sx={{ width: "100%" }}
-                      label="select End Date"
-                      variant="standard"
-                      name="end_date"
-                      value={values.end_date}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "250px", overflowY: "auto" }}>
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Select Class & sections
-                    </MDTypography>
-                    <Tree
-                      checkable
-                      onExpand={onExpand}
-                      expandedKeys={expandedKeys}
-                      autoExpandParent={autoExpandParent}
-                      onCheck={onCheck}
-                      checkedKeys={checkedKeys}
-                      onSelect={onSelect}
-                      selectedKeys={selectedKeys}
-                      treeData={result}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  sm={12}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Grid item mt={2}>
-                    <MDButton
-                      color="dark"
-                      variant="contained"
-                      // onClick={() => {
-                      //   handleCloseupdate();
-                      // }}
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        defaultValue={Cacademic_year}
+                        disabled
+                        onChange={(_event, value) => {
+                          handleChange({ target: { name: "academic_year", value } });
+                        }}
+                        options={
+                          classes
+                            ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                            : []
+                        }
+                        renderInput={(params) => (
+                          <MDInput
+                            required
+                            name="academic_year"
+                            onChange={handleChange}
+                            value={values.academic_year || Cacademic_year}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Academic Year
+                              </MDTypography>
+                            }
+                            {...params}
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        type="date"
+                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                        sx={{ width: "100%" }}
+                        label=" Start Date"
+                        variant="standard"
+                        name="start_date"
+                        value={values.start_date}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        type="date"
+                        onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                        sx={{ width: "100%" }}
+                        label=" End Date"
+                        variant="standard"
+                        name="end_date"
+                        value={values.end_date}
+                        onChange={handleChange}
+                        inputProps={{ min: values.start_date }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={4}
+                      p={3}
+                      style={{ maxHeight: "250px", overflowY: "auto" }}
                     >
-                      Back
-                    </MDButton>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Select Class & sections
+                      </MDTypography>
+                      <Tree
+                        checkable
+                        onExpand={onExpand}
+                        expandedKeys={expandedKeys}
+                        autoExpandParent={autoExpandParent}
+                        onCheck={onCheck}
+                        checkedKeys={checkedKeys}
+                        onSelect={onSelect}
+                        selectedKeys={selectedKeys}
+                        treeData={result}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item mt={2} ml={2}>
-                    <MDButton color="info" variant="contained" type="submit">
-                      Show
-                    </MDButton>
+                  <Grid
+                    item
+                    container
+                    xs={12}
+                    sm={12}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    <Grid item mt={2}>
+                      <MDButton
+                        color="dark"
+                        variant="contained"
+                        // onClick={() => {
+                        //   handleCloseupdate();
+                        // }}
+                      >
+                        Back
+                      </MDButton>
+                    </Grid>
+                    <Grid item mt={2} ml={2}>
+                      <MDButton color="info" variant="contained" type="submit">
+                        Show
+                      </MDButton>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Card>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Card>
+                <DataTable table={feeDefaulter} />
+              </Card>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={12}>
-            <Card>
-              <DataTable table={feeDefaulter} />
-            </Card>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Spin>
     </DashboardLayout>
   );
 }
