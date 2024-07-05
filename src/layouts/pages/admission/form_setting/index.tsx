@@ -12,6 +12,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import EditDialog from "./update";
+import { Popconfirm, message } from "antd";
 
 const FormSetting = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const FormSetting = () => {
     columns: [],
     rows: [],
   });
+  const [manageData, setManageData] = useState<any[]>([]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -57,9 +59,19 @@ const FormSetting = () => {
                 </Tooltip>
               </Grid>
               <Grid item>
-                <Tooltip title="Delete" placement="top">
-                  <Icon fontSize="small">delete</Icon>
-                </Tooltip>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure to Delete it ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(item)}
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Tooltip title="Delete" placement="top">
+                    <Icon fontSize="small">delete</Icon>
+                  </Tooltip>
+                </Popconfirm>
               </Grid>
               <Grid item>
                 <Tooltip
@@ -74,6 +86,7 @@ const FormSetting = () => {
           ),
         })),
       });
+      setManageData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -112,39 +125,40 @@ const FormSetting = () => {
     }
   };
 
-  const handleManageSubTemplate = async (item: any) => {
+  const handleDelete = async (item: any) => {
     try {
-      const response = await axios.post(
-        "http://10.0.20.200:8000/admissions/settings_detail",
-        {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/admissions/settings`, {
+        data: {
           academic_year: item.academic_year,
           start_date: item.start_date,
           end_date: item.end_date,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      navigate(
-        "/pages/admission/formsetting/manage_sub_template",
-        // "/pages/admission/formsetting/try",
-        {
-          state: {
-            templateData: response.data,
-            postedData: {
-              academic_year: item.academic_year,
-              start_date: item.start_date,
-              end_date: item.end_date,
-            },
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Delete response:", response.data);
+      fetchData();
     } catch (error) {
-      console.error("Error posting data:", error);
+      console.error("Error deleting data:", error);
     }
+  };
+
+  const handleManageSubTemplate = (item: any) => {
+    // const filteredData = manageData.find((data: any) => data.academic_year === item.academic_year);
+    // console.error("manageData is empty.", filteredData);
+
+    navigate("/pages/admission/formsetting/manage_sub_template", {
+      state: {
+        templateData: item,
+        postedData: {
+          academic_year: item.academic_year,
+          start_date: item.start_date,
+          end_date: item.end_date,
+        },
+      },
+    });
   };
 
   return (
@@ -178,7 +192,9 @@ const FormSetting = () => {
                   showTotalEntries={false}
                 />
               </MDBox>
-            ) : null}
+            ) : (
+              <MDTypography>No data Avialble</MDTypography>
+            )}
           </Grid>
         </MDBox>
       </Card>

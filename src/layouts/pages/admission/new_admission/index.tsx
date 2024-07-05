@@ -33,6 +33,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const AdmissionForm = () => {
   const token = Cookies.get("token");
+  const [storeid, setStoreId] = useState();
   const { classes, account, studentcategory } = useSelector((state: any) => state);
   const [isAlumni, setIsAlumni] = useState(false);
   const [isSiblings, setIsSiblings] = useState(false);
@@ -121,7 +122,12 @@ const AdmissionForm = () => {
 
   const handleOk = () => {
     setIsModalVisible(false);
-    navigate("/pages/admission/Fee");
+
+    navigate("/pages/admission/Fee", {
+      state: {
+        id: storeid,
+      },
+    });
   };
 
   const handleCancel = () => {
@@ -160,8 +166,8 @@ const AdmissionForm = () => {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then(() => {
-          // message.success(" Created successfully!");
+        .then((response) => {
+          setStoreId(response.data.id);
           setIsModalVisible(true);
         })
         .catch((error: any) => {
@@ -273,6 +279,7 @@ const AdmissionForm = () => {
                       onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      disabled
                       error={touched.admission_date && Boolean(errors.admission_date)}
                       helperText={touched.admission_date && errors.admission_date}
                     />

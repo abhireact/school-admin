@@ -119,8 +119,6 @@ const Fee = () => {
 
   const navigate = useNavigate();
 
-  const collectiontypes = ["School", "Bank Details"];
-
   const { values, errors, handleBlur, handleChange, handleSubmit, touched } = useFormik({
     initialValues: initialValues,
     onSubmit: (values) => {
@@ -166,7 +164,8 @@ const Fee = () => {
                     });
                   }}
                   disableClearable
-                  options={collectiontypes}
+                  defaultValue="School"
+                  options={["School", "Bank Details"]}
                   renderInput={(params: any) => (
                     <MDInput
                       label={

@@ -16,10 +16,10 @@ const ManageSubTemplate = () => {
   const location = useLocation();
   const { templateData, postedData } = location.state || {};
   const navigate = useNavigate();
-
+  console.log(templateData, "template");
   const [rows, setRows] = useState(
     templateData
-      ? templateData.map((item: any) => ({
+      ? templateData.details.map((item: any) => ({
           select: item.select,
           class_name: item.class_name,
           max_form_per_day: item.max_form_per_day,

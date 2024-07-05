@@ -65,6 +65,7 @@ import AdmissionForm from "layouts/pages/admission/new_admission";
 import StudentAdmission from "layouts/pages/admission";
 import FormSetting from "layouts/pages/admission/form_setting";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import ManageFeeAdmission from "layouts/pages/admission/manage_fee_admission";
 
 const routes = [
   {
@@ -610,6 +611,12 @@ const routes = [
         key: "admissionpage",
         route: "pages/admission/studentAdmission",
         component: <StudentAdmission />,
+      },
+      {
+        name: "Manage Admission",
+        key: "manage_admission",
+        route: "/pages/admission/manage_admission",
+        component: <ManageFeeAdmission />,
       },
     ],
   },

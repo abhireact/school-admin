@@ -21,6 +21,23 @@ const initialValues = {
   academic_year: "",
   start_date: "",
   end_date: "",
+  details: [
+    {
+      select: true,
+      class_name: "",
+      max_form_per_day: 0,
+      max_form: 0,
+      date_of_calculating_age: "",
+      min_age: 0,
+      max_age: 0,
+      min_age_month: 0,
+      max_age_month: 0,
+      min_age_day: 0,
+      max_age_day: 0,
+      amount: 0,
+      status: "",
+    },
+  ],
 };
 
 const validationSchema = Yup.object().shape({
@@ -130,7 +147,7 @@ const AddDate = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                  onKeyDown={(e: any) => e.preventDefault()}
                   inputProps={{ min: values.academic_year }}
                   error={touched.start_date && Boolean(errors.start_date)}
                   helperText={touched.start_date && errors.start_date}
@@ -152,7 +169,7 @@ const AddDate = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                  onKeyDown={(e: any) => e.preventDefault()}
                   inputProps={{ min: values.start_date }}
                   error={touched.end_date && Boolean(errors.end_date)}
                   helperText={touched.end_date && errors.end_date}
