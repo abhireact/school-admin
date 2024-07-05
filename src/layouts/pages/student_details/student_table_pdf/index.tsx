@@ -105,18 +105,20 @@ const PdfGenerator = forwardRef<HTMLDivElement, PdfGeneratorProps>(
         {Array.isArray(data) && data.length > 0 ? (
           <>
             {heading && (
-              <MDTypography
-                color="secondary"
-                variant="button"
-                fontWeight="bold"
-                style={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {heading}
-              </MDTypography>
+              <Grid sx={{ display: "flex", justifyContent: "center" }}>
+                <MDTypography
+                  // color="secondary"
+                  variant="button"
+                  fontWeight="bold"
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {heading}
+                </MDTypography>
+              </Grid>
             )}
             <table className="report-pdf-table">
               <thead>
