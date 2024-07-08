@@ -38,103 +38,10 @@ const validationSchema = Yup.object().shape({
   wing_name: Yup.string(),
 });
 const cookies_academic_year = Cookies.get("academic_year");
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { fetchStudent } from "layouts/pages/redux/dataSlice";
+
 const StudentPhotoUpload = () => {
-  const [rbacData, setRbacData] = useState([]);
-
-  const { classes, student } = useSelector((state: any) => state);
-  let dispatch = useDispatch();
-  const [data, setData] = useState(student);
-
-  //Update Dialog Box Start
-  const [username, setUsername] = useState(null);
-  const [openupdate, setOpenupdate] = useState(false);
-
-  const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
-    const main_data = data[index];
-    console.log(main_data, "maindata");
-
-    setOpenupdate(true);
-    setUsername(main_data.user_id);
-  };
-
-  const handleDelete = async (name: any) => {
-    try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_student`, {
-        data: { user_name: name },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        message.success("Deleted SuccessFully");
-        // Filter out the deleted user from the data
-        // Update the state with the new data
-        dispatch(fetchStudent() as any);
-      }
-    } catch (error: any) {
-      console.error("Error deleting task:", error);
-
-      message.error(error.response.data.detail);
-    }
-  };
-  const dataTableData = {
-    columns: [
-      { Header: "Student Name", accessor: "full_name" },
-      { Header: "Class", accessor: "class_name" },
-      { Header: "Section", accessor: "section_name" },
-      { Header: "Gender", accessor: "gender" },
-      { Header: "Admission Number", accessor: "admission_number" },
-      { Header: "User ID", accessor: "user_id" },
-      { Header: "Action", accessor: "action" },
-    ],
-
-    rows: data?.map((row: any, index: any) => ({
-      admission_number: row.admission_number,
-      user_id: row.user_id,
-
-      action: (
-        <MDTypography variant="p">
-          <IconButton
-            onClick={() => {
-              handleOpenupdate(index);
-            }}
-          >
-            <Tooltip title="Manage Student" placement="top">
-              <AccountBoxIcon />
-            </Tooltip>
-          </IconButton>
-          <IconButton>
-            <Popconfirm
-              title="Delete"
-              description="Are you sure to Delete it ?"
-              placement="topLeft"
-              onConfirm={() => handleDelete(row.user_id)} // Pass index to confirm function
-              // onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Tooltip title="Delete" placement="top">
-                <DeleteIcon />
-              </Tooltip>
-            </Popconfirm>
-          </IconButton>
-        </MDTypography>
-      ),
-
-      full_name: `${row.first_name} ${row.middle_name == null ? "" : row.middle_name} ${
-        row.last_name == null ? "" : row.last_name
-      }`,
-      class_name: row.class_name,
-      gender: row.gender,
-      section_name: row.section_name,
-      mobile_number: row.mobile_number,
-    })),
-  };
-
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const { classes, account, studentcategory } = useSelector((state: any) => state);
   const { values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: {
@@ -142,38 +49,65 @@ const StudentPhotoUpload = () => {
         class_name: "",
         section_name: "",
         wing_name: "",
-        stud_img: null,
+        stud_upload: [],
       },
       validationSchema: validationSchema,
-      onSubmit: (values, action) => {},
+      onSubmit: async (values, action) => {
+        try {
+          const formData = new FormData();
+          formData.append("academic_year", values.academic_year);
+          formData.append("class_name", values.class_name);
+          formData.append("section_name", values.section_name);
+          formData.append("wing_name", values.wing_name);
+
+          uploadedImages.forEach((file, index) => {
+            formData.append(`stud_upload[${index}]`, file);
+          });
+
+          const response = await axios.post(
+            `${process.env.REACT_APP_BASE_URL}/your_endpoint`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            message.success("Student photos uploaded successfully!");
+            action.resetForm();
+            setUploadedImages([]);
+          }
+        } catch (error) {
+          console.error("Error uploading student photos:", error);
+          message.error("Error uploading student photos.");
+        }
+      },
     });
 
-  const handleImage = (e: any) => {
-    const file = e.target.files[0];
+  const handleImages = (e: any) => {
+    const files = e.target.files;
+    const fileArray = Array.from(files);
+    const validFiles: any = [];
 
-    if (file) {
-      // Check file size (5 MB limit)
+    fileArray.forEach((file: any) => {
       if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        e.target.value = "";
+        message.error(`File ${file.name} exceeds 5 MB limit.`);
         return;
       }
 
-      // Check file type
       if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setFieldValue("stud_img", reader.result); // Set Base64 string
-        };
-        reader.readAsDataURL(file);
+        validFiles.push(file);
       } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-        e.target.value = "";
-        return;
+        message.error(`File ${file.name} is not a valid PNG, JPEG, or HEIC image.`);
       }
-    }
-  };
+    });
 
+    setUploadedImages((prevImages) => [...prevImages, ...validFiles]);
+    setFieldValue("stud_upload", validFiles);
+  };
   return (
     <BaseLayout>
       <Card>
@@ -340,7 +274,8 @@ const StudentPhotoUpload = () => {
                   type="file"
                   accept="image/*"
                   name="stud_img"
-                  onChange={handleImage}
+                  onChange={handleImages}
+                  inputProps={{ multiple: true }}
                   variant="standard"
                 />
               </Grid>
