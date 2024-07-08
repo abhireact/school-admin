@@ -1,20 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Icon from "@mui/material/Icon";
-import { Grid, Link, Tooltip, Autocomplete, Card, IconButton } from "@mui/material";
+import { Grid, Tooltip, Autocomplete, Card } from "@mui/material";
 import MDInput from "components/MDInput";
 import MDBox from "components/MDBox";
-import Dialog, { DialogProps } from "@mui/material/Dialog";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import { Table } from "antd";
-import { ColumnsType } from "antd/es/table/interface";
 import DataTable from "examples/Tables/DataTable";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useReactToPrint } from "react-to-print";
-import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
 import { useFormik } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -103,6 +98,7 @@ export default function ManageFeeAdmission() {
   const [managedata, setManageFeeData] = useState([]);
   const [allReciptData, setAllRecieptData] = useState<AllReceiptData>();
   const [pdfData, setPdfData] = useState(null);
+  const [fetchAttempted, setFetchAttempted] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -123,6 +119,7 @@ export default function ManageFeeAdmission() {
       setManageFeeData([]);
       message.error("No data for this section");
     }
+    setFetchAttempted(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -130,16 +127,14 @@ export default function ManageFeeAdmission() {
     return date.toLocaleDateString("en-GB");
   };
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
-    useFormik({
-      initialValues,
-      validationSchema: commonacademicyear,
-      enableReinitialize: true,
-      onSubmit: async (values, action) => {
-        console.log("inside onsubmitr");
-        fetchData();
-      },
-    });
+  const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
+    initialValues,
+    validationSchema: commonacademicyear,
+    enableReinitialize: true,
+    onSubmit: async () => {
+      fetchData();
+    },
+  });
 
   const tableRef = useRef();
   const hiddenText = "This is computer generated fee receipt and no signature required.";
@@ -160,7 +155,6 @@ export default function ManageFeeAdmission() {
         }
       )
       .then((response) => {
-        console.log("response", response.data);
         setAllRecieptData(response.data);
         if (response.status == 200) {
           const feeRecieptData = {
@@ -203,7 +197,7 @@ export default function ManageFeeAdmission() {
         }
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        alert("Error fetching data:");
       });
   };
 
@@ -285,19 +279,38 @@ export default function ManageFeeAdmission() {
     return {
       bill_no: allReciptData?.receipt_no,
       name: fullName,
-      admission_no: studentData?.admission_no,
-      payment_date: studentData?.payment_date,
-      guardians: guardianNames?.join(" & "),
+      father_name: guardianNames?.join(" / "),
+      course: className,
+      form_no: allReciptData?.receipt_no,
+      admission_date: studentData?.payment_date,
+      receipt_no: allReciptData?.receipt_no,
+      paid_at: studentData?.payment_date,
+      transaction_no: allReciptData?.receipt_no,
       academic_year: academicYear,
       class_name: className,
     };
   }
 
-  const formattedData = formatStudentDataForPdf(
-    allReciptData?.student_data,
-    values.academic_year,
-    values.class_name
-  );
+  useEffect(() => {
+    // Reset managedata and pdfData when the component mounts
+    setManageFeeData([]);
+    setPdfData(null);
+  }, []);
+
+  useEffect(() => {
+    if (allReciptData) {
+      const formattedData = formatStudentDataForPdf(
+        allReciptData?.student_data,
+        values.academic_year,
+        values.class_name
+      );
+
+      setPdfData({
+        rows: manageFeeData.rows,
+        ...formattedData,
+      });
+    }
+  }, [allReciptData]);
 
   return (
     <DashboardLayout>
@@ -308,7 +321,7 @@ export default function ManageFeeAdmission() {
               data={pdfData.rows}
               hiddenText={hiddenText}
               isPdfMode={true}
-              additionalInfo={formattedData}
+              additionalInfo={pdfData}
               extraData={{
                 leftData: {
                   type: "normal",
@@ -410,11 +423,17 @@ export default function ManageFeeAdmission() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={12}>
-            {managedata.length > 0 ? (
-              <Card>
-                <DataTable table={manageFeeData} canSearch />
-              </Card>
-            ) : null}
+            {fetchAttempted && managedata.length === 0 ? (
+              <MDTypography variant="h6" align="center" p={3}>
+                No data available
+              </MDTypography>
+            ) : (
+              managedata.length > 0 && (
+                <Card>
+                  <DataTable table={manageFeeData} canSearch />
+                </Card>
+              )
+            )}
           </Grid>
         </Grid>
       </form>

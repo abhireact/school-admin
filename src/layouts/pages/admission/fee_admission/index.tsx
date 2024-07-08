@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import {
   Grid,
@@ -45,7 +45,7 @@ const Fee = () => {
       });
       setFilterApi(response.data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      alert("Error fetching data. Please try again later.");
     }
   };
 
@@ -91,7 +91,6 @@ const Fee = () => {
     setIsCheque(event.target.value === "By Cheque");
     setIsDraft(event.target.value === "By Draft");
   };
-  console.log("amountFromEditData", amountFromEditData);
 
   const handleFormSubmit = async (values: any) => {
     try {
@@ -113,7 +112,7 @@ const Fee = () => {
       message.success("Payment successful");
       navigate("/pages/admission/studentAdmission");
     } catch (error) {
-      console.error("Error:", error);
+      alert("Error fetching data. Please try again later.");
     }
   };
 

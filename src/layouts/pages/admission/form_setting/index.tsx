@@ -7,7 +7,7 @@ import MDBox from "components/MDBox";
 import { Grid, Card, Tooltip, Icon } from "@mui/material";
 import DataTable from "examples/Tables/DataTable";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";

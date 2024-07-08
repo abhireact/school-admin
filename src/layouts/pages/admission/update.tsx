@@ -2,62 +2,29 @@ import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import { message } from "antd";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { useFormik, useFormikContext } from "formik";
+import { useFormik } from "formik";
 import MDInput from "components/MDInput";
 import { format } from "date-fns";
 import axios from "axios";
-import {
-  Grid,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Card,
-  Autocomplete,
-} from "@mui/material";
-import { useSelector } from "react-redux";
-import FormField from "layouts/ecommerce/products/new-product/components/FormField";
+import { Grid, Autocomplete } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React from "react";
-// import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
 import { v4 as uuidv4 } from "uuid";
 import { admissionformschema } from "./common_validationschema";
 
 const EditAdmission = (props: any) => {
-  const { username, setOpenupdate, fetchStudentInfo, dialogNumber, templateData } = props;
+  const { dialogNumber, studentInfo, fetchStudentInfo } = props;
   const token = Cookies.get("token");
-  const location = useLocation();
-  const { classes, account, studentcategory } = useSelector((state: any) => state);
-  const [isAlumni, setIsAlumni] = useState(false);
-  const [isSiblings, setIsSiblings] = useState(false);
   const [isSameAsCurrentAddress, setIsSameAsCurrentAddress] = useState(false);
-  const navigate = useNavigate();
-  const handleAlumniChange = (event: any) => {
-    handleChange(event);
-    // setIsAlumni(event.target.value === "yes");
-    const value = event.target.value === "yes";
-    setFieldValue("alumni", value);
-    setIsAlumni(value);
-  };
-  const handleSiblingsChange = (event: any) => {
-    handleChange(event);
-    const value = event.target.value === "yes";
-    setFieldValue("siblings", value);
-    setIsSiblings(value);
-  };
+
   //display the current date
   const [currentDate, setCurrentDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  // const [fields, setFields] = useState([{ id: Date.now(), sibling_name: "", sibling_class: "" }]);
   const [fields, setFields] = useState([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
   const handleAddField = () => {
-    // setFields([...fields, { id: Date.now(), sibling_name: "", sibling_class: "" }]);
     setFields([...fields, { id: uuidv4(), sibling_name: "", sibling_class: "" }]);
   };
 
@@ -75,7 +42,6 @@ const EditAdmission = (props: any) => {
   };
 
   const handleCheckboxChange = (event: any) => {
-    // const isChecked = event.target.checked;
     setIsSameAsCurrentAddress(event.target.checked);
     if (event.target.checked) {
       handleChange({
@@ -120,67 +86,67 @@ const EditAdmission = (props: any) => {
   };
 
   const initialValues = {
-    academic_year: templateData?.academic_year || "",
-    class_name: templateData?.class_name || "",
-    admission_date: templateData?.admission_date || "",
-    form_number: templateData?.form_number || "",
-    candidate_first_name: templateData?.candidate_first_name || "",
-    candidate_middle_name: templateData?.candidate_middle_name || "",
-    candidate_last_name: templateData?.candidate_last_name || "",
-    candidate_dob: templateData?.candidate_dob || "",
-    category: templateData?.category || "",
-    religion: templateData?.religion || "",
-    gender: templateData?.gender || "",
-    nationality: templateData?.nationality || "",
-    blood_group: templateData?.blood_group || "",
-    father_first_name: templateData?.father_first_name || "",
-    father_middle_name: templateData?.father_middle_name || "",
-    father_last_name: templateData?.father_last_name || "",
-    father_qualification: templateData?.father_qualification || "",
-    father_occupation: templateData?.father_occupation || "",
-    father_designation: templateData?.father_designation || "",
-    father_place_occupation: templateData?.father_place_occupation || "",
-    father_number: templateData?.father_number || "",
-    father_email_id: templateData?.father_email_id || "",
-    mother_first_name: templateData?.mother_first_name || "",
-    mother_middle_name: templateData?.mother_middle_name || "",
-    mother_last_name: templateData?.mother_last_name || "",
+    academic_year: studentInfo?.academic_year || "",
+    class_name: studentInfo?.class_name || "",
+    admission_date: studentInfo?.admission_date || "",
+    form_number: studentInfo?.form_number || "",
+    candidate_first_name: studentInfo?.candidate_first_name || "",
+    candidate_middle_name: studentInfo?.candidate_middle_name || "",
+    candidate_last_name: studentInfo?.candidate_last_name || "",
+    candidate_dob: studentInfo?.candidate_dob || "",
+    category: studentInfo?.category || "",
+    religion: studentInfo?.religion || "",
+    gender: studentInfo?.gender || "",
+    nationality: studentInfo?.nationality || "",
+    blood_group: studentInfo?.blood_group || "",
+    father_first_name: studentInfo?.father_first_name || "",
+    father_middle_name: studentInfo?.father_middle_name || "",
+    father_last_name: studentInfo?.father_last_name || "",
+    father_qualification: studentInfo?.father_qualification || "",
+    father_occupation: studentInfo?.father_occupation || "",
+    father_designation: studentInfo?.father_designation || "",
+    father_place_occupation: studentInfo?.father_place_occupation || "",
+    father_number: studentInfo?.father_number || "",
+    father_email_id: studentInfo?.father_email_id || "",
+    mother_first_name: studentInfo?.mother_first_name || "",
+    mother_middle_name: studentInfo?.mother_middle_name || "",
+    mother_last_name: studentInfo?.mother_last_name || "",
 
-    mother_qualification: templateData?.academic_year || "",
-    mother_occupation: templateData?.mother_occupation || "",
-    mother_designation: templateData?.mother_designation || "",
-    mother_place_occupation: templateData?.mother_place_occupation || "",
-    mother_number: templateData?.mother_number || "",
-    mother_email_id: templateData?.mother_email_id || "",
-    address_line_1: templateData?.address_line_1 || "",
-    address_line_2: templateData?.address_line_2 || "",
+    mother_qualification: studentInfo?.academic_year || "",
+    mother_occupation: studentInfo?.mother_occupation || "",
+    mother_designation: studentInfo?.mother_designation || "",
+    mother_place_occupation: studentInfo?.mother_place_occupation || "",
+    mother_number: studentInfo?.mother_number || "",
+    mother_email_id: studentInfo?.mother_email_id || "",
+    address_line_1: studentInfo?.address_line_1 || "",
+    address_line_2: studentInfo?.address_line_2 || "",
 
-    district: templateData?.district || "",
-    country: templateData?.country || "",
-    pin_code: templateData?.pin_code || "",
-    correspondence_address_line_1: templateData?.correspondence_address_line_1 || "",
-    correspondence_address_line_2: templateData?.correspondence_address_line_2 || "",
-    correspondence_district: templateData?.correspondence_district || "",
-    correspondence_country: templateData?.correspondence_country || "",
+    district: studentInfo?.district || "",
+    country: studentInfo?.country || "",
+    pin_code: studentInfo?.pin_code || "",
+    correspondence_address_line_1: studentInfo?.correspondence_address_line_1 || "",
+    correspondence_address_line_2: studentInfo?.correspondence_address_line_2 || "",
+    correspondence_district: studentInfo?.correspondence_district || "",
+    correspondence_country: studentInfo?.correspondence_country || "",
 
-    correspondence_pin_code: templateData?.correspondence_pin_code || "",
-    alumni: templateData?.alumni || false,
-    from_year: templateData?.from_year || "",
-    to_year: templateData?.to_year || "",
-    from_class: templateData?.from_class || "",
-    to_class: templateData?.to_class || "",
-    siblings: templateData?.siblings || false,
+    correspondence_pin_code: studentInfo?.correspondence_pin_code || "",
+    alumni: studentInfo?.alumni || false,
+    from_year: studentInfo?.from_year || "",
+    to_year: studentInfo?.to_year || "",
+    from_class: studentInfo?.from_class || "",
+    to_class: studentInfo?.to_class || "",
+    siblings: studentInfo?.siblings || false,
 
-    upload_father_photo: templateData?.upload_father_photo || "",
-    upload_mother_photo: templateData?.upload_mother_photo || "",
+    upload_father_photo: studentInfo?.upload_father_photo || "",
+    upload_mother_photo: studentInfo?.upload_mother_photo || "",
 
-    upload_father_aadhar: templateData?.upload_father_aadhar || "",
-    upload_mother_aadhar: templateData?.upload_mother_aadhar || "",
+    upload_father_aadhar: studentInfo?.upload_father_aadhar || "",
+    upload_mother_aadhar: studentInfo?.upload_mother_aadhar || "",
 
-    upload_candidate_aadhar: templateData?.upload_candidate_aadhar || "",
-    upload_dob_certificate: templateData?.upload_dob_certificate || "",
-    upload_candidate_photo: templateData?.upload_candidate_photo || "",
-    id: templateData?.id,
+    upload_candidate_aadhar: studentInfo?.upload_candidate_aadhar || "",
+    upload_dob_certificate: studentInfo?.upload_dob_certificate || "",
+    upload_candidate_photo: studentInfo?.upload_candidate_photo || "",
+    id: studentInfo?.id,
   };
 
   const handleFormSubmit = async () => {
@@ -202,11 +168,9 @@ const EditAdmission = (props: any) => {
         },
       });
       message.success("Updated successfully!");
+      fetchStudentInfo();
       props.handleClose();
-      // navigate("/pages/admission/studentAdmission");
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    } catch (error) {}
   };
 
   const { values, errors, handleBlur, handleChange, handleSubmit, setFieldValue, touched } =
@@ -241,7 +205,7 @@ const EditAdmission = (props: any) => {
                         Class Name
                       </MDTypography>
                     }
-                    value={templateData?.class_name}
+                    value={studentInfo?.class_name}
                     onBlur={handleBlur}
                     disabled
                   />

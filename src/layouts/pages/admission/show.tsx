@@ -12,29 +12,17 @@ import Dialog from "@mui/material/Dialog";
 import Sidenav from "layouts/pages/account/settings/components/Sidenav";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import MDAvatar from "components/MDAvatar";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import EditAdmission from "./update";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const ShowAdmission = (props: any) => {
   const location = useLocation();
-  const [studentInfo, setStudentInfo] = useState<any>({});
   const navigate = useNavigate();
-  const { editData } = location.state;
-  const { templateData } = location.state || {};
-
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-
-  const [editedItem, setEditedItem] = useState<any>(null);
-  const handleEditClick = (item: any) => {
-    setEditedItem(item);
-    setEditDialogOpen(true);
-  };
-
-  const handleEditClose = () => {
-    setEditDialogOpen(false);
-    setEditedItem(null);
-  };
-  const { username, setOpenupdate, fetchData } = props;
+  const { id } = location.state || {};
+  const token = Cookies.get("token");
+  const [studentInfo, setStudentInfo] = useState<any>({});
   const [dialogNumber, setDialogNumber] = useState(0);
   const [dialogbox, setDialogbox] = useState(false);
 
@@ -46,6 +34,33 @@ const ShowAdmission = (props: any) => {
     setDialogNumber(dialogNum);
     setDialogbox(true);
   };
+
+  const fetchStudentInfo = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASE_URL}/admissions/retrive`,
+        {
+          id: id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setStudentInfo(response.data);
+        console.log("student info data", response.data);
+      })
+      .catch(() => {
+        console.error("Error on getting student info");
+      });
+  };
+
+  useEffect(() => {
+    fetchStudentInfo();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -66,10 +81,10 @@ const ShowAdmission = (props: any) => {
         <EditAdmission
           dialogNumber={dialogNumber}
           handleClose={handleDialogbox}
-          username={props.username}
+          username={id}
           setOpenupdate={props.setOpenupdate}
-          fetchStudentInfo={props.fetchStudentInfo}
-          templateData={templateData}
+          fetchStudentInfo={fetchStudentInfo}
+          studentInfo={studentInfo}
         />
       </Dialog>
       <form>
@@ -91,11 +106,11 @@ const ShowAdmission = (props: any) => {
 
           <Grid container item xs={12} sm={9} spacing={3}>
             <Grid item sm={12} id="1">
-              {templateData.upload_candidate_photo ? (
+              {studentInfo.upload_candidate_photo ? (
                 <Grid item xs={12} sm={12}>
                   <Avatar
                     alt="student"
-                    src={templateData.upload_candidate_photo}
+                    src={studentInfo.upload_candidate_photo}
                     sx={{ width: 84, height: 84 }}
                   />
                 </Grid>
@@ -153,22 +168,22 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.admission_date}
+                        {studentInfo.admission_date}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.form_number}
+                        {studentInfo.form_number}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.academic_year}
+                        {studentInfo.academic_year}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.class_name}
+                        {studentInfo.class_name}
                       </MDTypography>
                     </Grid>
 
@@ -194,22 +209,22 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.candidate_first_name}
+                        {studentInfo.candidate_first_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.candidate_middle_name}
+                        {studentInfo.candidate_middle_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.candidate_last_name}
+                        {studentInfo.candidate_last_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.gender}
+                        {studentInfo.gender}
                       </MDTypography>
                     </Grid>
 
@@ -235,22 +250,22 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.date_of_birth}
+                        {studentInfo.date_of_birth}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.religion}
+                        {studentInfo.religion}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.category}
+                        {studentInfo.category}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.blood_group}
+                        {studentInfo.blood_group}
                       </MDTypography>
                     </Grid>
 
@@ -301,22 +316,22 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_first_name}
+                        {studentInfo.father_first_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_middle_name}
+                        {studentInfo.father_middle_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_last_name}
+                        {studentInfo.father_last_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_qualification}
+                        {studentInfo.father_qualification}
                       </MDTypography>
                     </Grid>
 
@@ -343,22 +358,22 @@ const ShowAdmission = (props: any) => {
 
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_occupation}
+                        {studentInfo.father_occupation}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_place_occupation}
+                        {studentInfo.father_place_occupation}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_designation}
+                        {studentInfo.father_designation}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_number}
+                        {studentInfo.father_number}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -371,7 +386,7 @@ const ShowAdmission = (props: any) => {
                     <Grid item xs={12} sm={3}></Grid>
                     <Grid item xs={12} sm={4}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.father_email_id}
+                        {studentInfo.father_email_id}
                       </MDTypography>
                     </Grid>
                   </Grid>
@@ -419,22 +434,22 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_first_name}
+                        {studentInfo.mother_first_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_middle_name}
+                        {studentInfo.mother_middle_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_last_name}
+                        {studentInfo.mother_last_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_qualification}
+                        {studentInfo.mother_qualification}
                       </MDTypography>
                     </Grid>
 
@@ -461,22 +476,22 @@ const ShowAdmission = (props: any) => {
 
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_occupation}
+                        {studentInfo.mother_occupation}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_place_occupation}
+                        {studentInfo.mother_place_occupation}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_designation}
+                        {studentInfo.mother_designation}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_number}
+                        {studentInfo.mother_number}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -489,7 +504,7 @@ const ShowAdmission = (props: any) => {
                     <Grid item xs={12} sm={3}></Grid>
                     <Grid item xs={12} sm={4}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.mother_email_id}
+                        {studentInfo.mother_email_id}
                       </MDTypography>
                     </Grid>
                   </Grid>
@@ -547,22 +562,22 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.address_line_1}
+                        {studentInfo.address_line_1}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.address_line_2}
+                        {studentInfo.address_line_2}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.pin_code}
+                        {studentInfo.pin_code}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.district}
+                        {studentInfo.district}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -583,7 +598,7 @@ const ShowAdmission = (props: any) => {
                     {/* Add an empty Grid item to maintain 4-column layout */}
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.country}
+                        {studentInfo.country}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}></Grid>
@@ -623,22 +638,22 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.correspondence_address_line_1}
+                        {studentInfo.correspondence_address_line_1}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.correspondence_address_line_2}
+                        {studentInfo.correspondence_address_line_2}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.correspondence_pin_code}
+                        {studentInfo.correspondence_pin_code}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.correspondence_district}
+                        {studentInfo.correspondence_district}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -653,7 +668,7 @@ const ShowAdmission = (props: any) => {
                     {/* Add an empty Grid item to maintain 4-column layout */}
                     <Grid item xs={12} sm={3}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.correspondence_country}
+                        {studentInfo.correspondence_country}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={3}></Grid>
@@ -696,12 +711,12 @@ const ShowAdmission = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.sibling_name}
+                        {studentInfo.sibling_name}
                       </MDTypography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <MDTypography variant="body2" fontWeight="bold">
-                        {templateData.sibling_class}
+                        {studentInfo.sibling_class}
                       </MDTypography>
                     </Grid>
                   </Grid>

@@ -5,14 +5,12 @@ import { useNavigate } from "react-router-dom";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 import MDBox from "components/MDBox";
-import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useState, useEffect, useRef } from "react";
 import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
 import { useReactToPrint } from "react-to-print";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import Icon from "@mui/material/Icon";
 import { Grid, Tooltip, Card } from "@mui/material";
 import axios from "axios";
@@ -50,7 +48,6 @@ const StudentAdmission = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
 
       setTableData({
         columns: [
@@ -73,11 +70,6 @@ const StudentAdmission = () => {
           status: item.status,
           action: (
             <Grid container spacing={1}>
-              {/* <Grid item>
-                <Tooltip title="Edit" placement="top">
-                  <EditOutlinedIcon fontSize="small" onClick={() => handleEditAdmission(item)} />
-                </Tooltip>
-              </Grid> */}
               <Grid item>
                 <Tooltip title="Show" placement="top">
                   <VisibilityIcon fontSize="small" onClick={() => handleShowAdmission(item)} />
@@ -125,56 +117,40 @@ const StudentAdmission = () => {
         })),
       });
     } catch (error) {
-      console.error("Error fetching data:", error);
+      alert("Error fetching data:");
     }
   };
 
-  const handleShowAdmission = async (item: any) => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/admissions/retrive`,
-        {
-          id: item.id,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      navigate("/pages/admission/show_admission", {
-        state: {
-          templateData: response.data,
-        },
-      });
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
-  };
+  // const handleShowAdmission = async (item: any) => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_BASE_URL}/admissions/retrive`,
+  //       {
+  //         id: item.id,
+  //       },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     navigate("/pages/admission/show_admission", {
+  //       state: {
+  //         templateData: response.data,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error posting data:", error);
+  //   }
+  // };
 
-  const handleEditAdmission = async (item: any) => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/admissions/retrive`,
-        {
-          id: item.id,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      navigate("/pages/admission/edit_admission", {
-        state: {
-          editData: response.data,
-        },
-      });
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
+  const handleShowAdmission = (item: any) => {
+    navigate("/pages/admission/show_admission", {
+      state: {
+        id: item.id,
+      },
+    });
   };
 
   const handlePaymentAdmission = (item: any) => {
@@ -198,10 +174,9 @@ const StudentAdmission = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Delete response:", response.data);
       fetchData();
     } catch (error) {
-      console.error("Error deleting data:", error);
+      alert("Error deleting data:");
     }
   };
 
@@ -228,7 +203,6 @@ const StudentAdmission = () => {
         }
       )
       .then((response) => {
-        console.log("response", response.data);
         setAllRecieptData(response.data);
         if (response.status === 200) {
           const feeRecieptData = {
@@ -252,9 +226,7 @@ const StudentAdmission = () => {
           }, 0);
         }
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      .catch((error) => {});
   };
 
   return (

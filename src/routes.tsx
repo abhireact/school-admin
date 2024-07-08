@@ -30,7 +30,6 @@ import Pdf from "layouts/pages/Mindcompdf/Pdf";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 import CreateStudent from "layouts/pages/student_details/student/create";
 import ShowAdmission from "layouts/pages/admission/show";
-import Try from "layouts/pages/admission/form_setting/manage_sub_template/try";
 import EditAdmission from "layouts/pages/admission/update";
 import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
 let route2 = mainroutes;

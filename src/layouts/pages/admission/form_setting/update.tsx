@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Autocomplete,
-  Grid,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogActions, Grid } from "@mui/material";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import { useFormik } from "formik";
@@ -47,23 +39,14 @@ const EditDialog = ({
   handleEditSave,
   classes,
 }: any) => {
-  const {
-    values,
-    errors,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-    setFieldValue,
-    touched,
-    setValues,
-  } = useFormik({
+  const { values, errors, handleBlur, handleSubmit, touched, setValues } = useFormik({
     initialValues: {
       academic_year: editedItem?.academic_year || "",
       start_date: editedItem?.start_date || "",
       end_date: editedItem?.end_date || "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values, action) => {
+    onSubmit: () => {
       handleEditSave();
     },
   });
