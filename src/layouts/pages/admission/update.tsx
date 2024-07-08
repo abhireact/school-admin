@@ -1,26 +1,12 @@
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
-import { message, Modal } from "antd";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { message } from "antd";
 import { useFormik } from "formik";
 import MDInput from "components/MDInput";
 import { format } from "date-fns";
 import axios from "axios";
-import {
-  Grid,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Card,
-  Autocomplete,
-} from "@mui/material";
-import { admissionformschema } from "../common_validationschema";
-import { useSelector } from "react-redux";
-import { initialValues } from "../initialvalues";
+import { Grid, Autocomplete } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -28,35 +14,17 @@ import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
 import { v4 as uuidv4 } from "uuid";
+import { admissionformschema } from "./common_validationschema";
 
-const AdmissionForm = () => {
+const EditAdmission = (props: any) => {
+  const { dialogNumber, studentInfo, fetchStudentInfo } = props;
   const token = Cookies.get("token");
-  const [storeid, setStoreId] = useState();
-  const { classes } = useSelector((state: any) => state);
-  const [isAlumni, setIsAlumni] = useState(false);
-  const [isSiblings, setIsSiblings] = useState(false);
   const [isSameAsCurrentAddress, setIsSameAsCurrentAddress] = useState(false);
-  const navigate = useNavigate();
-  const handleAlumniChange = (event: any) => {
-    handleChange(event);
-    // setIsAlumni(event.target.value === "yes");
-    const value = event.target.value === "yes";
-    setFieldValue("alumni", value);
-    setIsAlumni(value);
-  };
-  const handleSiblingsChange = (event: any) => {
-    handleChange(event);
-    const value = event.target.value === "yes";
-    setFieldValue("siblings", value);
-    setIsSiblings(value);
-  };
+
   //display the current date
-  const [currentDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [fields, setFields] = useState([{ id: Date.now(), sibling_name: "", sibling_class: "" }]);
+  const [currentDate, setCurrentDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [fields, setFields] = useState([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
   const handleAddField = () => {
-    // setFields([...fields, { id: Date.now(), sibling_name: "", sibling_class: "" }]);
     setFields([...fields, { id: uuidv4(), sibling_name: "", sibling_class: "" }]);
   };
 
@@ -117,20 +85,92 @@ const AdmissionForm = () => {
     }
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
+  const initialValues = {
+    academic_year: studentInfo?.academic_year || "",
+    class_name: studentInfo?.class_name || "",
+    admission_date: studentInfo?.admission_date || "",
+    form_number: studentInfo?.form_number || "",
+    candidate_first_name: studentInfo?.candidate_first_name || "",
+    candidate_middle_name: studentInfo?.candidate_middle_name || "",
+    candidate_last_name: studentInfo?.candidate_last_name || "",
+    candidate_dob: studentInfo?.candidate_dob || "",
+    category: studentInfo?.category || "",
+    religion: studentInfo?.religion || "",
+    gender: studentInfo?.gender || "",
+    nationality: studentInfo?.nationality || "",
+    blood_group: studentInfo?.blood_group || "",
+    father_first_name: studentInfo?.father_first_name || "",
+    father_middle_name: studentInfo?.father_middle_name || "",
+    father_last_name: studentInfo?.father_last_name || "",
+    father_qualification: studentInfo?.father_qualification || "",
+    father_occupation: studentInfo?.father_occupation || "",
+    father_designation: studentInfo?.father_designation || "",
+    father_place_occupation: studentInfo?.father_place_occupation || "",
+    father_number: studentInfo?.father_number || "",
+    father_email_id: studentInfo?.father_email_id || "",
+    mother_first_name: studentInfo?.mother_first_name || "",
+    mother_middle_name: studentInfo?.mother_middle_name || "",
+    mother_last_name: studentInfo?.mother_last_name || "",
 
-    navigate("/pages/admission/Fee", {
-      state: {
-        id: storeid,
-      },
-    });
+    mother_qualification: studentInfo?.academic_year || "",
+    mother_occupation: studentInfo?.mother_occupation || "",
+    mother_designation: studentInfo?.mother_designation || "",
+    mother_place_occupation: studentInfo?.mother_place_occupation || "",
+    mother_number: studentInfo?.mother_number || "",
+    mother_email_id: studentInfo?.mother_email_id || "",
+    address_line_1: studentInfo?.address_line_1 || "",
+    address_line_2: studentInfo?.address_line_2 || "",
+
+    district: studentInfo?.district || "",
+    country: studentInfo?.country || "",
+    pin_code: studentInfo?.pin_code || "",
+    correspondence_address_line_1: studentInfo?.correspondence_address_line_1 || "",
+    correspondence_address_line_2: studentInfo?.correspondence_address_line_2 || "",
+    correspondence_district: studentInfo?.correspondence_district || "",
+    correspondence_country: studentInfo?.correspondence_country || "",
+
+    correspondence_pin_code: studentInfo?.correspondence_pin_code || "",
+    alumni: studentInfo?.alumni || false,
+    from_year: studentInfo?.from_year || "",
+    to_year: studentInfo?.to_year || "",
+    from_class: studentInfo?.from_class || "",
+    to_class: studentInfo?.to_class || "",
+    siblings: studentInfo?.siblings || false,
+
+    upload_father_photo: studentInfo?.upload_father_photo || "",
+    upload_mother_photo: studentInfo?.upload_mother_photo || "",
+
+    upload_father_aadhar: studentInfo?.upload_father_aadhar || "",
+    upload_mother_aadhar: studentInfo?.upload_mother_aadhar || "",
+
+    upload_candidate_aadhar: studentInfo?.upload_candidate_aadhar || "",
+    upload_dob_certificate: studentInfo?.upload_dob_certificate || "",
+    upload_candidate_photo: studentInfo?.upload_candidate_photo || "",
+    id: studentInfo?.id,
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    message.info("You can proceed to fee payment later.");
-    navigate("/pages/admission/studentAdmission");
+  const handleFormSubmit = async () => {
+    try {
+      const allValues = {
+        ...values,
+        sibling_data: values.siblings
+          ? fields.map((field) => ({
+              sibling_name: field.sibling_name,
+              sibling_class: field.sibling_class,
+            }))
+          : [],
+      };
+
+      const response = await axios.put(`${process.env.REACT_APP_BASE_URL}/admissions`, allValues, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      message.success("Updated successfully!");
+      fetchStudentInfo();
+      props.handleClose();
+    } catch (error) {}
   };
 
   const { values, errors, handleBlur, handleChange, handleSubmit, setFieldValue, touched } =
@@ -138,159 +178,72 @@ const AdmissionForm = () => {
       initialValues: initialValues,
       validationSchema: admissionformschema,
       onSubmit: (values, action) => {
-        const allValues = {
-          ...values,
-          admission_date: currentDate,
-          sibling_data: values.siblings
-            ? fields.map((field) => ({
-                sibling_name: field.sibling_name,
-                sibling_class: field.sibling_class,
-              }))
-            : [],
-        };
-        axios
-          .post(`${process.env.REACT_APP_BASE_URL}/admissions`, allValues, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setStoreId(response.data.id);
-            setIsModalVisible(true);
-          })
-          .catch((error: any) => {
-            message.error(error.response.data.detail);
-          });
+        handleFormSubmit();
       },
     });
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <form onSubmit={handleSubmit}>
-        <Grid container>
-          <Grid item xs={12} sm={12}>
-            <Card>
-              <MDBox p={4}>
-                <Grid container>
-                  <Grid item xs={12} sm={6}>
-                    <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                      Admission Form
-                    </MDTypography>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={3} pt={3}>
-                  <Grid item xs={12} sm={3}>
-                    <Autocomplete
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "academic_year", value } });
-                      }}
-                      options={
-                        classes
-                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          name="academic_year"
-                          onChange={handleChange}
-                          value={values.academic_year}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Academic Year
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                          required
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <Autocomplete
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "class_name", value } });
-                      }}
-                      options={
-                        values.academic_year !== ""
-                          ? classes
-                              .filter((item: any) => item.academic_year === values.academic_year)
-                              .map((item: any) => item.class_name)
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          name="class_name"
-                          onChange={handleChange}
-                          value={values.class_name}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Class
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                          required
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      name="form_number"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Form Number
-                        </MDTypography>
-                      }
-                      value={values.form_number}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <MDInput
-                      type="date"
-                      InputLabelProps={{ shrink: true }}
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      name="admission_date"
-                      value={currentDate}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Admission Date
-                        </MDTypography>
-                      }
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      disabled
-                      error={touched.admission_date && Boolean(errors.admission_date)}
-                      helperText={touched.admission_date && errors.admission_date}
-                    />
-                  </Grid>
-                </Grid>
-              </MDBox>
-            </Card>
-          </Grid>
-        </Grid>
+    <form onSubmit={handleSubmit}>
+      <Grid container spacing={3}>
         {/* Form for candidate details */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
-                  <MDTypography variant="h6" color="secondary">
-                    Candidate Details
+        {dialogNumber == 1 && (
+          <Grid item sm={12}>
+            <MDBox p={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12}>
+                  <MDTypography color="secondary" variant="body2" fontWeight="bold" fontSize="18px">
+                    STUDENT DETAILS
                   </MDTypography>
                 </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    name="class_name"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Class Name
+                      </MDTypography>
+                    }
+                    value={studentInfo?.class_name}
+                    onBlur={handleBlur}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    name="form_number"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Form Number
+                      </MDTypography>
+                    }
+                    value={values.form_number}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    name="admission_date"
+                    value={currentDate}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Admission Date
+                      </MDTypography>
+                    }
+                    onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                    disabled
+                    error={touched.admission_date && Boolean(errors.admission_date)}
+                    helperText={touched.admission_date && errors.admission_date}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
@@ -313,7 +266,7 @@ const AdmissionForm = () => {
                     </MDTypography>
                   ) : null}
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
@@ -328,7 +281,7 @@ const AdmissionForm = () => {
                     onBlur={handleBlur}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
                     variant="standard"
@@ -343,7 +296,7 @@ const AdmissionForm = () => {
                     onBlur={handleBlur}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <MDInput
                     type="date"
                     InputLabelProps={{ shrink: true }}
@@ -363,22 +316,6 @@ const AdmissionForm = () => {
                     error={touched.candidate_dob && Boolean(errors.candidate_dob)}
                   />
                 </Grid>
-              </Grid>
-            </MDBox>
-          </Card>
-        </MDBox>
-        {/* Form for deatiled information */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
-                  <MDTypography variant="h6" color="secondary">
-                    Detailed Infromation
-                  </MDTypography>
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
                     sx={{ width: "100%" }}
@@ -529,22 +466,36 @@ const AdmissionForm = () => {
                     )}
                   />
                 </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    type="file"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Upload Candidate Photo
+                      </MDTypography>
+                    }
+                    accept="image/*"
+                    name="upload_candidate_photo"
+                    onChange={(event: any) => handleImage(event, "upload_candidate_photo")}
+                    variant="standard"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
             </MDBox>
-          </Card>
-        </MDBox>
-        {/* Form for fathers information */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
+          </Grid>
+        )}
+        {/* Form for father information */}
+        {dialogNumber == 2 && (
+          <Grid item sm={12}>
+            <MDBox p={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12}>
                   <MDTypography variant="h6" color="secondary">
                     Father&apos;s Information
                   </MDTypography>
                 </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
@@ -722,20 +673,18 @@ const AdmissionForm = () => {
                 </Grid>
               </Grid>
             </MDBox>
-          </Card>
-        </MDBox>
-        {/* Form for mothers information */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
+          </Grid>
+        )}
+        {/* Form for mother information */}
+        {dialogNumber == 3 && (
+          <Grid item sm={12}>
+            <MDBox p={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12}>
                   <MDTypography variant="h6" color="secondary">
                     Mother&apos;s Information
                   </MDTypography>
                 </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
@@ -912,20 +861,18 @@ const AdmissionForm = () => {
                 </Grid>
               </Grid>
             </MDBox>
-          </Card>
-        </MDBox>
-        {/* Form for Domicile */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
+          </Grid>
+        )}
+        {/* Form for address information */}
+        {dialogNumber == 4 && (
+          <Grid item sm={12}>
+            <MDBox p={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12}>
                   <MDTypography variant="h6" color="secondary">
-                    Domicile
+                    Address
                   </MDTypography>
                 </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
@@ -1012,25 +959,15 @@ const AdmissionForm = () => {
                     </MDTypography>
                   ) : null}
                 </Grid>
-              </Grid>
-            </MDBox>
-          </Card>
-        </MDBox>
-        {/* Form for adress for correspondence */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={9}>
+                <Grid item xs={12} sm={12}>
                   <MDTypography variant="h6" color="secondary">
-                    Address For Correspondence
+                    PERMANENT ADDRESS
                   </MDTypography>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={12}>
                   <Checkbox
-                    // checked={values.late_fine_discount}
                     name="same_as_current_address"
-                    //  checked={isSameAsCurrentAddress}
+                    // checked={isSameAsCurrentAddress}
                     value="true"
                     onChange={handleCheckboxChange}
                   />
@@ -1038,8 +975,6 @@ const AdmissionForm = () => {
                     Same As Current Address
                   </MDTypography>
                 </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
                 <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "100%" }}
@@ -1148,240 +1083,81 @@ const AdmissionForm = () => {
                 </Grid>
               </Grid>
             </MDBox>
-          </Card>
-        </MDBox>
-        {/* Alumni Section */}
-        <Grid item xs={12}>
-          <Card style={{ marginTop: "15px" }}>
-            <MDBox style={{ padding: "16px" }}>
-              <Grid container>
-                <Grid item xs={12} sm={9}>
-                  <MDTypography variant="h6" color="secondary">
-                    Alumni
-                  </MDTypography>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs={12} sm={9}>
-                  <MDTypography variant="overline" color="secondary">
-                    Father/Mother was a student of this Institution
-                  </MDTypography>
-                  <FormControl
-                    component="fieldset"
-                    style={{ marginLeft: "16px" }}
-                    error={touched.alumni && Boolean(errors.alumni)}
-                  >
-                    <FormLabel component="legend"></FormLabel>
-                    <RadioGroup
-                      row
-                      aria-label="parent-student"
-                      name="alumni"
-                      value={values.alumni ? "yes" : "no"}
-                      onChange={handleAlumniChange}
-                      onBlur={handleBlur}
-                    >
-                      <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="no" control={<Radio />} label="No" />
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              {isAlumni && (
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={3}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          From Year
-                        </MDTypography>
-                      }
-                      name="from_year"
-                      value={values.from_year}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.from_year && touched.from_year}
-                      success={values.from_year.length && !errors.from_year}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          To Year
-                        </MDTypography>
-                      }
-                      name="to_year"
-                      value={values.to_year}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.to_year && touched.to_year}
-                      success={values.to_year.length && !errors.to_year}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          From Class
-                        </MDTypography>
-                      }
-                      name="from_class"
-                      value={values.from_class}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.from_class && touched.from_class}
-                      success={values.from_class.length && !errors.from_class}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          To Class
-                        </MDTypography>
-                      }
-                      name="to_class"
-                      value={values.to_class}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.to_class && touched.to_class}
-                      success={values.to_class.length && !errors.to_class}
-                      required
-                    />
-                  </Grid>
-                </Grid>
-              )}
-            </MDBox>
-          </Card>
-        </Grid>
-
-        {/* form for Sibling Details */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={9}>
+          </Grid>
+        )}
+        {/* Form for siblings */}
+        {dialogNumber == 5 && (
+          <Grid item sm={12}>
+            <MDBox p={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={10}>
                   <MDTypography variant="h6" color="secondary">
                     Sibling Details
                   </MDTypography>
                 </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs={12} sm={9}>
-                  <MDTypography variant="overline" color="secondary">
-                    Applicant’s elder brother/sister is studying in this institution
-                  </MDTypography>
-                  <FormControl component="fieldset" style={{ marginLeft: "16px" }}>
-                    <FormLabel component="legend"></FormLabel>
-                    <RadioGroup
-                      row
-                      aria-label="parent-student"
-                      name="siblings"
-                      value={values.siblings ? "yes" : "no"}
-                      onChange={handleSiblingsChange}
-                      onBlur={handleBlur}
-                    >
-                      <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="no" control={<Radio />} label="No" />
-                    </RadioGroup>
-                  </FormControl>
+                <Grid item xs={12} sm={2}>
+                  <MDButton variant="contained" color="secondary" onClick={handleAddField}>
+                    ADD
+                  </MDButton>
                 </Grid>
+                {fields.map((field, index) => (
+                  <React.Fragment key={field.id}>
+                    <Grid item xs={12} sm={5}>
+                      <MDInput
+                        sx={{ width: "100%" }}
+                        variant="standard"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {`Name ${index + 1}`}
+                          </MDTypography>
+                        }
+                        name={`sibling_name-${field.id}`}
+                        value={field.sibling_name}
+                        onChange={(e: any) =>
+                          handleFieldChange(field.id, "sibling_name", e.target.value)
+                        }
+                        onBlur={handleBlur}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={5}>
+                      <MDInput
+                        sx={{ width: "100%" }}
+                        variant="standard"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {`Class ${index + 1}`}
+                          </MDTypography>
+                        }
+                        name={`sibling_class-${field.id}`}
+                        value={field.sibling_class}
+                        onChange={(e: any) =>
+                          handleFieldChange(field.id, "sibling_class", e.target.value)
+                        }
+                        onBlur={handleBlur}
+                        required
+                      />
+                    </Grid>
+                    {index > 0 && (
+                      <MDBox style={{ marginTop: "35px", marginLeft: "15px" }}>
+                        <DeleteIcon fontSize="medium" onClick={() => handleRemoveField(field.id)} />
+                      </MDBox>
+                    )}
+                  </React.Fragment>
+                ))}
               </Grid>
-              {isSiblings && (
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={12}>
-                    <MDButton variant="contained" color="secondary" onClick={handleAddField}>
-                      ADD
-                    </MDButton>
-                  </Grid>
-                  {fields.map((field, index) => (
-                    <React.Fragment key={field.id}>
-                      <Grid item xs={12} sm={5}>
-                        <MDInput
-                          sx={{ width: "100%" }}
-                          variant="standard"
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              {`Name ${index + 1}`}
-                            </MDTypography>
-                          }
-                          name={`sibling_name-${field.id}`}
-                          value={field.sibling_name}
-                          onChange={(e: any) =>
-                            handleFieldChange(field.id, "sibling_name", e.target.value)
-                          }
-                          onBlur={handleBlur}
-                          required
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={5}>
-                        <MDInput
-                          sx={{ width: "100%" }}
-                          variant="standard"
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              {`Class ${index + 1}`}
-                            </MDTypography>
-                          }
-                          name={`sibling_class-${field.id}`}
-                          value={field.sibling_class}
-                          onChange={(e: any) =>
-                            handleFieldChange(field.id, "sibling_class", e.target.value)
-                          }
-                          onBlur={handleBlur}
-                          required
-                        />
-                      </Grid>
-                      {index > 0 && (
-                        <MDBox style={{ marginTop: "35px", marginLeft: "15px" }}>
-                          <DeleteIcon
-                            fontSize="medium"
-                            onClick={() => handleRemoveField(field.id)}
-                          />
-                        </MDBox>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </Grid>
-              )}
             </MDBox>
-          </Card>
-        </MDBox>
-        {/* Form for Upload information */}
-        <MDBox style={{ marginTop: "15px" }}>
-          <Card>
-            <MDBox p={3}>
-              <Grid container>
-                <Grid item xs={12} sm={9}>
+          </Grid>
+        )}
+        {/* Form for upload photo */}
+        {dialogNumber == 6 && (
+          <Grid item sm={12}>
+            <MDBox p={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={10}>
                   <MDTypography variant="h6" color="secondary">
-                    Upload Information
+                    Upload Documents
                   </MDTypography>
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} pt={2}>
-                <Grid item xs={6} sm={4} mt={2}>
-                  <MDInput
-                    sx={{ width: "80%" }}
-                    type="file"
-                    label="Upload Candidate Photo"
-                    accept="image/*"
-                    name="upload_candidate_photo"
-                    onChange={(event: any) => handleImage(event, "upload_candidate_photo")}
-                    variant="standard"
-                    InputLabelProps={{ shrink: true }}
-                    required
-                  />
                 </Grid>
                 <Grid item xs={6} sm={4} mt={2}>
                   <MDInput
@@ -1393,7 +1169,6 @@ const AdmissionForm = () => {
                     onChange={(event: any) => handleImage(event, "upload_father_photo")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
-                    required
                   />
                 </Grid>
                 <Grid item xs={6} sm={4} mt={2}>
@@ -1406,8 +1181,13 @@ const AdmissionForm = () => {
                     onChange={(event: any) => handleImage(event, "upload_mother_photo")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
-                    required
                   />
+                  {values.upload_mother_photo && (
+                    <img
+                      src={values.upload_mother_photo}
+                      style={{ width: "80%", marginTop: "16px" }}
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={6} sm={4} mt={2}>
                   <MDInput
@@ -1419,8 +1199,13 @@ const AdmissionForm = () => {
                     onChange={(event: any) => handleImage(event, "upload_father_aadhar")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
-                    required
                   />
+                  {values.upload_father_aadhar && (
+                    <img
+                      src={values.upload_father_aadhar}
+                      style={{ width: "80%", marginTop: "16px" }}
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={6} sm={4} mt={2}>
                   <MDInput
@@ -1432,8 +1217,13 @@ const AdmissionForm = () => {
                     onChange={(event: any) => handleImage(event, "upload_mother_aadhar")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
-                    required
                   />
+                  {values.upload_mother_aadhar && (
+                    <img
+                      src={values.upload_mother_aadhar}
+                      style={{ width: "80%", marginTop: "16px" }}
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={6} sm={4} mt={2}>
                   <MDInput
@@ -1445,8 +1235,13 @@ const AdmissionForm = () => {
                     onChange={(event: any) => handleImage(event, "upload_candidate_aadhar")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
-                    required
                   />
+                  {values.upload_candidate_aadhar && (
+                    <img
+                      src={values.upload_candidate_aadhar}
+                      style={{ width: "80%", marginTop: "16px" }}
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={6} sm={4} mt={2}>
                   <MDInput
@@ -1458,46 +1253,48 @@ const AdmissionForm = () => {
                     onChange={(event: any) => handleImage(event, "upload_dob_certificate")}
                     variant="standard"
                     InputLabelProps={{ shrink: true }}
-                    required
                   />
+                  {values.upload_dob_certificate && (
+                    <img
+                      src={values.upload_dob_certificate}
+                      style={{ width: "80%", marginTop: "16px" }}
+                    />
+                  )}
                 </Grid>
               </Grid>
             </MDBox>
-          </Card>
-        </MDBox>
-        {/* instruction */}
-        <MDTypography variant="overline">
-          <b>Instruction:</b> Please check the information carefully before submitting. Once
-          submitted, the information cannot be changed. Once you are sure about the correctness of
-          the information, please click the “Submit” button.
-        </MDTypography>
-        {/* button for submit the form */}
-        <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Grid item mt={2}>
-            <MDButton color="info" variant="contained" type="submit">
-              Submit
-            </MDButton>
           </Grid>
-          <Grid item mt={2} ml={2}>
+        )}
+
+        {/* button for submit the form */}
+        <Grid
+          item
+          mb={1}
+          xs={12}
+          sm={12}
+          sx={{ display: "flex", justifyContent: "flex-end" }}
+          mr={5}
+        >
+          <Grid item mr={2}>
             <MDButton
               color="dark"
               variant="contained"
-              type="submit"
-              // onClick={() => navigate("/pages/admission/Fee")}
-              onClick={() => navigate("/pages/admission/studentAdmission")}
-              // navigate("/pages/admission/Fee");
+              onClick={() => {
+                props.handleClose();
+              }}
             >
               Back
             </MDButton>
           </Grid>
+          <Grid item>
+            <MDButton color="info" variant="contained" type="submit" onClick={handleFormSubmit}>
+              Submit
+            </MDButton>
+          </Grid>
         </Grid>
-      </form>
-
-      <Modal title="Success" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <p>Your form is successfully submitted. Do you want to proceed to fee payment?</p>
-      </Modal>
-    </DashboardLayout>
+      </Grid>
+    </form>
   );
 };
 
-export default AdmissionForm;
+export default EditAdmission;

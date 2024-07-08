@@ -60,8 +60,6 @@ export const initialValues = {
 
   siblings: false, //boolean required
   sibling_data: [{ sibling_name: "", sibling_class: "" }],
-  // sibling_name: "", //more than one
-  // sibling_class: "", //more than one
 
   upload_candidate_photo: "", //required
   upload_father_photo: "", //required
