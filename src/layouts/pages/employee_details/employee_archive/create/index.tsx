@@ -15,33 +15,41 @@ import MDBox from "components/MDBox";
 import SaveIcon from "@mui/icons-material/Save";
 const token = Cookies.get("token");
 import * as Yup from "yup";
-import { fetchStudent } from "layouts/pages/redux/dataSlice";
 const validationSchema = Yup.object().shape({
-  class_name: Yup.string().required("Required *"),
-  section_name: Yup.string().required("Required *"),
-  academic_year: Yup.string()
-    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
-    .required("Required *"),
+  department: Yup.string().required("Required *"),
   archive_date: Yup.date().required("Required *"),
   reason_id: Yup.string().required("Required *"),
 });
-const cookies_academic_year = Cookies.get("academic_year");
 export default function StudentArchive(props: any) {
   const [data, setData] = useState([]);
   const initialValues = {
-    academic_year: cookies_academic_year,
-    class_name: "",
-    section_name: "",
     reason_id: "",
     archive_date: "",
+    department: "",
     user_name: [] as string[], // Array to store particulars
   };
-  let dispatch = useDispatch();
-  const { classes, account, studentcategory } = useSelector((state: any) => state);
+
   const [reasonsdata, setReasonsdata] = useState([]);
+  const [departmentInfo, setDepartmentInfo] = useState([]);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/student_archive/archive_reasons`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/employee_department`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response: any) => {
+        setDepartmentInfo(response.data);
+        console.log(response.data, "department info");
+      })
+      .catch((error) => {
+        setDepartmentInfo([]);
+        message.error(error.response.data.detail);
+        console.error("Error fetching data:", error);
+      });
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/employee_archive/archive_reasons`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -60,8 +68,8 @@ export default function StudentArchive(props: any) {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
-      validationSchema: validationSchema,
       enableReinitialize: true,
+      validationSchema: validationSchema,
       onSubmit: async (values, action) => {
         console.log("submit");
         const sendData = data
@@ -73,10 +81,14 @@ export default function StudentArchive(props: any) {
           return;
         }
         let reasonNumber = reasonsdata.find((item: any) => item.reason === values.reason_id).id;
-        const sendValue = { ...values, user_name: sendData, reason_id: reasonNumber };
+        const sendValue = {
+          archive_date: values.archive_date,
+          user_name: sendData,
+          reason_id: reasonNumber,
+        };
 
         axios
-          .post(`${process.env.REACT_APP_BASE_URL}/student_archive`, sendValue, {
+          .post(`${process.env.REACT_APP_BASE_URL}/employee_archive`, sendValue, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -86,8 +98,7 @@ export default function StudentArchive(props: any) {
             action.resetForm();
             props.setShowpage(false);
             props.fetchData();
-            message.success("Student Archived Successfully");
-            dispatch(fetchStudent() as any);
+            message.success("Employees Archived Successfully");
           })
           .catch((error: any) => {
             console.log(error, "error");
@@ -97,38 +108,23 @@ export default function StudentArchive(props: any) {
     });
 
   const handleShowData = () => {
-    const sendData = {
-      academic_year: values.academic_year,
-      classes: [
-        {
-          class_name: values.class_name,
-          section_name: values.section_name,
-        },
-      ],
-    };
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/mg_student/search`, sendData, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        console.log(response.data, "Student for this  Academic Year,Class and Section");
-        if (response.data.length < 1) {
-          setData([]);
-          message.error("No Student found  for this Academic Year ,Class and Section ");
-        }
-        let studentData = response.data.map((selection: any, i: number) => ({
-          ...selection,
-          is_selected: false,
-        }));
-        setData(studentData);
+        setData(response.data.filter((item: any) => item.department == values.department));
+
+        console.log(
+          response.data.filter((item: any) => item.department == values.department),
+          "selected department employee"
+        );
       })
-      .catch((error: any) => {
-        setData([]);
-        console.log(error, "error");
-        message.error(error.response.data.detail);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   };
   const handleCheckboxChange = (index: number) => {
@@ -158,7 +154,7 @@ export default function StudentArchive(props: any) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Student Archive
+                Employee Archive
               </MDTypography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -169,104 +165,28 @@ export default function StudentArchive(props: any) {
             <Grid item xs={12} sm={4}>
               <Autocomplete
                 disableClearable
-                value={values.academic_year}
+                value={values.department}
                 onChange={(_event, value) => {
-                  handleChange({ target: { name: "academic_year", value } });
+                  handleChange({ target: { name: "department", value } });
                 }}
-                options={
-                  classes ? Array.from(new Set(classes.map((item: any) => item.academic_year))) : []
-                }
+                options={departmentInfo.map((item: any) => item.dept_name) || []}
                 renderInput={(params) => (
                   <MDInput
+                    name="department"
                     required
-                    name="academic_year"
                     //onChange={handleChange}
-                    value={values.academic_year}
+                    value={values.department}
                     label={
                       <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Academic Year
+                        Department
                       </MDTypography>
                     }
                     {...params}
                     variant="standard"
                     onBlur={handleBlur}
-                    error={touched.academic_year && Boolean(errors.academic_year)}
-                    success={values.academic_year.length && !errors.academic_year}
-                    helperText={touched.academic_year && errors.academic_year}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Autocomplete
-                disableClearable
-                value={values.class_name}
-                onChange={(_event, value) => {
-                  handleChange({ target: { name: "class_name", value } });
-                }}
-                options={
-                  values.academic_year !== ""
-                    ? classes
-                        .filter((item: any) => item.academic_year === values.academic_year)
-                        .map((item: any) => item.class_name)
-                    : []
-                }
-                renderInput={(params) => (
-                  <MDInput
-                    required
-                    name="class_name"
-                    // onChange={handleChange}
-                    value={values.class_name}
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Class
-                      </MDTypography>
-                    }
-                    {...params}
-                    variant="standard"
-                    onBlur={handleBlur}
-                    error={touched.class_name && Boolean(errors.class_name)}
-                    success={values.class_name.length && !errors.class_name}
-                    helperText={touched.class_name && errors.class_name}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Autocomplete
-                disableClearable
-                value={values.section_name}
-                onChange={(_event, value) => {
-                  handleChange({ target: { name: "section_name", value } });
-                }}
-                options={
-                  values.class_name !== ""
-                    ? classes
-                        .filter(
-                          (item: any) =>
-                            item.academic_year === values.academic_year &&
-                            item.class_name === values.class_name
-                        )[0]
-                        .section_data.map((item: any) => item.section_name)
-                    : []
-                }
-                renderInput={(params) => (
-                  <MDInput
-                    required
-                    name="section_name"
-                    //  onChange={handleChange}
-                    value={values.section_name}
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Section
-                      </MDTypography>
-                    }
-                    {...params}
-                    variant="standard"
-                    onBlur={handleBlur}
-                    error={touched.section_name && Boolean(errors.section_name)}
-                    success={values.section_name.length && !errors.section_name}
-                    helperText={touched.section_name && errors.section_name}
+                    error={touched.department && Boolean(errors.department)}
+                    success={values.department && !errors.department}
+                    helperText={touched.department && errors.department}
                   />
                 )}
               />
@@ -381,7 +301,7 @@ export default function StudentArchive(props: any) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                            AVAILABLE STUDENTS
+                            AVAILABLE EMPLOYEES
                           </MDTypography>
                         </td>
                         <td
@@ -444,8 +364,7 @@ export default function StudentArchive(props: any) {
                                     textOverflow: "ellipsis",
                                   }}
                                 >
-                                  {item.user_id} {item.first_name}
-                                  {item.middle_name} {item.last_name}
+                                  {item.user_id} {item.employee_name}
                                 </MDTypography>
                               </td>
 

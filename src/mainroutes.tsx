@@ -70,7 +70,7 @@ import Consolidiration from "layouts/pages/Attendance/reports/consolidiration";
 import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_attendance";
 import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
-
+import EmployeeArchive from "layouts/pages/employee_details/employee_archive";
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -463,6 +463,12 @@ const routes = [
         component: <AssignClassTeacher />,
       },
       {
+        name: "Employee Archive",
+        key: "employee_archive",
+        route: "employee/employee_archive",
+        component: <EmployeeArchive />,
+      },
+      {
         name: "Employee Category",
         key: "employee_category",
         route: "employee/employee_category",
@@ -669,18 +675,7 @@ const routes = [
             route: "pages/fee/fee_collection_report",
             component: <FeeCollectionReport />,
           },
-          // {
-          //   name: "Fee Certificate",
-          //   key: "feecertificate",
-          //   route: "pages/fee/feecertificate",
-          //   component: <FeeCertificate />,
-          // },
-          // {
-          //   name: "Student Certificate",
-          //   key: "studentcertificate",
-          //   route: "pages/fee/studentcertificate",
-          //   component: <StudentCertificate />,
-          // },
+
           {
             name: "Fee Receipt ",
             key: "feereceiptreport",
