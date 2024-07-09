@@ -301,11 +301,11 @@ const FeeCollectionReport = () => {
 
     return { columns: cleanedColumns, rows: cleanedRows };
   };
-  const tableRef = useRef();
-  // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
-  const handlePrint = useReactToPrint({
-    content: () => tableRef.current,
-  });
+  // const tableRef = useRef();
+  // // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  // const handlePrint = useReactToPrint({
+  //   content: () => tableRef.current,
+  // });
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -545,22 +545,33 @@ const FeeCollectionReport = () => {
                   </MDButton>
                 </Grid>
               </Grid>
-              {collectionData.length > 0 ? (
+              {/* {collectionData.length > 0 ? (
                 <MDBox>
                   <MDButton onClick={handlePrint}>Print</MDButton>
                 </MDBox>
-              ) : null}
+              ) : null} */}
               {collectionData.length > 0 ? (
                 <Grid container mt={2}>
-                  <MDBox ref={tableRef} className="hidden-text">
+                  {/* <MDBox ref={tableRef} className="hidden-text">
                     <PdfGenerator
                       data={cleanDataForPdf(dataTableData).rows}
                       isPdfMode={true}
                       hiddenText={""}
                       additionalInfo={undefined}
                     />
-                  </MDBox>
-                  <DataTable table={dataTableData} isSorted={false} canSearch selectColumnBtn />
+                  </MDBox> */}
+                  <DataTable
+                    table={dataTableData}
+                    isSorted={false}
+                    canSearch
+                    selectColumnBtn
+                    importbtn
+                    pdfGeneratorProps={{
+                      isPdfMode: true,
+                      hiddenText: "",
+                      additionalInfo: undefined,
+                    }}
+                  />
                 </Grid>
               ) : null}
             </MDBox>

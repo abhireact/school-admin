@@ -159,21 +159,6 @@ export default function FeeDefaulterReport() {
     setSelectedKeys(selectedKeysValue);
   };
 
-  // {
-  //       "user_name": "THSKRBS1292",
-  //       "admission_number": "THS/2425/1813",
-  //       "student_name": "DRISHTI SINGH",
-  //       "class_name": "I",
-  //       "section_name": "B",
-  //       "collection_name": "May Month Fee",
-  //       "guardian_name": "DURGENDRA  PRATAP  SINGH",
-  //       "guardian_phone": "9451175081",
-  //       "total_amount": 4122.0,
-  //       "paid_amount": 0.0,
-  //       "fine_amount": 200.0,
-  //       "amount_paying": 4122.0,
-  //       "is_archive": false
-  //   },
   const feeDefaulter = {
     columns: [
       { Header: "SL.NO", accessor: "sl_no" },
@@ -200,17 +185,17 @@ export default function FeeDefaulterReport() {
       remaining_amount: row.amount_paying,
     })),
   };
-  const tableRef = useRef();
-  const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
-  const handlePrint = useReactToPrint({
-    content: () => tableRef.current,
-  });
+  // const tableRef = useRef();
+  // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  // const handlePrint = useReactToPrint({
+  //   content: () => tableRef.current,
+  // });
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Spin spinning={isLoading}>
         <form onSubmit={handleSubmit}>
-          <MDBox ref={tableRef} className="hidden-text">
+          {/* <MDBox ref={tableRef} className="hidden-text">
             <PdfGenerator
               data={feeDefaulter.rows}
               hiddenText={hiddenText}
@@ -218,7 +203,7 @@ export default function FeeDefaulterReport() {
               additionalInfo={undefined}
             />
           </MDBox>
-          <MDButton onClick={handlePrint}>Print</MDButton>
+          <MDButton onClick={handlePrint}>Print</MDButton> */}
 
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
@@ -338,7 +323,17 @@ export default function FeeDefaulterReport() {
             </Grid>
             <Grid item xs={12} sm={12}>
               <Card>
-                <DataTable table={feeDefaulter} />
+                <DataTable
+                  table={feeDefaulter}
+                  canSearch
+                  selectColumnBtn
+                  importbtn
+                  pdfGeneratorProps={{
+                    isPdfMode: true,
+                    hiddenText: "",
+                    additionalInfo: undefined,
+                  }}
+                />
               </Card>
             </Grid>
           </Grid>
