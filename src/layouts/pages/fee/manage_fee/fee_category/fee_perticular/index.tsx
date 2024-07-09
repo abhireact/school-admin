@@ -28,7 +28,7 @@ export default function ManageFeeAmountPerticular() {
   const fetchData = async () => {
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/fee_particular/search`,
+        `${process.env.REACT_APP_BASE_URL}/fee_particular/search`,
         { category_name: category_data.name },
         {
           headers: {

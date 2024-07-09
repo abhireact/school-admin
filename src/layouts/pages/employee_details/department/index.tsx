@@ -14,10 +14,10 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { Card, useMediaQuery } from "@mui/material";
+import { Card, Tooltip, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 const token = Cookies.get("token");
 const Department = () => {
@@ -79,7 +79,7 @@ const Department = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
-  const fetchEmployeeType = () => {
+  const fetchEmployeeDepartment = () => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/employee_department`, {
         headers: {
@@ -97,22 +97,20 @@ const Department = () => {
       });
   };
   useEffect(() => {
-    fetchEmployeeType();
+    fetchEmployeeDepartment();
   }, []);
-  const handleDelete = async (name: any) => {
+  const handleDelete = async (info: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
-        data: { emp_type: name.emp_type },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/employee_department`, {
+        data: { dept_name: info.dept_name },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
       if (response.status === 200) {
-        message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        message.success("Deleted SuccessFully");
+        fetchEmployeeDepartment();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
@@ -124,7 +122,7 @@ const Department = () => {
     columns: [
       { Header: "Department Name", accessor: "dept_name" },
       { Header: "Department Code", accessor: "dept_code" },
-
+      { Header: "Status", accessor: "status" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -149,12 +147,20 @@ const Department = () => {
 
           {rbacData ? (
             rbacData?.find((element: string) => element === "departmentdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
+              <IconButton>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure to Delete it ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(row)} // Pass index to confirm function
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Tooltip title="Delete" placement="top">
+                    <DeleteIcon />
+                  </Tooltip>
+                </Popconfirm>
               </IconButton>
             ) : (
               ""
@@ -195,14 +201,18 @@ const Department = () => {
             )}
           </Grid>{" "}
         </Grid>
-        <DataTable table={dataTableData} canSearch />
+        {data.length > 0 && <DataTable table={dataTableData} canSearch />}
       </Card>
 
       <Dialog open={open} onClose={handleClose}>
-        <Create setOpen={setOpen} fetchData={fetchEmployeeType} />
+        <Create setOpen={setOpen} fetchData={fetchEmployeeDepartment} />
       </Dialog>
       <Dialog open={openupdate} onClose={handleCloseupdate}>
-        <Update setOpenupdate={setOpenupdate} editData={editData} fetchData={fetchEmployeeType} />
+        <Update
+          setOpenupdate={setOpenupdate}
+          editData={editData}
+          fetchData={fetchEmployeeDepartment}
+        />
       </Dialog>
     </DashboardLayout>
   );

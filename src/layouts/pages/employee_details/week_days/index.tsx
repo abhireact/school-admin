@@ -51,7 +51,7 @@ export default function WeekDays() {
           weekday: checked_days,
         };
         axios
-          .post("http://10.0.20.200:8000/mg_weekdays", submit_value, {
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_weekdays`, submit_value, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -59,7 +59,8 @@ export default function WeekDays() {
           })
           .then((response) => {
             if (response.status == 200) {
-              message.success(" Created Successfully");
+              message.success("Created Successfully");
+              console.log(response.data, "fetching data");
             }
           })
           .catch((error) => {
@@ -74,7 +75,7 @@ export default function WeekDays() {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_weekdays", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_weekdays`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -82,7 +83,8 @@ export default function WeekDays() {
       })
       .then((response) => {
         if (response.status == 200) {
-          message.success(" Created Successfully");
+          console.log(response.data, "fetched Data");
+          //  message.success(" Created Successfully");
         }
       })
       .catch((error) => {
@@ -220,7 +222,7 @@ export default function WeekDays() {
                       ))}
                     </Box>
                   </Grid>
-                  <Grid
+                  {/* <Grid
                     item
                     xs={12}
                     sm={12}
@@ -230,13 +232,23 @@ export default function WeekDays() {
                     <MDButton color="info" variant="contained" type="submit">
                       Save
                     </MDButton>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               )}
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                p={3}
+                sx={{ display: "flex", justifyContent: "flex-start" }}
+              >
+                <MDButton color="info" variant="contained" type="submit">
+                  Save
+                </MDButton>
+              </Grid>
             </Card>
           </Grid>
         </Grid>
-        <Grid container mt={4}></Grid>
       </form>
     </DashboardLayout>
   );

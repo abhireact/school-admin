@@ -2,7 +2,7 @@ import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
 import DialogContent from "@mui/material/DialogContent";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
-import BaseLayout from "layouts/pages/account/components/BaseLayout";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
@@ -11,18 +11,17 @@ import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
-import Update from "./show_update";
+import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { Card, useMediaQuery } from "@mui/material";
+import { Card, Tooltip, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
-
 const token = Cookies.get("token");
-const Employee = () => {
+const EmployeeCategory = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -53,24 +52,37 @@ const Employee = () => {
   //End
   const [data, setData] = useState([]);
 
+  //Start
+
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  //End
+
   //Update Dialog Box Start
-  const [username, setUsername] = useState(null);
+  const [editData, setEditData] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
+    setOpenupdate(true);
     const main_data = data[index];
     console.log(main_data, "maindata");
 
-    setOpenupdate(!openupdate);
-    setUsername(main_data.user_id);
+    setOpenupdate(true);
+    setEditData(main_data);
   };
 
   const handleCloseupdate = () => {
-    setOpenupdate(!openupdate);
+    setOpenupdate(false);
   }; //End
-  const fetchEmployees = () => {
+  const fetchEmployeeCategory = () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employee_category`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -86,20 +98,23 @@ const Employee = () => {
       });
   };
   useEffect(() => {
-    fetchEmployees();
+    fetchEmployeeCategory();
   }, []);
   const handleDelete = async (info: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
-        data: { user_name: info },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/mg_employee_category`,
+        {
+          data: info,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
-        message.success("Deleted SuccessFully");
-        fetchEmployees();
+        message.success("Deleted successFully");
+        fetchEmployeeCategory();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
@@ -109,14 +124,8 @@ const Employee = () => {
   };
   const dataTableData = {
     columns: [
-      { Header: "Employee Name", accessor: "employee_name" },
-
-      { Header: "Position", accessor: "position" },
-      { Header: "Department", accessor: "department" },
-      { Header: "User ID", accessor: "user_id" },
-
-      { Header: "Joining Date", accessor: "joining_date" },
-
+      { Header: "Employee Category", accessor: "category_name" },
+      { Header: "Status", accessor: "status" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -124,7 +133,7 @@ const Employee = () => {
       action: (
         <MDTypography variant="p">
           {rbacData ? (
-            rbacData?.find((element: string) => element === "employee_detailsupdate") ? (
+            rbacData?.find((element: string) => element === "employee_typeupdate") ? (
               <IconButton
                 onClick={() => {
                   handleOpenupdate(index);
@@ -140,13 +149,21 @@ const Employee = () => {
           )}
 
           {rbacData ? (
-            rbacData?.find((element: string) => element === "employee_detailsdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row.user_id);
-                }}
-              >
-                <DeleteIcon />
+            rbacData?.find((element: string) => element === "employee_typedelete") ? (
+              <IconButton>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure to Delete it ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(row)} // Pass index to confirm function
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Tooltip title="Delete" placement="top">
+                    <DeleteIcon />
+                  </Tooltip>
+                </Popconfirm>
               </IconButton>
             ) : (
               ""
@@ -157,50 +174,53 @@ const Employee = () => {
         </MDTypography>
       ),
 
-      employee_name: row.employee_name,
-      department: row.department,
-      position: row.position,
-
-      user_id: row.user_id,
-      joining_date: row.joining_date,
+      category_name: row.category_name,
+      status: row.status ? "Active" : "InActive",
     })),
   };
-  const [showpage, setShowpage] = useState(false);
-  const handleShowPage = () => {
-    setShowpage(!showpage);
-  };
   return (
-    <BaseLayout>
-      {showpage ? (
-        <>
-          <Create handleClose={handleShowPage} fetchData={fetchEmployees} />
-        </>
-      ) : openupdate ? (
-        <Update username={username} fetchData={fetchEmployees} handleClose={handleCloseupdate} />
-      ) : (
-        <Card>
-          <MDBox p={4}>
-            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Grid item pt={2} pl={2}>
-                <MDTypography variant="h4" color="secondary" fontWeight="bold">
-                  Employee List
-                </MDTypography>
-              </Grid>
-              {rbacData &&
-              rbacData.find((element: string) => element === "employee_detailscreate") ? (
-                <Grid item pt={2} pr={2}>
-                  <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                    + New Employee
-                  </MDButton>
-                </Grid>
-              ) : null}
+    <DashboardLayout>
+      <DashboardNavbar />
+      <Card>
+        {" "}
+        <MDBox p={4}>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Grid item pt={2} pl={2}>
+              <MDTypography variant="h4" color="secondary" fontWeight="bold">
+                Employee Category
+              </MDTypography>
             </Grid>
-            {data.length > 0 && <DataTable table={dataTableData} canSearch />}
-          </MDBox>
-        </Card>
-      )}
-    </BaseLayout>
+            <Grid item pt={2} pr={2}>
+              {" "}
+              {rbacData ? (
+                rbacData?.find((element: string) => element === "employee_typecreate") ? (
+                  <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                    + New Employee Category
+                  </MDButton>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+            </Grid>
+          </Grid>
+          {data.length > 0 && <DataTable table={dataTableData} canSearch />}
+        </MDBox>
+      </Card>
+      <Dialog open={open} onClose={handleClose}>
+        <Create setOpen={setOpen} fetchData={fetchEmployeeCategory} />
+      </Dialog>
+
+      <Dialog open={openupdate} onClose={handleCloseupdate}>
+        <Update
+          setOpenupdate={setOpenupdate}
+          editData={editData}
+          fetchData={fetchEmployeeCategory}
+        />
+      </Dialog>
+    </DashboardLayout>
   );
 };
 
-export default Employee;
+export default EmployeeCategory;

@@ -145,7 +145,7 @@ const Importattandance = () => {
     console.log(values, "formdata");
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/attendance/excel`,
+        `${process.env.REACT_APP_BASE_URL}/attendance/excel`,
         {
           email: mainData[emplyid],
           checkIn: mainData[checkinTime],

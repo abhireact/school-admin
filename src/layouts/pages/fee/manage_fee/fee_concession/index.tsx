@@ -37,12 +37,16 @@ export default function FeeConcession() {
   const [concessiondata, setConcessiondata] = useState([]);
   const fetchData = async () => {
     try {
-      const response = await axios.post(`http://10.0.20.200:8000/fee_concession/search`, values, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/fee_concession/search`,
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
         setConcessiondata(response.data);
       }
