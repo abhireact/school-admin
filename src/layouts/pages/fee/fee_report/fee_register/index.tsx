@@ -308,6 +308,8 @@ const FeeRegister = (props: any) => {
       : { columns: [], rows: [] };
   }, [feeRegisterData]);
 
+  console.log(feeRegisterData, "fee register data");
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -416,7 +418,7 @@ const FeeRegister = (props: any) => {
                     )}
                   />
                 </Grid>
-                {feeRegisterData?.pdfRows ? (
+                {/* {feeRegisterData?.pdfRows ? (
                   <>
                     <MDBox ref={tableRef} className="hidden-text">
                       <PdfGenerator
@@ -431,8 +433,23 @@ const FeeRegister = (props: any) => {
                       <MDButton onClick={handlePrint}>Print</MDButton>
                     </MDBox>
                   </>
+                ) : null} */}
+                {dataTableData && showTable ? (
+                  <DataTable
+                    table={{
+                      columns: feeRegisterData.columns,
+                      rows: feeRegisterData.rows,
+                      pdfRows: feeRegisterData.pdfRows,
+                    }}
+                    selectColumnBtn
+                    importbtn
+                    pdfGeneratorProps={{
+                      isPdfMode: false,
+                      hiddenText: "",
+                      additionalInfo: undefined,
+                    }}
+                  />
                 ) : null}
-                {dataTableData && showTable ? <DataTable table={dataTableData} /> : null}
 
                 <Grid
                   item

@@ -117,19 +117,19 @@ export default function FeeConcessionReport() {
   });
 
   console.log(feeConcessionReportData, "concession DAtaa");
-  const tableRef = useRef();
-  // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
-  const handlePrint = useReactToPrint({
-    content: () => tableRef.current,
-  });
+  // const tableRef = useRef();
+  // // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  // const handlePrint = useReactToPrint({
+  //   content: () => tableRef.current,
+  // });
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Spin spinning={isLoading}>
         <form onSubmit={handleSubmit}>
-          <MDBox>
+          {/* <MDBox>
             <MDButton onClick={handlePrint}>Print</MDButton>
-          </MDBox>
+          </MDBox> */}
 
           <Grid container>
             <Grid item xs={12} sm={12}>
@@ -261,7 +261,7 @@ export default function FeeConcessionReport() {
             <Grid item xs={12} sm={12} pt={2}>
               {feeConcessionReportData.rows.length > 0 ? (
                 <Card>
-                  <MDBox ref={tableRef} className="hidden-text">
+                  {/* <MDBox ref={tableRef} className="hidden-text">
                     <PdfGenerator
                       data={feeConcessionReportData.rows}
                       // hiddenText={hiddenText}
@@ -269,13 +269,17 @@ export default function FeeConcessionReport() {
                       hiddenText={""}
                       additionalInfo={undefined}
                     />
-                  </MDBox>
+                  </MDBox> */}
                   <MDBox p={3}>
                     <DataTable
                       table={feeConcessionReportData}
-                      isSorted={false}
-                      entriesPerPage={false}
-                      showTotalEntries={false}
+                      importbtn
+                      selectColumnBtn
+                      pdfGeneratorProps={{
+                        isPdfMode: true,
+                        hiddenText: "",
+                        additionalInfo: undefined,
+                      }}
                     />
                   </MDBox>
                 </Card>

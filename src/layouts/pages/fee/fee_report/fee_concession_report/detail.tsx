@@ -148,9 +148,9 @@ export default function FeeConcessionReportDetail() {
             let dateTotal = 0;
             const dateRows: RowType[] = [
               {
-                isDateHeader: true,
+                // isDateHeader: true,
                 sl_no: "",
-                student_name: `Date ${date}`,
+                student_name: `Date: ${date}`,
                 admission_number: "",
                 section: "",
                 transaction_number: "",
@@ -173,7 +173,7 @@ export default function FeeConcessionReportDetail() {
                 };
               }),
               {
-                isDateTotal: true,
+                // isDateTotal: true,
                 sl_no: "",
                 student_name: "",
                 admission_number: "",
@@ -181,7 +181,7 @@ export default function FeeConcessionReportDetail() {
                 transaction_number: "",
                 insallment: "",
                 payment_mode: "",
-                amount: `ToTal ${dateTotal.toFixed(2)}`,
+                amount: `Total : ${dateTotal.toFixed(2)}`,
               },
             ];
             return dateRows;
@@ -189,7 +189,7 @@ export default function FeeConcessionReportDetail() {
 
           // Add grand total at the end
           rows.push({
-            isGrandTotal: true,
+            // isGrandTotal: true,
             sl_no: "",
             student_name: "",
             admission_number: "",
@@ -197,7 +197,7 @@ export default function FeeConcessionReportDetail() {
             transaction_number: "",
             insallment: "",
             payment_mode: "",
-            amount: `Grand Total: ${grandTotal.toFixed(2)}`,
+            amount: `Grand Total : ${grandTotal.toFixed(2)}`,
           });
 
           feeConcessionData = {
@@ -230,7 +230,7 @@ export default function FeeConcessionReportDetail() {
             0
           );
           rows.push({
-            isGrandTotal: true,
+            // isGrandTotal: true,
             sl_no: "",
             student_name: "",
             admission_number: "",
@@ -238,7 +238,7 @@ export default function FeeConcessionReportDetail() {
             transaction_number: "",
             insallment: "",
             payment_mode: "",
-            amount: `Grand Total:${grandTotal.toFixed(2)}`,
+            amount: `Grand Total : ${grandTotal.toFixed(2)}`,
           });
 
           feeConcessionData = {
@@ -446,24 +446,35 @@ export default function FeeConcessionReportDetail() {
                 <Card>
                   <MDBox ref={tableRef} className="hidden-text">
                     <PdfGenerator
-                      data={feeConcessionReportData.rows}
+                      data={feeConcessionReportData.rows.map((row, index) =>
+                        index === 0 && row.isDateHeader
+                          ? (({ isDateHeader, ...rest }) => rest)(row)
+                          : row
+                      )}
                       isPdfMode={true}
                       hiddenText={""}
                       additionalInfo={undefined}
                     />
                   </MDBox>
                   <MDBox p={3}>
-                    {values.datewise && (
-                      <DataTable
-                        table={{
-                          columns: feeConcessionReportData.columns,
-                          rows: feeConcessionReportData.rows,
-                        }}
-                        isSorted={false}
-                        entriesPerPage={false}
-                        showTotalEntries={false}
-                      />
-                    )}
+                    <DataTable
+                      table={{
+                        columns: feeConcessionReportData.columns,
+                        rows: feeConcessionReportData.rows.map((row, index) =>
+                          index === 0 && row.isDateHeader
+                            ? (({ isDateHeader, ...rest }) => rest)(row)
+                            : row
+                        ),
+                      }}
+                      canSearch
+                      selectColumnBtn
+                      importbtn
+                      pdfGeneratorProps={{
+                        isPdfMode: true,
+                        hiddenText: "",
+                        additionalInfo: undefined,
+                      }}
+                    />
                   </MDBox>
                 </Card>
               ) : null}
