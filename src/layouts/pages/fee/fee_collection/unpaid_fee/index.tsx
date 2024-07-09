@@ -129,9 +129,7 @@ const UnPaidFees = (props: any) => {
           <StudentCard data={props.mainData} />
         </Grid>
       </Grid>
-      <IconButton onClick={handleColumnSelectorOpen}>
-        <ViewColumnIcon />
-      </IconButton>
+      <IconButton onClick={handleColumnSelectorOpen}>{/* <ViewColumnIcon /> */}</IconButton>
       <DataTable table={dataTableData} />
       <Dialog open={openColumnSelector} onClose={handleColumnSelectorClose}>
         <DialogTitle>Select Columns</DialogTitle>

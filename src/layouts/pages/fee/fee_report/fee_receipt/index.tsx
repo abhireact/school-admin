@@ -564,6 +564,8 @@ export default function FeeReceiptReport() {
                       entriesPerPage={false}
                       showTotalEntries={false}
                       canSearch
+                      importbtn
+                      selectColumnBtn
                     />
                   </MDBox>
                 </Card>
