@@ -29,6 +29,9 @@ import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_t
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 import CreateStudent from "layouts/pages/student_details/student/create";
+import ShowAdmission from "layouts/pages/admission/show";
+import EditAdmission from "layouts/pages/admission/update";
+import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -226,6 +229,24 @@ let routes = [
     key: "manage_sub_template",
     route: "/pages/admission/formsetting/manage_sub_template",
     component: <ManageSubTemplate />,
+  },
+  {
+    name: "Show Admission",
+    key: "show_admission",
+    route: "/pages/admission/show_admission",
+    component: <ShowAdmission />,
+  },
+  {
+    name: "Edit Admission",
+    key: "edit_admission",
+    route: "/pages/admission/edit_admission",
+    component: <EditAdmission />,
+  },
+  {
+    name: "Manage Pay Fee",
+    key: "manage_pay_fee",
+    route: "/pages/admission/manage_admission/pay_fee",
+    component: <ManagePayFee />,
   },
 ];
 

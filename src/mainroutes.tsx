@@ -92,6 +92,8 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import StudentPhotoUpload from "layouts/pages/student_details/student_bulk_upload";
 import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_report";
 import EmployeeCategory from "layouts/pages/employee_details/employee_category";
+import ManageFeeAdmission from "layouts/pages/admission/manage_fee_admission";
+import AdmissionReport from "layouts/pages/admission/admission_report";
 
 const routes = [
   {
@@ -723,6 +725,18 @@ const routes = [
         key: "admissionpage",
         route: "pages/admission/studentAdmission",
         component: <StudentAdmission />,
+      },
+      {
+        name: "Manage Admission",
+        key: "manage_admission",
+        route: "/pages/admission/manage_admission",
+        component: <ManageFeeAdmission />,
+      },
+      {
+        name: "Admission Report",
+        key: "admission_report",
+        route: "/pages/admission/admission_report",
+        component: <AdmissionReport />,
       },
     ],
   },
