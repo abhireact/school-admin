@@ -36,7 +36,7 @@ function Sessions(): JSX.Element {
   };
 
   return (
-    <Card id="sessions">
+    <Card>
       <MDBox p={3} lineHeight={1}>
         <MDBox mb={1}>
           <MDTypography variant="h4">Sessions</MDTypography>

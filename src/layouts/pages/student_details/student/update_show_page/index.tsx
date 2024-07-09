@@ -66,7 +66,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const Update = (props: any) => {
-  const { username, setOpenupdate, fetchData } = props;
+  const { username, setOpenupdate } = props;
   const [studentInfo, setStudentInfo] = useState<any>({});
   const [guardianInfo, setGuardianInfo] = useState([]);
 

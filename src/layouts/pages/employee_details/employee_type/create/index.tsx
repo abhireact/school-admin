@@ -40,10 +40,10 @@ const Create = (props: any) => {
           .then(() => {
             handleClose();
             fetchData();
-            message.success(" Created successfully!");
+            message.success("Created Successfully!");
           })
-          .catch(() => {
-            message.error("Error on creating  !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
 
         action.resetForm();
@@ -75,14 +75,7 @@ const Create = (props: any) => {
             />
           </Grid>
 
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            mt={4}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item>
               <MDButton
                 color="dark"

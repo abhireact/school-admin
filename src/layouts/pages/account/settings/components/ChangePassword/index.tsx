@@ -44,7 +44,7 @@ function ChangePassword(): JSX.Element {
   });
 
   return (
-    <Card id="change-password">
+    <Card>
       <MDBox p={3}>
         <MDTypography variant="h4">Change Password</MDTypography>
       </MDBox>

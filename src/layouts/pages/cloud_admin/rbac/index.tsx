@@ -103,7 +103,7 @@ const CloudAdminRbac = (props: any) => {
   useEffect(() => {
     axios
       .get(
-        `http://10.0.20.200:8000/mg_rbac/cloud_admin
+        `${process.env.REACT_APP_BASE_URL}/mg_rbac/cloud_admin
       `,
         {
           headers: {

@@ -67,7 +67,7 @@ const SchoolCreation = () => {
   const FetchAllSchool = () => {
     axios
       .get(
-        `http://10.0.20.200:8000/mg_school/all_school
+        `${process.env.REACT_APP_BASE_URL}/mg_school/all_school
       `,
         {
           headers: {

@@ -7,7 +7,6 @@ import axios from "axios";
 import { message } from "antd";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import React from "react";
 import { Grid, Card, Autocomplete } from "@mui/material";
 import Cookies from "js-cookie";
 import { useFormik } from "formik";
@@ -21,6 +20,23 @@ const initialValues = {
   academic_year: "",
   start_date: "",
   end_date: "",
+  details: [
+    {
+      select: true,
+      class_name: "",
+      max_form_per_day: 0,
+      max_form: 0,
+      date_of_calculating_age: "",
+      min_age: 0,
+      max_age: 0,
+      min_age_month: 0,
+      max_age_month: 0,
+      min_age_day: 0,
+      max_age_day: 0,
+      amount: 0,
+      status: "",
+    },
+  ],
 };
 
 const validationSchema = Yup.object().shape({
@@ -58,7 +74,7 @@ const AddDate = () => {
       validationSchema,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.200:8000/admissions/settings", values, {
+          .post(`${process.env.REACT_APP_BASE_URL}/admissions/settings`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -130,7 +146,7 @@ const AddDate = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                  onKeyDown={(e: any) => e.preventDefault()}
                   inputProps={{ min: values.academic_year }}
                   error={touched.start_date && Boolean(errors.start_date)}
                   helperText={touched.start_date && errors.start_date}
@@ -152,7 +168,7 @@ const AddDate = () => {
                   }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                  onKeyDown={(e: any) => e.preventDefault()}
                   inputProps={{ min: values.start_date }}
                   error={touched.end_date && Boolean(errors.end_date)}
                   helperText={touched.end_date && errors.end_date}

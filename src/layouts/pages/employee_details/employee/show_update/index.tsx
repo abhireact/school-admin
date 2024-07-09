@@ -182,7 +182,7 @@ const ShowUpdate = (props: any) => {
         max_no_of_class: employeeInfo.max_no_of_class || 0,
         employee_type: employeeInfo.employee_type || "",
         ltc_applicable: employeeInfo.ltc_applicable || false,
-        employee_grade: employeeInfo.employee_grade || "None",
+        employee_grade: employeeInfo.employee_grade || "",
         status: employeeInfo.status || "",
         aadhar_number: employeeInfo.aadhar_number || "",
 

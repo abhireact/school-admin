@@ -473,7 +473,7 @@ function App() {
                       <Draggable
                         key={index}
                         position={{ x: image.x_coordinate, y: image.y_coordinate }}
-                        onDrag={(e, data) => handleImageDrag(e, data, index)}
+                        onDrag={(e: any, data: any) => handleImageDrag(e, data, index)}
                       >
                         <div
                           className="image-container"
@@ -511,7 +511,7 @@ function App() {
                         x: data.line_1_x_position,
                         y: data.line_1_y_position,
                       }}
-                      onStop={(e, data) => handleTextDrag(e, data, index)}
+                      onStop={(e: any, data: any) => handleTextDrag(e, data, index)}
                     >
                       <MDTypography variant="h6">{data.text_line_1}</MDTypography>
                     </Draggable>

@@ -529,7 +529,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
     } else {
       axios
         .put(
-          `http://10.0.20.200:8000/internal_portal/notifications/${data.id}`,
+          `${process.env.REACT_APP_BASE_URL}/internal_portal/notifications/${data.id}`,
           {
             status: true,
           },

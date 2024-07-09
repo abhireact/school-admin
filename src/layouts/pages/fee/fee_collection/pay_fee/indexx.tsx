@@ -510,7 +510,7 @@ const PayFee = (props: any) => {
     setFieldValue: (field: string, value: any) => void
   ) => {
     const rowData = KeyData[index]?.particular || [];
-    console.log(rowData, "rowdata particular");
+    // console.log(rowData, "rowdata particular");
     return {
       columns: [
         { Header: "Particular", accessor: "particular_name" },
@@ -691,7 +691,7 @@ const PayFee = (props: any) => {
     // }
 
     const rowData = KeyData[index]?.late_fine || [];
-    console.log(rowData, "rowdata");
+    // console.log(rowData, "rowdata");
 
     return {
       columns: [

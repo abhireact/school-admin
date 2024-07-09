@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import MDBox from "components/MDBox";
 
 const token = Cookies.get("token");
 const Employee = () => {
@@ -87,20 +88,18 @@ const Employee = () => {
   useEffect(() => {
     fetchEmployees();
   }, []);
-  const handleDelete = async (name: any) => {
+  const handleDelete = async (info: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_leaves`, {
-        data: { leave_type: name.leave_type, leave_code: name.leave_code },
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
+        data: { user_name: info },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
       if (response.status === 200) {
-        message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        message.success("Deleted SuccessFully");
+        fetchEmployees();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
@@ -144,7 +143,7 @@ const Employee = () => {
             rbacData?.find((element: string) => element === "employee_detailsdelete") ? (
               <IconButton
                 onClick={() => {
-                  handleDelete(row);
+                  handleDelete(row.user_id);
                 }}
               >
                 <DeleteIcon />
@@ -180,22 +179,24 @@ const Employee = () => {
         <Update username={username} fetchData={fetchEmployees} handleClose={handleCloseupdate} />
       ) : (
         <Card>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Grid item pt={2} pl={2}>
-              <MDTypography variant="h4" color="secondary" fontWeight="bold">
-                Employee List
-              </MDTypography>
-            </Grid>
-            {rbacData &&
-            rbacData.find((element: string) => element === "employee_detailscreate") ? (
-              <Grid item pt={2} pr={2}>
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + New Employee
-                </MDButton>
+          <MDBox p={4}>
+            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Grid item pt={2} pl={2}>
+                <MDTypography variant="h4" color="secondary" fontWeight="bold">
+                  Employee List
+                </MDTypography>
               </Grid>
-            ) : null}
-          </Grid>
-          <DataTable table={dataTableData} canSearch />
+              {rbacData &&
+              rbacData.find((element: string) => element === "employee_detailscreate") ? (
+                <Grid item pt={2} pr={2}>
+                  <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                    + New Employee
+                  </MDButton>
+                </Grid>
+              ) : null}
+            </Grid>
+            {data.length > 0 && <DataTable table={dataTableData} canSearch />}
+          </MDBox>
         </Card>
       )}
     </BaseLayout>

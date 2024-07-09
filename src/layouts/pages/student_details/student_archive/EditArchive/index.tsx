@@ -32,7 +32,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const EditArchive = (props: any) => {
-  const { handleClose, fetchData, editData, user_name } = props;
+  const { handleClose, fetchData, editData } = props;
   const token = Cookies.get("token");
   console.log(editData, "Edit data");
   const [reasonsdata, setReasonsdata] = useState([]);

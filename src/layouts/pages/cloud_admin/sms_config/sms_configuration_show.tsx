@@ -30,7 +30,7 @@ export default function SmsConfiguration() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://10.0.20.200:8000/mg_sms_configuration/school_incharge`,
+        `${process.env.REACT_APP_BASE_URL}/mg_sms_configuration/school_incharge`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -280,7 +280,7 @@ export default function FeeReceiptReport() {
     console.log(receiptNo, values.reason, "ok");
 
     axios
-      .delete(`http://10.0.20.200:8000/fee_receipts/receipt_no`, {
+      .delete(`${process.env.REACT_APP_BASE_URL}/fee_receipts/receipt_no`, {
         data: {
           reason: values.reason,
           receipt_no: receiptNo,

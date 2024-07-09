@@ -56,7 +56,7 @@ export default function AssignClassTeacher() {
   const fetchData = async () => {
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/assign_class_teacher/filter`,
+        `${process.env.REACT_APP_BASE_URL}/assign_class_teacher/filter`,
         values,
         {
           headers: {
@@ -70,7 +70,7 @@ export default function AssignClassTeacher() {
       }
     } catch (error) {
       setConcessiondata([]);
-      message.error("No data for this section");
+      //  message.error("No data for this section");
     }
   };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
@@ -311,7 +311,9 @@ export default function AssignClassTeacher() {
 
           <Grid item xs={12} sm={12}>
             <Card>
-              <DataTable table={feeConcessionData} isSorted={false} canSearch={true} />
+              {concessiondata.length > 0 && (
+                <DataTable table={feeConcessionData} isSorted={false} canSearch={true} />
+              )}
             </Card>
           </Grid>
         </Grid>
