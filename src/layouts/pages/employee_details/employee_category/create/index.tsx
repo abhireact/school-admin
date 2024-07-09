@@ -5,49 +5,49 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
+import SaveIcon from "@mui/icons-material/Save";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import SaveIcon from "@mui/icons-material/Save";
+
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 
-const Update = (props: any) => {
+const Create = (props: any) => {
   const token = Cookies.get("token");
 
-  const { setOpenupdate, editData, fetchData } = props;
+  const { setOpen, fetchData } = props;
   const handleClose = () => {
-    setOpenupdate(false);
+    setOpen(false);
   };
-  //end
 
-  const { values, handleChange, handleBlur, handleSubmit, touched, errors, setFieldValue } =
+  const { values, handleChange, handleBlur, handleSubmit, setFieldValue, touched, errors } =
     useFormik({
       initialValues: {
-        old_grade_name: editData.grade_name,
-        grade_name: editData.grade_name,
-
-        status: editData.status ? "Active" : "InActive",
+        category_name: "",
+        status: "InActive",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
         const sendValues = { ...values, status: values.status === "Active" ? true : false };
         axios
-          .put(`${process.env.REACT_APP_BASE_URL}/mg_Egrade`, sendValues, {
+          .post(`${process.env.REACT_APP_BASE_URL}/mg_employee_category`, sendValues, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           })
           .then(() => {
-            fetchData();
             handleClose();
-            message.success("Updated Successfully!");
+            fetchData();
+            message.success("Created Successfully!");
           })
           .catch((error: any) => {
             message.error(error.response.data.detail);
           });
+
+        action.resetForm();
       },
     });
   return (
@@ -56,7 +56,7 @@ const Update = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              GRADE NAME
+              CATEGORY NAME
             </MDTypography>
           </Grid>
 
@@ -65,14 +65,14 @@ const Update = (props: any) => {
               required
               sx={{ width: "65%" }}
               variant="standard"
-              name="grade_name"
-              value={values.grade_name}
-              placeholder="Enter Grade Name"
+              name="category_name"
+              value={values.category_name}
+              placeholder="Enter Category Name"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.grade_name && Boolean(errors.grade_name)}
-              success={values.grade_name && !errors.grade_name}
-              helperText={touched.grade_name && errors.grade_name}
+              error={touched.category_name && Boolean(errors.category_name)}
+              success={values.category_name && !errors.category_name}
+              helperText={touched.category_name && errors.category_name}
             />
           </Grid>
 
@@ -137,4 +137,4 @@ const Update = (props: any) => {
   );
 };
 
-export default Update;
+export default Create;

@@ -32,7 +32,7 @@ export default function FeeConcession(props: any) {
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/fee_category`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fee_category`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

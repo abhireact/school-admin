@@ -25,8 +25,8 @@ const Update = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit, touched, errors, setFieldValue } =
     useFormik({
       initialValues: {
-        old_grade_name: editData.grade_name,
-        grade_name: editData.grade_name,
+        old_category_name: editData.category_name,
+        category_name: editData.category_name,
 
         status: editData.status ? "Active" : "InActive",
       },
@@ -34,7 +34,7 @@ const Update = (props: any) => {
       onSubmit: (values, action) => {
         const sendValues = { ...values, status: values.status === "Active" ? true : false };
         axios
-          .put(`${process.env.REACT_APP_BASE_URL}/mg_Egrade`, sendValues, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_employee_category`, sendValues, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ const Update = (props: any) => {
           .then(() => {
             fetchData();
             handleClose();
-            message.success("Updated Successfully!");
+            message.success(" Updated Successfully!");
           })
           .catch((error: any) => {
             message.error(error.response.data.detail);
@@ -56,7 +56,7 @@ const Update = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              GRADE NAME
+              CATEGORY NAME
             </MDTypography>
           </Grid>
 
@@ -65,14 +65,14 @@ const Update = (props: any) => {
               required
               sx={{ width: "65%" }}
               variant="standard"
-              name="grade_name"
-              value={values.grade_name}
-              placeholder="Enter Grade Name"
+              name="category_name"
+              value={values.category_name}
+              placeholder="Enter Category Name"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.grade_name && Boolean(errors.grade_name)}
-              success={values.grade_name && !errors.grade_name}
-              helperText={touched.grade_name && errors.grade_name}
+              error={touched.category_name && Boolean(errors.category_name)}
+              success={values.category_name.length && !errors.category_name}
+              helperText={touched.category_name && errors.category_name}
             />
           </Grid>
 

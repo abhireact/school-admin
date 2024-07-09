@@ -20,7 +20,24 @@ const Update = (props: any) => {
   const handleClose = () => {
     setOpenupdate(false);
   };
-  //end
+  const [empCategory, setEmpCategory] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employee_category`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setEmpCategory(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
@@ -45,11 +62,9 @@ const Update = (props: any) => {
             handleClose();
             message.success(" Updated Successfully!");
           })
-          .catch(() => {
-            message.error("Error on  Updating  !");
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
           });
-
-        action.resetForm();
       },
     });
   return (
@@ -71,10 +86,9 @@ const Update = (props: any) => {
                   target: { name: "category_name", value },
                 });
               }}
-              options={["Teaching Staff", "Non-Teaching Staff"]}
+              options={empCategory?.map((info: any) => info.category_name)}
               renderInput={(params: any) => (
                 <MDInput
-                  required
                   InputLabelProps={{ shrink: true }}
                   name="category_name"
                   placeholder="Choose Category Name"
@@ -150,14 +164,7 @@ const Update = (props: any) => {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            mt={4}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item>
               <MDButton
                 color="dark"

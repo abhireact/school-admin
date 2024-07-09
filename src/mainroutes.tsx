@@ -70,6 +70,7 @@ import Consolidiration from "layouts/pages/Attendance/reports/consolidiration";
 import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_attendance";
 import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
+
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -90,6 +91,7 @@ const translater = {
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import StudentPhotoUpload from "layouts/pages/student_details/student_bulk_upload";
 import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_report";
+import EmployeeCategory from "layouts/pages/employee_details/employee_category";
 
 const routes = [
   {
@@ -452,6 +454,18 @@ const routes = [
         route: "employee/employee_details",
         component: <EmployeeDetails />,
       },
+      {
+        name: "Assign Class Teacher",
+        key: "assignclassteacher",
+        route: "employee/assignclassteacher",
+        component: <AssignClassTeacher />,
+      },
+      {
+        name: "Employee Category",
+        key: "employee_category",
+        route: "employee/employee_category",
+        component: <EmployeeCategory />,
+      },
 
       {
         name: "Employee Grade",
@@ -479,12 +493,7 @@ const routes = [
         route: "employee/department",
         component: <Department />,
       },
-      {
-        name: "Assign Class Teacher",
-        key: "assignclassteacher",
-        route: "employee/assignclassteacher",
-        component: <AssignClassTeacher />,
-      },
+
       {
         name: "Week Days",
         key: "weekdays",

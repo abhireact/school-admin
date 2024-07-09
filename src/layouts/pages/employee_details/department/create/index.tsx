@@ -11,7 +11,6 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 
 const Create = (props: any) => {
@@ -28,7 +27,7 @@ const Create = (props: any) => {
       initialValues: {
         dept_name: "",
         dept_code: "",
-        status: "",
+        status: "InActive",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -135,14 +134,7 @@ const Create = (props: any) => {
             </FormControl>
           </Grid>
 
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            mt={4}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item>
               <MDButton
                 color="dark"

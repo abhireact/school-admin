@@ -45,7 +45,7 @@ export default function StudentAttendanceReport() {
   useEffect(() => {
     const fetchData = async () => {
       axios
-        .post(`http://10.0.20.200:8000/mg_attendance/student_attendance_report`, values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_attendance/student_attendance_report`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

@@ -32,7 +32,7 @@ const StudentAdmission = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/admissions`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/admissions`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

@@ -255,7 +255,7 @@ const EmailSetting = () => {
 
   useEffect(() => {
     axios
-      .get(`http://10.0.20.200:8000/email_service`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/email_service`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

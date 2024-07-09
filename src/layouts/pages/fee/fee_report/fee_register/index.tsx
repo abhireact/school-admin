@@ -51,12 +51,16 @@ const FeeRegister = (props: any) => {
     async (currentValues: { section_name: unknown; class_name: string; academic_year: string }) => {
       setIsLoading(true);
       try {
-        const response = await axios.post(`http://10.0.20.200:8000/fee_register`, currentValues, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/fee_register`,
+          currentValues,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setData(response.data);
         setShowTable(true);
         handleShowPage();

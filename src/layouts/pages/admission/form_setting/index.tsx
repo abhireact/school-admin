@@ -22,7 +22,7 @@ const FormSetting = () => {
   });
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/admissions/settings`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/admissions/settings`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

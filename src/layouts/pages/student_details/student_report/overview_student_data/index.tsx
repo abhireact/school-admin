@@ -337,7 +337,7 @@ export default function OverViewStudent() {
                               textOverflow: "ellipsis",
                             }}
                           >
-                            COLUMN NAME
+                            SELECT COLUMN
                           </MDTypography>
                         </td>
                         <td

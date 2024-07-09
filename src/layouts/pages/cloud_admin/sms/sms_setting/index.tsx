@@ -29,7 +29,7 @@ export default function SmsSetting() {
   const [subdomain, setSubdomain] = useState("");
   const fetchEnableData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_school/sms_enable`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_school/sms_enable`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -44,7 +44,7 @@ export default function SmsSetting() {
   };
   const fetchPriorityData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_sms_priority`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_sms_priority`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ export default function SmsSetting() {
   };
   const fetchLimitData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/sms_limit`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/sms_limit`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

@@ -39,7 +39,7 @@ export default function ManageConcession(props: any) {
   const fetchData = async () => {
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/fee_concession/collection`,
+        `${process.env.REACT_APP_BASE_URL}/fee_concession/collection`,
         props.data,
         {
           headers: {

@@ -60,7 +60,7 @@ export default function Consolidiration() {
     const fetchData = async () => {
       axios
         .post(
-          `http://10.0.20.200:8000/mg_student_attendance/Consolidate_student_attendance_report`,
+          `${process.env.REACT_APP_BASE_URL}/mg_student_attendance/Consolidate_student_attendance_report`,
           values,
           {
             headers: {

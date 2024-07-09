@@ -283,7 +283,7 @@ const Rbac = (props: any) => {
   const fetchRbac = async (roles_name: string) => {
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/get_all_mg_rbac `,
+        `${process.env.REACT_APP_BASE_URL}/get_all_mg_rbac `,
         { role_name: roles_name },
         {
           headers: {
@@ -305,7 +305,7 @@ const Rbac = (props: any) => {
   };
   useEffect(() => {
     axios
-      .get(`http://10.0.20.200:8000/mg_school`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_school`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

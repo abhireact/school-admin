@@ -47,7 +47,7 @@ export default function StudentAttendanceDateWiseReport() {
       console.log(submitValue, "values ADte");
       axios
         .post(
-          `http://10.0.20.200:8000/mg_student_attendance/Date_wise_absent_detail`,
+          `${process.env.REACT_APP_BASE_URL}/mg_student_attendance/Date_wise_absent_detail`,
           submitValue,
           {
             headers: {

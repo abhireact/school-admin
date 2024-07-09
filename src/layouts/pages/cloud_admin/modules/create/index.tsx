@@ -43,7 +43,7 @@ const Create = (props: any) => {
     onSubmit: (values, action) => {
       axios
         .post(
-          `http://10.0.20.200:8000/mg_models
+          `${process.env.REACT_APP_BASE_URL}/mg_models
         `,
           values,
           {
