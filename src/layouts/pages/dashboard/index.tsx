@@ -19,6 +19,7 @@ import MyDataTableComponent from "./test2";
 import FeeCollectionListReport from "../fee/fee_report/daily_fee_collection_list";
 import FeeCollectionReport from "../fee/fee_report/fee_collection_report";
 import FeeConcessionReportDetail from "../fee/fee_report/fee_concession_report/detail";
+import Test3 from "./test3";
 // import Table from "./component/Table";
 
 const MyDashboard = () => {
@@ -60,7 +61,8 @@ const MyDashboard = () => {
       </Grid>
       {/* <MyDataTableComponent />{" "} */}
       {/* <FeeCollectionListReport /> */}
-      <FeeConcessionReportDetail />
+      {/* <FeeConcessionReportDetail /> */}
+      <Test3 />
       {/* </DashboardLayout> */}
     </>
   );
