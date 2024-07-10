@@ -89,7 +89,7 @@ const EmployeeArchive = () => {
         }
       );
       if (response.status === 200) {
-        message.success("Archived SuccessFully");
+        message.success("Employee UnArchived");
         fetchEmployeeArchive();
         // dispatch(fetchStudent() as any);
       }
