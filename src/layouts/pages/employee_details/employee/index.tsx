@@ -14,10 +14,10 @@ import Create from "./create";
 import Update from "./show_update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { Card, useMediaQuery } from "@mui/material";
+import { Card, Tooltip, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 
@@ -141,12 +141,20 @@ const Employee = () => {
 
           {rbacData ? (
             rbacData?.find((element: string) => element === "employee_detailsdelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row.user_id);
-                }}
-              >
-                <DeleteIcon />
+              <IconButton>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure to Delete it ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(row.user_id)} // Pass index to confirm function
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Tooltip title="Delete" placement="top">
+                    <DeleteIcon />
+                  </Tooltip>
+                </Popconfirm>
               </IconButton>
             ) : (
               ""
