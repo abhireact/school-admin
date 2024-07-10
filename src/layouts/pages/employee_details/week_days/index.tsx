@@ -20,18 +20,18 @@ export default function WeekDays() {
     wing_name: "",
   };
   const { classes, account, studentcategory, wings } = useSelector((state: any) => state);
-  const [selectedDays, setSelectedDays] = useState([]);
 
-  const handleDayToggle = (day: any) => {
-    if (selectedDays.includes(day)) {
-      setSelectedDays(selectedDays.filter((selectedDay) => selectedDay !== day));
+  const [studentDays, setStudentDays] = useState([]);
+  const handleStudentDay = (day: any) => {
+    if (studentDays.includes(day)) {
+      setStudentDays(studentDays.filter((selectedDay) => selectedDay !== day));
     } else {
-      setSelectedDays([...selectedDays, day]);
+      setStudentDays([...studentDays, day]);
     }
   };
 
-  const isChecked = (day: any) => selectedDays.includes(day);
-  console.log(selectedDays, "selected days");
+  const isStudentDayChecked = (day: any) => studentDays.includes(day);
+  console.log(studentDays, "student days");
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
@@ -39,7 +39,7 @@ export default function WeekDays() {
       enableReinitialize: true,
       onSubmit: async (values, action) => {
         const checked_days = ["0", "1", "2", "3", "4", "5", "6"].map((number, index) => {
-          const is_selected = selectedDays.includes(index);
+          const is_selected = studentDays.includes(index);
           return {
             week_name: number,
             is_selected: is_selected,
@@ -163,10 +163,10 @@ export default function WeekDays() {
                         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
                           <Box
                             key={index}
-                            onClick={() => handleDayToggle(index)}
+                            onClick={() => handleStudentDay(index)}
                             sx={{
-                              bgcolor: isChecked(index) ? "#2AD705" : "#dddddd",
-                              color: isChecked(index) ? "#ffffff" : "#000000",
+                              bgcolor: isStudentDayChecked(index) ? "#2AD705" : "#dddddd",
+                              color: isStudentDayChecked(index) ? "#ffffff" : "#000000",
                               borderRadius: "6px",
                               width: "40px",
                               height: "40px",
@@ -199,10 +199,10 @@ export default function WeekDays() {
                       {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
                         <Box
                           key={index}
-                          onClick={() => handleDayToggle(index)}
+                          onClick={() => handleStudentDay(index)}
                           sx={{
-                            bgcolor: isChecked(index) ? "#2AD705" : "#dddddd",
-                            color: isChecked(index) ? "#ffffff" : "#000000",
+                            bgcolor: isStudentDayChecked(index) ? "#2AD705" : "#dddddd",
+                            color: isStudentDayChecked(index) ? "#ffffff" : "#000000",
                             borderRadius: "6px",
                             width: "40px",
                             height: "40px",

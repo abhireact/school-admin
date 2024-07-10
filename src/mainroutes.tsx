@@ -52,7 +52,8 @@ import StudentSectionChange from "layouts/pages/student_details/student_section_
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
-import WeekDays from "layouts/pages/employee_details/week_days";
+import EmployeeWeekDays from "layouts/pages/employee_details/employee_week_days";
+import StudentWeekDays from "layouts/pages/student_details/student_week_days";
 import ClassTiming from "layouts/pages/employee_details/class_timing";
 import TimeTable from "layouts/pages/Attendance/time_table";
 import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/school_admin_sms_configuration";
@@ -210,6 +211,12 @@ const routes = [
         key: "student_section_change",
         route: "student/student_section_change",
         component: <StudentSectionChange />,
+      },
+      {
+        name: "Student Week Days",
+        key: "student_week_days",
+        route: "student/student_week_days",
+        component: <StudentWeekDays />,
       },
       {
         name: "Student Photo Upload",
@@ -463,6 +470,12 @@ const routes = [
         component: <AssignClassTeacher />,
       },
       {
+        name: "Employee Week Days",
+        key: "employee_week_days",
+        route: "employee/employee_week_days",
+        component: <EmployeeWeekDays />,
+      },
+      {
         name: "Employee Archive",
         key: "employee_archive",
         route: "employee/employee_archive",
@@ -500,13 +513,6 @@ const routes = [
         key: "department",
         route: "employee/department",
         component: <Department />,
-      },
-
-      {
-        name: "Week Days",
-        key: "weekdays",
-        route: "employee/week_days",
-        component: <WeekDays />,
       },
     ],
   },
