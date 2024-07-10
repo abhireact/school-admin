@@ -121,30 +121,6 @@ const StudentAdmission = () => {
     }
   };
 
-  // const handleShowAdmission = async (item: any) => {
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_BASE_URL}/admissions/retrive`,
-  //       {
-  //         id: item.id,
-  //       },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     navigate("/pages/admission/show_admission", {
-  //       state: {
-  //         templateData: response.data,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.error("Error posting data:", error);
-  //   }
-  // };
-
   const handleShowAdmission = (item: any) => {
     navigate("/pages/admission/show_admission", {
       state: {
