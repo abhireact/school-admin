@@ -91,7 +91,7 @@ const StudentArchive = () => {
         }
       );
       if (response.status === 200) {
-        message.success("Archived SuccessFully");
+        message.success("Student UnArchived");
         fetchArchiveStudents();
         dispatch(fetchStudent() as any);
       }
