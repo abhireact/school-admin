@@ -132,7 +132,7 @@ export default function FeeConcession(props: any) {
             <IconButton>
               <Popconfirm
                 title="Delete"
-                description="Are you sure to Delete it ?"
+                description="Are you sure you want to delete it? ?"
                 placement="topLeft"
                 onConfirm={() => confirm(data)} // Pass index to confirm function
                 onCancel={cancel}

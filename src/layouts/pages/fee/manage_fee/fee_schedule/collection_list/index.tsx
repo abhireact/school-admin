@@ -248,7 +248,7 @@ const CollectionList = () => {
             <IconButton>
               <Popconfirm
                 title="Delete"
-                description="Are you sure to Delete it ?"
+                description="Are you sure you want to delete it? ?"
                 placement="topLeft"
                 onConfirm={() => confirm(row)} // Pass index to confirm function
                 onCancel={cancel}

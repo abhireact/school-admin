@@ -72,6 +72,7 @@ import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_atten
 import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 import EmployeeArchive from "layouts/pages/employee_details/employee_archive";
+import EmployeeCertificate from "layouts/pages/employee_details/employee_certificate";
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -132,12 +133,6 @@ const routes = [
       </Icon>
     ),
     collapse: [
-      // {
-      //   name: "New School",
-      //   key: "new-school",
-      //   route: "pages/school/new-school",
-      //   component: <School />,
-      // },
       {
         name: translater[languagee].school_information,
         key: "schoolinfo",
@@ -168,15 +163,9 @@ const routes = [
         route: "pages/school/class",
         component: <Class />,
       },
-      // {
-      //   name: "Section",
-      //   key: "section",
-      //   route: "pages/school/section",
-      //   component: <Section />,
-      // },
     ],
   },
-  // Student
+
   {
     type: "collapse",
     name: "Student",
@@ -480,6 +469,12 @@ const routes = [
         key: "employee_archive",
         route: "employee/employee_archive",
         component: <EmployeeArchive />,
+      },
+      {
+        name: "Experience Certificate",
+        key: "employee_certificate",
+        route: "employee/employee_certificate",
+        component: <EmployeeCertificate />,
       },
       {
         name: "Employee Category",

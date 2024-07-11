@@ -146,7 +146,7 @@ const Wing = () => {
               <IconButton>
                 <Popconfirm
                   title="Delete"
-                  description="Are you sure to Delete it ?"
+                  description="Are you sure you want to delete it? ?"
                   placement="topLeft"
                   onConfirm={() => handleDelete(row.wing_name)} // Pass index to confirm function
                   // onCancel={cancel}
