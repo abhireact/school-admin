@@ -35,8 +35,8 @@ import routes from "routes";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
 
 // Images
-import brandWhite from "assets/images/orglogo.png";
-import brandDark from "assets/images/orglogo.png";
+import brandWhite from "assets/images/white_logo.png";
+import brandDark from "assets/images/remove_white.png";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";

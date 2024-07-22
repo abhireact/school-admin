@@ -12,6 +12,7 @@ import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
+import HeaderPdf from "layouts/pages/Mindcompdf/HeaderPdf";
 import {
   Autocomplete,
   Box,
@@ -104,6 +105,7 @@ const EmployeeCertificate = () => {
     fetchEmployees();
     fetchDepartment();
   }, []);
+  const [userName, setUserName] = useState("");
   const [certificateData, setCertificateData] = useState({
     employee_name: "",
     title: "",
@@ -159,6 +161,7 @@ const EmployeeCertificate = () => {
       initialValues: {
         department: "",
         employee: "",
+        user_name: userName,
         title: certificateData.title,
         employee_name: certificateData.employee_name,
         guardian_title: certificateData.guardian_title,
@@ -174,9 +177,9 @@ const EmployeeCertificate = () => {
       enableReinitialize: true,
 
       onSubmit: (values, action) => {
-        if (issuedData) {
+        if (issuedData.no_of_time_issued) {
           let sendData = {
-            user_name: values.employee.split("/")[0],
+            user_name: values.employee?.split("/")[0],
             title: values.title,
             employee_name: values.employee_name,
             guardian_title: values.guardian_title,
@@ -209,7 +212,7 @@ const EmployeeCertificate = () => {
             });
         } else {
           let sendData = {
-            user_name: values.employee.split("/")[0],
+            user_name: values.employee?.split("/")[0],
             title: values.title,
             employee_name: values.employee_name,
             guardian_title: values.guardian_title,
@@ -304,6 +307,7 @@ const EmployeeCertificate = () => {
                   }}
                 >
                   <Grid my={10} container>
+                    <HeaderPdf isPdfMode={true} />
                     <Grid item container display="flex" justifyContent="center">
                       <MDTypography
                         style={{ fontStyle: "italic", textDecoration: "underline" }}
@@ -702,6 +706,7 @@ const EmployeeCertificate = () => {
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "department", value } });
                         setFieldValue("employee", "");
+
                         setData(employeeInfo.filter((info: any) => info.department == value));
                       }}
                       options={departmentInfo.map((item: any) => item.dept_name) || []}
@@ -728,7 +733,9 @@ const EmployeeCertificate = () => {
                       value={values.employee}
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "employee", value } });
+                        setFieldValue("employee_name", value.split("/")[1]);
                         fetchCertificateIssued(values.department, value.split("/")[0]);
+                        setFieldValue("user_name", value.split("/")[0]);
                       }}
                       options={
                         data?.map((item: any) => `${item.user_id}/${item.employee_name}`) || []
