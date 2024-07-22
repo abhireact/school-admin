@@ -153,15 +153,27 @@ function DataTable({
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
 
   const setEntriesPerPage = (value: any) => setPageSize(value);
+  const getPageRange = (currentPage: number, totalPages: number, maxButtons: number = 5) => {
+    const halfButtons = Math.floor(maxButtons / 2);
+    let start = Math.max(currentPage - halfButtons, 0);
+    let end = Math.min(start + maxButtons - 1, totalPages - 1);
 
-  const renderPagination = pageOptions.map((option: any) => (
+    if (end - start + 1 < maxButtons) {
+      start = Math.max(end - maxButtons + 1, 0);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+  const pageRange = getPageRange(pageIndex, pageOptions.length);
+
+  const renderPagination = pageRange.map((pageNumber) => (
     <MDPagination
       item
-      key={option}
-      onClick={() => gotoPage(Number(option))}
-      active={pageIndex === option}
+      key={pageNumber}
+      onClick={() => gotoPage(pageNumber)}
+      active={pageIndex === pageNumber}
     >
-      {option + 1}
+      {pageNumber + 1}
     </MDPagination>
   ));
 
@@ -417,20 +429,6 @@ function DataTable({
                 <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
               </MDPagination>
             )}
-            {/* {renderPagination.length > 6 ? (
-              <MDBox width="5rem" mx={1}>
-                <MDInput
-                  inputProps={{ type: "number", min: 1, max: customizedPageOptions.length }}
-                  value={customizedPageOptions[pageIndex]}
-                  onChange={(event: any) => {
-                    handleInputPagination(event);
-                    handleInputPaginationValue(event);
-                  }}
-                />
-              </MDBox>
-            ) : (
-              renderPagination
-            )} */}
             {renderPagination}
             {canNextPage && (
               <MDPagination item onClick={() => nextPage()}>
