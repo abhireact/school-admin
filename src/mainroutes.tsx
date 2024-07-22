@@ -12,6 +12,7 @@ import ExportEmployeeData from "layouts/pages/employee_details/export_employee_d
 import StudentOverview from "layouts/pages/student_details/student_report/overview_student_data";
 import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PortraitIcon from "@mui/icons-material/Portrait";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmployeeType from "layouts/pages/employee_details/employee_type";
 import EmployeeDetails from "layouts/pages/employee_details/employee";
@@ -19,7 +20,7 @@ import Academic from "layouts/pages/school/school_academic_year";
 import Class from "layouts/pages/school/school_class";
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee_details/department";
-import PortraitIcon from "@mui/icons-material/Portrait";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeIcon from "@mui/icons-material/Badge";
 import EmpGrade from "layouts/pages/employee_details/employee_grade";
 import Caste from "layouts/pages/student_details/caste";
@@ -443,7 +444,7 @@ const routes = [
     key: "employee",
     icon: (
       <Icon fontSize="medium">
-        <PortraitIcon />
+        <AssignmentIndOutlinedIcon />
       </Icon>
     ),
     collapse: [
