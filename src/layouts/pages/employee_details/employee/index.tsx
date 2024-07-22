@@ -8,6 +8,7 @@ import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
@@ -130,7 +131,9 @@ const Employee = () => {
                   handleOpenupdate(index);
                 }}
               >
-                <CreateRoundedIcon />
+                <Tooltip title="Manage Employee" placement="top">
+                  <AccountBoxIcon />
+                </Tooltip>
               </IconButton>
             ) : (
               ""
