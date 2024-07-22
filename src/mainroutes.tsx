@@ -8,6 +8,7 @@ import StudentDetails from "layouts/pages/student_details/student";
 import StudentArchive from "layouts/pages/student_details/student_archive";
 import StudentClassListReport from "layouts/pages/student_details/student_report/student_classlist_report";
 import ExportStudentData from "layouts/pages/student_details/student_report/export_student_data";
+import ExportEmployeeData from "layouts/pages/employee_details/export_employee_data";
 import StudentOverview from "layouts/pages/student_details/student_report/overview_student_data";
 import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -475,6 +476,12 @@ const routes = [
         key: "employee_certificate",
         route: "employee/employee_certificate",
         component: <EmployeeCertificate />,
+      },
+      {
+        name: "Export Employee Data",
+        key: "employee_export_data",
+        route: "employee/employee_export_data",
+        component: <ExportEmployeeData />,
       },
       {
         name: "Employee Category",

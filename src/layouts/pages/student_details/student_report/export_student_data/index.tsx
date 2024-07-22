@@ -95,7 +95,7 @@ export default function ExportStudentData() {
       .then((response) => {
         console.log(response.data, "Student for this  Academic Year,Class and Section");
         if (response.data.length < 1) {
-          message.error("No Student found  for this Academic Year ,Class and Section ");
+          message.error("No Student found  for this Academic Year,Class and Section ");
           setData([]);
           return;
         }
