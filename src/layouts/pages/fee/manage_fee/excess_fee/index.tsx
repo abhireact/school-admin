@@ -17,7 +17,6 @@ import { Popconfirm, Tooltip, message } from "antd";
 
 const token = Cookies.get("token");
 const ExcessFee = () => {
-
   const { t } = useTranslation();
 
   //End
@@ -153,7 +152,7 @@ const ExcessFee = () => {
               <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Grid item pt={2} pl={2}>
                   <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  {t("excess_fee")}
+                    {t("excess_fee")}
                   </MDTypography>
                 </Grid>
               </Grid>
