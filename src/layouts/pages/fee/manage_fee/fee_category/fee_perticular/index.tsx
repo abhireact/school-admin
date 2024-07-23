@@ -15,8 +15,11 @@ import Cookies from "js-cookie";
 import { Popconfirm, message } from "antd";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 const token = Cookies.get("token");
 export default function ManageFeeAmountPerticular() {
+  const { t } = useTranslation();
   const location = useLocation();
   const category_data = location.state || {};
   const [editdata, setEditdata] = useState({});
@@ -132,26 +135,28 @@ export default function ManageFeeAmountPerticular() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <Dialog open={editopen} onClose={handleClickCloseEdit}>
-          <EditFeePerticularAmount data={editdata} onSuccess={handleEditSuccess} />
-        </Dialog>
-        <Grid container p={3}>
-          <Grid item xs={12} sm={6} mt={2}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Fee Amount Particular
-            </MDTypography>
+      <I18nextProvider i18n={createTrans}>
+        <Card>
+          <Dialog open={editopen} onClose={handleClickCloseEdit}>
+            <EditFeePerticularAmount data={editdata} onSuccess={handleEditSuccess} />
+          </Dialog>
+          <Grid container p={3}>
+            <Grid item xs={12} sm={6} mt={2}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                {t("fee_amount_particular")}{" "}
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Link href="/fee/create_fee_amount_perticular" variant="body2">
+                <MDButton variant="outlined" color="info">
+                  + {t("create_fee_amount_particular")}
+                </MDButton>
+              </Link>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link href="/fee/create_fee_amount_perticular" variant="body2">
-              <MDButton variant="outlined" color="info">
-                + Create Fee Amount Particular
-              </MDButton>
-            </Link>
-          </Grid>
-        </Grid>
-        <DataTable table={feeConcessionData} canSearch />
-      </Card>
+          <DataTable table={feeConcessionData} canSearch />
+        </Card>
+      </I18nextProvider>
     </DashboardLayout>
   );
 }

@@ -12,16 +12,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import Icon from "@mui/material/Icon";
-import { useSelector } from "react-redux";
-import {
-  FormControlLabel,
-  FormControl,
-  Radio,
-  RadioGroup,
-  Checkbox,
-  IconButton,
-} from "@mui/material";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
+
+import { IconButton } from "@mui/material";
 import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   fine_name: Yup.string().required("Required *"),
@@ -31,7 +25,7 @@ const validationSchema = Yup.object().shape({
 
 const Update = (props: any) => {
   const token = Cookies.get("token");
-
+  const { t } = useTranslation();
   const { setOpen, editData, fetchingData } = props;
   console.log(props.editData);
 
@@ -106,126 +100,128 @@ const Update = (props: any) => {
     setFieldValue("due_date", newparticular);
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <Card>
-        {" "}
-        <MDBox p={4}>
-          <Grid container>
-            <Grid item xs={12} sm={6}>
-              <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Edit Late Fee
-              </MDTypography>
+    <I18nextProvider i18n={createTrans}>
+      <form onSubmit={handleSubmit}>
+        <Card>
+          {" "}
+          <MDBox p={4}>
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  {t("late_fee")} {t("Edit")}
+                </MDTypography>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="fine_name"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Fine Name
-                  </MDTypography>
-                }
-                value={values.fine_name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.fine_name && Boolean(errors.fine_name)}
-                success={values.fine_name.length && !errors.fine_name}
-                helperText={touched.fine_name && errors.fine_name}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <Autocomplete
-                disableClearable
-                sx={{ width: "70%" }}
-                value={values.account_name}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "account_name", value },
-                  });
-                }}
-                options={accountData.map((acd) => acd.account_name)}
-                renderInput={(params: any) => (
-                  <MDInput
-                    InputLabelProps={{ shrink: true }}
-                    name="account_name"
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Account
-                      </MDTypography>
-                    }
-                    onChange={handleChange}
-                    value={values.account_name}
-                    {...params}
-                    variant="standard"
-                    onBlur={handleBlur}
-                    error={touched.account_name && Boolean(errors.account_name)}
-                    helperText={touched.account_name && errors.account_name}
-                    success={values.account_name.length && !errors.account_name}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} py={1}>
-              <MDInput
-                rows={2}
-                sx={{ width: "70%" }}
-                variant="standard"
-                name="description"
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Description
-                  </MDTypography>
-                }
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.description && Boolean(errors.description)}
-                helperText={touched.description && errors.description}
-                success={values.description.length && !errors.description}
-              />
-            </Grid>
-            <Grid xs={12} sm={4} py={1}>
-              <Autocomplete
-                sx={{ width: "70%" }}
-                onChange={(event, value) => {
-                  handleChange({
-                    target: { name: "late_fee_calculation_type", value },
-                  });
-                }}
-                disableClearable
-                options={calculationtypes}
-                value={values.late_fee_calculation_type}
-                renderInput={(params: any) => (
-                  <MDInput
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Late Fee Calculation Type
-                      </MDTypography>
-                    }
-                    InputLabelProps={{ shrink: true }}
-                    name="late_fee_calculation_type"
-                    onChange={handleChange}
-                    value={values.late_fee_calculation_type}
-                    error={
-                      touched.late_fee_calculation_type && Boolean(errors.late_fee_calculation_type)
-                    }
-                    success={
-                      values.late_fee_calculation_type.length && !errors.late_fee_calculation_type
-                    }
-                    helperText={
-                      touched.late_fee_calculation_type && errors.late_fee_calculation_type
-                    }
-                    {...params}
-                    variant="standard"
-                  />
-                )}
-              />
-            </Grid>
+            <Grid container>
+              <Grid item xs={12} sm={4} py={1}>
+                <MDInput
+                  sx={{ width: "70%" }}
+                  variant="standard"
+                  name="fine_name"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      {t("fine_name")}
+                    </MDTypography>
+                  }
+                  value={values.fine_name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.fine_name && Boolean(errors.fine_name)}
+                  success={values.fine_name.length && !errors.fine_name}
+                  helperText={touched.fine_name && errors.fine_name}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <Autocomplete
+                  disableClearable
+                  sx={{ width: "70%" }}
+                  value={values.account_name}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "account_name", value },
+                    });
+                  }}
+                  options={accountData.map((acd) => acd.account_name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      InputLabelProps={{ shrink: true }}
+                      name="account_name"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          {t("account")}
+                        </MDTypography>
+                      }
+                      onChange={handleChange}
+                      value={values.account_name}
+                      {...params}
+                      variant="standard"
+                      onBlur={handleBlur}
+                      error={touched.account_name && Boolean(errors.account_name)}
+                      helperText={touched.account_name && errors.account_name}
+                      success={values.account_name.length && !errors.account_name}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <MDInput
+                  rows={2}
+                  sx={{ width: "70%" }}
+                  variant="standard"
+                  name="description"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      {t("description")}
+                    </MDTypography>
+                  }
+                  value={values.description}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.description && Boolean(errors.description)}
+                  helperText={touched.description && errors.description}
+                  success={values.description.length && !errors.description}
+                />
+              </Grid>
+              <Grid xs={12} sm={4} py={1}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "late_fee_calculation_type", value },
+                    });
+                  }}
+                  disableClearable
+                  options={calculationtypes}
+                  value={values.late_fee_calculation_type}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          {t("late_fee_calculation_type")}
+                        </MDTypography>
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      name="late_fee_calculation_type"
+                      onChange={handleChange}
+                      value={values.late_fee_calculation_type}
+                      error={
+                        touched.late_fee_calculation_type &&
+                        Boolean(errors.late_fee_calculation_type)
+                      }
+                      success={
+                        values.late_fee_calculation_type.length && !errors.late_fee_calculation_type
+                      }
+                      helperText={
+                        touched.late_fee_calculation_type && errors.late_fee_calculation_type
+                      }
+                      {...params}
+                      variant="standard"
+                    />
+                  )}
+                />
+              </Grid>
 
-            {/* <Grid xs={12} sm={8} py={1}>
+              {/* <Grid xs={12} sm={8} py={1}>
               <MDButton
                 onClick={() => {
                   handleAddField();
@@ -288,128 +284,129 @@ const Update = (props: any) => {
               </>
             ))} */}
 
-            {values.late_fee_calculation_type &&
-              values.due_date.map((day_after_due_date: any, index: any) => (
-                <Grid item container sm={12} key={index} spacing={3}>
-                  <Grid item xs={12} sm={4} py={1}>
-                    <MDInput
-                      placeholder="Enter Days After Due Date"
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      name={`due_date.${index}.day_after_due_date`}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Days After Due Date
-                        </MDTypography>
-                      }
-                      required
-                      value={day_after_due_date.day_after_due_date}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      // error={
-                      //   touched.due_date?.[index]?.day_after_due_date &&
-                      //   Boolean(
-                      //     (errors.due_date as FormikErrors<Particular>[])?.[index]
-                      //       ?.day_after_due_date
-                      //   )
-                      // }
-                      // success={
-                      //   day_after_due_date.day_after_due_date.length > 0 &&
-                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
-                      // }
-                      // helperText={
-                      //   touched.due_date?.[index]?.day_after_due_date &&
-                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
-                      // }
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4} py={1}>
-                    <MDInput
-                      placeholder="Enter Amount"
-                      sx={{ width: "100%" }}
-                      variant="standard"
-                      name={`due_date.${index}.amount`}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Amount{" "}
-                        </MDTypography>
-                      }
-                      required
-                      value={day_after_due_date.amount}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      // error={
-                      //   touched.due_date?.[index]?.day_after_due_date &&
-                      //   Boolean(
-                      //     (errors.due_date as FormikErrors<Particular>[])?.[index]
-                      //       ?.day_after_due_date
-                      //   )
-                      // }
-                      // success={
-                      //   day_after_due_date.day_after_due_date.length > 0 &&
-                      //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
-                      // }
-                      // helperText={
-                      //   touched.due_date?.[index]?.day_after_due_date &&
-                      //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
-                      // }
-                    />
-                  </Grid>
+              {values.late_fee_calculation_type &&
+                values.due_date.map((day_after_due_date: any, index: any) => (
+                  <Grid item container sm={12} key={index} spacing={3}>
+                    <Grid item xs={12} sm={4} py={1}>
+                      <MDInput
+                        placeholder="Enter Days After Due Date"
+                        sx={{ width: "100%" }}
+                        variant="standard"
+                        name={`due_date.${index}.day_after_due_date`}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {t("days_after_due_date")}
+                          </MDTypography>
+                        }
+                        required
+                        value={day_after_due_date.day_after_due_date}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        // error={
+                        //   touched.due_date?.[index]?.day_after_due_date &&
+                        //   Boolean(
+                        //     (errors.due_date as FormikErrors<Particular>[])?.[index]
+                        //       ?.day_after_due_date
+                        //   )
+                        // }
+                        // success={
+                        //   day_after_due_date.day_after_due_date.length > 0 &&
+                        //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                        // }
+                        // helperText={
+                        //   touched.due_date?.[index]?.day_after_due_date &&
+                        //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                        // }
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} py={1}>
+                      <MDInput
+                        placeholder="Enter Amount"
+                        sx={{ width: "100%" }}
+                        variant="standard"
+                        name={`due_date.${index}.amount`}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {t("amount")}
+                          </MDTypography>
+                        }
+                        required
+                        value={day_after_due_date.amount}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        // error={
+                        //   touched.due_date?.[index]?.day_after_due_date &&
+                        //   Boolean(
+                        //     (errors.due_date as FormikErrors<Particular>[])?.[index]
+                        //       ?.day_after_due_date
+                        //   )
+                        // }
+                        // success={
+                        //   day_after_due_date.day_after_due_date.length > 0 &&
+                        //   !(errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                        // }
+                        // helperText={
+                        //   touched.due_date?.[index]?.day_after_due_date &&
+                        //   (errors.due_date as FormikErrors<Particular>[])?.[index]?.day_after_due_date
+                        // }
+                      />
+                    </Grid>
 
-                  <Grid
-                    item
-                    xs={12}
-                    sm={4}
-                    py={1}
-                    mt={2}
-                    // sx={{ display: "flex", justifyContent: "flex-end" }}
-                  >
-                    {index == values.due_date.length - 1 && (
-                      <IconButton
-                        onClick={() => addParticular()}
-                        disabled={values.late_fee_calculation_type.toLowerCase() !== "by days"}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                    )}
-
-                    <IconButton
-                      onClick={() => removeParticular(index)}
-                      disabled={values.due_date.length === 1}
+                    <Grid
+                      item
+                      xs={12}
+                      sm={4}
+                      py={1}
+                      mt={2}
+                      // sx={{ display: "flex", justifyContent: "flex-end" }}
                     >
-                      <DeleteIcon />
-                    </IconButton>
+                      {index == values.due_date.length - 1 && (
+                        <IconButton
+                          onClick={() => addParticular()}
+                          disabled={values.late_fee_calculation_type.toLowerCase() !== "by days"}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      )}
+
+                      <IconButton
+                        onClick={() => removeParticular(index)}
+                        disabled={values.due_date.length === 1}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
                   </Grid>
+                ))}
+              <Grid
+                item
+                container
+                xs={12}
+                sm={12}
+                sx={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Grid item mt={2}>
+                  <MDButton
+                    color="dark"
+                    variant="contained"
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    {t("back")}
+                  </MDButton>
                 </Grid>
-              ))}
-            <Grid
-              item
-              container
-              xs={12}
-              sm={12}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <Grid item mt={2}>
-                <MDButton
-                  color="dark"
-                  variant="contained"
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  Back
-                </MDButton>
-              </Grid>
-              <Grid item mt={2} ml={2}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Save
-                </MDButton>
+                <Grid item mt={2} ml={2}>
+                  <MDButton color="info" variant="contained" type="submit">
+                    {t("save")}
+                  </MDButton>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </MDBox>
-      </Card>
-    </form>
+          </MDBox>
+        </Card>
+      </form>
+    </I18nextProvider>
   );
 };
 
