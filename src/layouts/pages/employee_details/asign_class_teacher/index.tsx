@@ -23,6 +23,13 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { commonacademicyear } from "layouts/pages/fee/common_validationschema";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
+const validationSchema = Yup.object().shape({
+  wing_name: Yup.string().required("Required *"),
+  academic_year: Yup.string()
+    .matches(/^\d{4}-\d{4}$/, "YYYY-YYYY format")
+    .required("Required *"),
+});
 const token = Cookies.get("token");
 const initialValues = {
   academic_year: "",
@@ -56,7 +63,7 @@ export default function AssignClassTeacher() {
   const fetchData = async () => {
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/assign_class_teacher/filter`,
+        `${process.env.REACT_APP_BASE_URL}/assign_class_teacher/filter`,
         values,
         {
           headers: {
@@ -70,13 +77,13 @@ export default function AssignClassTeacher() {
       }
     } catch (error) {
       setConcessiondata([]);
-      message.error("No data for this section");
+      //  message.error("No data for this section");
     }
   };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues,
-      // validationSchema: commonacademicyear,
+      validationSchema: validationSchema,
       enableReinitialize: true,
       onSubmit: async (values, action) => {},
     });
@@ -93,7 +100,7 @@ export default function AssignClassTeacher() {
     ];
     console.log(editData, sectionData, "submitted");
     axios
-      .put("http://10.0.20.200:8000/mg_assign_class_teacher", editData, {
+      .put(`${process.env.REACT_APP_BASE_URL}/mg_assign_class_teacher`, editData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -125,7 +132,7 @@ export default function AssignClassTeacher() {
   }, [values.wing_name, values.academic_year]);
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_employees", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -168,7 +175,7 @@ export default function AssignClassTeacher() {
         data.mg_class_teacher == "No teacher assigned" ? null : (
           <Grid container spacing={1}>
             <Grid item>
-              <Tooltip title="Edit" placement="top">
+              <Tooltip title="Update Teacher" placement="top">
                 <Icon
                   fontSize="small"
                   onClick={() => {
@@ -186,12 +193,12 @@ export default function AssignClassTeacher() {
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: "Employee ID",
+      title: "EMPLOYEE ID",
       dataIndex: "employee_id",
       render: (text: string) => <a>{text}</a>,
     },
     {
-      title: "Employee Name",
+      title: "EMPLOYEE NAME",
       dataIndex: "employee_name",
     },
   ];
@@ -232,7 +239,7 @@ export default function AssignClassTeacher() {
               <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
                 <Grid item>
                   <MDButton color="dark" variant="contained" onClick={handleClickCloseEdit}>
-                    Cancel
+                    Back
                   </MDButton>
                 </Grid>
                 <Grid item ml={2}>
@@ -257,6 +264,8 @@ export default function AssignClassTeacher() {
               <Grid container spacing={3} p={3}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    disableClearable
+                    value={values.academic_year}
                     onChange={(_event, value) => {
                       handleChange({ target: { name: "academic_year", value } });
                     }}
@@ -269,7 +278,6 @@ export default function AssignClassTeacher() {
                       <MDInput
                         required
                         name="academic_year"
-                        onChange={handleChange}
                         value={values.academic_year}
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -278,12 +286,18 @@ export default function AssignClassTeacher() {
                         }
                         {...params}
                         variant="standard"
+                        onBlur={handleBlur}
+                        error={touched.academic_year && Boolean(errors.academic_year)}
+                        success={values.academic_year && !errors.academic_year}
+                        helperText={touched.academic_year && errors.academic_year}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    disableClearable
+                    value={values.wing_name}
                     onChange={(_event, value) => {
                       handleChange({ target: { name: "wing_name", value } });
                     }}
@@ -292,7 +306,6 @@ export default function AssignClassTeacher() {
                       <MDInput
                         required
                         name="wing_name"
-                        onChange={handleChange}
                         value={values.wing_name}
                         label={
                           <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -301,6 +314,10 @@ export default function AssignClassTeacher() {
                         }
                         {...params}
                         variant="standard"
+                        onBlur={handleBlur}
+                        error={touched.wing_name && Boolean(errors.wing_name)}
+                        success={values.wing_name && !errors.wing_name}
+                        helperText={touched.wing_name && errors.wing_name}
                       />
                     )}
                   />
@@ -311,7 +328,9 @@ export default function AssignClassTeacher() {
 
           <Grid item xs={12} sm={12}>
             <Card>
-              <DataTable table={feeConcessionData} isSorted={false} canSearch={true} />
+              {concessiondata.length > 0 && (
+                <DataTable table={feeConcessionData} isSorted={false} canSearch={true} />
+              )}
             </Card>
           </Grid>
         </Grid>

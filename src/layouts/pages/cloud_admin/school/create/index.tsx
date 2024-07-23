@@ -188,7 +188,7 @@ const Create = (props: any) => {
   };
   const FetchModule = () => {
     axios
-      .get(`http://10.0.20.200:8000/mg_models`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_models`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

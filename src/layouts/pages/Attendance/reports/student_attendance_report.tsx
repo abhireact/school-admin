@@ -14,6 +14,7 @@ import axios from "axios";
 import { message } from "antd";
 const token = Cookies.get("token");
 const Cacademic_year = Cookies.get("academic_year");
+
 const initialValues = {
   academic_year: Cacademic_year,
   class_name: "",
@@ -45,7 +46,7 @@ export default function StudentAttendanceReport() {
   useEffect(() => {
     const fetchData = async () => {
       axios
-        .post(`http://10.0.20.200:8000/mg_attendance/student_attendance_report`, values, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_attendance/student_attendance_report`, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

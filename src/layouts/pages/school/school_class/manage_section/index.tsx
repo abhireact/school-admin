@@ -309,7 +309,7 @@ const ManageSection = (props: any) => {
                     <IconButton>
                       <Popconfirm
                         title="Delete"
-                        description="Are you sure to Delete it ?"
+                        description="Are you sure you want to delete it? ?"
                         placement="topLeft"
                         onConfirm={() => handleDeleteSection(clone, index)} // Pass index to confirm function
                         // onCancel={cancel}

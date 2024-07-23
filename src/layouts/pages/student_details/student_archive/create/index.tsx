@@ -476,6 +476,3 @@ export default function StudentArchive(props: any) {
     </form>
   );
 }
-function useDipstach() {
-  throw new Error("Function not implemented.");
-}

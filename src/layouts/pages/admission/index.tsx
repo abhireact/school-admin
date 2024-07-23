@@ -89,7 +89,7 @@ const StudentAdmission = () => {
               <Grid item>
                 <Popconfirm
                   title="Delete"
-                  description="Are you sure to Delete it ?"
+                  description="Are you sure you want to delete it? ?"
                   placement="topLeft"
                   onConfirm={() => handleDeleteAdmission(item)}
                   // onCancel={cancel}
@@ -120,30 +120,6 @@ const StudentAdmission = () => {
       alert("Error fetching data:");
     }
   };
-
-  // const handleShowAdmission = async (item: any) => {
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_BASE_URL}/admissions/retrive`,
-  //       {
-  //         id: item.id,
-  //       },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     navigate("/pages/admission/show_admission", {
-  //       state: {
-  //         templateData: response.data,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.error("Error posting data:", error);
-  //   }
-  // };
 
   const handleShowAdmission = (item: any) => {
     navigate("/pages/admission/show_admission", {

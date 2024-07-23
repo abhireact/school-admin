@@ -13,8 +13,11 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 const token = Cookies.get("token");
 export default function EditFeeCategory(props: any) {
+  const { t } = useTranslation();
   const [particularFields, setParticularFields] = useState([]);
   const [existingParticularFields, setexistingParticularFields] = useState(["string", "string"]);
   const propdata = props.data;
@@ -82,170 +85,128 @@ export default function EditFeeCategory(props: any) {
     setFieldValue("particular_types", newparticular);
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <Card>
-        <Grid xs={12} sm={12} p={2}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={12}>
-              <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Edit Fee Category
-              </MDTypography>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3} p={2}>
-            <Grid item xs={12} sm={6}>
-              <MDInput
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Name
-                  </MDTypography>
-                }
-                name="name"
-                value={values.name}
-                placeholder="Enter Fee Category Name"
-                variant="standard"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MDInput
-                label={
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Description
-                  </MDTypography>
-                }
-                sx={{ width: "100%" }}
-                name="description"
-                value={values.description}
-                variant="standard"
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Grid>
-          </Grid>
-          <MDTypography variant="h6" fontWeight="bold" color="secondary">
-            Existing Particulars
-          </MDTypography>
-          <Grid container spacing={3} p={2}>
-            {values.existing_perticular.map((particular: any, index: React.Key) => (
-              <Grid item xs={10} sm={6} key={index}>
-                <MDInput
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Particular Name
-                    </MDTypography>
-                  }
-                  disabled
-                  value={particular.particular_name}
-                  variant="standard"
-                />
+    <I18nextProvider i18n={createTrans}>
+      <form onSubmit={handleSubmit}>
+        <Card>
+          <Grid xs={12} sm={12} p={2}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={12}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  {t("edit_fee_category")}
+                </MDTypography>
               </Grid>
-            ))}
-          </Grid>
-          <MDTypography variant="h6" fontWeight="bold" color="secondary">
-            Add New Particulars
-          </MDTypography>
-          {values.particular_types.map((particular_name, index) => (
-            <Grid container spacing={3} p={2} key={index}>
+            </Grid>
+            <Grid container spacing={3} p={2}>
               <Grid item xs={12} sm={6}>
                 <MDInput
-                  placeholder="Enter Particular Name"
-                  sx={{ width: "100%" }}
-                  variant="standard"
-                  name={`particular_types.${index}.particular_name`}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Particular Name
+                      Name
                     </MDTypography>
                   }
-                  value={particular_name.particular_name}
+                  name="name"
+                  value={values.name}
+                  placeholder="Enter Fee Category Name"
+                  variant="standard"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <MDInput
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      {t("description")}
+                    </MDTypography>
+                  }
+                  sx={{ width: "100%" }}
+                  name="description"
+                  value={values.description}
+                  variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
               </Grid>
+            </Grid>
+            <MDTypography variant="h6" fontWeight="bold" color="secondary">
+              {t("existing_particulars")}
+            </MDTypography>
+            <Grid container spacing={3} p={2}>
+              {values.existing_perticular.map((particular: any, index: React.Key) => (
+                <Grid item xs={10} sm={6} key={index}>
+                  <MDInput
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        {t("particular_name")}
+                      </MDTypography>
+                    }
+                    disabled
+                    value={particular.particular_name}
+                    variant="standard"
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <MDTypography variant="h6" fontWeight="bold" color="secondary">
+              {t("add_new_particulars")}
+            </MDTypography>
+            {values.particular_types.map((particular_name, index) => (
+              <Grid container spacing={3} p={2} key={index}>
+                <Grid item xs={12} sm={6}>
+                  <MDInput
+                    placeholder="Enter Particular Name"
+                    sx={{ width: "100%" }}
+                    variant="standard"
+                    name={`particular_types.${index}.particular_name`}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        {t("particular_name")}
+                      </MDTypography>
+                    }
+                    value={particular_name.particular_name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Grid>
 
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                mt={2}
-                // sx={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <IconButton
-                  onClick={() => removeParticular(index)}
-                  disabled={values.particular_types.length === 1}
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  mt={2}
+                  // sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <DeleteIcon />
-                </IconButton>
-                {index == values.particular_types.length - 1 && (
-                  <IconButton onClick={() => addParticular()}>
-                    <AddIcon />
+                  <IconButton
+                    onClick={() => removeParticular(index)}
+                    disabled={values.particular_types.length === 1}
+                  >
+                    <DeleteIcon />
                   </IconButton>
-                )}
+                  {index == values.particular_types.length - 1 && (
+                    <IconButton onClick={() => addParticular()}>
+                      <AddIcon />
+                    </IconButton>
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
-          ))}
-          {/* <Grid container spacing={3} p={2}>
-            <Grid item xs={10} sm={6}>
-              <FormField
-                label={`Particular`}
-                name={`first_perticular`}
-                // value={values.first_perticular}
-                variant="standard"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <MDButton
-                color="info"
-                variant="text"
-                style={{ fontSize: "16px" }}
-                onClick={addParticularField}
-                pl={2}
-              >
-                {"ADD +"}
-              </MDButton>
-            </Grid>
-          </Grid>
+            ))}
 
-          {particularFields.map((particular, index) => (
-            <Grid container spacing={3} key={index} p={2}>
-              <Grid item xs={10} sm={6}>
-                <FormField
-                  label={`Particular ${index + 2}`}
-                  name={`particulars.${index}`}
-                  value={particular}
-                  variant="standard"
-                  onChange={(e: any) => {
-                    const updatedFields = [...particularFields];
-                    updatedFields[index] = e.target.value;
-                    setParticularFields(updatedFields);
-                  }}
-                />
+            <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
+              <Grid item>
+                <Link href="fee_category" variant="body2">
+                  <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
+                    {t("back")}
+                  </MDButton>
+                </Link>
               </Grid>
-              <Grid item xs={2} sm={6}>
-                <Icon color="secondary" onClick={() => removeParticularField(index)}>
-                  delete
-                </Icon>
-              </Grid>
-            </Grid>
-          ))} */}
-          <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={4}>
-            <Grid item>
-              <Link href="fee_category" variant="body2">
-                <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
-                  Back
+              <Grid item ml={2}>
+                <MDButton color="info" variant="contained" type="submit">
+                  {t("save")}
                 </MDButton>
-              </Link>
-            </Grid>
-            <Grid item ml={2}>
-              <MDButton color="info" variant="contained" type="submit">
-                Save
-              </MDButton>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Card>
-    </form>
+        </Card>
+      </form>
+    </I18nextProvider>
   );
 }

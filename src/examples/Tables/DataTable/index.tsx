@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useRef } from "react";
 import * as XLSX from "xlsx";
 import { useTable, usePagination, useGlobalFilter, useAsyncDebounce, useSortBy } from "react-table";
 import Table from "@mui/material/Table";
@@ -31,6 +31,9 @@ import MDButton from "components/MDButton";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Column, Accessor } from "react-table";
+import { useReactToPrint } from "react-to-print";
+import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
+import ReactDOM from "react-dom";
 interface DataItem {
   [key: string]: any;
 }
@@ -48,6 +51,7 @@ interface Props {
   table: {
     columns: Column<DataItem>[];
     rows: DataItem[];
+    pdfRows?: DataItem[];
   };
   pagination?: {
     variant: "contained" | "gradient";
@@ -55,6 +59,11 @@ interface Props {
   };
   isSorted?: boolean;
   noEndBorder?: boolean;
+  pdfGeneratorProps?: {
+    isPdfMode: boolean;
+    hiddenText: string;
+    additionalInfo?: any;
+  };
 }
 
 interface TableRow {
@@ -71,6 +80,7 @@ function DataTable({
   noEndBorder,
   importbtn,
   selectColumnBtn,
+  pdfGeneratorProps,
 }: Props): JSX.Element {
   let defaultValue: any;
   let entries: any[];
@@ -143,15 +153,27 @@ function DataTable({
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
 
   const setEntriesPerPage = (value: any) => setPageSize(value);
+  const getPageRange = (currentPage: number, totalPages: number, maxButtons: number = 5) => {
+    const halfButtons = Math.floor(maxButtons / 2);
+    let start = Math.max(currentPage - halfButtons, 0);
+    let end = Math.min(start + maxButtons - 1, totalPages - 1);
 
-  const renderPagination = pageOptions.map((option: any) => (
+    if (end - start + 1 < maxButtons) {
+      start = Math.max(end - maxButtons + 1, 0);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+  const pageRange = getPageRange(pageIndex, pageOptions.length);
+
+  const renderPagination = pageRange.map((pageNumber) => (
     <MDPagination
       item
-      key={option}
-      onClick={() => gotoPage(Number(option))}
-      active={pageIndex === option}
+      key={pageNumber}
+      onClick={() => gotoPage(pageNumber)}
+      active={pageIndex === pageNumber}
     >
-      {option + 1}
+      {pageNumber + 1}
     </MDPagination>
   ));
 
@@ -168,6 +190,17 @@ function DataTable({
     setGlobalFilter(value || undefined);
   }, 100);
 
+  // pagination updated setting
+  const getPageNumbers = (currentPage: number, totalPages: number) => {
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+
+    if (endPage - startPage < 4) {
+      startPage = Math.max(1, endPage - 4);
+    }
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  };
   const setSortedValue = (column: any) => {
     let sortedValue;
 
@@ -194,39 +227,54 @@ function DataTable({
     entriesEnd = pageSize * (pageIndex + 1);
   }
 
-  const handleGeneratePDF = () => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.text("Your Header Text", 14, 15);
-    doc.setFontSize(12);
-
-    doc.setLineWidth(0.5);
-    doc.line(14, 20, 196, 20);
-
-    const tableHeaders = columns.map((column) => column.Header as string);
-    const tableRows = data.map((row: DataItem) =>
-      columns.map((column) => {
-        const accessor = getAccessorString(column.accessor);
-        const value = row[accessor];
-        return typeof value === "object" && value !== null ? JSON.stringify(value) : String(value);
-      })
-    );
-    autoTable(doc, {
-      startY: 30,
-      head: [tableHeaders],
-      body: tableRows,
+  const getVisibleData = () => {
+    const dataToUse = table.pdfRows || table.rows;
+    return dataToUse.map((row) => {
+      const visibleRow: DataItem = {};
+      Object.keys(row).forEach((key) => {
+        if (visibleColumns[key]) {
+          visibleRow[key] = row[key];
+        }
+      });
+      return visibleRow;
     });
-
-    doc.save("table.pdf");
   };
+  const tableRef = useRef(null);
 
+  const generatePdf = useReactToPrint({
+    content: () => {
+      if (tableRef.current) {
+        // Force a re-render of the PdfGenerator with current visible columns
+        const pdfGeneratorElement = tableRef.current.querySelector(".pdf-generator");
+        if (pdfGeneratorElement) {
+          pdfGeneratorElement.innerHTML = "";
+          ReactDOM.render(
+            <PdfGenerator
+              data={getVisibleData()}
+              isPdfMode={true}
+              hiddenText={pdfGeneratorProps?.hiddenText || ""}
+              additionalInfo={pdfGeneratorProps?.additionalInfo}
+            />,
+            pdfGeneratorElement
+          );
+        }
+      }
+      return tableRef.current;
+    },
+  });
   const downloadXLSX = (tableData: TableRow[]) => {
+    const flattenArrayData = (data: any): string => {
+      if (Array.isArray(data)) {
+        return data.map((item) => flattenArrayData(item)).join(", ");
+      }
+      return String(data);
+    };
+
     const filteredTableData = tableData.map((row) => {
       const filteredRow: DataItem = {};
       columns.forEach((column) => {
         const accessor = getAccessorString(column.accessor);
-        filteredRow[accessor] = row[accessor];
+        filteredRow[accessor] = flattenArrayData(row[accessor]);
       });
       return filteredRow;
     });
@@ -317,6 +365,16 @@ function DataTable({
               )}
             </MDBox>
           )}
+          {pdfGeneratorProps && (
+            <MDBox ref={tableRef} className="hidden-text">
+              <PdfGenerator
+                data={getVisibleData()}
+                isPdfMode={true}
+                hiddenText={pdfGeneratorProps.hiddenText}
+                additionalInfo={pdfGeneratorProps.additionalInfo}
+              />
+            </MDBox>
+          )}
         </MDBox>
       ) : null}
       <Table {...getTableProps()}>
@@ -382,20 +440,16 @@ function DataTable({
                 <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
               </MDPagination>
             )}
-            {renderPagination.length > 6 ? (
-              <MDBox width="5rem" mx={1}>
-                <MDInput
-                  inputProps={{ type: "number", min: 1, max: customizedPageOptions.length }}
-                  value={customizedPageOptions[pageIndex]}
-                  onChange={(event: any) => {
-                    handleInputPagination(event);
-                    handleInputPaginationValue(event);
-                  }}
-                />
-              </MDBox>
-            ) : (
-              renderPagination
-            )}
+            {getPageNumbers(pageIndex + 1, pageOptions.length).map((pageNumber) => (
+              <MDPagination
+                key={pageNumber}
+                item
+                onClick={() => gotoPage(pageNumber - 1)}
+                active={pageIndex + 1 === pageNumber}
+              >
+                {pageNumber}
+              </MDPagination>
+            ))}
             {canNextPage && (
               <MDPagination item onClick={() => nextPage()}>
                 <Icon sx={{ fontWeight: "bold" }}>chevron_right</Icon>
@@ -414,8 +468,8 @@ function DataTable({
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleGeneratePDF}>PDF</MenuItem>
-        <MenuItem onClick={() => downloadXLSX(data)}>XSL</MenuItem>
+        <MenuItem onClick={generatePdf}>PDF</MenuItem>
+        <MenuItem onClick={() => downloadXLSX(table.pdfRows || table.rows)}>Excel</MenuItem>
       </Menu>
       <Menu
         anchorEl={columnMenuAnchorEl}

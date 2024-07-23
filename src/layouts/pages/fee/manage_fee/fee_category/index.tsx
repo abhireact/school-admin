@@ -19,12 +19,15 @@ import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CreateFeeCategory from "./create";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 
 const token = Cookies.get("token");
 export default function FeeConcession(props: any) {
   const [editdata, setEditdata] = useState({});
   const [editopen, setEditOpen] = useState(false);
   const [createopen, setCreateOpen] = useState(false);
+  const { t } = useTranslation();
 
   const [feecategoryData, setFeecategoryData] = useState([]);
   useEffect(() => {
@@ -32,7 +35,7 @@ export default function FeeConcession(props: any) {
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/fee_category`, {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fee_category`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -132,7 +135,7 @@ export default function FeeConcession(props: any) {
             <IconButton>
               <Popconfirm
                 title="Delete"
-                description="Are you sure to Delete it ?"
+                description="Are you sure you want to delete it? ?"
                 placement="topLeft"
                 onConfirm={() => confirm(data)} // Pass index to confirm function
                 onCancel={cancel}
@@ -162,35 +165,37 @@ export default function FeeConcession(props: any) {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <Dialog open={editopen} onClose={handleClickCloseEdit}>
-          <EditFeeCategory data={editdata} onSuccess={handleEditSuccess} />
-        </Dialog>
-        <Dialog open={createopen} onClose={() => setCreateOpen(false)}>
-          <CreateFeeCategory onSuccess={handleCreateSuccess} />
-        </Dialog>
-        <Grid container p={3}>
-          <Grid item xs={12} sm={6} mt={2}>
-            <MDTypography variant="h4" fontWeight="bold" color="secondary">
-              Fee Category
-            </MDTypography>
+      <I18nextProvider i18n={createTrans}>
+        <Card>
+          <Dialog open={editopen} onClose={handleClickCloseEdit}>
+            <EditFeeCategory data={editdata} onSuccess={handleEditSuccess} />
+          </Dialog>
+          <Dialog open={createopen} onClose={() => setCreateOpen(false)}>
+            <CreateFeeCategory onSuccess={handleCreateSuccess} />
+          </Dialog>
+          <Grid container p={3}>
+            <Grid item xs={12} sm={6} mt={2}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                {t("fee_category")}
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              {/* <Link to="/fee/create_fee_category"> */}
+              <MDButton variant="outlined" color="info" onClick={() => setCreateOpen(true)}>
+                + {t("create_fee_category")}
+              </MDButton>
+              {/* </Link> */}
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            {/* <Link to="/fee/create_fee_category"> */}
-            <MDButton variant="outlined" color="info" onClick={() => setCreateOpen(true)}>
-              + Create Fee Category
-            </MDButton>
-            {/* </Link> */}
-          </Grid>
-        </Grid>
-        <DataTable
-          table={feeCategory}
-          isSorted={false}
-          entriesPerPage={false}
-          showTotalEntries={false}
-          canSearch
-        />
-      </Card>
+          <DataTable
+            table={feeCategory}
+            isSorted={false}
+            entriesPerPage={false}
+            showTotalEntries={false}
+            canSearch
+          />
+        </Card>
+      </I18nextProvider>
     </DashboardLayout>
   );
 }

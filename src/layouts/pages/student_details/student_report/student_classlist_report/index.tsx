@@ -416,7 +416,7 @@ export default function StudentReport() {
                               textOverflow: "ellipsis",
                             }}
                           >
-                            COLUMN NAME
+                            SELECT COLUMN
                           </MDTypography>
                         </td>
                         <td

@@ -4,7 +4,7 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { template } from "lodash";
+
 import IconButton from "@mui/material/IconButton";
 import { useLocation, useNavigate } from "react-router-dom";
 import MDButton from "components/MDButton";

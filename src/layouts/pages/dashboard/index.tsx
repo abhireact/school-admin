@@ -7,6 +7,7 @@ import {
   fetchClasses,
   fetchAccount,
   fetchStudent,
+  fetchProfile,
 } from "../redux/dataSlice";
 
 import { useEffect } from "react";
@@ -19,6 +20,9 @@ import MyDataTableComponent from "./test2";
 import FeeCollectionListReport from "../fee/fee_report/daily_fee_collection_list";
 import FeeCollectionReport from "../fee/fee_report/fee_collection_report";
 import FeeConcessionReportDetail from "../fee/fee_report/fee_concession_report/detail";
+import Test3 from "./test3";
+import PhonePePayment from "./test4";
+import RazorpayPayment from "./text5";
 // import Table from "./component/Table";
 
 const MyDashboard = () => {
@@ -38,6 +42,7 @@ const MyDashboard = () => {
     dispatch(fetchAcademicYear() as any);
     dispatch(fetchAccount() as any);
     dispatch(fetchStudent() as any);
+    dispatch(fetchProfile() as any);
   }, [dispatch]);
   const renderedComponent = <Myrbacroutes />;
   // console.log("Rendered component data:", renderedComponent);
@@ -60,7 +65,10 @@ const MyDashboard = () => {
       </Grid>
       {/* <MyDataTableComponent />{" "} */}
       {/* <FeeCollectionListReport /> */}
-      <FeeConcessionReportDetail />
+      {/* <FeeConcessionReportDetail /> */}
+      {/* <Test3 /> */}
+      <PhonePePayment />
+      <RazorpayPayment />
       {/* </DashboardLayout> */}
     </>
   );

@@ -14,13 +14,14 @@ import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { Card, useMediaQuery } from "@mui/material";
+import { Card, Tooltip, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useSelector } from "react-redux";
+import MDBox from "components/MDBox";
 const token = Cookies.get("token");
-const EmpProfile = () => {
+const EmployeeProfile = () => {
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -99,20 +100,21 @@ const EmpProfile = () => {
   useEffect(() => {
     fetchEmployeePosition();
   }, []);
-  const handleDelete = async (name: any) => {
+  const handleDelete = async (info: any) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_emptype`, {
-        data: { emp_type: name.emp_type },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/mg_employee_positions`,
+        {
+          data: { position_name: info.position_name },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
-        message.success("Deleted successFully");
-        // Filter out the deleted user from the data
-        const updatedData = data.filter((row) => row.username !== name);
-        setData(updatedData); // Update the state with the new data
+        message.success("Deleted SuccessFully");
+        fetchEmployeePosition();
       }
     } catch (error: any) {
       console.error("Error deleting task:", error);
@@ -124,7 +126,7 @@ const EmpProfile = () => {
     columns: [
       { Header: "Employee Profile", accessor: "position_name" },
       { Header: "Employee Category", accessor: "category_name" },
-
+      { Header: "Status", accessor: "status" },
       { Header: "Action", accessor: "action" },
     ],
 
@@ -149,12 +151,20 @@ const EmpProfile = () => {
 
           {rbacData ? (
             rbacData?.find((element: string) => element === "employee_profiledelete") ? (
-              <IconButton
-                onClick={() => {
-                  handleDelete(row);
-                }}
-              >
-                <DeleteIcon />
+              <IconButton>
+                <Popconfirm
+                  title="Delete"
+                  description="Are you sure you want to delete it? ?"
+                  placement="topLeft"
+                  onConfirm={() => handleDelete(row)} // Pass index to confirm function
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Tooltip title="Delete" placement="top">
+                    <DeleteIcon />
+                  </Tooltip>
+                </Popconfirm>
               </IconButton>
             ) : (
               ""
@@ -167,34 +177,37 @@ const EmpProfile = () => {
 
       position_name: row.position_name,
       category_name: row.category_name,
+      status: row.status ? "Active" : "InActive",
     })),
   };
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Grid item pt={2} pl={2}>
-            {" "}
-            <MDTypography variant="h4" color="secondary" fontWeight="bold">
-              Employee Profile
-            </MDTypography>
-          </Grid>
-          <Grid item pt={2} pr={2}>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "employee_profilecreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
-                  + New Employee Profile
-                </MDButton>
+        <MDBox p={4}>
+          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Grid item pt={2} pl={2}>
+              {" "}
+              <MDTypography variant="h4" color="secondary" fontWeight="bold">
+                Employee Profile
+              </MDTypography>
+            </Grid>
+            <Grid item pt={2} pr={2}>
+              {rbacData ? (
+                rbacData?.find((element: string) => element === "employee_profilecreate") ? (
+                  <MDButton variant="outlined" color="info" type="submit" onClick={handleClickOpen}>
+                    + New Employee Profile
+                  </MDButton>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
-              )
-            ) : (
-              ""
-            )}
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-        <DataTable table={dataTableData} canSearch />
+          {data.length > 0 && <DataTable table={dataTableData} canSearch />}
+        </MDBox>
       </Card>
       <Dialog open={open} onClose={handleClose}>
         <Create setOpen={setOpen} fetchData={fetchEmployeePosition} />
@@ -211,4 +224,4 @@ const EmpProfile = () => {
   );
 };
 
-export default EmpProfile;
+export default EmployeeProfile;

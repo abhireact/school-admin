@@ -13,6 +13,8 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 import * as Yup from "yup";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 
 const token = Cookies.get("token");
 
@@ -28,6 +30,7 @@ const ManageSchedule = (props: any) => {
   const { manageData, handleClose } = props;
   const { classes, account, studentcategory, student } = useSelector((state: any) => state);
   const [data, setData] = useState([]);
+  const { t } = useTranslation();
 
   const [filteredSection, setFilteredSection] = useState([]);
 
@@ -110,200 +113,202 @@ const ManageSchedule = (props: any) => {
   };
   return (
     <>
-      <Card>
-        <form onSubmit={handleSubmit}>
-          <Grid container p={3}>
-            <Grid item xs={12} sm={6}>
-              <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Manage Late Fee
-              </MDTypography>
-            </Grid>
-          </Grid>
-          <MDBox p={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "academic_year", value } });
-                  }}
-                  defaultValue={Cacademic_year}
-                  options={
-                    classes
-                      ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                      : []
-                  }
-                  disabled
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      defaultValue="Cacademic_year"
-                      name="academic_year"
-                      onChange={handleChange}
-                      disabled
-                      value={values.academic_year}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Academic Year
-                        </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "class_name", value } });
-                  }}
-                  options={
-                    values.academic_year !== ""
-                      ? classes
-                          .filter((item: any) => item.academic_year === values.academic_year)
-                          .map((item: any) => item.class_name)
-                      : []
-                  }
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      name="class"
-                      onChange={handleChange}
-                      value={values.class_name}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Class
-                        </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  onChange={(_event, value) => {
-                    handleChange({ target: { name: "section_name", value } });
-                  }}
-                  options={
-                    values.class_name !== ""
-                      ? classes
-                          .filter(
-                            (item: any) =>
-                              item.academic_year === values.academic_year &&
-                              item.class_name === values.class_name
-                          )[0]
-                          .section_data.map((item: any) => item.section_name)
-                      : []
-                  }
-                  renderInput={(params) => (
-                    <MDInput
-                      required
-                      name="section_name"
-                      onChange={handleChange}
-                      value={values.section_name}
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Section
-                        </MDTypography>
-                      }
-                      {...params}
-                      variant="standard"
-                    />
-                  )}
-                />
+      <I18nextProvider i18n={createTrans}>
+        <Card>
+          <form onSubmit={handleSubmit}>
+            <Grid container p={3}>
+              <Grid item xs={12} sm={6}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  {t("manage_late_fee")}
+                </MDTypography>
               </Grid>
             </Grid>
-          </MDBox>
-        </form>
-
-        {data.length == 0 ? (
-          ""
-        ) : (
-          <>
             <MDBox p={4}>
-              <Grid container>
-                <Grid item sm={12} xs={12}>
-                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                    <thead>
-                      <tr>
-                        <td
-                          style={{
-                            fontSize: "15px",
-                            textAlign: "left",
-                          }}
-                        >
-                          {" "}
-                          <b>Collection Name</b>
-                        </td>
-                        <td
-                          style={{
-                            fontSize: "15px",
-                            textAlign: "left",
-                          }}
-                        >
-                          <b>Select</b>: &nbsp;All
-                          <Checkbox checked={allCheck} onChange={() => handleSelectAll()} />
-                          &nbsp; None
-                          <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
-                        </td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.map((datainfo, index) => (
-                        <tr key={index}>
-                          <td style={{ textAlign: "left" }}>
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              {datainfo.collection_name}
-                            </MDTypography>
-                          </td>
-                          <td>
-                            <Checkbox
-                              checked={datainfo.select}
-                              onChange={() => handleCheckboxChange(index)}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={4}>
+                  <Autocomplete
+                    onChange={(_event, value) => {
+                      handleChange({ target: { name: "academic_year", value } });
+                    }}
+                    defaultValue={Cacademic_year}
+                    options={
+                      classes
+                        ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                        : []
+                    }
+                    disabled
+                    renderInput={(params) => (
+                      <MDInput
+                        required
+                        defaultValue="Cacademic_year"
+                        name="academic_year"
+                        onChange={handleChange}
+                        disabled
+                        value={values.academic_year}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {t("academic_year")}
+                          </MDTypography>
+                        }
+                        {...params}
+                        variant="standard"
+                      />
+                    )}
+                  />
                 </Grid>
-                <Grid
-                  item
-                  container
-                  xs={12}
-                  sm={12}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                  mr={2}
-                >
-                  <Grid item mt={2} mr={2}>
-                    <MDButton
-                      color="dark"
-                      variant="contained"
-                      onClick={() => {
-                        handleClose(false);
-                      }}
-                    >
-                      Back
-                    </MDButton>
-                  </Grid>
-                  <Grid item mt={2}>
-                    <MDButton
-                      color="info"
-                      variant="contained"
-                      type="submit"
-                      onClick={() => handleCollectionSubmit()}
-                    >
-                      Submit
-                    </MDButton>
-                  </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Autocomplete
+                    onChange={(_event, value) => {
+                      handleChange({ target: { name: "class_name", value } });
+                    }}
+                    options={
+                      values.academic_year !== ""
+                        ? classes
+                            .filter((item: any) => item.academic_year === values.academic_year)
+                            .map((item: any) => item.class_name)
+                        : []
+                    }
+                    renderInput={(params) => (
+                      <MDInput
+                        required
+                        name="class"
+                        onChange={handleChange}
+                        value={values.class_name}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {t("class")}
+                          </MDTypography>
+                        }
+                        {...params}
+                        variant="standard"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Autocomplete
+                    onChange={(_event, value) => {
+                      handleChange({ target: { name: "section_name", value } });
+                    }}
+                    options={
+                      values.class_name !== ""
+                        ? classes
+                            .filter(
+                              (item: any) =>
+                                item.academic_year === values.academic_year &&
+                                item.class_name === values.class_name
+                            )[0]
+                            .section_data.map((item: any) => item.section_name)
+                        : []
+                    }
+                    renderInput={(params) => (
+                      <MDInput
+                        required
+                        name="section_name"
+                        onChange={handleChange}
+                        value={values.section_name}
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            {t("section")}
+                          </MDTypography>
+                        }
+                        {...params}
+                        variant="standard"
+                      />
+                    )}
+                  />
                 </Grid>
               </Grid>
             </MDBox>
-          </>
-        )}
-      </Card>
+          </form>
+
+          {data.length == 0 ? (
+            ""
+          ) : (
+            <>
+              <MDBox p={4}>
+                <Grid container>
+                  <Grid item sm={12} xs={12}>
+                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                      <thead>
+                        <tr>
+                          <td
+                            style={{
+                              fontSize: "15px",
+                              textAlign: "left",
+                            }}
+                          >
+                            {" "}
+                            <b>{t("fee_collection_name")}</b>
+                          </td>
+                          <td
+                            style={{
+                              fontSize: "15px",
+                              textAlign: "left",
+                            }}
+                          >
+                            <b>Select</b>: &nbsp;All
+                            <Checkbox checked={allCheck} onChange={() => handleSelectAll()} />
+                            &nbsp; None
+                            <Checkbox checked={noneCheck} onChange={() => handleSelectNone()} />
+                          </td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.map((datainfo, index) => (
+                          <tr key={index}>
+                            <td style={{ textAlign: "left" }}>
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                {datainfo.collection_name}
+                              </MDTypography>
+                            </td>
+                            <td>
+                              <Checkbox
+                                checked={datainfo.select}
+                                onChange={() => handleCheckboxChange(index)}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    xs={12}
+                    sm={12}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                    mr={2}
+                  >
+                    <Grid item mt={2} mr={2}>
+                      <MDButton
+                        color="dark"
+                        variant="contained"
+                        onClick={() => {
+                          handleClose(false);
+                        }}
+                      >
+                        {t("back")}
+                      </MDButton>
+                    </Grid>
+                    <Grid item mt={2}>
+                      <MDButton
+                        color="info"
+                        variant="contained"
+                        type="submit"
+                        onClick={() => handleCollectionSubmit()}
+                      >
+                        {t("save")}
+                      </MDButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </MDBox>
+            </>
+          )}
+        </Card>
+      </I18nextProvider>
     </>
   );
 };

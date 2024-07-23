@@ -12,11 +12,13 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
 import Cookies from "js-cookie";
-
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 const token = Cookies.get("token");
 
 const Update = (props: any) => {
   const { editData, handleClose, fetchingData } = props;
+  const { t } = useTranslation();
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
@@ -67,13 +69,13 @@ const Update = (props: any) => {
     setFieldValue("total_amount", Number(e.target.value) + Number(values.excess_amount));
   };
   return (
-    <>
+    <I18nextProvider i18n={createTrans}>
       <Card>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3} p={3}>
             <Grid item xs={12} sm={12}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Edit Excess Fees
+                {t("excess_fee")} {t("Edit")}
               </MDTypography>
             </Grid>
           </Grid>
@@ -99,7 +101,7 @@ const Update = (props: any) => {
                   sx={{ width: "80%" }}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Description
+                      {t("description")}
                     </MDTypography>
                   }
                   value={values.description}
@@ -114,7 +116,7 @@ const Update = (props: any) => {
                   placeholder="eg. 2022-2023"
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Academic Year
+                      {t("academic_year")}
                     </MDTypography>
                   }
                   value={values.academic_year}
@@ -128,7 +130,7 @@ const Update = (props: any) => {
                   sx={{ width: "80%" }}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Account Name
+                      {t("account")}
                     </MDTypography>
                   }
                   value={values.account_name}
@@ -142,7 +144,7 @@ const Update = (props: any) => {
                   sx={{ width: "80%" }}
                   label={
                     <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Class and Section
+                      {t("class")}-{t("section")}
                     </MDTypography>
                   }
                   value={`${values.class_name} ${values.section_name}`}
@@ -286,7 +288,7 @@ const Update = (props: any) => {
           </MDBox>
         </form>
       </Card>
-    </>
+    </I18nextProvider>
   );
 };
 export default Update;

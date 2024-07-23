@@ -52,7 +52,7 @@ export default function SendMail() {
 
   useEffect(() => {
     axios
-      .get(`http://10.0.20.200:8000/employee_department`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/employee_department`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ export default function SendMail() {
   }, []);
   useEffect(() => {
     axios
-      .get(`http://10.0.20.200:8000/mg_templates/school_incharge/view`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_templates/school_incharge/view`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -129,7 +129,7 @@ export default function SendMail() {
               user_type: values.send_to,
             };
             axios
-              .post(`http://10.0.20.200:8000/internal_portal/`, submitValue, {
+              .post(`${process.env.REACT_APP_BASE_URL}/internal_portal/`, submitValue, {
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${token}`,
@@ -158,7 +158,7 @@ export default function SendMail() {
               to_user: values.send_to == "All" ? [] : selectedRowKeys,
             };
             axios
-              .post(`http://10.0.20.200:8000/sms_notification/`, SMSSubmitValue, {
+              .post(`${process.env.REACT_APP_BASE_URL}/sms_notification/`, SMSSubmitValue, {
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${token}`,
@@ -201,7 +201,7 @@ export default function SendMail() {
       };
 
       axios
-        .post(`http://10.0.20.200:8000/mg_sms_notifications/filter_by`, postvalue, {
+        .post(`${process.env.REACT_APP_BASE_URL}/mg_sms_notifications/filter_by`, postvalue, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

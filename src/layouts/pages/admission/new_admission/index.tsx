@@ -1483,7 +1483,7 @@ const AdmissionForm = () => {
             <MDButton
               color="dark"
               variant="contained"
-              type="submit"
+              // type="submit"
               // onClick={() => navigate("/pages/admission/Fee")}
               onClick={() => navigate("/pages/admission/studentAdmission")}
               // navigate("/pages/admission/Fee");
