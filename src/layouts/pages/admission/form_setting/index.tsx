@@ -187,9 +187,9 @@ const FormSetting = () => {
               <MDBox pt={3}>
                 <DataTable
                   table={tabledata}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  // isSorted={false}
+                  // entriesPerPage={false}
+                  // showTotalEntries={false}
                 />
               </MDBox>
             ) : (

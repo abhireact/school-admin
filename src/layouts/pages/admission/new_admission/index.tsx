@@ -250,6 +250,7 @@ const AdmissionForm = () => {
                       value={values.form_number}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      required
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
