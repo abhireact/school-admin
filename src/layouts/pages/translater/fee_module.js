@@ -185,8 +185,8 @@ i18n.use(initReactI18next).init({
       },
     },
   },
-  fallbackLng: "hi",
-  lng: "hi",
+  fallbackLng: "en",
+  lng: "en",
   interpolation: {
     escapeValue: false, // React already escapes the values, so no need for additional escaping
   },
