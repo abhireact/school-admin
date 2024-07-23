@@ -79,13 +79,6 @@ const FeeCollection = (props: any) => {
   console.log(Cacademic_year, "Cacademic_year");
 
   //  const {wings,academicyear,classes}=useSelector
-  function filterClassData(data: any, academic_year: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === academic_year)
-      .map((item: any) => item.class_name);
-    setFilteredClass(filtereddata);
-  }
-  const [sectiondata, setsectiondata] = useState([]);
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
@@ -192,21 +185,18 @@ const FeeCollection = (props: any) => {
         { Header: "Action", accessor: "action" },
       ],
       rows: origionalData?.map(
-        (
-          row: {
-            father_name: any;
-            admission_number: any;
-            user_id: any;
-            first_name: any;
-            middle_name: null;
-            last_name: any;
-            class_name: any;
-            gender: any;
-            section_name: any;
-            mobile_number: any;
-          },
-          index: any
-        ) => ({
+        (row: {
+          father_name: any;
+          admission_number: any;
+          user_id: any;
+          first_name: any;
+          middle_name: null;
+          last_name: any;
+          class_name: any;
+          gender: any;
+          section_name: any;
+          mobile_number: any;
+        }) => ({
           admission_number: row.admission_number,
           user_id: row.user_id,
           action: (
@@ -230,7 +220,7 @@ const FeeCollection = (props: any) => {
         })
       ),
     };
-  }, [concessiondata, values.search_by, values]);
+  }, [concessiondata, values.search_by, values.collection_date, values]);
   console.log(mainData, "mainData");
 
   return (

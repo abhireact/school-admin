@@ -66,7 +66,7 @@ const Test3 = () => {
   };
 
   return (
-    <MDBox>
+    <MDBox pl={40}>
       <MDButton type="submit" onClick={handleFormSubmit}>
         Pay
       </MDButton>
