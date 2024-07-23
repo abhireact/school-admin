@@ -61,7 +61,7 @@ const FormSetting = () => {
               <Grid item>
                 <Popconfirm
                   title="Delete"
-                  description="Are you sure to Delete it ?"
+                  description="Are you sure you want to delete it? ?"
                   placement="topLeft"
                   onConfirm={() => handleDelete(item)}
                   // onCancel={cancel}

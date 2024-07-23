@@ -8,9 +8,11 @@ import StudentDetails from "layouts/pages/student_details/student";
 import StudentArchive from "layouts/pages/student_details/student_archive";
 import StudentClassListReport from "layouts/pages/student_details/student_report/student_classlist_report";
 import ExportStudentData from "layouts/pages/student_details/student_report/export_student_data";
+import ExportEmployeeData from "layouts/pages/employee_details/export_employee_data";
 import StudentOverview from "layouts/pages/student_details/student_report/overview_student_data";
 import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PortraitIcon from "@mui/icons-material/Portrait";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmployeeType from "layouts/pages/employee_details/employee_type";
 import EmployeeDetails from "layouts/pages/employee_details/employee";
@@ -18,7 +20,7 @@ import Academic from "layouts/pages/school/school_academic_year";
 import Class from "layouts/pages/school/school_class";
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee_details/department";
-import PortraitIcon from "@mui/icons-material/Portrait";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeIcon from "@mui/icons-material/Badge";
 import EmpGrade from "layouts/pages/employee_details/employee_grade";
 import Caste from "layouts/pages/student_details/caste";
@@ -52,7 +54,8 @@ import StudentSectionChange from "layouts/pages/student_details/student_section_
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
-import WeekDays from "layouts/pages/employee_details/week_days";
+import EmployeeWeekDays from "layouts/pages/employee_details/employee_week_days";
+import StudentWeekDays from "layouts/pages/student_details/student_week_days";
 import ClassTiming from "layouts/pages/employee_details/class_timing";
 import TimeTable from "layouts/pages/Attendance/time_table";
 import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/school_admin_sms_configuration";
@@ -71,6 +74,7 @@ import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_atten
 import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 import EmployeeArchive from "layouts/pages/employee_details/employee_archive";
+import EmployeeCertificate from "layouts/pages/employee_details/employee_certificate";
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -131,12 +135,6 @@ const routes = [
       </Icon>
     ),
     collapse: [
-      // {
-      //   name: "New School",
-      //   key: "new-school",
-      //   route: "pages/school/new-school",
-      //   component: <School />,
-      // },
       {
         name: translater[languagee].school_information,
         key: "schoolinfo",
@@ -167,15 +165,9 @@ const routes = [
         route: "pages/school/class",
         component: <Class />,
       },
-      // {
-      //   name: "Section",
-      //   key: "section",
-      //   route: "pages/school/section",
-      //   component: <Section />,
-      // },
     ],
   },
-  // Student
+
   {
     type: "collapse",
     name: "Student",
@@ -210,6 +202,12 @@ const routes = [
         key: "student_section_change",
         route: "student/student_section_change",
         component: <StudentSectionChange />,
+      },
+      {
+        name: "Student Week Days",
+        key: "student_week_days",
+        route: "student/student_week_days",
+        component: <StudentWeekDays />,
       },
       {
         name: "Student Photo Upload",
@@ -446,7 +444,7 @@ const routes = [
     key: "employee",
     icon: (
       <Icon fontSize="medium">
-        <PortraitIcon />
+        <AssignmentIndOutlinedIcon />
       </Icon>
     ),
     collapse: [
@@ -463,10 +461,28 @@ const routes = [
         component: <AssignClassTeacher />,
       },
       {
+        name: "Employee Week Days",
+        key: "employee_week_days",
+        route: "employee/employee_week_days",
+        component: <EmployeeWeekDays />,
+      },
+      {
         name: "Employee Archive",
         key: "employee_archive",
         route: "employee/employee_archive",
         component: <EmployeeArchive />,
+      },
+      {
+        name: "Experience Certificate",
+        key: "employee_certificate",
+        route: "employee/employee_certificate",
+        component: <EmployeeCertificate />,
+      },
+      {
+        name: "Export Employee Data",
+        key: "employee_export_data",
+        route: "employee/employee_export_data",
+        component: <ExportEmployeeData />,
       },
       {
         name: "Employee Category",
@@ -500,13 +516,6 @@ const routes = [
         key: "department",
         route: "employee/department",
         component: <Department />,
-      },
-
-      {
-        name: "Week Days",
-        key: "weekdays",
-        route: "employee/week_days",
-        component: <WeekDays />,
       },
     ],
   },
