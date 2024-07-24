@@ -39,7 +39,6 @@ const Create = (props: any) => {
       .matches(/^[0-9]{10}$/, "Incorrect Format")
       .required("Required *"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
-
     email: Yup.string().email("Incorrect Format"),
   });
   const [empCategory, setEmpCategory] = useState([]);
@@ -146,7 +145,6 @@ const Create = (props: any) => {
         employee_grade: "",
         status: "",
         aadhar_number: "",
-
         last_working_day: "",
         esi_number: "",
         una_number: "",
@@ -195,7 +193,7 @@ const Create = (props: any) => {
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         setLoading(true);
-        let dob = values.employee_dob;
+
         let sendData = {
           ...values,
           total_yrs_experience: values.total_yrs_experience.toString(),
@@ -1216,7 +1214,7 @@ const Create = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                       <MDInput
-                        type="number"
+                        //type="number"
                         sx={{ width: "90%" }}
                         variant="standard"
                         label={
