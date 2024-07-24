@@ -234,6 +234,7 @@ const Update = (props: any) => {
           .then(() => {
             setLoading(false);
             fetchData();
+            handleClose();
             message.success("Updated Successfully!");
             action.resetForm();
           })

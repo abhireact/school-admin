@@ -145,7 +145,6 @@ const Create = (props: any) => {
         employee_grade: "",
         status: "",
         aadhar_number: "",
-
         last_working_day: "",
         esi_number: "",
         una_number: "",
