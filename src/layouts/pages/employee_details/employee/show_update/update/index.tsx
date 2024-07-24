@@ -35,7 +35,7 @@ const Update = (props: any) => {
     aadhaar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format"),
     mobile_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
-    email: Yup.string().email("Incorrect Format"),
+    email: Yup.string().email("Incorrect Format").required("Required *"),
   });
   const [empCategory, setEmpCategory] = useState([]);
   const [empGrade, setEmpGrade] = useState([]);
@@ -1001,6 +1001,74 @@ const Update = (props: any) => {
                     success={values.mobile_number && !errors.mobile_number}
                   />
                 </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <input
+                    type="checkbox"
+                    checked={values.employee_notification}
+                    onChange={handleChange}
+                    name="employee_notification"
+                  />
+                  &nbsp;
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Notification
+                  </MDTypography>
+                </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <input
+                    type="checkbox"
+                    checked={values.employee_subscription}
+                    onChange={handleChange}
+                    name="employee_subscription"
+                  />
+                  &nbsp;
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Subscription
+                  </MDTypography>
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    sx={{ width: "90%" }}
+                    variant="standard"
+                    required
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Email ID
+                      </MDTypography>
+                    }
+                    name="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                    success={values.email && !errors.email}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <input
+                    type="checkbox"
+                    checked={values.employee_email_notificaton}
+                    onChange={handleChange}
+                    name="employee_email_notificaton"
+                  />
+                  &nbsp;
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Notification
+                  </MDTypography>
+                </Grid>
+                <Grid item xs={12} sm={4} mt={2}>
+                  <input
+                    type="checkbox"
+                    checked={values.employee_email_subscription}
+                    onChange={handleChange}
+                    name="employee_email_subscription"
+                  />
+                  &nbsp;
+                  <MDTypography variant="button" fontWeight="bold" color="secondary">
+                    Subscription
+                  </MDTypography>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "90%" }}
@@ -1017,24 +1085,6 @@ const Update = (props: any) => {
                     error={touched.phone_number && Boolean(errors.phone_number)}
                     helperText={touched.phone_number && errors.phone_number}
                     success={values.phone_number && !errors.phone_number}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    sx={{ width: "90%" }}
-                    variant="standard"
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Email ID
-                      </MDTypography>
-                    }
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email && errors.email}
-                    success={values.email && !errors.email}
                   />
                 </Grid>
               </Grid>
