@@ -36,15 +36,7 @@ interface FormValues {
   deposite_at: string;
   based_on: string;
 }
-// interface Totals {
-//   monthley_fee: number;
-//   concession: number;
-//   fine: number;
-//   discount: number;
-//   refund: number;
-//   adjust: number;
-//   amount: number;
-// }
+
 interface Totals {
   [key: string]: number;
 }
@@ -59,17 +51,7 @@ interface RowData {
   adjust?: number;
   amount?: number;
 }
-const validationSchema = Yup.object().shape({
-  // name: Yup.string().required(),
-  // start_date: Yup.string().required(),
-  // date: Yup.string().required(),
-  // end_date: Yup.string().required(),
-  // month: Yup.string().required(),
-  // mode_of_payment: Yup.string().required(),
-  // deposite_at: Yup.string().required(),
-  // based_on: Yup.string().required(),
-  // Add any additional validation rules as needed
-});
+const validationSchema = Yup.object().shape({});
 
 const FeeCollectionReport = () => {
   const [controller] = useMaterialUIController();
@@ -84,8 +66,8 @@ const FeeCollectionReport = () => {
   const Cacademic_year = Cookies.get("academic_year");
   console.log(Cacademic_year, "Cacademic_year");
   const [collectionData, setCollectionData] = useState([]);
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik<FormValues>(
-    {
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
+    useFormik<FormValues>({
       initialValues: {
         name: "",
         start_date: today,
@@ -152,8 +134,7 @@ const FeeCollectionReport = () => {
           setIsLoading(false);
         }
       },
-    }
-  );
+    });
 
   console.log(student, "student data");
   console.log(values, "value");
@@ -301,11 +282,7 @@ const FeeCollectionReport = () => {
 
     return { columns: cleanedColumns, rows: cleanedRows };
   };
-  // const tableRef = useRef();
-  // // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
-  // const handlePrint = useReactToPrint({
-  //   content: () => tableRef.current,
-  // });
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -339,6 +316,18 @@ const FeeCollectionReport = () => {
                         row
                         name="based_on"
                         defaultValue="Daily"
+                        value={values.based_on}
+                        onChange={(e) => {
+                          handleChange(e);
+                          // Clear fields when changing radio button
+                          setFieldValue("name", "");
+                          setFieldValue("start_date", "");
+                          setFieldValue("end_date", "");
+                          setFieldValue("date", "");
+                          setFieldValue("month", "");
+                          setFieldValue("deposite_at", "");
+                          setFieldValue("mode_of_payment", "");
+                        }}
                       >
                         <FormControlLabel
                           //   value="female"
@@ -391,10 +380,7 @@ const FeeCollectionReport = () => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}>
-                  <MDTypography variant="button">Select Wings</MDTypography>
-                  <TreeSelect {...tProps} size="large" />
-                </Grid> */}
+
                   {values.based_on == "Daily" ? (
                     <Grid item xs={12} sm={3}>
                       <MDInput
@@ -490,6 +476,7 @@ const FeeCollectionReport = () => {
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "mode_of_payment", value } });
                       }}
+                      value={values.mode_of_payment}
                       options={[
                         "By Cash",
                         "By Cheque",
@@ -519,6 +506,7 @@ const FeeCollectionReport = () => {
                       onChange={(_event, value) => {
                         handleChange({ target: { name: "deposite_at", value } });
                       }}
+                      value={values.deposite_at}
                       options={["All", "School", "Online"]}
                       renderInput={(params) => (
                         <MDInput
