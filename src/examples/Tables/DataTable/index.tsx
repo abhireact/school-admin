@@ -190,6 +190,17 @@ function DataTable({
     setGlobalFilter(value || undefined);
   }, 100);
 
+  // pagination updated setting
+  const getPageNumbers = (currentPage: number, totalPages: number) => {
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+
+    if (endPage - startPage < 4) {
+      startPage = Math.max(1, endPage - 4);
+    }
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  };
   const setSortedValue = (column: any) => {
     let sortedValue;
 
@@ -429,7 +440,16 @@ function DataTable({
                 <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
               </MDPagination>
             )}
-            {renderPagination}
+            {getPageNumbers(pageIndex + 1, pageOptions.length).map((pageNumber) => (
+              <MDPagination
+                key={pageNumber}
+                item
+                onClick={() => gotoPage(pageNumber - 1)}
+                active={pageIndex + 1 === pageNumber}
+              >
+                {pageNumber}
+              </MDPagination>
+            ))}
             {canNextPage && (
               <MDPagination item onClick={() => nextPage()}>
                 <Icon sx={{ fontWeight: "bold" }}>chevron_right</Icon>
