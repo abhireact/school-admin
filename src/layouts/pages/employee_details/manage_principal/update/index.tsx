@@ -18,7 +18,7 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 const token = Cookies.get("token");
 
 const Update = (props: any) => {
-  const { handleClose, username, fetchData, dialogNumber } = props;
+  const { handleClose, dialogNumber, fetchData } = props;
   const validationSchema = Yup.object().shape({
     employee_dob: Yup.date().test("year-range", "Incorrect format", function (value) {
       if (value) {
@@ -35,6 +35,7 @@ const Update = (props: any) => {
     aadhaar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format"),
     mobile_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
+
     email: Yup.string().email("Incorrect Format"),
   });
   const [empCategory, setEmpCategory] = useState([]);
@@ -45,11 +46,9 @@ const Update = (props: any) => {
   const [employeeInfo, setEmployeeInfo] = useState<any>({});
   const fetchEmployeeInfo = () => {
     axios
-      .post(
-        `${process.env.REACT_APP_BASE_URL}/mg_employees/retrive`,
-        {
-          user_name: username,
-        },
+      .get(
+        `${process.env.REACT_APP_BASE_URL}/mg_employees/principle`,
+
         {
           headers: {
             "Content-Type": "application/json",
@@ -65,6 +64,9 @@ const Update = (props: any) => {
         console.error("Error on getting student info");
       });
   };
+  useEffect(() => {
+    fetchEmployeeInfo();
+  }, []);
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/employee_department`, {
@@ -147,7 +149,7 @@ const Update = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit, setFieldValue, touched, errors } =
     useFormik({
       initialValues: {
-        user_name: username,
+        user_name: employeeInfo.user_name || "",
         joining_date: employeeInfo.joining_date || "",
         first_name: employeeInfo.first_name || "",
         middle_name: employeeInfo.middle_name || "",
@@ -338,7 +340,7 @@ const Update = (props: any) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                   <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
-                    EMPLOYEE DETAILS
+                    PRINCIPAL DETAILS
                   </MDTypography>
                 </Grid>
 
@@ -1214,6 +1216,7 @@ const Update = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
+                    type="number"
                     sx={{ width: "90%" }}
                     variant="standard"
                     label={
