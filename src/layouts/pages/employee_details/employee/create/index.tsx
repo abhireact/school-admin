@@ -24,7 +24,7 @@ const Create = (props: any) => {
       .test("year-range", "Incorrect format", function (value) {
         if (value) {
           const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
+          return year >= 1900 && year <= 3000;
         }
         return true;
       })
