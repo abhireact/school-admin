@@ -180,10 +180,10 @@ const Update = (props: any) => {
         emergency_contact_number: employeeInfo.emergency_contact_number || "",
         hobby: employeeInfo.hobby || "",
         sport_activity: employeeInfo.sport_activity || "",
-        sport_activity_files: employeeInfo.sport_activity_files || [],
+        sport_activity_files: employeeInfo.sport_activity_files || "",
         extra_curricular: employeeInfo.extra_curricular || "",
-        extra_curricular_files: employeeInfo.extra_curricular_files || [],
-
+        extra_curricular_files: employeeInfo.extra_curricular_files || "",
+        adhar_card: employeeInfo.adhar_card || "",
         bank_name: employeeInfo.bank_name || "",
         account_name: employeeInfo.account_name || "",
         branch_name: employeeInfo.branch_name || "",
@@ -284,51 +284,111 @@ const Update = (props: any) => {
       }
     }
   };
-  const handleSportActivity = (e: any) => {
-    const file = e.target.files[0];
+  const handleFileChange = (event: any) => {
+    const file = event.target.files?.[0];
 
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        e.target.value = "";
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.sport_activity_files.push(e.target.files[0]);
-        setFieldValue("sport_activity", file.name);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-        e.target.value = "";
-        return;
-      }
+    if (!file) {
+      message.error("No file selected.");
+      return;
     }
+
+    if (file.type !== "application/pdf") {
+      message.error("File must be a PDF.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("File size exceeds 5 MB limit.");
+      event.target.value = "";
+      return;
+    }
+
+    // Check file type
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setFieldValue("adhar_card", result);
+      } else {
+        console.error("Error: reader.result is not a string.");
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+    };
   };
-  const handleExtraCurricular = (e: any) => {
-    const file = e.target.files[0];
 
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        e.target.value = "";
-        return;
-      }
+  const handleSportActivity = (event: any) => {
+    const file = event.target.files?.[0];
 
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.extra_curricular_files.push(e.target.files[0]);
-        setFieldValue("extra_curricular", file.name);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-        e.target.value = "";
-        return;
-      }
+    if (!file) {
+      message.error("No file selected.");
+      return;
     }
+
+    if (file.type !== "application/pdf") {
+      message.error("File must be a PDF.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("File size exceeds 5 MB limit.");
+      event.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setFieldValue("sport_activity_files", result);
+      } else {
+        console.error("Error: reader.result is not a string.");
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+    };
+  };
+  const handleExtraCurricular = (event: any) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      message.error("No file selected.");
+      return;
+    }
+
+    if (file.type !== "application/pdf") {
+      message.error("File must be a PDF.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("File size exceeds 5 MB limit.");
+      event.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setFieldValue("extra_curricular_files", result);
+      } else {
+        console.error("Error: reader.result is not a string.");
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+    };
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -969,6 +1029,30 @@ const Update = (props: any) => {
                     />
                   </Grid>
                 </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={4.1}
+                  container
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Grid item>
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Aadhar Card
+                    </MDTypography>
+                  </Grid>
+
+                  <Grid item>
+                    <MDInput
+                      sx={{ width: "90%" }}
+                      type="file"
+                      accept="application/pdf"
+                      name="adhar_card"
+                      onChange={handleFileChange}
+                      variant="standard"
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
             </MDBox>
           </Grid>
@@ -1490,7 +1574,7 @@ const Update = (props: any) => {
                   <MDInput
                     sx={{ width: "90%" }}
                     type="file"
-                    accept="image/*"
+                    accept="application/pdf"
                     name="sport_activity_files"
                     onChange={handleSportActivity}
                     variant="standard"
@@ -1507,7 +1591,7 @@ const Update = (props: any) => {
                   <MDInput
                     sx={{ width: "90%" }}
                     type="file"
-                    accept="image/*"
+                    accept="application/pdf"
                     name="extra_curricular_files"
                     onChange={handleExtraCurricular}
                     variant="standard"
