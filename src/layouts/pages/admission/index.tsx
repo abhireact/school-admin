@@ -202,8 +202,7 @@ const StudentAdmission = () => {
           }, 0);
         }
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   return (

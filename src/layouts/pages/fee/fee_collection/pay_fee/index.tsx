@@ -28,7 +28,7 @@ const PayFee = (props: any) => {
   console.log(props, "props");
   const { profile } = useSelector((state: any) => state);
 
-  const isGuardian = profile.user_type === "guardian";
+  const isGuardian = profile?.user_type === "guardian";
 
   let { values, handleChange, handleSubmit, setFieldValue, touched, errors, handleBlur } =
     useFormik({
