@@ -18,7 +18,7 @@ import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui
 const token = Cookies.get("token");
 
 const Update = (props: any) => {
-  const { handleClose, username, fetchData, dialogNumber } = props;
+  const { handleClose, dialogNumber, fetchData } = props;
   const validationSchema = Yup.object().shape({
     employee_dob: Yup.date().test("year-range", "Incorrect format", function (value) {
       if (value) {
@@ -35,7 +35,8 @@ const Update = (props: any) => {
     aadhaar_number: Yup.string().matches(/^[0-9]{12}$/, "Incorrect Format"),
     mobile_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
-    email: Yup.string().email("Incorrect Format").required("Required *"),
+
+    email: Yup.string().email("Incorrect Format"),
   });
   const [empCategory, setEmpCategory] = useState([]);
   const [empGrade, setEmpGrade] = useState([]);
@@ -45,11 +46,9 @@ const Update = (props: any) => {
   const [employeeInfo, setEmployeeInfo] = useState<any>({});
   const fetchEmployeeInfo = () => {
     axios
-      .post(
-        `${process.env.REACT_APP_BASE_URL}/mg_employees/retrive`,
-        {
-          user_name: username,
-        },
+      .get(
+        `${process.env.REACT_APP_BASE_URL}/mg_employees/principle`,
+
         {
           headers: {
             "Content-Type": "application/json",
@@ -65,6 +64,9 @@ const Update = (props: any) => {
         console.error("Error on getting student info");
       });
   };
+  useEffect(() => {
+    fetchEmployeeInfo();
+  }, []);
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/employee_department`, {
@@ -147,7 +149,7 @@ const Update = (props: any) => {
   const { values, handleChange, handleBlur, handleSubmit, setFieldValue, touched, errors } =
     useFormik({
       initialValues: {
-        user_name: username,
+        user_name: employeeInfo.user_name || "",
         joining_date: employeeInfo.joining_date || "",
         first_name: employeeInfo.first_name || "",
         middle_name: employeeInfo.middle_name || "",
@@ -234,7 +236,6 @@ const Update = (props: any) => {
           .then(() => {
             setLoading(false);
             fetchData();
-            handleClose();
             message.success("Updated Successfully!");
             action.resetForm();
           })
@@ -339,7 +340,7 @@ const Update = (props: any) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                   <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
-                    EMPLOYEE DETAILS
+                    PRINCIPAL DETAILS
                   </MDTypography>
                 </Grid>
 
@@ -1001,74 +1002,6 @@ const Update = (props: any) => {
                     success={values.mobile_number && !errors.mobile_number}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4} mt={2}>
-                  <input
-                    type="checkbox"
-                    checked={values.employee_notification}
-                    onChange={handleChange}
-                    name="employee_notification"
-                  />
-                  &nbsp;
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Notification
-                  </MDTypography>
-                </Grid>
-                <Grid item xs={12} sm={4} mt={2}>
-                  <input
-                    type="checkbox"
-                    checked={values.employee_subscription}
-                    onChange={handleChange}
-                    name="employee_subscription"
-                  />
-                  &nbsp;
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Subscription
-                  </MDTypography>
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    sx={{ width: "90%" }}
-                    variant="standard"
-                    required
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Email ID
-                      </MDTypography>
-                    }
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email && errors.email}
-                    success={values.email && !errors.email}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4} mt={2}>
-                  <input
-                    type="checkbox"
-                    checked={values.employee_email_notificaton}
-                    onChange={handleChange}
-                    name="employee_email_notificaton"
-                  />
-                  &nbsp;
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Notification
-                  </MDTypography>
-                </Grid>
-                <Grid item xs={12} sm={4} mt={2}>
-                  <input
-                    type="checkbox"
-                    checked={values.employee_email_subscription}
-                    onChange={handleChange}
-                    name="employee_email_subscription"
-                  />
-                  &nbsp;
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Subscription
-                  </MDTypography>
-                </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
                     sx={{ width: "90%" }}
@@ -1085,6 +1018,24 @@ const Update = (props: any) => {
                     error={touched.phone_number && Boolean(errors.phone_number)}
                     helperText={touched.phone_number && errors.phone_number}
                     success={values.phone_number && !errors.phone_number}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDInput
+                    sx={{ width: "90%" }}
+                    variant="standard"
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Email ID
+                      </MDTypography>
+                    }
+                    name="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                    success={values.email && !errors.email}
                   />
                 </Grid>
               </Grid>
@@ -1265,6 +1216,7 @@ const Update = (props: any) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <MDInput
+                    type="number"
                     sx={{ width: "90%" }}
                     variant="standard"
                     label={

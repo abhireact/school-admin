@@ -74,7 +74,9 @@ import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_atten
 import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 import EmployeeArchive from "layouts/pages/employee_details/employee_archive";
+import EmployeeArchivePDF from "layouts/pages/employee_details/export_archive_data";
 import EmployeeCertificate from "layouts/pages/employee_details/employee_certificate";
+import ManagePrincipal from "layouts/pages/employee_details/manage_principal";
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -473,6 +475,13 @@ const routes = [
         component: <EmployeeArchive />,
       },
       {
+        name: "Manage Principal",
+        key: "manage_principal",
+        route: "employee/manage_principal",
+        component: <ManagePrincipal />,
+      },
+
+      {
         name: "Experience Certificate",
         key: "employee_certificate",
         route: "employee/employee_certificate",
@@ -483,6 +492,12 @@ const routes = [
         key: "employee_export_data",
         route: "employee/employee_export_data",
         component: <ExportEmployeeData />,
+      },
+      {
+        name: "Export Archive Employee Data",
+        key: "export_archived_employee",
+        route: "employee/export_archived_employee",
+        component: <EmployeeArchivePDF />,
       },
       {
         name: "Employee Category",

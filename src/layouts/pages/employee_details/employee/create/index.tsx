@@ -24,7 +24,7 @@ const Create = (props: any) => {
       .test("year-range", "Incorrect format", function (value) {
         if (value) {
           const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
+          return year >= 1900 && year <= 3000;
         }
         return true;
       })
@@ -39,8 +39,7 @@ const Create = (props: any) => {
       .matches(/^[0-9]{10}$/, "Incorrect Format")
       .required("Required *"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
-
-    email: Yup.string().email("Incorrect Format"),
+    email: Yup.string().email("Incorrect Format").required("Required *"),
   });
   const [empCategory, setEmpCategory] = useState([]);
   const [empGrade, setEmpGrade] = useState([]);
@@ -146,7 +145,6 @@ const Create = (props: any) => {
         employee_grade: "",
         status: "",
         aadhar_number: "",
-
         last_working_day: "",
         esi_number: "",
         una_number: "",
@@ -195,7 +193,7 @@ const Create = (props: any) => {
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         setLoading(true);
-        let dob = values.employee_dob;
+
         let sendData = {
           ...values,
           total_yrs_experience: values.total_yrs_experience.toString(),
@@ -997,6 +995,74 @@ const Create = (props: any) => {
                         success={values.mobile_number && !errors.mobile_number}
                       />
                     </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_notification}
+                        onChange={handleChange}
+                        name="employee_notification"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Notification
+                      </MDTypography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_subscription}
+                        onChange={handleChange}
+                        name="employee_subscription"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Subscription
+                      </MDTypography>
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        variant="standard"
+                        required
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Email ID
+                          </MDTypography>
+                        }
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.email && Boolean(errors.email)}
+                        helperText={touched.email && errors.email}
+                        success={values.email && !errors.email}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_email_notificaton}
+                        onChange={handleChange}
+                        name="employee_email_notificaton"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Notification
+                      </MDTypography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_email_subscription}
+                        onChange={handleChange}
+                        name="employee_email_subscription"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Subscription
+                      </MDTypography>
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                       <MDInput
                         sx={{ width: "90%" }}
@@ -1013,24 +1079,6 @@ const Create = (props: any) => {
                         error={touched.phone_number && Boolean(errors.phone_number)}
                         helperText={touched.phone_number && errors.phone_number}
                         success={values.phone_number && !errors.phone_number}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <MDInput
-                        sx={{ width: "90%" }}
-                        variant="standard"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Email ID
-                          </MDTypography>
-                        }
-                        name="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.email && Boolean(errors.email)}
-                        helperText={touched.email && errors.email}
-                        success={values.email && !errors.email}
                       />
                     </Grid>
                   </Grid>
@@ -1216,7 +1264,7 @@ const Create = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                       <MDInput
-                        type="number"
+                        //type="number"
                         sx={{ width: "90%" }}
                         variant="standard"
                         label={

@@ -28,8 +28,7 @@ const PayFee = (props: any) => {
   console.log(props, "props");
   const { profile } = useSelector((state: any) => state);
 
-  const isGuardian = profile?.user_type === "guardian";
-
+  const isGuardian = profile?.user_type === "guardian" || false;
   let { values, handleChange, handleSubmit, setFieldValue, touched, errors, handleBlur } =
     useFormik({
       initialValues: {
@@ -39,7 +38,7 @@ const PayFee = (props: any) => {
         admission_number: "",
         fee_code: "",
         section_name: "",
-        collection_date: props?.collection_date,
+        collection_date: props.collection_date,
         adm_no_or_fee_code: "",
         collected_at: "",
         cheque_number: "",
@@ -675,7 +674,7 @@ const PayFee = (props: any) => {
                   </MDTypography>
                 }
                 onChange={handleChange}
-                value={props.collection_date || values.collection_date}
+                value={values.collection_date}
                 variant="standard"
                 onBlur={handleBlur}
                 error={touched.collection_date && Boolean(errors.collection_date)}
