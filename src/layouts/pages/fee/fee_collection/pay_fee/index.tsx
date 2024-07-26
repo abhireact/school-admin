@@ -53,7 +53,7 @@ const PayFee = (props: any) => {
         applicable_late_fee: true,
         payment_details: {
           collected_at: "",
-          payment_mode: isGuardian ? "online payment" : "",
+          payment_mode: isGuardian ? "online payment" : "By Cash",
           cheque_number: "",
           cheque_date: "",
           bank_branch: "",
