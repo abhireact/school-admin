@@ -24,7 +24,7 @@ const Create = (props: any) => {
       .test("year-range", "Incorrect format", function (value) {
         if (value) {
           const year = value.getFullYear();
-          return year >= 2000 && year <= 3000;
+          return year >= 1900 && year <= 3000;
         }
         return true;
       })
@@ -39,8 +39,7 @@ const Create = (props: any) => {
       .matches(/^[0-9]{10}$/, "Incorrect Format")
       .required("Required *"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
-
-    email: Yup.string().email("Incorrect Format"),
+    email: Yup.string().email("Incorrect Format").required("Required *"),
   });
   const [empCategory, setEmpCategory] = useState([]);
   const [empGrade, setEmpGrade] = useState([]);
@@ -146,7 +145,6 @@ const Create = (props: any) => {
         employee_grade: "",
         status: "",
         aadhar_number: "",
-
         last_working_day: "",
         esi_number: "",
         una_number: "",
@@ -159,9 +157,9 @@ const Create = (props: any) => {
         emergency_contact_number: "",
         hobby: "",
         sport_activity: "",
-        sport_activity_files: [],
+        sport_activity_files: "",
         extra_curricular: "",
-        extra_curricular_files: [],
+        extra_curricular_files: "",
         bank_name: "",
         account_name: "",
         branch_name: "",
@@ -191,11 +189,12 @@ const Create = (props: any) => {
         email: "",
         employee_img: null,
         language: [],
+        adhar_card: "",
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
         setLoading(true);
-        let dob = values.employee_dob;
+
         let sendData = {
           ...values,
           total_yrs_experience: values.total_yrs_experience.toString(),
@@ -260,51 +259,108 @@ const Create = (props: any) => {
       }
     }
   };
-  const handleSportActivity = (e: any) => {
-    const file = e.target.files[0];
+  const handleFileChange = (event: any) => {
+    const file = event.target.files?.[0];
 
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        e.target.value = "";
-        return;
-      }
-
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.sport_activity_files.push(e.target.files[0]);
-        setFieldValue("sport_activity", file.name);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-        e.target.value = "";
-        return;
-      }
+    if (!file) {
+      message.error("No file selected.");
+      return;
     }
+
+    if (file.type !== "application/pdf") {
+      message.error("File must be a PDF.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("File size exceeds 5 MB limit.");
+      event.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setFieldValue("adhar_card", result);
+      } else {
+        console.error("Error: reader.result is not a string.");
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+    };
   };
-  const handleExtraCurricular = (e: any) => {
-    const file = e.target.files[0];
 
-    if (file) {
-      // Check file size (5 MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        message.error("File size exceeds 5 MB limit.");
-        e.target.value = "";
-        return;
-      }
+  const handleSportActivity = (event: any) => {
+    const file = event.target.files?.[0];
 
-      // Check file type
-      if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/heic") {
-        // setFieldValue("stud_img", e.target.files[0]);
-        values.extra_curricular_files.push(e.target.files[0]);
-        setFieldValue("extra_curricular", file.name);
-      } else {
-        message.error("Please select a valid PNG, JPEG, or HEIC image.");
-        e.target.value = "";
-        return;
-      }
+    if (!file) {
+      message.error("No file selected.");
+      return;
     }
+
+    if (file.type !== "application/pdf") {
+      message.error("File must be a PDF.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("File size exceeds 5 MB limit.");
+      event.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setFieldValue("sport_activity_files", result);
+      } else {
+        console.error("Error: reader.result is not a string.");
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+    };
+  };
+  const handleExtraCurricular = (event: any) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      message.error("No file selected.");
+      return;
+    }
+
+    if (file.type !== "application/pdf") {
+      message.error("File must be a PDF.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("File size exceeds 5 MB limit.");
+      event.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setFieldValue("extra_curricular_files", result);
+      } else {
+        console.error("Error: reader.result is not a string.");
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+    };
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -965,6 +1021,30 @@ const Create = (props: any) => {
                         />
                       </Grid>
                     </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={4.1}
+                      container
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <Grid item>
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Aadhar Card
+                        </MDTypography>
+                      </Grid>
+
+                      <Grid item>
+                        <MDInput
+                          sx={{ width: "90%" }}
+                          type="file"
+                          accept="application/pdf"
+                          name="adhar_card"
+                          onChange={handleFileChange}
+                          variant="standard"
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </MDBox>
               </Card>
@@ -997,6 +1077,74 @@ const Create = (props: any) => {
                         success={values.mobile_number && !errors.mobile_number}
                       />
                     </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_notification}
+                        onChange={handleChange}
+                        name="employee_notification"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Notification
+                      </MDTypography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_subscription}
+                        onChange={handleChange}
+                        name="employee_subscription"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Subscription
+                      </MDTypography>
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        variant="standard"
+                        required
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Email ID
+                          </MDTypography>
+                        }
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.email && Boolean(errors.email)}
+                        helperText={touched.email && errors.email}
+                        success={values.email && !errors.email}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_email_notificaton}
+                        onChange={handleChange}
+                        name="employee_email_notificaton"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Notification
+                      </MDTypography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <input
+                        type="checkbox"
+                        checked={values.employee_email_subscription}
+                        onChange={handleChange}
+                        name="employee_email_subscription"
+                      />
+                      &nbsp;
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Subscription
+                      </MDTypography>
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                       <MDInput
                         sx={{ width: "90%" }}
@@ -1013,24 +1161,6 @@ const Create = (props: any) => {
                         error={touched.phone_number && Boolean(errors.phone_number)}
                         helperText={touched.phone_number && errors.phone_number}
                         success={values.phone_number && !errors.phone_number}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <MDInput
-                        sx={{ width: "90%" }}
-                        variant="standard"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Email ID
-                          </MDTypography>
-                        }
-                        name="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.email && Boolean(errors.email)}
-                        helperText={touched.email && errors.email}
-                        success={values.email && !errors.email}
                       />
                     </Grid>
                   </Grid>
@@ -1216,7 +1346,7 @@ const Create = (props: any) => {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                       <MDInput
-                        type="number"
+                        //type="number"
                         sx={{ width: "90%" }}
                         variant="standard"
                         label={
@@ -1436,7 +1566,7 @@ const Create = (props: any) => {
                       <MDInput
                         sx={{ width: "90%" }}
                         type="file"
-                        accept="image/*"
+                        accept="application/pdf"
                         name="sport_activity_files"
                         onChange={handleSportActivity}
                         variant="standard"
@@ -1453,14 +1583,14 @@ const Create = (props: any) => {
                       <MDInput
                         sx={{ width: "90%" }}
                         type="file"
-                        accept="image/*"
+                        accept="application/pdf"
                         name="extra_curricular_files"
                         onChange={handleExtraCurricular}
                         variant="standard"
                         InputLabelProps={{ shrink: true }}
                       />
                     </Grid>
-                    <Grid item xs={6} sm={6}>
+                    <Grid item xs={6} sm={4}>
                       <MDInput
                         sx={{ width: "90%" }}
                         variant="standard"
