@@ -231,9 +231,9 @@ const ManageSubTemplate = () => {
             {rows.length > 0 ? (
               <DataTable
                 table={{ columns, rows }}
-                isSorted={false}
-                entriesPerPage={false}
-                showTotalEntries={false}
+                // isSorted={false}
+                // entriesPerPage={false}
+                // showTotalEntries={false}
               />
             ) : null}
           </MDBox>

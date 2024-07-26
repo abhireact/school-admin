@@ -259,9 +259,9 @@ const ManagePayFee = () => {
                     <Card>
                       <DataTable
                         table={manageShowData}
-                        isSorted={false}
-                        entriesPerPage={false}
-                        showTotalEntries={false}
+                        // isSorted={false}
+                        // entriesPerPage={false}
+                        // showTotalEntries={false}
                       />
                     </Card>
                   </MDBox>
