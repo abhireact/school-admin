@@ -21,6 +21,7 @@ export default function EditFeeParicularAmount(props: any) {
     fee_perticular: props.data.fee_particular,
     account: props.data.account_name,
     amount: props.data.amount,
+    id: props.data?.id,
   };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
@@ -38,6 +39,7 @@ export default function EditFeeParicularAmount(props: any) {
           section_name: props.data.section_name,
           student_category: props.data.student_category,
           user_id: props.data.user_id,
+          id: props.data?.id,
         };
         axios
           .put("http://10.0.20.200:8000/fee_particular", updatedValue, {
