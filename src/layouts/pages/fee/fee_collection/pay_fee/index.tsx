@@ -289,10 +289,14 @@ const PayFee = (props: any) => {
       const typedData = data as { collections: any[] }[];
       const selectedData = selectedRows.map((index) => typedData[0].collections[index]);
       console.log(selectedData, "selected data");
-
       const response = await axios.post(
         "http://10.0.20.200:8000/fee_collections/pay_fee",
-        { ...values, collections: selectedData, user_name: props?.mainData?.user_id },
+        {
+          ...values,
+          collections: selectedData,
+          user_name: props?.mainData?.user_id,
+          ...(refundcheck ? { refund: refundData } : {}),
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -303,6 +307,7 @@ const PayFee = (props: any) => {
 
       if (response.status === 200) {
         console.log("Created Employee Successfully");
+        fetchData();
         message.success("Paid successfully!");
       }
     } catch (error) {
@@ -1124,7 +1129,13 @@ const PayFee = (props: any) => {
           </Grid>
         ) : null}
         <Grid item xs={12} sm={4} display={"flex"} justifyContent={"end"}>
-          <MDButton color="info" variant="contained" type="submit" onClick={handlePayButtonClick}>
+          <MDButton
+            disabled={selectedRows.length == 0}
+            color="info"
+            variant="contained"
+            type="submit"
+            onClick={handlePayButtonClick}
+          >
             Pay
           </MDButton>
           {open && (
