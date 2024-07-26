@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Card, Divider, Grid } from "@mui/material";
 import {
   fetchWings,
   fetchRbac,
@@ -9,21 +9,14 @@ import {
   fetchStudent,
   fetchProfile,
 } from "../redux/dataSlice";
-
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Myrbacroutes from "myrbacroutes";
-
-import MyDataTableComponent from "./test2";
-import FeeCollectionListReport from "../fee/fee_report/daily_fee_collection_list";
-import FeeCollectionReport from "../fee/fee_report/fee_collection_report";
-import FeeConcessionReportDetail from "../fee/fee_report/fee_concession_report/detail";
-import Test3 from "./test3";
-import PhonePePayment from "./test4";
-import RazorpayPayment from "./text5";
-// import Table from "./component/Table";
+import MDTypography from "components/MDTypography";
+import MDBox from "components/MDBox";
 
 const MyDashboard = () => {
   const data = useSelector((state: any) => state);
@@ -31,7 +24,6 @@ const MyDashboard = () => {
   // const token = useSelector((state: any) => state.data.token);
   // console.log(token,"rbac token");
 
-  // Redux Call
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -47,29 +39,53 @@ const MyDashboard = () => {
   const renderedComponent = <Myrbacroutes />;
   // console.log("Rendered component data:", renderedComponent);
   return (
-    // <DashboardLayout>
-    //   <DashboardNavbar />
     <>
-      <Grid container spacing={2} display={"flex"} justifyContent="center">
-        <h1>My Dashboard </h1>
-        {/* {renderedComponent} */}
-        {/* <Grid item xs={12} sm={5}>
-          <StudentIDCard />{" "}
-        </Grid>
-        <Grid item xs={12} sm={5}>
-          <StudentIDCard2 />{" "}
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <StudentIDCard3 />{" "}
-        </Grid> */}
-      </Grid>
-      {/* <MyDataTableComponent />{" "} */}
-      {/* <FeeCollectionListReport /> */}
-      {/* <FeeConcessionReportDetail /> */}
-      {/* <Test3 /> */}
-      <PhonePePayment />
-      <RazorpayPayment />
-      {/* </DashboardLayout> */}
+      <DashboardLayout>
+        <DashboardNavbar />
+
+        <Card>
+          <Grid p={3} container>
+            <Grid>
+              <MDTypography variant="h4">Dashboard</MDTypography>
+            </Grid>
+          </Grid>
+          <Divider />
+          <Grid item sm={6}>
+            <MDBox borderRadius="10px" border={"1px solid #F1F3F4"}>
+              <Grid container spacing={3} p={2}>
+                <Grid item sm={8} pb={1}>
+                  <MDTypography>Work Location</MDTypography>
+                </Grid>
+                <Grid item sm={4} pb={1}>
+                  <MDTypography
+                    component={Link}
+                    to="/pages/reports/distributionreport"
+                    variant="button"
+                    color="info"
+                    fontWeight="medium"
+                    textGradient
+                  >
+                    Detailed Report
+                  </MDTypography>
+                </Grid>
+              </Grid>
+
+              <Grid sm={12} textAlign={"center"} pb={1}>
+                {/* <PieChart
+                  series={[
+                    {
+                      // data: locationData,
+                      highlightScope: { faded: "global", highlighted: "item" },
+                      faded: { innerRadius: 30, additionalRadius: -30 },
+                    },
+                  ]}
+                  height={200}
+                /> */}
+              </Grid>
+            </MDBox>
+          </Grid>
+        </Card>
+      </DashboardLayout>
     </>
   );
 };

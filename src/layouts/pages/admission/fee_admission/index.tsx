@@ -150,8 +150,9 @@ const Fee = () => {
                     </MDTypography>
                   }
                   value={amountFromEditData}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  // onChange={handleChange}
+                  // onBlur={handleBlur}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={4} py={1}>
@@ -385,13 +386,13 @@ const Fee = () => {
               sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Grid item mt={2}>
-                <MDButton color="dark" variant="contained" type="submit" onClick={handleFormSubmit}>
+                <MDButton color="info" variant="contained" type="submit" onClick={handleFormSubmit}>
                   Pay Fee
                 </MDButton>
               </Grid>
               <Grid item mt={2} ml={2}>
                 <MDButton
-                  color="info"
+                  color="dark"
                   variant="contained"
                   type="submit"
                   onClick={() => navigate("/pages/admission/studentAdmission")}
