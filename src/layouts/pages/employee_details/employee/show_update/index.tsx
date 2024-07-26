@@ -231,6 +231,7 @@ const ShowUpdate = (props: any) => {
         mobile_number: employeeInfo.mobile_number || "",
         email: employeeInfo.email || "",
         employee_img: employeeInfo.employee_img || null,
+        pan_number: employeeInfo.pan_number || "",
       },
       enableReinitialize: true,
       validationSchema: validationSchema,
@@ -364,7 +365,7 @@ const ShowUpdate = (props: any) => {
                 { icon: "call", label: "Contact Info", href: "2" },
                 { icon: "account_balance", label: "Account Info", href: "3" },
                 { icon: "gite", label: "Address", href: "4" },
-                { icon: "sports_martial_arts", label: "Activities", href: "5" },
+                { icon: "workspace_premium", label: "Certification", href: "5" },
               ]}
               brandName={""}
               routes={[]}
@@ -636,7 +637,11 @@ const ShowUpdate = (props: any) => {
                           LTC Applicable
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={3} sm={3}></Grid>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Hobbies
+                        </MDTypography>
+                      </Grid>
                       <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.employee_type}
@@ -652,7 +657,11 @@ const ShowUpdate = (props: any) => {
                           {values.ltc_applicable ? "YES" : "NO"}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={3} sm={3}></Grid>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold">
+                          {values.hobby}
+                        </MDTypography>
+                      </Grid>
                       <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Referred
@@ -672,15 +681,15 @@ const ShowUpdate = (props: any) => {
                         {employeeInfo.adhar_card && (
                           <MDButton
                             variant="text"
-                            color="dark"
+                            color="info"
                             onClick={() =>
                               downloadPDF(
                                 employeeInfo.adhar_card,
-                                `${username}_${employeeInfo.first_name}_aadhar_card.pdf`
+                                `${username}_${employeeInfo.first_name}_employee_details.pdf`
                               )
                             }
                           >
-                            Aadhar Card
+                            Download
                             <Icon>download</Icon>
                           </MDButton>
                         )}
@@ -855,8 +864,28 @@ const ShowUpdate = (props: any) => {
                           UNA Number
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={3} sm={3}></Grid>
-                      <Grid item xs={3} sm={3}></Grid>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          PAN Number
+                        </MDTypography>
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
+                        {employeeInfo.bank_account_details && (
+                          <MDButton
+                            variant="text"
+                            color="info"
+                            onClick={() =>
+                              downloadPDF(
+                                employeeInfo.bank_account_details,
+                                `${username}_${employeeInfo.first_name}_account_details.pdf`
+                              )
+                            }
+                          >
+                            Donwload
+                            <Icon>download</Icon>
+                          </MDButton>
+                        )}
+                      </Grid>
                       <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.esi_number}
@@ -865,6 +894,11 @@ const ShowUpdate = (props: any) => {
                       <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.una_number}
+                        </MDTypography>
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold">
+                          {values.pan_number}
                         </MDTypography>
                       </Grid>
                     </Grid>
@@ -1074,7 +1108,7 @@ const ShowUpdate = (props: any) => {
                           fontWeight="bold"
                           fontSize="18px"
                         >
-                          ACTIVITIES
+                          CERTIFICATION
                         </MDTypography>
                       </Grid>
                       <Grid
@@ -1095,49 +1129,40 @@ const ShowUpdate = (props: any) => {
                           <ModeEditOutlineIcon />
                         </MDAvatar>
                       </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Hobbies
-                        </MDTypography>
-                      </Grid>
-                      <Grid item xs={12} sm={4}>
+
+                      <Grid item xs={12} sm={6}>
                         {employeeInfo.extra_curricular_files && (
                           <MDButton
                             variant="text"
-                            color="dark"
+                            color="info"
                             onClick={() =>
                               downloadPDF(
                                 employeeInfo.extra_curricular_files,
-                                `${username}_${employeeInfo.first_name}_extra_curricular_certificate.pdf`
+                                `${username}_${employeeInfo.first_name}_experience_certificate.pdf`
                               )
                             }
                           >
-                            Extra Curricular Certificate
+                            Experience Certificate
                             <Icon>download</Icon>
                           </MDButton>
                         )}
                       </Grid>
-                      <Grid item xs={12} sm={4}>
+                      <Grid item xs={12} sm={6}>
                         {employeeInfo.sport_activity_files && (
                           <MDButton
                             variant="text"
-                            color="dark"
+                            color="info"
                             onClick={() =>
                               downloadPDF(
                                 employeeInfo.sport_activity_files,
-                                `${username}_${employeeInfo.first_name}_sport_activity_Certificate.pdf`
+                                `${username}_${employeeInfo.first_name}_other_certificate.pdf`
                               )
                             }
                           >
-                            Sport Activity Certificate
+                            Other Certificate
                             <Icon>download</Icon>
                           </MDButton>
                         )}
-                      </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <MDTypography variant="button" fontWeight="bold">
-                          {values.hobby}
-                        </MDTypography>
                       </Grid>
                     </Grid>
                   </MDBox>

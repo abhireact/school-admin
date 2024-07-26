@@ -53,7 +53,7 @@ const Update = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              EMPLOYEE TYPE NAME
+              EMPLOYEE TYPE NAME *
             </MDTypography>
           </Grid>
 
