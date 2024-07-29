@@ -24,20 +24,18 @@ import { useSelector } from "react-redux";
 import MDBox from "components/MDBox";
 
 const token = Cookies.get("token");
-const Employee = () => {
-  // To fetch rbac from redux:  Start
-  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
-  // console.log("rbac user", rbacData);
-  //End
 
-  // Fetch rbac  Date from useEffect: Start
+const Employee = () => {
   const tableRef = useRef();
   const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
   const handlePrint = useReactToPrint({
     content: () => tableRef.current,
   });
-  const [employeeInfo, setEmployeeInfo] = useState<any>({});
+  const [employeeInfo, setEmployeeInfo] = useState<any>(null);
   const fetchEmployeeInfo = (userinfo: any) => {
+    // Clear the previous employeeInfo before fetching new data
+    setEmployeeInfo(null);
+
     axios
       .post(
         `${process.env.REACT_APP_BASE_URL}/mg_employees/retrive`,
@@ -54,12 +52,17 @@ const Employee = () => {
       .then((response) => {
         setEmployeeInfo(response.data);
         console.log("employee info data", response.data);
-        handlePrint();
+
+        // Move handlePrint() here to ensure it's called after the state is updated
+        setTimeout(() => {
+          handlePrint();
+        }, 0);
       })
       .catch(() => {
         console.error("Error on getting student info");
       });
   };
+
   const [rbacData, setRbacData] = useState([]);
   const fetchRbac = async () => {
     try {
@@ -77,13 +80,13 @@ const Employee = () => {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchRbac();
   }, [token]);
-  //End
+
   const [data, setData] = useState([]);
 
-  //Update Dialog Box Start
   const [username, setUsername] = useState(null);
   const [openupdate, setOpenupdate] = useState(false);
 
@@ -94,6 +97,7 @@ const Employee = () => {
     setOpenupdate(!openupdate);
     setUsername(main_data.user_id);
   };
+
   const handlePdf = (index: number) => {
     setUsername(data[index].user_id);
     fetchEmployeeInfo(data[index].user_id);
@@ -101,7 +105,8 @@ const Employee = () => {
 
   const handleCloseupdate = () => {
     setOpenupdate(!openupdate);
-  }; //End
+  };
+
   const fetchEmployees = () => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
@@ -112,16 +117,17 @@ const Employee = () => {
       })
       .then((response) => {
         setData(response.data);
-
         console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   };
+
   useEffect(() => {
     fetchEmployees();
   }, []);
+
   const handleDelete = async (info: any) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
@@ -132,7 +138,7 @@ const Employee = () => {
         },
       });
       if (response.status === 200) {
-        message.success("Deleted SuccessFully");
+        message.success("Deleted Successfully");
         fetchEmployees();
       }
     } catch (error: any) {
@@ -145,13 +151,10 @@ const Employee = () => {
   const dataTableData = {
     columns: [
       { Header: "Employee Name", accessor: "employee_name" },
-
       { Header: "Position", accessor: "position" },
       { Header: "Department", accessor: "department" },
       { Header: "User ID", accessor: "user_id" },
-
       { Header: "Joining Date", accessor: "joining_date" },
-
       { Header: "Action", accessor: "action" },
     ],
 
@@ -191,10 +194,9 @@ const Employee = () => {
                 <IconButton>
                   <Popconfirm
                     title="Delete"
-                    description="Are you sure you want to delete it? ?"
+                    description="Are you sure you want to delete it?"
                     placement="topLeft"
-                    onConfirm={() => handleDelete(row.user_id)} // Pass index to confirm function
-                    // onCancel={cancel}
+                    onConfirm={() => handleDelete(row.user_id)}
                     okText="Yes"
                     cancelText="No"
                   >
@@ -216,11 +218,11 @@ const Employee = () => {
       employee_name: row.employee_name,
       department: row.department,
       position: row.position,
-
       user_id: row.user_id,
       joining_date: row.joining_date,
     })),
   };
+
   const [showpage, setShowpage] = useState(false);
   const handleShowPage = () => {
     setShowpage(!showpage);
@@ -256,7 +258,7 @@ const Employee = () => {
           </MDBox>
         </Card>
       )}
-      {username && (
+      {employeeInfo && (
         <div ref={tableRef} className="report-hidden-text">
           <EmployeePDF employeeInfo={employeeInfo} />
         </div>

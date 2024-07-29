@@ -78,16 +78,23 @@ export default function ExportEmployeeData() {
         },
       })
       .then((response) => {
-        setData(response.data.filter((item: any) => item.emp_dept === values.department));
+        let employeeData = response.data.filter((item: any) => item.emp_dept === values.department);
+        if (employeeData.length < 1) {
+          message.error("No Data Available");
+        }
+        setData(employeeData);
 
         console.log(response.data);
       })
       .catch((error) => {
+        message.error(error.response.data.detail);
         console.error("Error fetching data:", error);
       });
   };
   useEffect(() => {
-    fetchExportEmployeeData();
+    if ((values.department && values.category) || values.department) {
+      fetchExportEmployeeData();
+    }
   }, [values]);
 
   const [isExporting, setIsExporting] = useState(false);

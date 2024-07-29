@@ -7,14 +7,14 @@ import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import SaveIcon from "@mui/icons-material/Save";
 import { message } from "antd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import Sidenav from "layouts/pages/account/settings/components/Sidenav";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
+import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox, Icon } from "@mui/material";
 const token = Cookies.get("token");
 
 const Create = (props: any) => {
@@ -40,6 +40,7 @@ const Create = (props: any) => {
       .required("Required *"),
     phone_number: Yup.string().matches(/^[0-9]{10}$/, "Incorrect Format"),
     email: Yup.string().email("Incorrect Format").required("Required *"),
+    pan_number: Yup.string().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Incorrect Format"),
   });
   const [empCategory, setEmpCategory] = useState([]);
   const [empGrade, setEmpGrade] = useState([]);
@@ -190,6 +191,8 @@ const Create = (props: any) => {
         employee_img: null,
         language: [],
         adhar_card: "",
+        pan_number: "",
+        bank_account_details: "",
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -234,7 +237,11 @@ const Create = (props: any) => {
       setFieldValue("pr_country", values.country);
     }
   };
-  const handleImage = (e: any) => {
+  const ImageRef = useRef(null);
+  const handleImageChangeButton = () => {
+    ImageRef.current.click();
+  };
+  const handleImageChange = (e: any) => {
     const file = e.target.files[0];
 
     if (file) {
@@ -259,7 +266,17 @@ const Create = (props: any) => {
       }
     }
   };
-  const handleFileChange = (event: any) => {
+  const FileChangeRef = useRef(null);
+
+  const handleFileChangeButton = () => {
+    FileChangeRef.current.click();
+  };
+  const AccountDetailsRef = useRef(null);
+  const handleAccountChangeButton = () => {
+    AccountDetailsRef.current.click();
+  };
+
+  const handleAccountChange = (event: any) => {
     const file = event.target.files?.[0];
 
     if (!file) {
@@ -284,6 +301,41 @@ const Create = (props: any) => {
     reader.onload = () => {
       const result = reader.result;
       if (typeof result === "string") {
+        setFieldValue("bank_account_details", result);
+      } else {
+        console.error("Error: reader.result is not a string.");
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+    };
+  };
+  const handleFileChange = (event: any) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      message.error("No file selected.");
+      return;
+    }
+
+    if (file.type !== "application/pdf") {
+      message.error("File must be a PDF.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("File size exceeds 5 MB limit.");
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
         setFieldValue("adhar_card", result);
       } else {
         console.error("Error: reader.result is not a string.");
@@ -293,7 +345,10 @@ const Create = (props: any) => {
       console.error("Error reading file:", error);
     };
   };
-
+  const SportActivityRef = useRef(null);
+  const handleSportActivityButton = () => {
+    SportActivityRef.current.click();
+  };
   const handleSportActivity = (event: any) => {
     const file = event.target.files?.[0];
 
@@ -327,6 +382,10 @@ const Create = (props: any) => {
     reader.onerror = (error) => {
       console.error("Error reading file:", error);
     };
+  };
+  const ExtraCurricularRef = useRef(null);
+  const handleExtraCurricularButton = () => {
+    ExtraCurricularRef.current.click();
   };
   const handleExtraCurricular = (event: any) => {
     const file = event.target.files?.[0];
@@ -373,7 +432,7 @@ const Create = (props: any) => {
               { icon: "call", label: "Contact Info", href: "2" },
               { icon: "account_balance", label: "Account Info", href: "3" },
               { icon: "gite", label: "Address", href: "4" },
-              { icon: "sports_martial_arts", label: "Activities", href: "5" },
+              { icon: "workspace_premium", label: "Certification", href: "5" },
             ]}
             brandName={""}
             routes={[]}
@@ -930,7 +989,24 @@ const Create = (props: any) => {
                         )}
                       />
                     </Grid>
-
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        variant="standard"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Hobbies
+                          </MDTypography>
+                        }
+                        name="hobby"
+                        value={values.hobby}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.hobby && Boolean(errors.hobby)}
+                        helperText={touched.hobby && errors.hobby}
+                        success={values.hobby && !errors.hobby}
+                      />
+                    </Grid>
                     <Grid item xs={12} sm={4} mt={2}>
                       <input
                         type="checkbox"
@@ -943,6 +1019,7 @@ const Create = (props: any) => {
                         LTC Applicable
                       </MDTypography>
                     </Grid>
+
                     {values.is_refered ? (
                       <>
                         <Grid item xs={6} sm={4}>
@@ -983,18 +1060,22 @@ const Create = (props: any) => {
                         </Grid>
                       </>
                     ) : (
-                      <Grid item xs={12} sm={4} mt={2}>
-                        <input
-                          type="checkbox"
-                          checked={values.is_refered}
-                          onChange={handleChange}
-                          name="is_refered"
-                        />
-                        &nbsp;
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Referred
-                        </MDTypography>
-                      </Grid>
+                      <>
+                        <Grid item xs={12} sm={4} mt={2}>
+                          <input
+                            type="checkbox"
+                            checked={values.is_refered}
+                            onChange={handleChange}
+                            name="is_refered"
+                          />
+                          &nbsp;
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            Referred
+                          </MDTypography>
+                        </Grid>
+                        <Grid item xs={12} sm={4}></Grid>
+                        <Grid item xs={12} sm={4}></Grid>
+                      </>
                     )}
 
                     <Grid
@@ -1004,46 +1085,43 @@ const Create = (props: any) => {
                       container
                       sx={{ display: "flex", justifyContent: "space-between" }}
                     >
-                      <Grid item>
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Upload Image
-                        </MDTypography>
-                      </Grid>
+                      <MDButton
+                        variant="text"
+                        color="dark"
+                        onClick={handleImageChangeButton}
+                        sx={{ width: "90%" }}
+                      >
+                        {values.employee_img ? "Re-Upload" : "Upload"} Employee Image
+                        <Icon>cloud_upload</Icon>
+                      </MDButton>
 
-                      <Grid item>
-                        <MDInput
-                          sx={{ width: "90%" }}
-                          type="file"
-                          accept="image/*"
-                          name="employee_img"
-                          onChange={handleImage}
-                          variant="standard"
-                        />
-                      </Grid>
+                      <input
+                        type="file"
+                        ref={ImageRef}
+                        accept="image/*"
+                        name="employee_img"
+                        onChange={handleImageChange}
+                        style={{ display: "none" }}
+                      />
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      sm={4.1}
-                      container
-                      sx={{ display: "flex", justifyContent: "space-between" }}
-                    >
-                      <Grid item>
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Aadhar Card
-                        </MDTypography>
-                      </Grid>
-
-                      <Grid item>
-                        <MDInput
-                          sx={{ width: "90%" }}
-                          type="file"
-                          accept="application/pdf"
-                          name="adhar_card"
-                          onChange={handleFileChange}
-                          variant="standard"
-                        />
-                      </Grid>
+                    <Grid item xs={12} sm={4.1}>
+                      <MDButton
+                        variant="text"
+                        color="dark"
+                        onClick={handleFileChangeButton}
+                        sx={{ width: "90%" }}
+                      >
+                        {values.adhar_card ? "Re-Upload" : "Upload"}&nbsp;
+                        <Icon>cloud_upload</Icon>
+                      </MDButton>
+                      <input
+                        type="file"
+                        ref={FileChangeRef}
+                        accept="application/pdf"
+                        name="adhar_card"
+                        onChange={handleFileChange}
+                        style={{ display: "none" }}
+                      />
                     </Grid>
                   </Grid>
                 </MDBox>
@@ -1282,6 +1360,43 @@ const Create = (props: any) => {
                         error={touched.una_number && Boolean(errors.una_number)}
                         helperText={touched.una_number && errors.una_number}
                         success={values.una_number && !errors.una_number}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <MDInput
+                        sx={{ width: "90%" }}
+                        variant="standard"
+                        label={
+                          <MDTypography variant="button" fontWeight="bold" color="secondary">
+                            PAN Number
+                          </MDTypography>
+                        }
+                        name="pan_number"
+                        value={values.pan_number}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.pan_number && Boolean(errors.pan_number)}
+                        helperText={touched.pan_number && errors.pan_number}
+                        success={values.pan_number && !errors.pan_number}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} mt={2}>
+                      <MDButton
+                        variant="text"
+                        color="dark"
+                        onClick={handleAccountChangeButton}
+                        sx={{ width: "90%" }}
+                      >
+                        {values.bank_account_details ? "Re-Upload" : "Upload"}&nbsp;
+                        <Icon>cloud_upload</Icon>
+                      </MDButton>
+                      <input
+                        type="file"
+                        ref={AccountDetailsRef}
+                        accept="application/pdf"
+                        name="bank_account_details"
+                        onChange={handleAccountChange}
+                        style={{ display: "none" }}
                       />
                     </Grid>
                   </Grid>
@@ -1554,58 +1669,48 @@ const Create = (props: any) => {
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
                       <MDTypography color="info" variant="body2" fontWeight="bold" fontSize="18px">
-                        ACTIVITIES
+                        CERTIFICATION
                       </MDTypography>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Sport Activity
-                      </MDTypography>
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <MDInput
+
+                    <Grid item xs={12} sm={6}>
+                      <MDButton
+                        variant="text"
+                        color="dark"
+                        onClick={handleSportActivityButton}
                         sx={{ width: "90%" }}
+                      >
+                        {values.sport_activity_files ? "Re-Upload" : "Upload"} Experience
+                        Certificate&nbsp;&nbsp;
+                        <Icon>cloud_upload</Icon>
+                      </MDButton>
+                      <input
                         type="file"
+                        ref={SportActivityRef}
                         accept="application/pdf"
                         name="sport_activity_files"
                         onChange={handleSportActivity}
-                        variant="standard"
-                        InputLabelProps={{ shrink: true }}
+                        style={{ display: "none" }}
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={3}>
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Extra Curricular
-                      </MDTypography>
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <MDInput
+                    <Grid item xs={12} sm={6}>
+                      <MDButton
+                        variant="text"
+                        color="dark"
+                        onClick={handleExtraCurricularButton}
                         sx={{ width: "90%" }}
+                      >
+                        {values.extra_curricular_files ? "Re-Upload" : "Upload"} Other
+                        Certificate&nbsp;&nbsp;<Icon>cloud_upload</Icon>
+                      </MDButton>
+                      <input
                         type="file"
+                        ref={ExtraCurricularRef}
                         accept="application/pdf"
                         name="extra_curricular_files"
                         onChange={handleExtraCurricular}
-                        variant="standard"
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={4}>
-                      <MDInput
-                        sx={{ width: "90%" }}
-                        variant="standard"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Hobbies
-                          </MDTypography>
-                        }
-                        name="hobby"
-                        value={values.hobby}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.hobby && Boolean(errors.hobby)}
-                        helperText={touched.hobby && errors.hobby}
-                        success={values.hobby && !errors.hobby}
+                        style={{ display: "none" }}
                       />
                     </Grid>
                   </Grid>

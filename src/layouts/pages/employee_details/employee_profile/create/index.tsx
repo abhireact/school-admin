@@ -75,7 +75,7 @@ const Create = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              CATEGORY NAME
+              CATEGORY NAME *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
@@ -109,7 +109,7 @@ const Create = (props: any) => {
 
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              POSITION NAME
+              POSITION NAME *
             </MDTypography>
           </Grid>
 

@@ -51,6 +51,14 @@ export default function ExportEmployeeData() {
               const archiveDate = new Date(item.archive_date);
               return archiveDate >= startDate && archiveDate <= endDate;
             });
+            if (filterData.length < 1) {
+              message.error(
+                `No Archived Employee Found between ${values.start_date} and ${values.end_date} `
+              );
+              setData([]);
+              return;
+            }
+
             const modifiedData = filterData.map((item: any) => ({
               user_name: item.user_name,
               employee_name: item.employee_name,

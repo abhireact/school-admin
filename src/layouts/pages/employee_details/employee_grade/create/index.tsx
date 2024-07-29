@@ -57,7 +57,7 @@ const Create = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              GRADE NAME
+              GRADE NAME *
             </MDTypography>
           </Grid>
 
