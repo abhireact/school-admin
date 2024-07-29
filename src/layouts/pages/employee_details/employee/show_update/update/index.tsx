@@ -218,7 +218,7 @@ const Update = (props: any) => {
         employee_img: employeeInfo.employee_img || null,
         language: [],
         pan_number: "",
-        bank_account_details: "",
+        bank_account_details: employeeInfo.bank_account_details || null,
       },
       enableReinitialize: true,
       validationSchema: validationSchema,
@@ -1387,7 +1387,8 @@ const Update = (props: any) => {
                     success={values.pan_number && !errors.pan_number}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4} mt={2}>
+
+                <Grid item xs={12} sm={6} mt={2}>
                   <MDButton
                     variant="text"
                     color="dark"
