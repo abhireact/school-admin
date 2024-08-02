@@ -131,6 +131,7 @@ const TransferCertificateSettings: React.FC = () => {
     attendedSchool: true,
     schoolCategory: true,
     extraCurricular: true,
+    english_or_hindi: false,
   });
   useEffect(() => {
     const savedSettings = localStorage.getItem("transferCertificateSettings");
@@ -139,10 +140,10 @@ const TransferCertificateSettings: React.FC = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   // Save settings to localStorage whenever they change
-  //   localStorage.setItem("transferCertificateSettings", JSON.stringify(settings));
-  // }, [settings]);
+  useEffect(() => {
+    // Save settings to localStorage whenever they change
+    localStorage.setItem("transferCertificateSettings", JSON.stringify(settings));
+  }, [settings]);
 
   const handleToggle = (field: string): void => {
     setSettings((prevSettings) => ({
@@ -152,14 +153,14 @@ const TransferCertificateSettings: React.FC = () => {
   };
 
   const saveSettings = (): void => {
-    // Save settings to localStorage
-    localStorage.setItem("transferCertificateSettings", JSON.stringify(settings));
+    // Save in database
+
     message.success("Transfer Certificate Settings Saved");
     console.log("Settings saved to localStorage:", settings);
   };
 
   const renderSettingToggle = (field: string, label: string): JSX.Element => (
-    <Grid item xs={12} sm={12} md={12} key={field}>
+    <Grid item xs={12} sm={12} md={12} key={field} style={{ borderBottom: "1px solid #dddd" }}>
       <MDBox display="flex" alignItems="center" justifyContent="space-between">
         <MDTypography variant="button" color="body3">
           {label}
@@ -169,62 +170,122 @@ const TransferCertificateSettings: React.FC = () => {
     </Grid>
   );
   const formFields = [
-    { label: "School No.", inputName: "school_no" },
-    { label: "Book No.", inputName: "book_no" },
-    { label: "S R No.", inputName: "serial_number" },
-    { label: "PEN", inputName: "pen" },
-    { label: "Admission Number", inputName: "admission_number" },
-    { label: "Affiliation No.", inputName: "affiliation_no" },
-    { label: "Renewed Upto", inputName: "renewed_upto" },
-    { label: "Status of School", inputName: "school_status" },
+    { label: { en: "School No.", hi: "स्कूल संख्या" }, inputName: "school_no" },
+    { label: { en: "Book No.", hi: "पुस्तक संख्या" }, inputName: "book_no" },
+    { label: { en: "S R No.", hi: "एस आर संख्या" }, inputName: "serial_number" },
+    { label: { en: "PEN", hi: "पेन" }, inputName: "pen" },
+    { label: { en: "Admission Number", hi: "प्रवेश संख्या" }, inputName: "admission_number" },
+    { label: { en: "Affiliation No.", hi: "संबद्धता संख्या" }, inputName: "affiliation_no" },
+    { label: { en: "Renewed Upto", hi: "नवीनीकृत तिथि" }, inputName: "renewed_upto" },
+    { label: { en: "Status of School", hi: "स्कूल की स्थिति" }, inputName: "school_status" },
   ].filter((field) => settings[field.inputName] !== false);
 
   const certificateFields = [
-    { label: "Name of the student", inputName: "name" },
-    { label: "Mother's Name", inputName: "motherName" },
-    { label: "Father's Name", inputName: "fatherName" },
+    { label: { en: "Name of the student", hi: "छात्र का नाम" }, inputName: "name" },
+    { label: { en: "Mother's Name", hi: "मां का नाम" }, inputName: "motherName" },
+    { label: { en: "Father's Name", hi: "पिता का नाम" }, inputName: "fatherName" },
     {
-      label: "Date of Birth according to Admission Register(in figures and words):",
+      label: {
+        en: "Date of Birth according to Admission Register(in figures and words):",
+        hi: "प्रवेश रजिस्टर के अनुसार जन्म तिथि (अंकों और शब्दों में):",
+      },
       inputName: "dob",
     },
-    { label: "Nationality", inputName: "nationality" },
-    { label: "Religion", inputName: "religion" },
-    { label: "Caste Category", inputName: "casteCategory" },
-    { label: "Whether the student is failed", inputName: "isFailed" },
+    { label: { en: "Nationality", hi: "राष्ट्रीयता" }, inputName: "nationality" },
+    { label: { en: "Religion", hi: "धर्म" }, inputName: "religion" },
+    { label: { en: "Caste Category", hi: "जाति श्रेणी" }, inputName: "casteCategory" },
     {
-      label: "Subjects offered",
-      inputName: "subjectsOffered",
+      label: { en: "Whether the student is failed", hi: "क्या छात्र अनुत्तीर्ण हुआ है" },
+      inputName: "isFailed",
     },
+    { label: { en: "Subjects offered", hi: "प्रस्तावित विषय" }, inputName: "subjectsOffered" },
     {
-      label: "No. of school days the student attended",
+      label: {
+        en: "No. of school days the student attended",
+        hi: "छात्र द्वारा उपस्थित स्कूल के दिनों की संख्या",
+      },
       inputName: "attendedSchool",
     },
     {
-      label: "Games played or extra curricular activities in which the pupil usually took part",
+      label: {
+        en: "Games played or extra curricular activities in which the pupil usually took part",
+        hi: "खेले गए खेल या अतिरिक्त पाठ्यक्रम गतिविधियाँ जिनमें छात्र ने आमतौर पर भाग लिया",
+      },
       inputName: "extraCurricular",
     },
     {
-      label: "Whether school is under Govt./Minority/Independent Category",
+      label: {
+        en: "Whether school is under Govt./Minority/Independent Category",
+        hi: "क्या स्कूल सरकारी/अल्पसंख्यक/स्वतंत्र श्रेणी के अंतर्गत आता है",
+      },
       inputName: "schoolCategory",
     },
-    { label: "Class in which student last studied(in figures and words)", inputName: "lastClass" },
     {
-      label: "School/Board Annual examination last taken with result",
+      label: {
+        en: "Class in which student last studied(in figures and words)",
+        hi: "वह कक्षा जिसमें छात्र ने अंतिम बार अध्ययन किया (अंकों और शब्दों में)",
+      },
+      inputName: "lastClass",
+    },
+    {
+      label: {
+        en: "School/Board Annual examination last taken with result",
+        hi: "स्कूल/बोर्ड वार्षिक परीक्षा अंतिम परिणाम के साथ",
+      },
       inputName: "lastClassResult",
     },
     {
-      label: "Date on which the student's name was struck off the rolls of the school",
+      label: {
+        en: "Date on which the student's name was struck off the rolls of the school",
+        hi: "जिस तारीख को छात्र का नाम स्कूल के रजिस्टर से हटाया गया था",
+      },
       inputName: "struckoffName",
     },
-    { label: "Whether qualified for promotion to the higher class", inputName: "isQualified" },
-    { label: "Months up to which the college dues paid", inputName: "duesPaid" },
-    { label: "Any fee concession availed of, nature of concession", inputName: "feeConcession" },
-    { label: "The student is NCC cadet/ Boy Scout/ Girl Scout", inputName: "nccCadet" },
-    { label: "Date of Admission in  the college", inputName: "admissionDate" },
-    { label: "General Conduct of the student", inputName: "studentConduct" },
-    { label: "Reason of leaving the School", inputName: "leavingReason" },
-    { label: "Date of issue of certificate", inputName: "certificateDate" },
-    { label: "Any other remarks:", inputName: "remarks" },
+    {
+      label: {
+        en: "Whether qualified for promotion to the higher class",
+        hi: "क्या उच्च कक्षा में पदोन्नति के लिए योग्य है",
+      },
+      inputName: "isQualified",
+    },
+    {
+      label: {
+        en: "Months up to which the college dues paid",
+        hi: "जिस महीने तक कॉलेज की फीस भरी गई है",
+      },
+      inputName: "duesPaid",
+    },
+    {
+      label: {
+        en: "Any fee concession availed of, nature of concession",
+        hi: "किसी भी शुल्क रियायत का लाभ, रियायत का प्रकार",
+      },
+      inputName: "feeConcession",
+    },
+    {
+      label: {
+        en: "The student is NCC cadet/ Boy Scout/ Girl Scout",
+        hi: "छात्र एनसीसी कैडेट/ बॉय स्काउट/ गर्ल स्काउट है",
+      },
+      inputName: "nccCadet",
+    },
+    {
+      label: { en: "Date of Admission in the college", hi: "कॉलेज में प्रवेश की तारीख" },
+      inputName: "admissionDate",
+    },
+    {
+      label: { en: "General Conduct of the student", hi: "छात्र का सामान्य आचरण" },
+      inputName: "studentConduct",
+    },
+    {
+      label: { en: "Reason of leaving the School", hi: "स्कूल छोड़ने का कारण" },
+      inputName: "leavingReason",
+    },
+    {
+      label: { en: "Date of issue of certificate", hi: "प्रमाण पत्र जारी करने की तारीख" },
+      inputName: "certificateDate",
+    },
+    { label: { en: "Any other remarks", hi: "अन्य कोई टिप्पणी" }, inputName: "remarks" },
   ].filter((field) => settings[field.inputName] !== false);
 
   return (
@@ -238,6 +299,8 @@ const TransferCertificateSettings: React.FC = () => {
                   Transfer Certificate Settings
                 </MDTypography>
               </Grid>
+              {renderSettingToggle("studentImage", "Student Image")}
+              {renderSettingToggle("backgroundSchoolLogo", "Background School Logo")}
               {renderSettingToggle("school_no", "School No.")}
               {renderSettingToggle("book_no", "Book No.")}
               {renderSettingToggle("admission_number", "Admission Number")}
@@ -247,15 +310,11 @@ const TransferCertificateSettings: React.FC = () => {
               {renderSettingToggle("renewed_upto", "Renewed Upto")}
               {renderSettingToggle("school_status", "Status of School")}
               {renderSettingToggle("registration_no", "Registration Number")}
-              {renderSettingToggle("studentImage", "Student Image")}
-              {renderSettingToggle("backgroundSchoolLogo", "Background School Logo")}
+
               {renderSettingToggle("name", "Name of the student")}
               {renderSettingToggle("motherName", "Mother's Name")}
               {renderSettingToggle("fatherName", "Father's Name")}
-              {renderSettingToggle(
-                "dob",
-                "Date of Birth according to Admission Register(in figures and words):"
-              )}
+              {renderSettingToggle("dob", "Date of Birth")}
               {renderSettingToggle("nationality", "Nationality")}
               {renderSettingToggle("religion", "Religion")}
               {renderSettingToggle("casteCategory", "Caste Category")}
@@ -264,16 +323,13 @@ const TransferCertificateSettings: React.FC = () => {
               {renderSettingToggle("attendedSchool", "No. of school days the student attended")}
               {renderSettingToggle(
                 "extraCurricular",
-                "Games played or extra curricular activities in which the pupil usually took part"
+                "Games played or extra curricular activities"
               )}
               {renderSettingToggle(
                 "schoolCategory",
                 "Whether school is under Govt./Minority/Independent Category"
               )}
-              {renderSettingToggle(
-                "lastClass",
-                "Class in which student last studied(in figures and words)"
-              )}
+              {renderSettingToggle("lastClass", "Class in which student last studied")}
               {renderSettingToggle(
                 "lastClassResult",
                 "School/Board Annual examination last taken with result"
@@ -303,15 +359,20 @@ const TransferCertificateSettings: React.FC = () => {
               {renderSettingToggle("principalSign", "Principal's Signature")}
             </Grid>
             <Grid item sm={8}>
-              <Grid item sm={12}>
+              <Grid item sm={12} sx={{ display: "flex", justifyContent: "space-between" }}>
                 <MDTypography variant="h4" mb={4} color="info">
                   Preview
+                </MDTypography>
+                <MDTypography variant="button" fontWeight="bold" color="body3">
+                  Language : {renderSettingToggle("english_or_hindi", "English/Hindi")}
                 </MDTypography>
               </Grid>
               <Grid item sm={12}>
                 <Grid container>
                   <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-                    <MDTypography variant="h4">Transfer Certificate</MDTypography>
+                    <MDTypography variant="h4">
+                      स्थानांतरण प्रमाणपत्र/Transfer Certificate
+                    </MDTypography>
                   </Grid>
                   <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
                     {settings.studentImage !== false && (
@@ -322,18 +383,31 @@ const TransferCertificateSettings: React.FC = () => {
                       />
                     )}
                   </Grid>
-                  {formFields.map((field, index) => (
+                  {/* {formFields.map((field, index) => (
                     <Grid item xs={4} sm={4} key={index}>
                       <MDTypography variant="button" fontWeight="bold" color="body3">
-                        {field.label}: {getDummyData(field.inputName)}
+                       {field.label.en}: {getDummyData(field.inputName)}
                       </MDTypography>
                     </Grid>
-                  ))}{" "}
+                  ))} */}
+                  {formFields.map((field, index) => (
+                    <Grid item xs={6} sm={6} key={index}>
+                      <MDTypography variant="button" fontWeight="bold" color="body3">
+                        {field.label.hi}/{field.label.en}: {getDummyData(field.inputName)}
+                      </MDTypography>
+                    </Grid>
+                  ))}
                   {settings.registration_no !== false && (
                     <Grid item xs={12} sm={12}>
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        Registration No. of the Candidate (in case Class I to II) : 9864367
-                      </MDTypography>
+                      <>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          उम्मीदवार का पंजीकरण संख्या/Registration No. of the Candidate (in case
+                          Class I to II) :
+                        </MDTypography>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          9864367
+                        </MDTypography>
+                      </>
                     </Grid>
                   )}
                   {/* <Grid item xs={6} sm={6}>
@@ -389,7 +463,7 @@ const TransferCertificateSettings: React.FC = () => {
                           }}
                         >
                           <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {item.label}
+                            {item.label.hi}/{item.label.en}
                           </MDTypography>
                         </Grid>
                         <Grid
@@ -408,7 +482,7 @@ const TransferCertificateSettings: React.FC = () => {
                   {settings.preparedBy !== false && (
                     <Grid item xs={4} sm={4}>
                       <MDTypography variant="button" fontWeight="bold" color="body3">
-                        Prepared By
+                        द्वारा तैयार /Prepared By
                       </MDTypography>
                       <br />
                       <MDTypography variant="button" fontWeight="bold" color="body3">
@@ -419,7 +493,7 @@ const TransferCertificateSettings: React.FC = () => {
                   {settings.checkedBy !== false && (
                     <Grid item xs={4} sm={4}>
                       <MDTypography variant="button" fontWeight="bold" color="body3">
-                        Checked By
+                        द्वारा जांचा गया /Checked By
                       </MDTypography>
                       <br />
                       <MDTypography variant="button" fontWeight="bold" color="body3">
@@ -429,8 +503,17 @@ const TransferCertificateSettings: React.FC = () => {
                   )}
                   {settings.principalSign !== false && (
                     <Grid item xs={4} sm={4}>
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        Signature of Principal
+                      <MDTypography
+                        variant="button"
+                        fontWeight="bold"
+                        color="body3"
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        प्राचार्य के हस्ताक्षर /Signature of Principal
                       </MDTypography>
                       <br />
                       <MDTypography variant="button" fontWeight="bold" color="body3">
@@ -480,6 +563,13 @@ const TransferCertificateSettings: React.FC = () => {
                     checkedBy: true,
                     principalSign: true,
                     registration_no: true,
+                    lastClassResult: true,
+                    struckoffName: true,
+                    subjectsOffered: true,
+                    attendedSchool: true,
+                    schoolCategory: true,
+                    extraCurricular: true,
+                    english_or_hindi: false,
                   })
                 }
               >
