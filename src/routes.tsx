@@ -29,6 +29,14 @@ import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configura
 import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
+import StudentAdmission from "layouts/pages/admission";
+import StudentAttendanceReport from "layouts/pages/Attendance/reports/student_attendance_report";
+import StudentAttendanceDateWiseReport from "layouts/pages/Attendance/reports/student_date_wise";
+import Consolidiration from "layouts/pages/Attendance/reports/consolidiration";
+import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_attendance";
+import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
+import TimeTable from "layouts/pages/Attendance/time_table";
+import StudentLeaveApply from "layouts/pages/Attendance/student/leave_apply";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -52,7 +60,6 @@ const trimmed = parts[0];
 console.log(trimmed, "school code "); // Output: "mindcom"
 // const data = useSelector((state: any) => state);
 const rendered: any = <Myrbacroutes />;
-console.log(rendered, "rendered component");
 
 try {
   if (token) {
@@ -71,6 +78,85 @@ try {
 }
 let routes = [
   // pages not to show in left navbar
+  {
+    type: "collapse",
+    name: "Attendance",
+    key: "attendance",
+    collapse: [
+      {
+        name: "Class Timing",
+        key: "classtiming",
+        route: "attendance/class_timing",
+        component: <ClassTiming />,
+      },
+      {
+        name: "Time Table",
+        key: "time_table",
+        route: "attendance/time_table",
+        component: <TimeTable />,
+      },
+      {
+        name: "Student Attendance",
+        key: "student_attendance",
+        route: "attendance/take_student_attendance",
+        component: <StudentAttendance />,
+      },
+      {
+        name: "Apply Student Leave",
+        key: "student_leave_apply",
+        route: "attendance/student_leave_apply",
+        component: <StudentLeaveApply />,
+      },
+      {
+        name: "Reports",
+        key: "attendance_reports",
+        collapse: [
+          {
+            name: "Student Attendance Report",
+            key: "student_attendance_report",
+            route: "attendance/report/student_attendance",
+            component: <StudentAttendanceReport />,
+          },
+          {
+            name: "Student Attendance Date Wise",
+            key: "student_attendance_dateWise_report",
+            route: "attendance/report/student_attendance_dateWise_report",
+            component: <StudentAttendanceDateWiseReport />,
+          },
+          {
+            name: "Student Consolidate",
+            key: "student_consolidate",
+            route: "attendance/report/student_consolidate",
+            component: <Consolidiration />,
+          },
+        ],
+      },
+      {
+        name: "Employee Attendance",
+        key: "employee_attendance",
+        collapse: [
+          {
+            name: "Employee Attendance",
+            key: "employee_atendance",
+            route: "attendance/employee_attendance",
+            component: <EmployeeAttendance />,
+          },
+          {
+            name: "Take Attendance",
+            key: "take_atendance",
+            route: "attendance/take_employee_attendance",
+            component: <TakeAttandance />,
+          },
+          {
+            name: "My Attendance",
+            key: "my_atendance",
+            route: "attendance/my_attendance",
+            component: <MYAttandance />,
+          },
+        ],
+      },
+    ],
+  },
   {
     type: "collapse",
     name: "Dashboards",

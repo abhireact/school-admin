@@ -49,9 +49,6 @@ const TakeAttandance = () => {
     updatedData[index].isCheckedIn = true;
     setData(updatedData);
     const main_data = data[index];
-    console.log(main_data, "maindata");
-    console.log(main_data.first_name, main_data.email, typeof current_time, "handlecheckin");
-
     try {
       const response = await axios.post(
         `http://10.0.20.200:8000/attendance`,
