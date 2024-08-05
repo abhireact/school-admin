@@ -33,6 +33,10 @@ import ShowAdmission from "layouts/pages/admission/show";
 import EditAdmission from "layouts/pages/admission/update";
 import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
 import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
+import Second_CC from "layouts/pages/authentication/Certificate/second_cc";
+import CC_one from "layouts/pages/authentication/Certificate/CC_one";
+import Certificates from "layouts/pages/student_details/student/certificates";
+import Character_Certificate from "layouts/pages/student_details/student/certificates/Character_Certificate";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -88,26 +92,6 @@ let routes = [
       },
     ],
   },
-  {
-    type: "collapse",
-    name: "Transfer Certificate",
-    key: "brooklyn-alice",
-    icon: <Icon>chrome_reader_mode</Icon>,
-    collapse: [
-      {
-        name: "Student  Transfer Certificate",
-        key: "tc_create",
-        route: "/pages/tc_create",
-        component: <TransferCertificate />,
-      },
-      {
-        name: "Transfer Certificate Settings",
-        key: "tc_settings",
-        route: "/pages/tc_settings",
-        component: <TransferCertificateTemplate />,
-      },
-    ],
-  },
 
   {
     type: "collapse",
@@ -139,6 +123,12 @@ let routes = [
         component: <MYProfile />,
       },
       {
+        name: "Second CC",
+        key: "second_cc",
+        route: "/pages/authentication/second_cc",
+        component: <Second_CC />,
+      },
+      {
         name: "Pdf Report",
         key: "pdfreport",
         route: "pages/fee/pdfreport",
@@ -151,6 +141,18 @@ let routes = [
     key: "create_student",
     route: "student/create_student",
     component: <CreateStudent />,
+  },
+  {
+    name: "Student Certificates",
+    key: "certificates",
+    route: "/pages/student_details/student/certificates",
+    component: <Certificates />,
+  },
+  {
+    name: "Character Certificates",
+    key: "character_ertificates",
+    route: "/pages/student_details/student/certificates/Character_Certificate",
+    component: <Character_Certificate />,
   },
 
   {
