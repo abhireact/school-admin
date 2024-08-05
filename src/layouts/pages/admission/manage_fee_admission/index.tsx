@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { Grid, Tooltip, Autocomplete, Card } from "@mui/material";
+import { Grid, Tooltip, Autocomplete, Card, IconButton } from "@mui/material";
 import MDInput from "components/MDInput";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -19,6 +19,7 @@ import { message } from "antd";
 import { commonacademicyear } from "layouts/pages/fee/common_validationschema";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import iconButton from "assets/theme/components/iconButton";
 
 interface FeeReceiptInterface {
   columns: { Header: string; accessor: string }[];
@@ -231,25 +232,29 @@ export default function ManageFeeAdmission() {
         <Grid container spacing={1}>
           <Grid item>
             {data.status === "No Paid" ? (
-              <Tooltip
-                title="View Fees"
-                placement="top"
-                onClick={() => {
-                  handlePaymentAdmission(data);
-                }}
-              >
-                <PaidOutlinedIcon fontSize="small" color="inherit" />
-              </Tooltip>
+              <IconButton>
+                <Tooltip
+                  title="View Fees"
+                  placement="top"
+                  onClick={() => {
+                    handlePaymentAdmission(data);
+                  }}
+                >
+                  <PaidOutlinedIcon fontSize="small" color="inherit" />
+                </Tooltip>
+              </IconButton>
             ) : (
-              <Tooltip
-                title="Fee Receipt"
-                placement="top"
-                onClick={() => {
-                  handlePrint(data.receipt_no);
-                }}
-              >
-                <FileDownloadIcon fontSize="small" color="secondary" />
-              </Tooltip>
+              <IconButton disabled>
+                <Tooltip
+                  title="Fee Receipt"
+                  placement="top"
+                  onClick={() => {
+                    handlePrint(data.receipt_no);
+                  }}
+                >
+                  <PaidOutlinedIcon fontSize="small" color="disabled" />
+                </Tooltip>
+              </IconButton>
             )}
           </Grid>
         </Grid>
