@@ -970,7 +970,6 @@ const Create = (props: any) => {
                         options={empGrade?.map((info: any) => info.grade_name)}
                         renderInput={(params: any) => (
                           <MDInput
-                            required
                             InputLabelProps={{ shrink: true }}
                             name="employee_grade"
                             label={
