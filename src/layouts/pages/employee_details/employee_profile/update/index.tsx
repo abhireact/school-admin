@@ -45,7 +45,7 @@ const Update = (props: any) => {
         old_position_name: editData.position_name,
         position_name: editData.position_name,
         category_name: editData.category_name || "",
-        status: editData.satus ? "Active" : "InActive",
+        status: editData.status ? "Active" : "InActive",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -60,7 +60,8 @@ const Update = (props: any) => {
           .then(() => {
             fetchData();
             handleClose();
-            message.success(" Updated Successfully!");
+
+            message.success("Updated Successfully!");
           })
           .catch((error: any) => {
             message.error(error.response.data.detail);
@@ -73,7 +74,7 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              CATEGORY NAME
+              CATEGORY NAME *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
@@ -89,6 +90,7 @@ const Update = (props: any) => {
               options={empCategory?.map((info: any) => info.category_name)}
               renderInput={(params: any) => (
                 <MDInput
+                  required
                   InputLabelProps={{ shrink: true }}
                   name="category_name"
                   placeholder="Choose Category Name"
@@ -107,7 +109,7 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              POSITION NAME
+              POSITION NAME *
             </MDTypography>
           </Grid>
 

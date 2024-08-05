@@ -173,6 +173,7 @@ const Department = () => {
 
       dept_name: row.dept_name,
       dept_code: row.dept_code,
+      status: row.status ? "Active" : "InActive",
     })),
   };
   return (
