@@ -9,6 +9,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import GroupsIcon from "@mui/icons-material/Groups";
 import MDButton from "components/MDButton";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 import Grid from "@mui/material/Grid";
 import { IconButton, Tooltip } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -43,7 +44,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { fetchStudent } from "layouts/pages/redux/dataSlice";
 const Student = () => {
   const [rbacData, setRbacData] = useState([]);
-
+  const navigate = useNavigate();
   const { classes, student } = useSelector((state: any) => state);
   let dispatch = useDispatch();
   const [data, setData] = useState(student);
@@ -82,6 +83,16 @@ const Student = () => {
       message.error(error.response.data.detail);
     }
   };
+
+  const handleCertificate = (index: number) => {
+    const main_data = data[index];
+    navigate("/pages/student_details/student/certificates", {
+      state: {
+        user_name: main_data.user_id,
+      },
+    });
+  };
+
   const dataTableData = {
     columns: [
       { Header: "Student Name", accessor: "full_name" },
@@ -122,6 +133,15 @@ const Student = () => {
                 <DeleteIcon />
               </Tooltip>
             </Popconfirm>
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              handleCertificate(index);
+            }}
+          >
+            <Tooltip title="Student Certificates" placement="top">
+              <SummarizeIcon />
+            </Tooltip>
           </IconButton>
         </MDTypography>
       ),
