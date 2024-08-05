@@ -13,7 +13,6 @@ import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create"
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
 import ManageFeeAmountPerticular from "layouts/pages/fee/manage_fee/fee_category/fee_perticular";
-import StudentDetails from "layouts/pages/student_details/student";
 import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create_concession";
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee_details/class_timing";
@@ -24,11 +23,11 @@ import AddDate from "layouts/pages/admission/form_setting/add_date";
 import Myrbacroutes from "myrbacroutes";
 import Settings from "layouts/pages/account/settings";
 import StudentAttendance from "layouts/pages/Attendance/student";
-import FormSetting from "layouts/pages/admission/form_setting";
 import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configuration";
 import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
+
 import CreateStudent from "layouts/pages/student_details/student/create";
 import ShowAdmission from "layouts/pages/admission/show";
 import EditAdmission from "layouts/pages/admission/update";
@@ -57,7 +56,6 @@ const trimmed = parts[0];
 console.log(trimmed, "school code "); // Output: "mindcom"
 // const data = useSelector((state: any) => state);
 const rendered: any = <Myrbacroutes />;
-console.log(rendered, "rendered component");
 
 try {
   if (token) {
@@ -75,7 +73,7 @@ try {
   console.error(error);
 }
 let routes = [
-  // pages not to show in left navbar
+  // pages not to show in left navba
   {
     type: "collapse",
     name: "Dashboards",

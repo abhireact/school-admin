@@ -75,6 +75,7 @@ import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
 import EmployeeArchive from "layouts/pages/employee_details/employee_archive";
 import EmployeeArchivePDF from "layouts/pages/employee_details/export_archive_data";
+import StudentLeaveApply from "layouts/pages/Attendance/student/leave_apply";
 import EmployeeCertificate from "layouts/pages/employee_details/employee_certificate";
 import ManagePrincipal from "layouts/pages/employee_details/manage_principal";
 // Define your variables
@@ -389,6 +390,12 @@ const routes = [
         key: "student_attendance",
         route: "attendance/take_student_attendance",
         component: <StudentAttendance />,
+      },
+      {
+        name: "Apply Student Leave",
+        key: "student_leave_apply",
+        route: "attendance/student_leave_apply",
+        component: <StudentLeaveApply />,
       },
       {
         name: "Reports",
