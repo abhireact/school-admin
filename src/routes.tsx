@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import MYProfile from "layouts/pages/authentication/myprofile";
 import MyDashboard from "layouts/pages/dashboard";
-import TransferCertificate from "layouts/pages/TransferCertificate";
+
 import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create";
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
@@ -32,7 +32,7 @@ import CreateStudent from "layouts/pages/student_details/student/create";
 import ShowAdmission from "layouts/pages/admission/show";
 import EditAdmission from "layouts/pages/admission/update";
 import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
-import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
+
 import Second_CC from "layouts/pages/authentication/Certificate/second_cc";
 import CC_one from "layouts/pages/authentication/Certificate/CC_one";
 import Certificates from "layouts/pages/student_details/student/certificates";
