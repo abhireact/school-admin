@@ -23,6 +23,8 @@ import ManageSchedule from "./manage";
 import NewFeeSchedule from "../new_fee_schedule";
 import { useSelector } from "react-redux";
 import UnscheduledStudents from "../unscheduled_students";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 
 const token = Cookies.get("token");
 const Cacademic_year = Cookies.get("academic_year");
@@ -35,6 +37,7 @@ const validationSchema = Yup.object().shape({
 
 const CollectionList = () => {
   const { classes } = useSelector((state: any) => state);
+  const { t } = useTranslation();
 
   const [data, setData] = useState([]);
 
@@ -133,44 +136,6 @@ const CollectionList = () => {
       });
   };
 
-  // const handleDelete = (row: any) => {
-  //   console.log(row, "delete schedule");
-  //   axios
-  //     .delete(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule`, {
-  //       data: {
-  //         name: row.name,
-  //         particular_id: row.particular_id,
-  //         academic_year: row.academic_year,
-  //         class_name: row.class_name,
-  //         section_name: row.section_name,
-  //       },
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       message.success("Deleted Successfully");
-  //       axios
-  //         .post(`${process.env.REACT_APP_BASE_URL}/mg_fee_schedule/search`, values, {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         })
-  //         .then((response) => {
-  //           setData(response.data);
-  //           console.log("may 20", response.data);
-  //         })
-  //         .catch((error: any) => {
-  //           setData([]);
-  //           message.error(error.response.data.detail);
-  //         });
-  //     })
-  //     .catch((error: any) => {
-  //       message.error(error.response.data.detail);
-  //     });
-  // };
   const confirm = async (row: any) => {
     console.log(row, "confirm data");
     axios
@@ -248,7 +213,7 @@ const CollectionList = () => {
             <IconButton>
               <Popconfirm
                 title="Delete"
-                description="Are you sure to Delete it ?"
+                description="Are you sure you want to delete it? ?"
                 placement="topLeft"
                 onConfirm={() => confirm(row)} // Pass index to confirm function
                 onCancel={cancel}
@@ -312,7 +277,7 @@ const CollectionList = () => {
                     </Grid>
                   ) : (
                     // ... (rest of the code remains the same)
-                    <>
+                    <I18nextProvider i18n={createTrans}>
                       <Grid
                         sm={12}
                         container
@@ -322,7 +287,7 @@ const CollectionList = () => {
                       >
                         <Grid item sm={7}>
                           <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                            Fee Schedule
+                            {t("fee_schedule")}
                           </MDTypography>
                         </Grid>
                         <Grid container sm={5}>
@@ -334,7 +299,7 @@ const CollectionList = () => {
                                 handleCreatePage();
                               }}
                             >
-                              + New Fee Schedule
+                              +{t("create_fee_schedule")}
                             </MDButton>
                           </Grid>
                           <Grid item sm={6}>
@@ -379,7 +344,7 @@ const CollectionList = () => {
                                         fontWeight="bold"
                                         color="secondary"
                                       >
-                                        Academic Year
+                                        {t("academic_year")}
                                       </MDTypography>
                                     }
                                     {...params}
@@ -416,7 +381,7 @@ const CollectionList = () => {
                                         fontWeight="bold"
                                         color="secondary"
                                       >
-                                        Class
+                                        {t("class")}
                                       </MDTypography>
                                     }
                                     {...params}
@@ -455,7 +420,7 @@ const CollectionList = () => {
                                         fontWeight="bold"
                                         color="secondary"
                                       >
-                                        Section
+                                        {t("section")}
                                       </MDTypography>
                                     }
                                     {...params}
@@ -474,17 +439,12 @@ const CollectionList = () => {
                               mr={2}
                             >
                               <Grid item mt={2} mr={2}></Grid>
-                              {/* <Grid item mt={2}>
-                              <MDButton color="info" variant="contained" type="submit">
-                                Submit
-                              </MDButton>
-                            </Grid> */}
                             </Grid>
                             {data.length > 1 ? <DataTable table={dataTableData} canSearch /> : ""}
                           </Grid>
                         </MDBox>
                       </form>
-                    </>
+                    </I18nextProvider>
                   )}
                 </>
               )}

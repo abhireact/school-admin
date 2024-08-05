@@ -19,7 +19,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useReactToPrint } from "react-to-print";
 import { fetchStudent } from "layouts/pages/redux/dataSlice";
 import * as XLSX from "xlsx";
-import PdfGenerator from "layouts/pages/student_details/student_pdf/PdfGenerator";
+import TablePdfGenerator from "layouts/pages/student_details/student_table_pdf";
 const validationSchema = Yup.object().shape({
   class_name: Yup.string().required("Required *"),
   section_name: Yup.string().required("Required *"),
@@ -67,12 +67,20 @@ const columns: Column[] = [
   { key: "admission_number", label: "Admission Number" },
   { key: "admission_date", label: "Date of Admission" },
   { key: "date_of_birth", label: "Date of Birth" },
+  { key: "blood_group", label: "Blood Group" },
   { key: "religion", label: "Religion" },
+  { key: "aadhar_number", label: "Aadhar Number" },
+  { key: "caste", label: "Caste" },
+  { key: "caste_category", label: "Caste Category" },
   { key: "phone_number", label: "Mobile Number" },
   { key: "father_name", label: "Father's Name" },
   { key: "mother_name", label: "Mother's Name" },
-  { key: "address_line1", label: "Address" },
-  { key: "caste_category", label: "Caste Category" },
+  { key: "address_line1", label: "Address Line 1" },
+  { key: "address_line2", label: "Address Line 2" },
+  { key: "city", label: "City" },
+  { key: "state", label: "State" },
+  { key: "country", label: "Country" },
+  { key: "is_archive", label: " Archive" },
 ];
 function filterData(data: any, columns: any) {
   return data.map((student: any) => {
@@ -85,9 +93,13 @@ function filterData(data: any, columns: any) {
     return filteredStudent;
   });
 }
-function sortData(data: any, sortColumns: any) {
+function sortData(data: any, sortOrder: { [key: string]: number }) {
+  const sortEntries = Object.entries(sortOrder)
+    .filter(([, value]) => value !== 0)
+    .sort(([, a], [, b]) => a - b);
+
   return data.sort((a: any, b: any) => {
-    for (let column of sortColumns) {
+    for (let [column, _] of sortEntries) {
       if (a[column] < b[column]) return -1;
       if (a[column] > b[column]) return 1;
     }
@@ -145,7 +157,7 @@ export default function StudentReport() {
           : response.data.filter((student: any) => student.is_archive === false);
         let filteredColumnsData = filterData(archive_or_unarchive, selectedColumns);
         console.log(filteredColumnsData, "filtered columnsData");
-        let sortedData = sortData(filteredColumnsData, sortColumns);
+        let sortedData = sortData(filteredColumnsData, sortOrder);
         console.log(sortedData, "sorted columnsData");
 
         setData(sortedData);
@@ -159,15 +171,7 @@ export default function StudentReport() {
 
   const [selectedColumns, setSelectedColumns] = useState([]);
 
-  // let MaxSelectedColumns = 6;
   const handleColumnChange = (key: keyof StudentData) => {
-    // if (
-    //   selectedColumns.length + values.no_of_empty_columns >= MaxSelectedColumns &&
-    //   !selectedColumns.includes(key)
-    // ) {
-    //   message.error(`You can select up to ${MaxSelectedColumns} columns.`);
-    //   return;
-    // }
     setSelectedColumns((prevSelectedColumns) => {
       if (prevSelectedColumns.includes(key)) {
         return prevSelectedColumns.filter((col) => col !== key);
@@ -178,18 +182,54 @@ export default function StudentReport() {
 
     console.log(selectedColumns, "selected columns");
   };
+  const handleSelectAll = () => {
+    setSelectedColumns(columns.map((col: any) => col.key));
+  };
+  const handleSelectNone = () => {
+    setSelectedColumns([]);
+  };
 
-  const [sortColumns, setSortColumns] = useState([]);
+  //const handleSortChange = (key: keyof StudentData) => {
+  //   setSortColumns((prevSortColumns) => {
+  //     if (prevSortColumns.includes(key)) {
+  //       return prevSortColumns.filter((col) => col !== key);
+  //     } else {
+  //       return [...prevSortColumns, key];
+  //     }
+  //   });
+  //   console.log(sortColumns, "sort columns");
+  // };
+  let MAX_SORT_ORDER = 19; // total 21 columns in which 2 is class and section columns
+  const [sortOrder, setSortOrder] = useState<{ [key: string]: number }>({});
+  const handleSortChange = (key: keyof StudentData, value: string) => {
+    const numValue = parseInt(value, 10);
 
-  const handleSortChange = (key: keyof StudentData) => {
-    setSortColumns((prevSortColumns) => {
-      if (prevSortColumns.includes(key)) {
-        return prevSortColumns.filter((col) => col !== key);
-      } else {
-        return [...prevSortColumns, key];
+    setSortOrder((prevSortOrder) => {
+      // If the input is empty or 0, remove the key from sortOrder
+      if (!value || numValue === 0) {
+        const { [key]: _, ...rest } = prevSortOrder;
+        return rest;
       }
+
+      // If the input is not a number or exceeds MAX_SORT_ORDER, don't update
+      if (isNaN(numValue) || numValue > MAX_SORT_ORDER) {
+        return prevSortOrder;
+      }
+
+      // Check if the new value already exists
+      const existingKey = Object.entries(prevSortOrder).find(([, v]) => v === numValue);
+
+      // If the value exists and it's not for the current key, don't update
+      if (existingKey && existingKey[0] !== key) {
+        return prevSortOrder;
+      }
+
+      // Update the sort order
+      return {
+        ...prevSortOrder,
+        [key]: numValue,
+      };
     });
-    console.log(sortColumns, "sort columns");
   };
   const tableRef = useRef();
   const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
@@ -345,10 +385,11 @@ export default function StudentReport() {
                 />
                 &nbsp;
                 <MDTypography variant="button" fontWeight="bold" color="secondary">
-                  Archive Student
+                  <b> Archive Student </b>
+                  is applicable
                 </MDTypography>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={9}>
                 {" "}
                 <div style={{ maxHeight: "200px", overflowY: "auto", position: "relative" }}>
                   <table
@@ -375,7 +416,7 @@ export default function StudentReport() {
                               textOverflow: "ellipsis",
                             }}
                           >
-                            COLUMN NAME
+                            SELECT COLUMN
                           </MDTypography>
                         </td>
                         <td
@@ -395,8 +436,26 @@ export default function StudentReport() {
                               textOverflow: "ellipsis",
                             }}
                           >
-                            SELECT COLUMN
+                            SELECT
                           </MDTypography>
+                          &nbsp;
+                          <MDButton
+                            color="info"
+                            size="small"
+                            variant="outlined"
+                            onClick={() => handleSelectAll()}
+                          >
+                            All
+                          </MDButton>
+                          &nbsp; &nbsp;
+                          <MDButton
+                            color="info"
+                            size="small"
+                            variant="outlined"
+                            onClick={() => handleSelectNone()}
+                          >
+                            None
+                          </MDButton>
                         </td>
                         <td
                           style={{
@@ -415,7 +474,7 @@ export default function StudentReport() {
                               textOverflow: "ellipsis",
                             }}
                           >
-                            SORT BY
+                            SORT ORDER
                           </MDTypography>
                         </td>
                       </tr>
@@ -465,13 +524,18 @@ export default function StudentReport() {
                               border: "1px solid #f0f2f5",
                             }}
                           >
-                            {" "}
                             {col.key !== "section" && col.key !== "class_name" && (
-                              <input
-                                type="checkbox"
-                                checked={sortColumns.includes(col.key)}
-                                onChange={() => handleSortChange(col.key)}
+                              <MDInput
+                                type="number"
+                                sx={{ width: "0%" }}
+                                //onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
+                                value={
+                                  selectedColumns.includes(col.key) ? sortOrder[col.key] || "" : ""
+                                }
+                                onChange={(e: any) => handleSortChange(col.key, e.target.value)}
                                 disabled={!selectedColumns.includes(col.key)}
+                                inputProps={{ min: 0, max: MAX_SORT_ORDER }}
+                                style={{ width: "50px" }}
                               />
                             )}
                           </td>
@@ -562,15 +626,17 @@ export default function StudentReport() {
             </Grid>
           </MDBox>
         </Card>
-        <div ref={tableRef}>
-          <PdfGenerator
-            emptycolumns={values.no_of_empty_columns}
-            data={data}
-            hiddenText={hiddenText}
-            isPdfMode={true}
-            additionalInfo={undefined}
-          />
-        </div>
+        {
+          <div ref={tableRef}>
+            <TablePdfGenerator
+              emptycolumns={values.no_of_empty_columns}
+              data={data}
+              hiddenText={hiddenText}
+              isPdfMode={true}
+              additionalInfo={undefined}
+            />
+          </div>
+        }
       </form>
     </DashboardLayout>
   );

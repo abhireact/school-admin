@@ -30,7 +30,7 @@ export default function StudentSectionChange() {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
   const initialValues = {
-    academic_year: "",
+    academic_year: Cookies.get("academic_year"),
     class_name: "",
     from_section_name: "",
     to_section_name: "",
@@ -67,6 +67,7 @@ export default function StudentSectionChange() {
           .then(() => {
             action.resetForm();
             setData([]);
+            dispatch(fetchStudent() as any);
             message.success("Student Section Changed Successfully");
           })
           .catch((error: any) => {
@@ -107,7 +108,7 @@ export default function StudentSectionChange() {
       })
       .catch((error: any) => {
         setData([]);
-        dispatch(fetchStudent() as any);
+
         console.log(error, "error");
         message.error(error.response.data.detail);
       });
@@ -149,6 +150,7 @@ export default function StudentSectionChange() {
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   disableClearable
+                  disabled
                   value={values.academic_year}
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "academic_year", value } });
@@ -163,6 +165,7 @@ export default function StudentSectionChange() {
                       required
                       name="academic_year"
                       //onChange={handleChange}
+
                       value={values.academic_year}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
@@ -302,6 +305,7 @@ export default function StudentSectionChange() {
                   onChange={(_event, value) => {
                     handleChange({ target: { name: "select_fees", value } });
                   }}
+                  value={values.select_fees}
                   options={[
                     "Section change with fee deletion",
                     "Section change without fee deletion",

@@ -3,6 +3,7 @@ export const admissionformschema = Yup.object({
   candidate_first_name: Yup.string().required("Please enter First Name"),
   candidate_dob: Yup.string().required("Required"),
   class_name: Yup.string().required("Please enter Class Name"),
+  nationality: Yup.string().required("required*"),
   father_first_name: Yup.string().required("Please Enter First Name"),
   father_qualification: Yup.string().required("Please Enter the Qualification"),
   father_occupation: Yup.string().required("Please Enter the Occuption"),

@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import MYProfile from "layouts/pages/authentication/myprofile";
 import MyDashboard from "layouts/pages/dashboard";
+import TransferCertificate from "layouts/pages/TransferCertificate";
 import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create";
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
@@ -17,7 +18,6 @@ import CreateConcession from "layouts/pages/fee/manage_fee/fee_concession/create
 import CreateTemplate from "layouts/pages/notifications/templates/create_message_template";
 import ClassTiming from "layouts/pages/employee_details/class_timing";
 import ClassTimingCreate from "layouts/pages/employee_details/class_timing/create";
-
 import Fee from "layouts/pages/admission/fee_admission";
 import AdmissionForm from "layouts/pages/admission/new_admission";
 import AddDate from "layouts/pages/admission/form_setting/add_date";
@@ -29,6 +29,7 @@ import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configura
 import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
+<<<<<<< HEAD
 import StudentAdmission from "layouts/pages/admission";
 import StudentAttendanceReport from "layouts/pages/Attendance/reports/student_attendance_report";
 import StudentAttendanceDateWiseReport from "layouts/pages/Attendance/reports/student_date_wise";
@@ -37,6 +38,13 @@ import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_atten
 import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import TimeTable from "layouts/pages/Attendance/time_table";
 import StudentLeaveApply from "layouts/pages/Attendance/student/leave_apply";
+=======
+import CreateStudent from "layouts/pages/student_details/student/create";
+import ShowAdmission from "layouts/pages/admission/show";
+import EditAdmission from "layouts/pages/admission/update";
+import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
+import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
+>>>>>>> main
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -171,6 +179,26 @@ let routes = [
       },
     ],
   },
+  {
+    type: "collapse",
+    name: "Transfer Certificate",
+    key: "brooklyn-alice",
+    icon: <Icon>chrome_reader_mode</Icon>,
+    collapse: [
+      {
+        name: "Student  Transfer Certificate",
+        key: "tc_create",
+        route: "/pages/tc_create",
+        component: <TransferCertificate />,
+      },
+      {
+        name: "Transfer Certificate Settings",
+        key: "tc_settings",
+        route: "/pages/tc_settings",
+        component: <TransferCertificateTemplate />,
+      },
+    ],
+  },
 
   {
     type: "collapse",
@@ -209,12 +237,13 @@ let routes = [
       },
     ],
   },
-  // {
-  //   name: "Student Info",
-  //   key: "studentdetails",
-  //   route: "/pages/school/studentdetails",
-  //   component: <StudentDetails />,
-  // },
+  {
+    name: "create student",
+    key: "create_student",
+    route: "student/create_student",
+    component: <CreateStudent />,
+  },
+
   {
     name: "Student Attendance",
     key: "student_attendance",
@@ -311,6 +340,24 @@ let routes = [
     key: "manage_sub_template",
     route: "/pages/admission/formsetting/manage_sub_template",
     component: <ManageSubTemplate />,
+  },
+  {
+    name: "Show Admission",
+    key: "show_admission",
+    route: "/pages/admission/show_admission",
+    component: <ShowAdmission />,
+  },
+  {
+    name: "Edit Admission",
+    key: "edit_admission",
+    route: "/pages/admission/edit_admission",
+    component: <EditAdmission />,
+  },
+  {
+    name: "Manage Pay Fee",
+    key: "manage_pay_fee",
+    route: "/pages/admission/manage_admission/pay_fee",
+    component: <ManagePayFee />,
   },
 ];
 

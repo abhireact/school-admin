@@ -20,7 +20,24 @@ const Update = (props: any) => {
   const handleClose = () => {
     setOpenupdate(false);
   };
-  //end
+  const [empCategory, setEmpCategory] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employee_category`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setEmpCategory(response.data);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
     useFormik({
@@ -28,7 +45,7 @@ const Update = (props: any) => {
         old_position_name: editData.position_name,
         position_name: editData.position_name,
         category_name: editData.category_name || "",
-        status: editData.satus ? "Active" : "InActive",
+        status: editData.status ? "Active" : "InActive",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -43,13 +60,12 @@ const Update = (props: any) => {
           .then(() => {
             fetchData();
             handleClose();
-            message.success(" Updated Successfully!");
-          })
-          .catch(() => {
-            message.error("Error on  Updating  !");
-          });
 
-        action.resetForm();
+            message.success("Updated Successfully!");
+          })
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
+          });
       },
     });
   return (
@@ -58,7 +74,7 @@ const Update = (props: any) => {
         <Grid container>
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              CATEGORY NAME
+              CATEGORY NAME *
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={7} mt={2}>
@@ -71,7 +87,7 @@ const Update = (props: any) => {
                   target: { name: "category_name", value },
                 });
               }}
-              options={["Teaching Staff", "Non-Teaching Staff"]}
+              options={empCategory?.map((info: any) => info.category_name)}
               renderInput={(params: any) => (
                 <MDInput
                   required
@@ -93,7 +109,7 @@ const Update = (props: any) => {
 
           <Grid item xs={12} sm={4} mt={2}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              POSITION NAME
+              POSITION NAME *
             </MDTypography>
           </Grid>
 
@@ -150,14 +166,7 @@ const Update = (props: any) => {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            mt={4}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item>
               <MDButton
                 color="dark"

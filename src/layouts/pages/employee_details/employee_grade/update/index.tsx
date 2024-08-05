@@ -27,7 +27,7 @@ const Update = (props: any) => {
       initialValues: {
         old_grade_name: editData.grade_name,
         grade_name: editData.grade_name,
-        priority: editData.priority,
+
         status: editData.status ? "Active" : "InActive",
       },
       // validationSchema: validationSchema,
@@ -43,13 +43,11 @@ const Update = (props: any) => {
           .then(() => {
             fetchData();
             handleClose();
-            message.success(" Updated Successfully!");
+            message.success("Updated Successfully!");
           })
           .catch((error: any) => {
             message.error(error.response.data.detail);
           });
-
-        action.resetForm();
       },
     });
   return (
@@ -58,7 +56,7 @@ const Update = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              GRADE NAME
+              GRADE NAME *
             </MDTypography>
           </Grid>
 
@@ -73,30 +71,11 @@ const Update = (props: any) => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.grade_name && Boolean(errors.grade_name)}
-              success={values.grade_name.length && !errors.grade_name}
+              success={values.grade_name && !errors.grade_name}
               helperText={touched.grade_name && errors.grade_name}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <MDTypography variant="button" fontWeight="bold" color="secondary">
-              PRIORITY
-            </MDTypography>
-          </Grid>
 
-          <Grid item xs={12} sm={7}>
-            <MDInput
-              sx={{ width: "65%" }}
-              variant="standard"
-              name="priority"
-              placeholder="Enter Priority"
-              value={values.priority}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.priority && Boolean(errors.priority)}
-              success={values.priority.length && !errors.priority}
-              helperText={touched.priority && errors.priority}
-            />
-          </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
               STATUS
@@ -134,14 +113,7 @@ const Update = (props: any) => {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            mt={4}
-            sx={{ display: "flex", justifyContent: "space-between" }}
-          >
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item>
               <MDButton
                 color="dark"

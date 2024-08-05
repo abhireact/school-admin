@@ -28,7 +28,7 @@ const Update = (props: any) => {
         old_dept_name: editData.dept_name,
         dept_name: editData.dept_name,
         dept_code: editData.dept_code,
-        status: editData.satus ? "Active" : "InActive",
+        status: editData.status ? "Active" : "InActive",
       },
       // validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -43,7 +43,7 @@ const Update = (props: any) => {
           .then(() => {
             fetchData();
             handleClose();
-            message.success(" Updated Successfully!");
+            message.success("Updated Successfully!");
           })
           .catch((error: any) => {
             message.error(error.response.data.detail);
@@ -57,7 +57,7 @@ const Update = (props: any) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              DEPARTMENT NAME
+              DEPARTMENT NAME *
             </MDTypography>
           </Grid>
 
@@ -78,7 +78,7 @@ const Update = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
-              DEPARTMENT CODE
+              DEPARTMENT CODE *
             </MDTypography>
           </Grid>
 
@@ -135,14 +135,7 @@ const Update = (props: any) => {
             </FormControl>
           </Grid>
 
-          <Grid
-            item
-            container
-            xs={12}
-            sm={12}
-            mt={4}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item>
               <MDButton
                 color="dark"

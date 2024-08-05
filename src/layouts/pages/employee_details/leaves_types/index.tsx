@@ -71,7 +71,7 @@ const LeaveType = () => {
 
   useEffect(() => {
     axios
-      .get("http://10.0.20.200:8000/mg_leaves", {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_leaves`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -88,7 +88,7 @@ const LeaveType = () => {
   }, []);
   const handleDelete = async (name: any) => {
     try {
-      const response = await axios.delete("http://10.0.20.200:8000/mg_leaves", {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/mg_leaves`, {
         data: { leave_type: name.leave_type, leave_code: name.leave_code },
         headers: {
           "Content-Type": "application/json",

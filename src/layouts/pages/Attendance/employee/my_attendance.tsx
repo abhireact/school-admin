@@ -32,7 +32,7 @@ const MYAttandance = () => {
 
   const handleFormSubmit = async () => {
     try {
-      const response = await axios.post(`http://10.0.20.200:8000/attendance/me`, values, {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/attendance/me`, values, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

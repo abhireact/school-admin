@@ -13,7 +13,7 @@ import Icon from "@mui/material/Icon";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import { Spin, message } from "antd";
 import { useReactToPrint } from "react-to-print";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Modal } from "antd";
@@ -98,6 +98,7 @@ export default function FeeReceiptReport() {
   const [selectedTab, setSelectedTab] = useState(0);
   const { classes, student } = useSelector((state: any) => state);
   const [pdfData, setPdfData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [allReciptData, setAllRecieptData] = useState<AllReceiptData>();
   const [feereceiptReportData, setfeeReceiptReportData] = useState<FeeReceiptInterface>({
     columns: [],
@@ -190,74 +191,81 @@ export default function FeeReceiptReport() {
           section_name: values.section_name,
           student_user_name: values.student.substring(0, values.student.indexOf("-")),
         };
-        axios
-          .post("http://10.0.20.200:8000/fee_receipts", postvalues, {
+        setIsLoading(true);
+
+        try {
+          const response = await axios.post("http://10.0.20.200:8000/fee_receipts", postvalues, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          })
-          .then((response) => {
-            console.log(response.data, "responcedata");
-            action.resetForm();
-            const feeReceiptData = {
-              columns: [
-                { Header: "RECEIPT NO", accessor: "receipt_no" },
-                { Header: "COLLECTION NAME", accessor: "collection_name" },
-                { Header: "DUE DATE", accessor: "due_date" },
-                { Header: "TOTAL AMOUNT", accessor: "total_amount" },
-                { Header: "SUBMIT DATE", accessor: "submit_date" },
-                { Header: "PAID AMOUNT", accessor: "paid_amount" },
-                { Header: "MOD OF PAYMENT", accessor: "mod_of_payment" },
-                { Header: "GENERATE PDF", accessor: "generate_pdf" },
-              ],
-              rows: response.data.map(
-                (
-                  data: {
-                    receipt_number: number;
-                    collection_name: string;
-                    due_date: string;
-                    total_amount: number;
-                    submit_date: string;
-                    paid_amount: number;
-                    mode_of_payment: string;
-                  },
-                  index: any
-                ) => ({
-                  receipt_no: data.receipt_number,
-                  collection_name: data.collection_name,
-                  due_date: data.due_date,
-                  total_amount: data.total_amount,
-                  submit_date: data.submit_date,
-                  paid_amount: data.paid_amount,
-                  mod_of_payment: data.mode_of_payment,
-                  generate_pdf: (
-                    <>
-                      <Tooltip title="Download reciept" placement="top">
-                        <IconButton
-                          onClick={() => {
-                            handlePrint(data.receipt_number);
-                          }}
-                        >
-                          <FileDownloadIcon fontSize="small" color="secondary" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete" placement="top">
-                        <IconButton onClick={() => showModal(data.receipt_number)}>
-                          <DeleteIcon fontSize="small" color="secondary" />
-                        </IconButton>
-                      </Tooltip>
-                    </>
-                  ),
-                })
-              ),
-            };
-            setfeeReceiptReportData(feeReceiptData);
-            console.log("submited", values);
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
           });
+
+          console.log(response.data, "responsedata");
+          action.resetForm();
+
+          const feeReceiptData = {
+            columns: [
+              { Header: "RECEIPT NO", accessor: "receipt_no" },
+              { Header: "COLLECTION NAME", accessor: "collection_name" },
+              { Header: "DUE DATE", accessor: "due_date" },
+              { Header: "TOTAL AMOUNT", accessor: "total_amount" },
+              { Header: "SUBMIT DATE", accessor: "submit_date" },
+              { Header: "PAID AMOUNT", accessor: "paid_amount" },
+              { Header: "MOD OF PAYMENT", accessor: "mod_of_payment" },
+              { Header: "GENERATE PDF", accessor: "generate_pdf" },
+            ],
+            rows: response.data.map(
+              (
+                data: {
+                  receipt_number: number;
+                  collection_name: string;
+                  due_date: string;
+                  total_amount: number;
+                  submit_date: string;
+                  paid_amount: number;
+                  mode_of_payment: string;
+                },
+                index: any
+              ) => ({
+                receipt_no: data.receipt_number,
+                collection_name: data.collection_name,
+                due_date: data.due_date,
+                total_amount: data.total_amount,
+                submit_date: data.submit_date,
+                paid_amount: data.paid_amount,
+                mod_of_payment: data.mode_of_payment,
+                generate_pdf: (
+                  <>
+                    <Tooltip title="Download receipt" placement="top">
+                      <IconButton
+                        onClick={() => {
+                          handlePrint(data.receipt_number);
+                        }}
+                      >
+                        <FileDownloadIcon fontSize="small" color="secondary" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete" placement="top">
+                      <IconButton onClick={() => showModal(data.receipt_number)}>
+                        <DeleteIcon fontSize="small" color="secondary" />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                ),
+              })
+            ),
+          };
+
+          setfeeReceiptReportData(feeReceiptData);
+          console.log("submitted", values);
+          message.success("Fetched Data Successfully!");
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          message.error("Failed to fetch data. Please try again.");
+        } finally {
+          setIsLoading(false);
+        }
       },
     });
   console.log(feereceiptReportData, "concession DAtaa");
@@ -272,7 +280,7 @@ export default function FeeReceiptReport() {
     console.log(receiptNo, values.reason, "ok");
 
     axios
-      .delete(`http://10.0.20.200:8000/fee_receipts/receipt_no`, {
+      .delete(`${process.env.REACT_APP_BASE_URL}/fee_receipts/receipt_no`, {
         data: {
           reason: values.reason,
           receipt_no: receiptNo,
@@ -402,166 +410,170 @@ export default function FeeReceiptReport() {
           </MDBox>
         </>
       ) : null}
-      <form onSubmit={handleSubmit}>
-        <Grid container>
-          <Grid item xs={12} sm={12}>
-            <Card>
-              <MDBox p={3}>
-                <Grid container>
-                  <Grid item xs={12} sm={6}>
-                    <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                      Fee Reciept Report
-                    </MDTypography>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={3} pt={2}>
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      disabled
-                      defaultValue={Cacademic_year}
-                      // value={values.academic_year || Cacademic_year}
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "academic_year", value } });
-                      }}
-                      options={
-                        classes
-                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          required
-                          name="academic_year"
-                          onChange={handleChange}
-                          value={values.academic_year || Cacademic_year}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Academic Year
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "class_name", value } });
-                      }}
-                      options={
-                        values.academic_year !== ""
-                          ? classes
-                              .filter((item: any) => item.academic_year === values.academic_year)
-                              .map((item: any) => item.class_name)
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          required
-                          name="class_name"
-                          onChange={handleChange}
-                          value={values.class_name}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Class
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "section_name", value } });
-                      }}
-                      options={
-                        values.class_name !== ""
-                          ? classes
-                              .filter(
-                                (item: any) =>
-                                  item.academic_year === values.academic_year &&
-                                  item.class_name === values.class_name
-                              )[0]
-                              .section_data.map((item: any) => item.section_name)
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          required
-                          name="section_name"
-                          onChange={handleChange}
-                          value={values.section_name}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Section
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "student", value } });
-                      }}
-                      options={
-                        values.section_name !== ""
-                          ? studentdata.map((item: any) => `${item.key}-${item.title}`)
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          required
-                          name="student"
-                          onChange={handleChange}
-                          value={values.student}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Student
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                        />
-                      )}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
-                  <Grid item ml={2}>
-                    <MDButton color="info" variant="contained" type="submit">
-                      Show Data
-                    </MDButton>
-                  </Grid>
-                </Grid>
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={12} pt={2}>
-            {feereceiptReportData.rows.length > 0 ? (
+      <Spin spinning={isLoading}>
+        <form onSubmit={handleSubmit}>
+          <Grid container>
+            <Grid item xs={12} sm={12}>
               <Card>
                 <MDBox p={3}>
-                  <DataTable
-                    table={feereceiptReportData}
-                    isSorted={false}
-                    entriesPerPage={false}
-                    showTotalEntries={false}
-                    canSearch
-                  />
+                  <Grid container>
+                    <Grid item xs={12} sm={6}>
+                      <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                        Fee Reciept Report
+                      </MDTypography>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={3} pt={2}>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        disabled
+                        defaultValue={Cacademic_year}
+                        // value={values.academic_year || Cacademic_year}
+                        onChange={(_event, value) => {
+                          handleChange({ target: { name: "academic_year", value } });
+                        }}
+                        options={
+                          classes
+                            ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                            : []
+                        }
+                        renderInput={(params) => (
+                          <MDInput
+                            required
+                            name="academic_year"
+                            onChange={handleChange}
+                            value={values.academic_year || Cacademic_year}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Academic Year
+                              </MDTypography>
+                            }
+                            {...params}
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        onChange={(_event, value) => {
+                          handleChange({ target: { name: "class_name", value } });
+                        }}
+                        options={
+                          values.academic_year !== ""
+                            ? classes
+                                .filter((item: any) => item.academic_year === values.academic_year)
+                                .map((item: any) => item.class_name)
+                            : []
+                        }
+                        renderInput={(params) => (
+                          <MDInput
+                            required
+                            name="class_name"
+                            onChange={handleChange}
+                            value={values.class_name}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Class
+                              </MDTypography>
+                            }
+                            {...params}
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        onChange={(_event, value) => {
+                          handleChange({ target: { name: "section_name", value } });
+                        }}
+                        options={
+                          values.class_name !== ""
+                            ? classes
+                                .filter(
+                                  (item: any) =>
+                                    item.academic_year === values.academic_year &&
+                                    item.class_name === values.class_name
+                                )[0]
+                                .section_data.map((item: any) => item.section_name)
+                            : []
+                        }
+                        renderInput={(params) => (
+                          <MDInput
+                            required
+                            name="section_name"
+                            onChange={handleChange}
+                            value={values.section_name}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Section
+                              </MDTypography>
+                            }
+                            {...params}
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        onChange={(_event, value) => {
+                          handleChange({ target: { name: "student", value } });
+                        }}
+                        options={
+                          values.section_name !== ""
+                            ? studentdata.map((item: any) => `${item.key}-${item.title}`)
+                            : []
+                        }
+                        renderInput={(params) => (
+                          <MDInput
+                            required
+                            name="student"
+                            onChange={handleChange}
+                            value={values.student}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                Student
+                              </MDTypography>
+                            }
+                            {...params}
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
+                    <Grid item ml={2}>
+                      <MDButton color="info" variant="contained" type="submit">
+                        Show Data
+                      </MDButton>
+                    </Grid>
+                  </Grid>
                 </MDBox>
               </Card>
-            ) : null}
+            </Grid>
+            <Grid item xs={12} sm={12} pt={2}>
+              {feereceiptReportData.rows.length > 0 ? (
+                <Card>
+                  <MDBox p={3}>
+                    <DataTable
+                      table={feereceiptReportData}
+                      isSorted={false}
+                      entriesPerPage={false}
+                      showTotalEntries={false}
+                      canSearch
+                      importbtn
+                      selectColumnBtn
+                    />
+                  </MDBox>
+                </Card>
+              ) : null}
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Spin>
     </DashboardLayout>
   );
 }

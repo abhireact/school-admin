@@ -25,6 +25,8 @@ import Cookies from "js-cookie";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 import type { TreeDataNode, TreeProps } from "antd";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 
 const token = Cookies.get("token");
 interface SectionData {
@@ -47,6 +49,8 @@ interface TreeNode {
 const Cacademic_year = Cookies.get("academic_year");
 console.log(Cacademic_year, "Cacademic_year");
 export default function CreateConcession() {
+  const { t } = useTranslation();
+
   const [feecategorydata, setFeecategorydata] = useState([]);
   const [result, setResult] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -239,527 +243,530 @@ export default function CreateConcession() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <MDBox p={3}>
-          <form onSubmit={handleSubmit}>
-            <Grid container>
-              <Grid item xs={12} sm={6}>
-                <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                  Create Fee Concession
-                </MDTypography>
-              </Grid>
-            </Grid>
-            <MDBox>
-              <Grid container spacing={3} pt={2}>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    value={values.concession_type}
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "concession_type", value } });
-                    }}
-                    options={["student", "section", "student_category"]}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="concession_type"
-                        onChange={handleChange}
-                        value={values.concession_type}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Concession Type
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
+      <I18nextProvider i18n={createTrans}>
+        <Card>
+          <MDBox p={3}>
+            <form onSubmit={handleSubmit}>
+              <Grid container>
+                <Grid item xs={12} sm={6}>
+                  <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  {t("create_fee_concession")}                  </MDTypography>
                 </Grid>
               </Grid>
-            </MDBox>
-            {values.concession_type == "student" ||
-            values.concession_type == "student" ||
-            values.concession_type == "student" ? (
-              <Grid container spacing={3} pt={2}>
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    required
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Concession Name
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    variant="standard"
-                    name="concession_name"
-                    value={values.concession_name}
-                    onChange={handleChange}
-                  />
+              <MDBox>
+                <Grid container spacing={3} pt={2}>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      value={values.concession_type}
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "concession_type", value } });
+                      }}
+                      options={["student", "section", "student_category"]}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="concession_type"
+                          onChange={handleChange}
+                          value={values.concession_type}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Concession Type
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "academic_year", value } });
-                    }}
-                    defaultValue={Cacademic_year}
-                    options={
-                      classes
-                        ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                        : []
-                    }
-                    value={values.academic_year}
-                    disabled
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        defaultValue="Cacademic_year"
-                        name="academic_year"
-                        onChange={handleChange}
-                        disabled
-                        value={values.academic_year}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Academic Year
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
+              </MDBox>
+              {values.concession_type == "student" ||
+              values.concession_type == "student" ||
+              values.concession_type == "student" ? (
+                <Grid container spacing={3} pt={2}>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      required
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Concession Name
+                        </MDTypography>
+                      }
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name="concession_name"
+                      value={values.concession_name}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "academic_year", value } });
+                      }}
+                      defaultValue={Cacademic_year}
+                      options={
+                        classes
+                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                          : []
+                      }
+                      value={values.academic_year}
+                      disabled
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          defaultValue="Cacademic_year"
+                          name="academic_year"
+                          onChange={handleChange}
+                          disabled
+                          value={values.academic_year}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Academic Year
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "class_name", value } });
+                      }}
+                      options={
+                        values.academic_year !== ""
+                          ? classes
+                              .filter((item: any) => item.academic_year === values.academic_year)
+                              .map((item: any) => item.class_name)
+                          : []
+                      }
+                      value={values.class_name}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="class"
+                          onChange={handleChange}
+                          value={values.class_name}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Class
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "section_name", value } });
+                      }}
+                      options={
+                        values.class_name !== ""
+                          ? classes
+                              .filter(
+                                (item: any) =>
+                                  item.academic_year === values.academic_year &&
+                                  item.class_name === values.class_name
+                              )[0]
+                              .section_data.map((item: any) => item.section_name)
+                          : []
+                      }
+                      value={values.section_name}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="section_name"
+                          onChange={handleChange}
+                          value={values.section_name}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Section
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "account", value } });
+                      }}
+                      value={values.account}
+                      options={account ? account.map((item: any) => item.account_name) : []}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="account"
+                          onChange={handleChange}
+                          value={values.account}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Account
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "fee_category", value } });
+                      }}
+                      value={values.fee_category}
+                      options={feecategorydata}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="fee_category"
+                          onChange={handleChange}
+                          value={values.fee_category}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Fee Category
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      // type="number"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Concession Amount
+                        </MDTypography>
+                      }
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name="concession_amount"
+                      value={values.concession_amount}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} style={{ maxHeight: "200px", overflowY: "auto" }}>
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Select Students
+                    </MDTypography>
+                    <Tree
+                      checkable
+                      onExpand={onExpand}
+                      expandedKeys={expandedKeys}
+                      autoExpandParent={autoExpandParent}
+                      onCheck={onCheck}
+                      checkedKeys={checkedKeys}
+                      onSelect={onSelect}
+                      selectedKeys={selectedKeys}
+                      treeData={studentdata}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "class_name", value } });
-                    }}
-                    options={
-                      values.academic_year !== ""
-                        ? classes
-                            .filter((item: any) => item.academic_year === values.academic_year)
-                            .map((item: any) => item.class_name)
-                        : []
-                    }
-                    value={values.class_name}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="class"
-                        onChange={handleChange}
-                        value={values.class_name}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Class
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
+              ) : values.concession_type == "section" ? (
+                <Grid container spacing={3} pt={2}>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      required
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Concession Name
+                        </MDTypography>
+                      }
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name="concession_name"
+                      value={values.concession_name}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "academic_year", value } });
+                      }}
+                      value={values.academic_year}
+                      options={
+                        classes
+                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                          : []
+                      }
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="academic_year"
+                          onChange={handleChange}
+                          value={values.academic_year}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Academic Year
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "account", value } });
+                      }}
+                      value={values.account}
+                      options={account ? account.map((item: any) => item.account_name) : []}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="account"
+                          onChange={handleChange}
+                          value={values.account}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Account
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "fee_category", value } });
+                      }}
+                      value={values.fee_category}
+                      options={feecategorydata}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="fee_category"
+                          onChange={handleChange}
+                          value={values.fee_category}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Fee Category
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      type="number"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Concession Amount
+                        </MDTypography>
+                      }
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name="concession_amount"
+                      value={values.concession_amount}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "200px", overflowY: "auto" }}>
+                    <Tree
+                      checkable
+                      onExpand={onExpand}
+                      expandedKeys={expandedKeys}
+                      autoExpandParent={autoExpandParent}
+                      onCheck={onCheck}
+                      checkedKeys={checkedKeys}
+                      onSelect={onSelect}
+                      selectedKeys={selectedKeys}
+                      treeData={result}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "section_name", value } });
-                    }}
-                    options={
-                      values.class_name !== ""
-                        ? classes
-                            .filter(
-                              (item: any) =>
-                                item.academic_year === values.academic_year &&
-                                item.class_name === values.class_name
-                            )[0]
-                            .section_data.map((item: any) => item.section_name)
-                        : []
-                    }
-                    value={values.section_name}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="section_name"
-                        onChange={handleChange}
-                        value={values.section_name}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Section
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
+              ) : values.concession_type == "student_category" ? (
+                <Grid container spacing={3} pt={2}>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      required
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Concession Name
+                        </MDTypography>
+                      }
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name="concession_name"
+                      value={values.concession_name}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "student_category", value } });
+                      }}
+                      options={
+                        studentcategory
+                          ? studentcategory.map((item: any) => item.category_name)
+                          : []
+                      }
+                      value={values.student_category}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="student_category"
+                          onChange={handleChange}
+                          value={values.student_category}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Student Category
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "academic_year", value } });
+                      }}
+                      options={
+                        classes
+                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                          : []
+                      }
+                      value={values.academic_year}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="academic_year"
+                          onChange={handleChange}
+                          value={values.academic_year}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Academic Year
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "account", value } });
+                      }}
+                      options={account ? account.map((item: any) => item.account_name) : []}
+                      value={values.account}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="account"
+                          onChange={handleChange}
+                          value={values.account}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Account
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Autocomplete
+                      onChange={(_event, value) => {
+                        handleChange({ target: { name: "fee_category", value } });
+                      }}
+                      value={values.fee_category}
+                      options={feecategorydata}
+                      renderInput={(params) => (
+                        <MDInput
+                          required
+                          name="fee_category"
+                          onChange={handleChange}
+                          value={values.fee_category}
+                          label={
+                            <MDTypography variant="button" fontWeight="bold" color="secondary">
+                              Fee Category
+                            </MDTypography>
+                          }
+                          {...params}
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      // type="number"
+                      label={
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Concession Amount
+                        </MDTypography>
+                      }
+                      sx={{ width: "100%" }}
+                      variant="standard"
+                      name="concession_amount"
+                      value={values.concession_amount}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "200px", overflowY: "auto" }}>
+                    <Tree
+                      checkable
+                      onExpand={onExpand}
+                      expandedKeys={expandedKeys}
+                      autoExpandParent={autoExpandParent}
+                      onCheck={onCheck}
+                      checkedKeys={checkedKeys}
+                      onSelect={onSelect}
+                      selectedKeys={selectedKeys}
+                      treeData={result}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "account", value } });
-                    }}
-                    value={values.account}
-                    options={account ? account.map((item: any) => item.account_name) : []}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="account"
-                        onChange={handleChange}
-                        value={values.account}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Account
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
+              ) : null}
+              <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
+                <Grid item>
+                  <Link href="fee_concession" variant="body2">
+                    <MDButton color="dark" variant="contained">
+                      Back
+                    </MDButton>
+                  </Link>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "fee_category", value } });
-                    }}
-                    value={values.fee_category}
-                    options={feecategorydata}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="fee_category"
-                        onChange={handleChange}
-                        value={values.fee_category}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Fee Category
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    // type="number"
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Concession Amount
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    variant="standard"
-                    name="concession_amount"
-                    value={values.concession_amount}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4} style={{ maxHeight: "200px", overflowY: "auto" }}>
-                  <MDTypography variant="button" fontWeight="bold" color="secondary">
-                    Select Students
-                  </MDTypography>
-                  <Tree
-                    checkable
-                    onExpand={onExpand}
-                    expandedKeys={expandedKeys}
-                    autoExpandParent={autoExpandParent}
-                    onCheck={onCheck}
-                    checkedKeys={checkedKeys}
-                    onSelect={onSelect}
-                    selectedKeys={selectedKeys}
-                    treeData={studentdata}
-                  />
-                </Grid>
-              </Grid>
-            ) : values.concession_type == "section" ? (
-              <Grid container spacing={3} pt={2}>
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    required
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Concession Name
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    variant="standard"
-                    name="concession_name"
-                    value={values.concession_name}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "academic_year", value } });
-                    }}
-                    value={values.academic_year}
-                    options={
-                      classes
-                        ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                        : []
-                    }
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="academic_year"
-                        onChange={handleChange}
-                        value={values.academic_year}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Academic Year
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "account", value } });
-                    }}
-                    value={values.account}
-                    options={account ? account.map((item: any) => item.account_name) : []}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="account"
-                        onChange={handleChange}
-                        value={values.account}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Account
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "fee_category", value } });
-                    }}
-                    value={values.fee_category}
-                    options={feecategorydata}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="fee_category"
-                        onChange={handleChange}
-                        value={values.fee_category}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Fee Category
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    type="number"
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Concession Amount
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    variant="standard"
-                    name="concession_amount"
-                    value={values.concession_amount}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "200px", overflowY: "auto" }}>
-                  <Tree
-                    checkable
-                    onExpand={onExpand}
-                    expandedKeys={expandedKeys}
-                    autoExpandParent={autoExpandParent}
-                    onCheck={onCheck}
-                    checkedKeys={checkedKeys}
-                    onSelect={onSelect}
-                    selectedKeys={selectedKeys}
-                    treeData={result}
-                  />
-                </Grid>
-              </Grid>
-            ) : values.concession_type == "student_category" ? (
-              <Grid container spacing={3} pt={2}>
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    required
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Concession Name
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    variant="standard"
-                    name="concession_name"
-                    value={values.concession_name}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "student_category", value } });
-                    }}
-                    options={
-                      studentcategory ? studentcategory.map((item: any) => item.category_name) : []
-                    }
-                    value={values.student_category}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="student_category"
-                        onChange={handleChange}
-                        value={values.student_category}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Student Category
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "academic_year", value } });
-                    }}
-                    options={
-                      classes
-                        ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                        : []
-                    }
-                    value={values.academic_year}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="academic_year"
-                        onChange={handleChange}
-                        value={values.academic_year}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Academic Year
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "account", value } });
-                    }}
-                    options={account ? account.map((item: any) => item.account_name) : []}
-                    value={values.account}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="account"
-                        onChange={handleChange}
-                        value={values.account}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Account
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    onChange={(_event, value) => {
-                      handleChange({ target: { name: "fee_category", value } });
-                    }}
-                    value={values.fee_category}
-                    options={feecategorydata}
-                    renderInput={(params) => (
-                      <MDInput
-                        required
-                        name="fee_category"
-                        onChange={handleChange}
-                        value={values.fee_category}
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Fee Category
-                          </MDTypography>
-                        }
-                        {...params}
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <MDInput
-                    // type="number"
-                    label={
-                      <MDTypography variant="button" fontWeight="bold" color="secondary">
-                        Concession Amount
-                      </MDTypography>
-                    }
-                    sx={{ width: "100%" }}
-                    variant="standard"
-                    name="concession_amount"
-                    value={values.concession_amount}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4} p={3} style={{ maxHeight: "200px", overflowY: "auto" }}>
-                  <Tree
-                    checkable
-                    onExpand={onExpand}
-                    expandedKeys={expandedKeys}
-                    autoExpandParent={autoExpandParent}
-                    onCheck={onCheck}
-                    checkedKeys={checkedKeys}
-                    onSelect={onSelect}
-                    selectedKeys={selectedKeys}
-                    treeData={result}
-                  />
-                </Grid>
-              </Grid>
-            ) : null}
-            <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
-              <Grid item>
-                <Link href="fee_concession" variant="body2">
-                  <MDButton color="dark" variant="contained">
-                    Back
+                <Grid item ml={2}>
+                  <MDButton color="info" variant="contained" type="submit">
+                    Save
                   </MDButton>
-                </Link>
+                </Grid>
               </Grid>
-              <Grid item ml={2}>
-                <MDButton color="info" variant="contained" type="submit">
-                  Save
-                </MDButton>
-              </Grid>
-            </Grid>
-          </form>
-        </MDBox>
-      </Card>
+            </form>
+          </MDBox>
+        </Card>
+      </I18nextProvider>
     </DashboardLayout>
   );
 }

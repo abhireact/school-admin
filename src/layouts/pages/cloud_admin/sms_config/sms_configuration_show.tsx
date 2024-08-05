@@ -30,7 +30,7 @@ export default function SmsConfiguration() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://10.0.20.200:8000/mg_sms_configuration/school_incharge`,
+        `${process.env.REACT_APP_BASE_URL}/mg_sms_configuration/school_incharge`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -110,7 +110,7 @@ export default function SmsConfiguration() {
           <Grid item>
             <Popconfirm
               title="Delete"
-              description="Are you sure to Delete it ?"
+              description="Are you sure you want to delete it? ?"
               placement="topLeft"
               onConfirm={() => confirm(data)} // Pass index to confirm function
               onCancel={cancel}

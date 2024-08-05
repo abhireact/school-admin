@@ -1,50 +1,42 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React TS - v1.0.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-2-pro-react-ts
-* Copyright 2023 Mindcom Group (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useMemo, useEffect, useState, LegacyRef, forwardRef } from "react";
+import { useMemo, useEffect, useState, useRef } from "react";
 import * as XLSX from "xlsx";
-
-// react-table components
 import { useTable, usePagination, useGlobalFilter, useAsyncDebounce, useSortBy } from "react-table";
-
-// @mui material components
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Icon from "@mui/material/Icon";
 import Autocomplete from "@mui/material/Autocomplete";
-import ReactDOMServer from "react-dom/server";
-// Material Dashboard 2 PRO React TS components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDPagination from "components/MDPagination";
 import DownloadIcon from "@mui/icons-material/Download";
-
-// Material Dashboard 2 PRO React TS examples components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
-import { Menu, MenuItem } from "@mui/material";
+import ViewColumnIcon from "@mui/icons-material/ViewColumn";
+import {
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  FormControlLabel,
+  Switch,
+  Divider,
+  ListSubheader,
+  IconButton,
+} from "@mui/material";
 import MDButton from "components/MDButton";
-import React from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import HeaderPdf from "layouts/pages/Mindcompdf/HeaderPdf";
-
-// Declaring props types for DataTable
+import { Column, Accessor } from "react-table";
+import { useReactToPrint } from "react-to-print";
+import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
+import ReactDOM from "react-dom";
+interface DataItem {
+  [key: string]: any;
+}
 interface Props {
   entriesPerPage?:
     | false
@@ -54,10 +46,12 @@ interface Props {
       };
   canSearch?: boolean;
   importbtn?: boolean;
+  selectColumnBtn?: boolean;
   showTotalEntries?: boolean;
   table: {
-    columns: { [key: string]: any }[];
-    rows: { [key: string]: any }[];
+    columns: Column<DataItem>[];
+    rows: DataItem[];
+    pdfRows?: DataItem[];
   };
   pagination?: {
     variant: "contained" | "gradient";
@@ -65,12 +59,16 @@ interface Props {
   };
   isSorted?: boolean;
   noEndBorder?: boolean;
+  pdfGeneratorProps?: {
+    isPdfMode: boolean;
+    hiddenText: string;
+    additionalInfo?: any;
+  };
 }
-// eslint-disable-next-line
+
 interface TableRow {
-  [key: string]: any; // Define the shape of your table rows here
+  [key: string]: any;
 }
-// eslint-disable-next-line
 
 function DataTable({
   entriesPerPage,
@@ -81,6 +79,8 @@ function DataTable({
   isSorted,
   noEndBorder,
   importbtn,
+  selectColumnBtn,
+  pdfGeneratorProps,
 }: Props): JSX.Element {
   let defaultValue: any;
   let entries: any[];
@@ -90,21 +90,48 @@ function DataTable({
     entries = entriesPerPage.entries ? entriesPerPage.entries : ["10", "25", "50", "100"];
   }
 
-  const columns = useMemo<any>(() => table.columns, [table]);
-  const data = useMemo<any>(() => table.rows, [table]);
-  // eslint-disable-next-line
-  const [tablerowdata, setTablerowdata] = useState([]);
-  const tableInstance = useTable(
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({});
+  const [openColumnSelector, setOpenColumnSelector] = useState(false);
+  const [columnMenuAnchorEl, setColumnMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const getAccessorString = (accessor: string | Accessor<DataItem>): string => {
+    if (typeof accessor === "string") {
+      return accessor;
+    }
+    if (typeof accessor === "function") {
+      // For function accessors, we can't reliably get a string representation
+      // So we'll return an empty string or some placeholder
+      return "";
+    }
+    // If it's neither a string nor a function (shouldn't happen, but TypeScript doesn't know that)
+    return "";
+  };
+  const columns = useMemo<Column<DataItem>[]>(() => {
+    const allColumns = table.columns as Column<DataItem>[];
+    if (Object.keys(visibleColumns).length === 0) {
+      const initialVisibleColumns = allColumns.reduce((acc, column) => {
+        acc[getAccessorString(column.accessor)] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+      setVisibleColumns(initialVisibleColumns);
+      return allColumns;
+    }
+    return allColumns.filter((column) => visibleColumns[getAccessorString(column.accessor)]);
+  }, [table.columns, visibleColumns]);
+
+  const data = useMemo<DataItem[]>(() => table.rows, [table]);
+  const tableInstance = useTable<DataItem>(
     { columns, data, initialState: { pageIndex: 0 } },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -123,46 +150,57 @@ function DataTable({
     state: { pageIndex, pageSize, globalFilter },
   }: any = tableInstance;
 
-  console.log(page, pageIndex, pageSize, "rowss for tableeeeeeeeeeee");
-  // Set the default value for the entries per page when component mounts
-  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
-  /* eslint-disable react-hooks/exhaustive-deps */
 
-  // Set the entries per page value based on the select value
   const setEntriesPerPage = (value: any) => setPageSize(value);
+  const getPageRange = (currentPage: number, totalPages: number, maxButtons: number = 5) => {
+    const halfButtons = Math.floor(maxButtons / 2);
+    let start = Math.max(currentPage - halfButtons, 0);
+    let end = Math.min(start + maxButtons - 1, totalPages - 1);
 
-  // Render the paginations
-  const renderPagination = pageOptions.map((option: any) => (
+    if (end - start + 1 < maxButtons) {
+      start = Math.max(end - maxButtons + 1, 0);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+  const pageRange = getPageRange(pageIndex, pageOptions.length);
+
+  const renderPagination = pageRange.map((pageNumber) => (
     <MDPagination
       item
-      key={option}
-      onClick={() => gotoPage(Number(option))}
-      active={pageIndex === option}
+      key={pageNumber}
+      onClick={() => gotoPage(pageNumber)}
+      active={pageIndex === pageNumber}
     >
-      {option + 1}
+      {pageNumber + 1}
     </MDPagination>
   ));
 
-  // Handler for the input to set the pagination index
   const handleInputPagination = ({ target: { value } }: any) =>
     value > pageOptions.length || value < 0 ? gotoPage(0) : gotoPage(Number(value));
 
-  // Customized page options starting from 1
   const customizedPageOptions = pageOptions.map((option: any) => option + 1);
 
-  // Setting value for the pagination input
   const handleInputPaginationValue = ({ target: value }: any) => gotoPage(Number(value.value - 1));
 
-  // Search input value state
   const [search, setSearch] = useState(globalFilter);
 
-  // Search input state handle
   const onSearchChange = useAsyncDebounce((value: any) => {
     setGlobalFilter(value || undefined);
   }, 100);
 
-  // A function that sets the sorted value for the table
+  // pagination updated setting
+  const getPageNumbers = (currentPage: number, totalPages: number) => {
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+
+    if (endPage - startPage < 4) {
+      startPage = Math.max(1, endPage - 4);
+    }
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  };
   const setSortedValue = (column: any) => {
     let sortedValue;
 
@@ -177,125 +215,9 @@ function DataTable({
     return sortedValue;
   };
 
-  // Setting the entries starting point
   const entriesStart = pageIndex === 0 ? pageIndex + 1 : pageIndex * pageSize + 1;
 
-  // Setting the entries ending point
   let entriesEnd;
-
-  // pdfgeneration
-  const handleGeneratePDF = () => {
-    const doc = new jsPDF();
-
-    // Add header
-    doc.setFontSize(18);
-    doc.text("Your Header Text", 14, 15);
-    doc.setFontSize(12); // Reset font size for the rest of the document
-
-    // Add a line under the header
-    doc.setLineWidth(0.5);
-    doc.line(14, 20, 196, 20);
-
-    // Set up table headers and rows
-    const tableHeaders = table.columns.map((column) => column.Header);
-    const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
-    const tableRows = table.rows.map((row) => {
-      // Get the keys from the first row of the input data
-      const keys = Object.keys(table.rows[0]);
-      // Map the keys to the corresponding values in the current row
-      return keys.map((key) => {
-        const value = row[key];
-        // Check if the value is an object
-        if (typeof value === "object" && value !== null) {
-          // If it's an object, convert it to a string using JSON.stringify
-          return JSON.stringify(value);
-        } else {
-          // Otherwise, return the value as is
-          return value;
-        }
-      });
-    });
-
-    // Flatten each individual row before passing to autoTable
-    const flattenedTableRows = tableRows.map((row) => row.flat());
-
-    // Add the table to the PDF document
-    autoTable(doc, {
-      startY: 30, // Start the table below the header
-      head: [filteredTableHeaders],
-      body: flattenedTableRows, // Pass flattenedTableRows as an array of arrays
-    });
-
-    // Save the PDF file
-    doc.save("table.pdf");
-  };
-  // const handleGeneratePDF = () => {
-  //   const doc = new jsPDF();
-
-  //   // Add header
-  //   doc.setFontSize(18);
-  //   doc.text("Your Header Text", 14, 15);
-  //   doc.setFontSize(12); // Reset font size for the rest of the document
-
-  //   // Add a line under the header
-  //   doc.setLineWidth(0.5);
-  //   doc.line(14, 20, 196, 20);
-
-  //   // Set up table headers and rows
-  //   const tableHeaders = table.columns.map((column) => column.Header);
-  //   const filteredTableHeaders = tableHeaders.filter((header) => header !== "Action");
-
-  //   const tableRows = table.rows.map((row) => {
-  //     const keys = Object.keys(table.rows[0]);
-  //     return keys.map((key) => {
-  //       const value = row[key];
-  //       if (typeof value === "object" && value !== null) {
-  //         return JSON.stringify(value);
-  //       } else {
-  //         return value;
-  //       }
-  //     });
-  //   });
-
-  //   // Flatten each individual row before passing to autoTable
-  //   const flattenedTableRows = tableRows.map((row) => row.flat());
-
-  //   // Add the table to the PDF document
-  //   autoTable(doc, {
-  //     startY: 30, // Start the table below the header
-  //     head: [filteredTableHeaders],
-  //     body: flattenedTableRows,
-  //   });
-
-  //   // Save the PDF file
-  //   doc.save("table.pdf");
-  // };
-
-  // excel generation
-  const downloadXLSX = (tableData: TableRow[]) => {
-    // Filter out the "Action" column header and its corresponding data
-    const filteredTableData = tableData.map((row) => {
-      const filteredRow: TableRow = {};
-      Object.keys(row).forEach((key) => {
-        if (key !== "action") {
-          filteredRow[key] = row[key];
-        }
-      });
-      return filteredRow;
-    });
-
-    const headers = Object.keys(filteredTableData[0]);
-    const data = filteredTableData.map((row) => headers.map((header) => row[header]));
-
-    // Create a new style object for the header row with a background color
-
-    // Apply the header style to the first row of the worksheet (headers)
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, "table.xlsx");
-  };
 
   if (pageIndex === 0) {
     entriesEnd = pageSize;
@@ -304,11 +226,88 @@ function DataTable({
   } else {
     entriesEnd = pageSize * (pageIndex + 1);
   }
-  console.log(table.columns, "column data ");
-  console.log(table.rows, "rowdata");
+
+  const getVisibleData = () => {
+    const dataToUse = table.pdfRows || table.rows;
+    return dataToUse.map((row) => {
+      const visibleRow: DataItem = {};
+      Object.keys(row).forEach((key) => {
+        if (visibleColumns[key]) {
+          visibleRow[key] = row[key];
+        }
+      });
+      return visibleRow;
+    });
+  };
+  const tableRef = useRef(null);
+
+  const generatePdf = useReactToPrint({
+    content: () => {
+      if (tableRef.current) {
+        // Force a re-render of the PdfGenerator with current visible columns
+        const pdfGeneratorElement = tableRef.current.querySelector(".pdf-generator");
+        if (pdfGeneratorElement) {
+          pdfGeneratorElement.innerHTML = "";
+          ReactDOM.render(
+            <PdfGenerator
+              data={getVisibleData()}
+              isPdfMode={true}
+              hiddenText={pdfGeneratorProps?.hiddenText || ""}
+              additionalInfo={pdfGeneratorProps?.additionalInfo}
+            />,
+            pdfGeneratorElement
+          );
+        }
+      }
+      return tableRef.current;
+    },
+  });
+  const downloadXLSX = (tableData: TableRow[]) => {
+    const flattenArrayData = (data: any): string => {
+      if (Array.isArray(data)) {
+        return data.map((item) => flattenArrayData(item)).join(", ");
+      }
+      return String(data);
+    };
+
+    const filteredTableData = tableData.map((row) => {
+      const filteredRow: DataItem = {};
+      columns.forEach((column) => {
+        const accessor = getAccessorString(column.accessor);
+        filteredRow[accessor] = flattenArrayData(row[accessor]);
+      });
+      return filteredRow;
+    });
+
+    const headers = columns.map((column) => column.Header as string);
+    const data = filteredTableData.map((row) =>
+      columns.map((column) => row[getAccessorString(column.accessor)])
+    );
+
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "table.xlsx");
+  };
+
+  const handleColumnSelectorOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setColumnMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleColumnSelectorClose = () => {
+    setColumnMenuAnchorEl(null);
+  };
+
+  const handleColumnToggle = (columnName: string) => {
+    setVisibleColumns((prev) => ({
+      ...prev,
+      [columnName]: !prev[columnName],
+    }));
+  };
+
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
-      {entriesPerPage || canSearch || importbtn ? (
+      {entriesPerPage || canSearch || importbtn || selectColumnBtn ? (
         <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
           {entriesPerPage && (
             <MDBox display="flex" alignItems="center">
@@ -328,35 +327,8 @@ function DataTable({
               </MDTypography>
             </MDBox>
           )}
-          {importbtn && (
-            <MDBox width="12rem" ml="auto">
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={() => setAnchorEl(null)}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem onClick={handleGeneratePDF}>PDF</MenuItem>
-                <MenuItem onClick={() => downloadXLSX(table.rows)}>XSL</MenuItem>
-              </Menu>
-              <MDButton
-                variant="gradient"
-                color="info"
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                <DownloadIcon />
-              </MDButton>
-            </MDBox>
-          )}
           {canSearch && (
-            <MDBox width="12rem" ml="auto">
+            <MDBox width="12rem" ml="auto" pr={1}>
               <MDInput
                 placeholder="Search..."
                 value={search}
@@ -366,6 +338,40 @@ function DataTable({
                   setSearch(search);
                   onSearchChange(currentTarget.value);
                 }}
+              />
+            </MDBox>
+          )}
+          {(importbtn || selectColumnBtn) && (
+            <MDBox display="flex" alignItems="center">
+              {importbtn && (
+                <MDBox mr={1}>
+                  <IconButton
+                    // variant="gradient"
+                    // color="info"
+                    // id="basic-button"
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                  >
+                    <DownloadIcon />
+                  </IconButton>
+                </MDBox>
+              )}
+              {selectColumnBtn && (
+                <IconButton onClick={handleColumnSelectorOpen}>
+                  <ViewColumnIcon fontSize="large" />{" "}
+                </IconButton>
+              )}
+            </MDBox>
+          )}
+          {pdfGeneratorProps && (
+            <MDBox ref={tableRef} className="hidden-text">
+              <PdfGenerator
+                data={getVisibleData()}
+                isPdfMode={true}
+                hiddenText={pdfGeneratorProps.hiddenText}
+                additionalInfo={pdfGeneratorProps.additionalInfo}
               />
             </MDBox>
           )}
@@ -384,7 +390,6 @@ function DataTable({
                   sorted={setSortedValue(column)}
                 >
                   {column.render("Header")}
-                  {/* setHeader({column}) */}
                 </DataTableHeadCell>
               ))}
             </TableRow>
@@ -403,7 +408,6 @@ function DataTable({
                     {...cell.getCellProps()}
                   >
                     {cell.render("Cell")}
-                    {/* setBodydata(cell) */}
                   </DataTableBodyCell>
                 ))}
               </TableRow>
@@ -436,20 +440,16 @@ function DataTable({
                 <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
               </MDPagination>
             )}
-            {renderPagination.length > 6 ? (
-              <MDBox width="5rem" mx={1}>
-                <MDInput
-                  inputProps={{ type: "number", min: 1, max: customizedPageOptions.length }}
-                  value={customizedPageOptions[pageIndex]}
-                  onChange={(event: any) => {
-                    handleInputPagination(event);
-                    handleInputPaginationValue(event);
-                  }}
-                />
-              </MDBox>
-            ) : (
-              renderPagination
-            )}
+            {getPageNumbers(pageIndex + 1, pageOptions.length).map((pageNumber) => (
+              <MDPagination
+                key={pageNumber}
+                item
+                onClick={() => gotoPage(pageNumber - 1)}
+                active={pageIndex + 1 === pageNumber}
+              >
+                {pageNumber}
+              </MDPagination>
+            ))}
             {canNextPage && (
               <MDPagination item onClick={() => nextPage()}>
                 <Icon sx={{ fontWeight: "bold" }}>chevron_right</Icon>
@@ -458,15 +458,80 @@ function DataTable({
           </MDPagination>
         )}
       </MDBox>
+
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={() => setAnchorEl(null)}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={generatePdf}>PDF</MenuItem>
+        <MenuItem onClick={() => downloadXLSX(table.pdfRows || table.rows)}>Excel</MenuItem>
+      </Menu>
+      <Menu
+        anchorEl={columnMenuAnchorEl}
+        open={Boolean(columnMenuAnchorEl)}
+        onClose={handleColumnSelectorClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiMenu-list": {
+              padding: 0,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <ListSubheader sx={{ lineHeight: "40px", backgroundColor: "background.paper" }}>
+          Select Columns
+        </ListSubheader>
+        <Divider />
+        <MDBox sx={{ maxHeight: "300px", overflowY: "auto" }}>
+          {table.columns.map((column) => (
+            <MenuItem key={getAccessorString(column.accessor)} sx={{ padding: 0 }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={visibleColumns[getAccessorString(column.accessor)]}
+                    onChange={() => handleColumnToggle(getAccessorString(column.accessor))}
+                    size="medium"
+                  />
+                }
+                label={column.Header as React.ReactNode}
+                sx={{ width: "100%", padding: "8px 16px" }}
+              />
+            </MenuItem>
+          ))}
+        </MDBox>
+      </Menu>
     </TableContainer>
   );
 }
 
-// Declaring default props for DataTable
 DataTable.defaultProps = {
   entriesPerPage: { defaultValue: 10, entries: ["5", "10", "15", "20", "25"] },
   canSearch: false,
   importbtn: false,
+  selectColumnBtn: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },
   isSorted: true,

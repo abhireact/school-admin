@@ -4,7 +4,7 @@ import MDTypography from "components/MDTypography";
 import { message, Modal } from "antd";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { useFormik, useFormikContext } from "formik";
+import { useFormik } from "formik";
 import MDInput from "components/MDInput";
 import { format } from "date-fns";
 import axios from "axios";
@@ -20,20 +20,19 @@ import {
 } from "@mui/material";
 import { admissionformschema } from "../common_validationschema";
 import { useSelector } from "react-redux";
-import FormField from "layouts/ecommerce/products/new-product/components/FormField";
 import { initialValues } from "../initialvalues";
 import Checkbox from "@mui/material/Checkbox";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-// import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
 import { v4 as uuidv4 } from "uuid";
 
 const AdmissionForm = () => {
   const token = Cookies.get("token");
-  const { classes, account, studentcategory } = useSelector((state: any) => state);
+  const [storeid, setStoreId] = useState();
+  const { classes } = useSelector((state: any) => state);
   const [isAlumni, setIsAlumni] = useState(false);
   const [isSiblings, setIsSiblings] = useState(false);
   const [isSameAsCurrentAddress, setIsSameAsCurrentAddress] = useState(false);
@@ -52,7 +51,7 @@ const AdmissionForm = () => {
     setIsSiblings(value);
   };
   //display the current date
-  const [currentDate, setCurrentDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [currentDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [isModalVisible, setIsModalVisible] = useState(false);
   // const [fields, setFields] = useState([{ id: Date.now(), sibling_name: "", sibling_class: "" }]);
   const [fields, setFields] = useState([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
@@ -74,22 +73,7 @@ const AdmissionForm = () => {
     setFields(updatedFields);
   };
 
-  // const handleClearClick = () => {
-  //   window.loc
-  //   resetForm();
-  //   setIsAlumni(false);
-  //   setIsSiblings(false);
-  //   setFields([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
-  //   setFieldValue("academic_year", ""); // Using setFieldValue from Formik
-  //   setFieldValue("class_name", "");
-  //   // const checkbox = document.getElementsByName("same_as_current_address")[0] as HTMLInputElement;
-  //   // if (checkbox) {
-  //   //   checkbox.checked = false;
-  //   // }
-  // };
-
   const handleCheckboxChange = (event: any) => {
-    // const isChecked = event.target.checked;
     setIsSameAsCurrentAddress(event.target.checked);
     if (event.target.checked) {
       handleChange({
@@ -135,7 +119,12 @@ const AdmissionForm = () => {
 
   const handleOk = () => {
     setIsModalVisible(false);
-    navigate("/pages/admission/Fee");
+
+    navigate("/pages/admission/Fee", {
+      state: {
+        id: storeid,
+      },
+    });
   };
 
   const handleCancel = () => {
@@ -144,50 +133,37 @@ const AdmissionForm = () => {
     navigate("/pages/admission/studentAdmission");
   };
 
-  const {
-    values,
-    errors,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-    setFieldValue,
-    touched,
-    resetForm,
-  } = useFormik({
-    initialValues: initialValues,
-    validationSchema: admissionformschema,
-    onSubmit: (values, action) => {
-      const allValues = {
-        ...values,
-        admission_date: currentDate,
-        sibling_data: values.siblings
-          ? fields.map((field) => ({
-              sibling_name: field.sibling_name,
-              sibling_class: field.sibling_class,
-            }))
-          : [],
-      };
-      axios
-        .post("http://10.0.20.200:8000/admissions", allValues, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          // message.success(" Created successfully!");
-          setIsModalVisible(true);
-          action.resetForm();
-          setIsAlumni(false); // Reset Alumni state
-          setIsSiblings(false); // Reset Siblings state
-          setFieldValue("upload_candidate_photo", "");
-          setFields([{ id: uuidv4(), sibling_name: "", sibling_class: "" }]);
-        })
-        .catch((error: any) => {
-          message.error(error.response.data.detail);
-        });
-    },
-  });
+  const { values, errors, handleBlur, handleChange, handleSubmit, setFieldValue, touched } =
+    useFormik({
+      initialValues: initialValues,
+      validationSchema: admissionformschema,
+      onSubmit: (values, action) => {
+        const allValues = {
+          ...values,
+          admission_date: currentDate,
+          sibling_data: values.siblings
+            ? fields.map((field) => ({
+                sibling_name: field.sibling_name,
+                sibling_class: field.sibling_class,
+              }))
+            : [],
+        };
+        axios
+          .post(`${process.env.REACT_APP_BASE_URL}/admissions`, allValues, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setStoreId(response.data.id);
+            setIsModalVisible(true);
+          })
+          .catch((error: any) => {
+            message.error(error.response.data.detail);
+          });
+      },
+    });
 
   return (
     <DashboardLayout>
@@ -274,6 +250,7 @@ const AdmissionForm = () => {
                       value={values.form_number}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      required
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -292,6 +269,7 @@ const AdmissionForm = () => {
                       onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      disabled
                       error={touched.admission_date && Boolean(errors.admission_date)}
                       helperText={touched.admission_date && errors.admission_date}
                     />
@@ -1505,7 +1483,7 @@ const AdmissionForm = () => {
             <MDButton
               color="dark"
               variant="contained"
-              type="submit"
+              // type="submit"
               // onClick={() => navigate("/pages/admission/Fee")}
               onClick={() => navigate("/pages/admission/studentAdmission")}
               // navigate("/pages/admission/Fee");

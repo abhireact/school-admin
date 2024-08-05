@@ -38,7 +38,7 @@ const Update = (props: any) => {
         description: values.description,
       };
       axios
-        .put(`http://10.0.20.200:8000/mg_models`, sendData, {
+        .put(`${process.env.REACT_APP_BASE_URL}/mg_models`, sendData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

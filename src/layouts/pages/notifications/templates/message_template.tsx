@@ -26,12 +26,15 @@ export default function MessageTemplate() {
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://10.0.20.200:8000/mg_templates/school_incharge`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/mg_templates/school_incharge`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
         setTemplateData(response.data);
       }
@@ -103,7 +106,7 @@ export default function MessageTemplate() {
           <Grid item>
             <Popconfirm
               title="Delete"
-              description="Are you sure to Delete it ?"
+              description="Are you sure you want to delete it? ?"
               placement="topLeft"
               onConfirm={() => confirm(data)} // Pass index to confirm function
               onCancel={cancel}

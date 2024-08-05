@@ -416,7 +416,7 @@ function CoverLogin(): JSX.Element {
       const sanitizedPassword = password.replace(/[<>"]/g, "");
 
       const res = await axios.post(
-        `http://10.0.20.200:8000/token1`,
+        `${process.env.REACT_APP_BASE_URL}/token1`,
         {
           username: email,
           url: url,
@@ -441,8 +441,10 @@ function CoverLogin(): JSX.Element {
         // dispatch(setMyRbac(myrbac)); // Dispatch the setToken action
 
         navigate("/dashboards/analytics");
-        // window.location.reload();
-        message.success("Login Successful");
+        setTimeout(() => {
+          window.location.reload();
+          message.success("Login Successful");
+        }, 0);
       } else {
         message.error("Invalid email or password");
       }

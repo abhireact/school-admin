@@ -110,6 +110,7 @@ const Class = () => {
   const handleCloseupdate = () => {
     setOpenupdate(false);
   }; //End
+
   const [managepage, setManagepage] = useState(false);
 
   const [manageSection, setManageSection] = useState([]);
@@ -212,7 +213,7 @@ const Class = () => {
               <IconButton>
                 <Popconfirm
                   title="Delete"
-                  description="Are you sure to Delete it ?"
+                  description="Are you sure you want to delete it? ?"
                   placement="topLeft"
                   onConfirm={() => handleDelete(row.class_name)} // Pass index to confirm function
                   // onCancel={cancel}

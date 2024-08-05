@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -15,6 +15,8 @@ import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import DataTable from "examples/Tables/DataTable";
+import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
+import { useReactToPrint } from "react-to-print";
 
 const Cacademic_year = Cookies.get("academic_year");
 console.log(Cacademic_year, "Cacademic_year");
@@ -26,63 +28,14 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
     .required("Required *"),
 });
-interface FeeDetail {
-  student_name: string;
-  academic_year: string;
-  wing_name: string;
-  class_name: string;
-  section_name: string;
-  admission_number: string;
-  tranx_num: string | null;
-  date_of_cheque: string | null;
-  date_of_draft: string | null;
-  cheque_number: string | null;
-  draft_number: string | null;
-  bankname_and_branch: string;
-  collected_at: string;
-  payment_mode: string;
-  installment: string;
-  date: string;
-  concession: number;
-  fine: number;
-  late: number;
-  discount: number;
-  refund: number;
-  adjust: number;
-  amount: number;
-  "Month Fee": number;
-  "Monthly Fee": number;
-}
-interface TableRow {
-  sl_no: number;
-  student_name: string;
-  guardian_name: string;
-  admission_number: string;
-  date: React.ReactNode;
-  payment_mode: React.ReactNode;
-  amount: React.ReactNode;
-  late: React.ReactNode;
-  concession: React.ReactNode;
-  fine: React.ReactNode;
-  discount: React.ReactNode;
-  refund: React.ReactNode;
-  adjust: React.ReactNode;
-  monthly_fee: React.ReactNode;
-  month_fee: React.ReactNode;
-}
-interface StudentFeeData {
-  student_name: string;
-  guardian_name: string;
-  is_archive: number;
-  fees: FeeDetail[];
-}
+
 const FeeRegister = (props: any) => {
   const token = Cookies.get("token");
   const { classes } = useSelector((state: any) => state);
   const { handleShowPage } = props;
   const [data, setData] = useState<StudentFeeData[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [showTable, setShowTable] = useState(false);
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
       class_name: "",
@@ -94,42 +47,102 @@ const FeeRegister = (props: any) => {
       console.log(values, "values");
     },
   });
+  const handleAPICall = useCallback(
+    async (currentValues: { section_name: unknown; class_name: string; academic_year: string }) => {
+      setIsLoading(true);
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/fee_register`,
+          currentValues,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setData(response.data);
+        setShowTable(true);
+        handleShowPage();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+        message.success("Fetched Data Successfully!");
+      }
+    },
+    [token, handleShowPage]
+  );
+  const handleSectionChange = useCallback(
+    async (value: unknown) => {
+      handleChange({ target: { name: "section_name", value } });
+      if (value) {
+        await handleAPICall({
+          ...values,
+          section_name: value,
+        });
+      }
+    },
+    [handleChange, handleAPICall, values]
+  );
 
-  const handleSectionChange = async (value: unknown) => {
-    handleChange({ target: { name: "section_name", value } });
-    if (value) {
-      await handleAPICall({
-        ...values,
-        section_name: value,
-      });
-    }
+  // Define types
+  type GrandTotals = {
+    amount: number;
+    late: number;
+    concession: number;
+    fine: number;
+    discount: number;
+    refund: number;
+    adjust: number;
+    monthlyFee: number;
+    monthFee: number;
   };
 
-  const handleAPICall = async (currentValues: {
-    section_name: unknown;
-    class_name: string;
-    academic_year: string;
-  }) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(`http://10.0.20.200:8000/fee_register`, currentValues, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setData(response.data);
-      handleShowPage();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-      message.success("Fetched Data Successfully!");
-    }
+  type FeeDetail = {
+    amount: number;
+    late: number;
+    concession: number;
+    fine: number;
+    discount: number;
+    refund: number;
+    adjust: number;
+    "Monthly Fee": number;
+    "Month Fee": number;
+    date: string;
+    payment_mode: string;
+    admission_number: string;
   };
-  const FeeRegisterdata = () => {
-    if (!data) return { columns: [], rows: [] };
 
+  type StudentFeeData = {
+    student_name: string;
+    guardian_name: string;
+    fees: FeeDetail[];
+  };
+
+  type RowData = {
+    sl_no: number;
+    student_name: string;
+    guardian_name: string;
+    admission_number: string;
+    date: string | JSX.Element | string[];
+    payment_mode: string | JSX.Element | string[];
+    amount: JSX.Element | (string | number)[];
+    late: JSX.Element | (string | number)[];
+    concession: JSX.Element | (string | number)[];
+    fine: JSX.Element | (string | number)[];
+    discount: JSX.Element | (string | number)[];
+    refund: JSX.Element | (string | number)[];
+    adjust: JSX.Element | (string | number)[];
+    monthly_fee: JSX.Element | (string | number)[];
+    month_fee: JSX.Element | (string | number)[];
+  };
+
+  const feeRegisterData = useMemo(() => {
+    if (!data) return { columns: [], rows: [], pdfRows: [] };
+
+    // Move the entire content of FeeRegisterdata function here
+    // ...
     const columns = [
       { Header: "SL.NO", accessor: "sl_no" },
       { Header: "Student Name", accessor: "student_name" },
@@ -146,173 +159,160 @@ const FeeRegister = (props: any) => {
       { Header: "Refund", accessor: "refund" },
       { Header: "Adjust", accessor: "adjust" },
       { Header: "Amount", accessor: "amount" },
-
-      // { Header: "Total", accessor: "total" },
     ];
 
-    let grandTotalAmount = 0;
-    let grandTotalLateFee = 0;
-    let grandTotalConcession = 0;
-    let grandTotalFine = 0;
-    let grandTotalDiscount = 0;
-    let grandTotalRefund = 0;
-    let grandTotalAdjust = 0;
-    let grandTotalMonthlyFee = 0;
-    let grandTotalMonthFee = 0;
-    let grandTotal = 0;
+    let grandTotals: GrandTotals = {
+      amount: 0,
+      late: 0,
+      concession: 0,
+      fine: 0,
+      discount: 0,
+      refund: 0,
+      adjust: 0,
+      monthlyFee: 0,
+      monthFee: 0,
+    };
 
-    const rows: TableRow[] = data.map((student: StudentFeeData, index: number) => {
-      const studentTotalAmount = student.fees.reduce((sum, fee) => sum + fee.amount, 0);
-      const studentTotalLateFee = student.fees.reduce((sum, fee) => sum + fee.late, 0);
-      const studentTotalConcession = student.fees.reduce((sum, fee) => sum + fee.concession, 0);
-      const studentTotalFine = student.fees.reduce((sum, fee) => sum + fee.fine, 0);
-      const studentTotalDiscount = student.fees.reduce((sum, fee) => sum + fee.discount, 0);
-      const studentTotalRefund = student.fees.reduce((sum, fee) => sum + fee.refund, 0);
-      const studentTotalAdjust = student.fees.reduce((sum, fee) => sum + fee.adjust, 0);
-      const studentTotalMonthlyFee = student.fees.reduce((sum, fee) => sum + fee["Monthly Fee"], 0);
-      const studentTotalMonthFee = student.fees.reduce((sum, fee) => sum + fee["Month Fee"], 0);
-      // const studentTotal =
-      //   studentTotalAmount +
-      //   studentTotalLateFee +
-      //   studentTotalFine -
-      //   studentTotalConcession -
-      //   studentTotalDiscount -
-      //   studentTotalRefund +
-      //   studentTotalAdjust;
+    const createRowData = (
+      student: StudentFeeData,
+      index: number,
+      includeHtml: boolean
+    ): RowData => {
+      const totals: GrandTotals = {
+        amount: student.fees.reduce((sum, fee) => sum + fee.amount, 0),
+        late: student.fees.reduce((sum, fee) => sum + fee.late, 0),
+        concession: student.fees.reduce((sum, fee) => sum + fee.concession, 0),
+        fine: student.fees.reduce((sum, fee) => sum + fee.fine, 0),
+        discount: student.fees.reduce((sum, fee) => sum + fee.discount, 0),
+        refund: student.fees.reduce((sum, fee) => sum + fee.refund, 0),
+        adjust: student.fees.reduce((sum, fee) => sum + fee.adjust, 0),
+        monthlyFee: student.fees.reduce((sum, fee) => sum + fee["Monthly Fee"], 0),
+        monthFee: student.fees.reduce((sum, fee) => sum + fee["Month Fee"], 0),
+      };
 
-      grandTotalAmount += studentTotalAmount;
-      grandTotalLateFee += studentTotalLateFee;
-      grandTotalConcession += studentTotalConcession;
-      grandTotalFine += studentTotalFine;
-      grandTotalDiscount += studentTotalDiscount;
-      grandTotalRefund += studentTotalRefund;
-      grandTotalAdjust += studentTotalAdjust;
-      grandTotalMonthlyFee += studentTotalMonthlyFee;
-      grandTotalMonthFee += studentTotalMonthFee;
-      // grandTotal += studentTotal;
+      // Update grand totals
+      Object.keys(grandTotals).forEach((key) => {
+        grandTotals[key as keyof GrandTotals] += totals[key as keyof GrandTotals];
+      });
+
+      const formatField = (
+        fees: FeeDetail[],
+        field: keyof FeeDetail
+      ): JSX.Element | (string | number)[] => {
+        const values = fees.map((fee) => {
+          const value = fee[field];
+          return typeof value === "number" ? Number(value.toFixed(2)) : value;
+        });
+
+        const total =
+          totals[
+            field === "Monthly Fee"
+              ? "monthlyFee"
+              : field === "Month Fee"
+              ? "monthFee"
+              : (field as keyof GrandTotals)
+          ];
+
+        if (includeHtml) {
+          return (
+            <React.Fragment>
+              <ul>
+                {values.map((value, i) => (
+                  <li key={i}>{value}</li>
+                ))}
+              </ul>
+              <strong>Total: {typeof total === "number" ? total.toFixed(2) : total}</strong>
+            </React.Fragment>
+          );
+        } else {
+          return [
+            ...values,
+            typeof total === "number" ? `Total:${Number(total.toFixed(2))}` : `Total:${total}`,
+          ];
+        }
+      };
 
       return {
         sl_no: index + 1,
         student_name: student.student_name,
         guardian_name: student.guardian_name,
         admission_number: student.fees[0]?.admission_number || "",
-        date: student.fees.map((fee, i) => <li key={i}>{fee.date}</li>),
-        payment_mode: student.fees.map((fee, i) => <li key={i}>{fee.payment_mode}</li>),
-        amount: (
-          <>
+        date: includeHtml ? (
+          <ul>
             {student.fees.map((fee, i) => (
-              <li key={i}>{fee.amount.toFixed(2)}</li>
+              <li key={i}>{fee.date}</li>
             ))}
-            <strong>Total: {studentTotalAmount.toFixed(2)}</strong>
-          </>
+          </ul>
+        ) : (
+          student.fees.map((fee) => fee.date)
         ),
-        late: (
-          <>
+        payment_mode: includeHtml ? (
+          <ul>
             {student.fees.map((fee, i) => (
-              <li key={i}>{fee.late.toFixed(2)}</li>
+              <li key={i}>{fee.payment_mode}</li>
             ))}
-            <strong>Total: {studentTotalLateFee.toFixed(2)}</strong>
-          </>
+          </ul>
+        ) : (
+          student.fees.map((fee) => fee.payment_mode)
         ),
-        concession: (
-          <>
-            {student.fees.map((fee, i) => (
-              <li key={i}>{fee.concession.toFixed(2)}</li>
-            ))}
-            <strong>Total: {studentTotalConcession.toFixed(2)}</strong>
-          </>
-        ),
-        fine: (
-          <>
-            {student.fees.map((fee, i) => (
-              <li key={i}>{fee.fine.toFixed(2)}</li>
-            ))}
-            <strong>Total: {studentTotalFine.toFixed(2)}</strong>
-          </>
-        ),
-        discount: (
-          <>
-            {student.fees.map((fee, i) => (
-              <li key={i}>{fee.discount.toFixed(2)}</li>
-            ))}
-            <strong>Total: {studentTotalDiscount.toFixed(2)}</strong>
-          </>
-        ),
-        refund: (
-          <>
-            {student.fees.map((fee, i) => (
-              <li key={i}>{fee.refund.toFixed(2)}</li>
-            ))}
-            <strong>Total: {studentTotalRefund.toFixed(2)}</strong>
-          </>
-        ),
-        adjust: (
-          <>
-            {student.fees.map((fee, i) => (
-              <li key={i}>{fee.adjust.toFixed(2)}</li>
-            ))}
-            <strong>Total: {studentTotalAdjust.toFixed(2)}</strong>
-          </>
-        ),
-        monthly_fee: (
-          <>
-            {student.fees.map((fee, i) => (
-              <li key={i}>{fee["Monthly Fee"].toFixed(2)}</li>
-            ))}
-            <strong>Total: {studentTotalMonthlyFee.toFixed(2)}</strong>
-          </>
-        ),
-        month_fee: (
-          <>
-            {student.fees.map((fee, i) => (
-              <li key={i}>{fee["Month Fee"].toFixed(2)}</li>
-            ))}
-            <strong>Total: {studentTotalMonthFee.toFixed(2)}</strong>
-          </>
-        ),
-        // total: (
-        //   <>
-        //     {student.fees.map((fee, i) => (
-        //       <li key={i}>
-        //         {(
-        //           fee.amount +
-        //           fee.late +
-        //           fee.fine -
-        //           fee.concession -
-        //           fee.discount -
-        //           fee.refund +
-        //           fee.adjust
-        //         ).toFixed(2)}
-        //       </li>
-        //     ))}
-        //     <strong>Total: {studentTotal.toFixed(2)}</strong>
-        //   </>
-        // ),
+        amount: formatField(student.fees, "amount"),
+        late: formatField(student.fees, "late"),
+        concession: formatField(student.fees, "concession"),
+        fine: formatField(student.fees, "fine"),
+        discount: formatField(student.fees, "discount"),
+        refund: formatField(student.fees, "refund"),
+        adjust: formatField(student.fees, "adjust"),
+        monthly_fee: formatField(student.fees, "Monthly Fee"),
+        month_fee: formatField(student.fees, "Month Fee"),
       };
-    });
+    };
 
-    // Add a grand total row
-    rows.push({
-      sl_no: data.length + 1,
-      student_name: "",
-      guardian_name: "",
-      admission_number: "",
-      date: "",
-      payment_mode: <strong>Grand Total:</strong>,
-      amount: <strong>{grandTotalAmount.toFixed(2)}</strong>,
-      late: <strong>{grandTotalLateFee.toFixed(2)}</strong>,
-      concession: <strong>{grandTotalConcession.toFixed(2)}</strong>,
-      fine: <strong>{grandTotalFine.toFixed(2)}</strong>,
-      discount: <strong>{grandTotalDiscount.toFixed(2)}</strong>,
-      refund: <strong>{grandTotalRefund.toFixed(2)}</strong>,
-      adjust: <strong>{grandTotalAdjust.toFixed(2)}</strong>,
-      monthly_fee: <strong>{grandTotalMonthlyFee.toFixed(2)}</strong>,
-      month_fee: <strong>{grandTotalMonthFee.toFixed(2)}</strong>,
-      // total: <strong>{grandTotal.toFixed(2)}</strong>,
-    });
+    const rows: RowData[] = data.map((student, index) => createRowData(student, index, true));
+    const pdfRows: RowData[] = data.map((student, index) => createRowData(student, index, false));
 
-    return { columns, rows };
-  };
+    // Add grand total row
+    const addGrandTotalRow = (includeHtml: boolean): RowData => {
+      const formatGrandTotal = (field: keyof GrandTotals): JSX.Element | (string | number)[] => {
+        const value = Number(grandTotals[field].toFixed(2));
+        return includeHtml ? <strong>{value}</strong> : [value];
+      };
+
+      return {
+        sl_no: data.length + 1,
+        student_name: "",
+        guardian_name: "",
+        admission_number: "",
+        date: "",
+        payment_mode: includeHtml ? <strong>Grand Total:</strong> : ["Grand Total:"],
+        amount: formatGrandTotal("amount"),
+        late: formatGrandTotal("late"),
+        concession: formatGrandTotal("concession"),
+        fine: formatGrandTotal("fine"),
+        discount: formatGrandTotal("discount"),
+        refund: formatGrandTotal("refund"),
+        adjust: formatGrandTotal("adjust"),
+        monthly_fee: formatGrandTotal("monthlyFee"),
+        month_fee: formatGrandTotal("monthFee"),
+      };
+    };
+
+    rows.push(addGrandTotalRow(true));
+    pdfRows.push(addGrandTotalRow(false));
+
+    return { columns, rows, pdfRows };
+  }, [data]);
+  const tableRef = useRef();
+  // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  const handlePrint = useReactToPrint({
+    content: () => tableRef.current,
+  });
+  const dataTableData = useMemo(() => {
+    return feeRegisterData
+      ? { columns: feeRegisterData.columns, rows: feeRegisterData.rows }
+      : { columns: [], rows: [] };
+  }, [feeRegisterData]);
+
+  console.log(feeRegisterData, "fee register data");
 
   return (
     <DashboardLayout>
@@ -422,8 +422,39 @@ const FeeRegister = (props: any) => {
                     )}
                   />
                 </Grid>
+                {/* {feeRegisterData?.pdfRows ? (
+                  <>
+                    <MDBox ref={tableRef} className="hidden-text">
+                      <PdfGenerator
+                        data={feeRegisterData?.pdfRows}
+                        // hiddenText={hiddenText}
+                        isPdfMode={true}
+                        hiddenText={""}
+                        additionalInfo={undefined}
+                      />
+                    </MDBox>
+                    <MDBox>
+                      <MDButton onClick={handlePrint}>Print</MDButton>
+                    </MDBox>
+                  </>
+                ) : null} */}
+                {dataTableData && showTable ? (
+                  <DataTable
+                    table={{
+                      columns: feeRegisterData.columns,
+                      rows: feeRegisterData.rows,
+                      pdfRows: feeRegisterData.pdfRows,
+                    }}
+                    selectColumnBtn
+                    importbtn
+                    pdfGeneratorProps={{
+                      isPdfMode: false,
+                      hiddenText: "",
+                      additionalInfo: undefined,
+                    }}
+                  />
+                ) : null}
 
-                <DataTable table={FeeRegisterdata()} />
                 <Grid
                   item
                   container
@@ -436,7 +467,7 @@ const FeeRegister = (props: any) => {
                       color="dark"
                       variant="contained"
                       onClick={() => {
-                        handleShowPage();
+                        history.back();
                       }}
                     >
                       Back

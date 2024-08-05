@@ -40,14 +40,26 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d{4}-\d{2}$/, "YYYY-YY format")
     .required("Required *"),
 });
-
+interface FormValues {
+  class_name: string;
+  wing_name: string;
+  name: string;
+  father_name: string;
+  academic_year: string;
+  admission_number: string;
+  fee_code: string;
+  section_name: string;
+  collection_date: string;
+  adm_no_or_fee_code: string;
+  search_by: string;
+}
 const FeeCollection = (props: any) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const [mainData, setMainData] = useState([]);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
-
+  const [isloading, setLoading] = useState(false);
   const showDrawer = (titleData: SetStateAction<string>, index: any) => {
     console.log(titleData, index, "drawer data");
     setMainData(index);
@@ -60,35 +72,25 @@ const FeeCollection = (props: any) => {
   const token = Cookies.get("token");
   const { handleShowPage, setData } = props;
   const [showadvanceSearch, setShowadvanceSearch] = useState(true);
-  const [academicdata, setAcademicdata] = useState([]);
-  const [classdata, setClassdata] = useState([]);
-  const [filteredClass, setFilteredClass] = useState([]);
+
   const { wings, academicyear, classes, student } = useSelector((state: any) => state);
   console.log(wings, academicyear, student, "redux Data");
   const [concessiondata, setConcessiondata] = useState(student);
   let today = new Date().toISOString().split("T")[0];
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true); // Set loading state to true before fetching data
+    setLoading(true); // Set loading state to true before fetching data
     setConcessiondata(student);
-    setIsLoading(false); // Set loading state to false after data is fetched
+    setLoading(false); // Set loading state to false after data is fetched
   }, []);
   console.log(concessiondata, "collection datav ");
   const Cacademic_year = Cookies.get("academic_year");
   console.log(Cacademic_year, "Cacademic_year");
 
   //  const {wings,academicyear,classes}=useSelector
-  function filterClassData(data: any, academic_year: any) {
-    let filtereddata = data
-      .filter((item: any) => item.academic_year === academic_year)
-      .map((item: any) => item.class_name);
-    setFilteredClass(filtereddata);
-  }
-  const [sectiondata, setsectiondata] = useState([]);
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
-    useFormik({
+    useFormik<FormValues>({
       initialValues: {
         class_name: "",
         wing_name: "All",
@@ -100,7 +102,7 @@ const FeeCollection = (props: any) => {
         section_name: "",
         collection_date: today,
         adm_no_or_fee_code: "",
-        search_by: [] as string[],
+        search_by: "",
       },
       validationSchema: validationSchema,
       onSubmit: (values, action) => {
@@ -192,21 +194,18 @@ const FeeCollection = (props: any) => {
         { Header: "Action", accessor: "action" },
       ],
       rows: origionalData?.map(
-        (
-          row: {
-            father_name: any;
-            admission_number: any;
-            user_id: any;
-            first_name: any;
-            middle_name: null;
-            last_name: any;
-            class_name: any;
-            gender: any;
-            section_name: any;
-            mobile_number: any;
-          },
-          index: any
-        ) => ({
+        (row: {
+          father_name: any;
+          admission_number: any;
+          user_id: any;
+          first_name: any;
+          middle_name: null;
+          last_name: any;
+          class_name: any;
+          gender: any;
+          section_name: any;
+          mobile_number: any;
+        }) => ({
           admission_number: row.admission_number,
           user_id: row.user_id,
           action: (
@@ -230,7 +229,7 @@ const FeeCollection = (props: any) => {
         })
       ),
     };
-  }, [concessiondata, values.search_by, values]);
+  }, [concessiondata, values.search_by, values.collection_date, values]);
   console.log(mainData, "mainData");
 
   return (
@@ -247,137 +246,82 @@ const FeeCollection = (props: any) => {
             </Grid>
           </Grid>
           <MDBox p={4}>
-            <Grid container>
-              {showadvanceSearch ? (
-                <Grid container spacing={3}>
+            <Grid container spacing={3}>
+              {showadvanceSearch && (
+                <>
                   <Grid item xs={12} sm={6} py={1} display="flex" justifyContent="flex-center">
                     <FormControl>
-                      <MDTypography
-                        variant="h5"
-                        fontWeight="bold"
-                        color="secondary"
-                        // sx={{ marginLeft: "20px" }}
-                      >
+                      <MDTypography variant="h5" fontWeight="bold" color="secondary">
                         Search By:
                       </MDTypography>
-
                       <RadioGroup
                         aria-labelledby="demo-radio-buttons-group-label"
                         row
                         name="search_by"
-                        // value={values.search_by}
-                        // onChange={handleSearchByChange}
+                        value={values.search_by}
+                        onChange={(e) => {
+                          handleChange(e);
+                          // Clear fields when changing radio button
+                          setFieldValue("class_name", "");
+                          setFieldValue("section_name", "");
+                          setFieldValue("wing_name", "");
+                          setFieldValue("fee_code", "");
+                          setFieldValue("admission_number", "");
+                          setFieldValue("name", "");
+                          setFieldValue("father_name", "");
+                        }}
                       >
-                        <FormControlLabel
-                          //   value="female"
-                          control={
-                            <Radio
-                              // checked={values.search_by.includes("Class")}
-                              onChange={handleChange}
-                              name="search_by"
-                              value="Class"
-                            />
-                          }
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Class{" "}
-                            </MDTypography>
-                          }
-                        />
-                        <FormControlLabel
-                          // value="male"
-                          control={
-                            <Radio
-                              // checked={values.search_by.includes("Addmission No")}
-                              onChange={handleChange}
-                              name="search_by"
-                              value="Admission No"
-                            />
-                          }
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Admission No{" "}
-                            </MDTypography>
-                          }
-                        />
-                        <FormControlLabel
-                          // value="male"
-                          control={
-                            <Radio
-                              // checked={values.search_by.includes("Addmission No")}
-                              onChange={handleChange}
-                              name="search_by"
-                              value="Fee Code"
-                            />
-                          }
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Fee Code{" "}
-                            </MDTypography>
-                          }
-                        />
-                        <FormControlLabel
-                          // value="male"
-                          control={
-                            <Radio
-                              // checked={values.search_by.includes("Addmission No")}
-                              onChange={handleChange}
-                              name="search_by"
-                              value="Name"
-                            />
-                          }
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Name
-                            </MDTypography>
-                          }
-                        />
+                        {["Class", "Admission No", "Fee Code", "Name"].map((option) => (
+                          <FormControlLabel
+                            key={option}
+                            control={<Radio />}
+                            value={option}
+                            label={
+                              <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                {option}
+                              </MDTypography>
+                            }
+                          />
+                        ))}
                       </RadioGroup>
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={3} py={1}>
                     <Autocomplete
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "academic_year", value } });
-                      }}
-                      defaultValue={Cacademic_year}
-                      options={
-                        classes
-                          ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
-                          : []
+                      onChange={(_event, value) =>
+                        handleChange({ target: { name: "academic_year", value } })
                       }
+                      options={Array.from(
+                        new Set(classes?.map((item: any) => item.academic_year) || [])
+                      )}
                       value={values.academic_year}
                       disabled
                       disableClearable
                       renderInput={(params) => (
                         <MDInput
+                          {...params}
                           required
-                          defaultValue="Cacademic_year"
                           name="academic_year"
-                          onChange={handleChange}
-                          disabled
-                          value={values.academic_year}
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
                               Academic Year
                             </MDTypography>
                           }
-                          {...params}
                           variant="standard"
                         />
                       )}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3} py={1} display="flex" justifyContent="flex-start">
+                  <Grid item xs={12} sm={3} py={1}>
                     <MDInput
                       type="date"
-                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()} // Prevent typing
+                      onKeyDown={(e: { preventDefault: () => any }) => e.preventDefault()}
                       InputLabelProps={{ shrink: true }}
                       sx={{ width: "80%" }}
                       name="collection_date"
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Collection Date{" "}
+                          Collection Date
                         </MDTypography>
                       }
                       onChange={handleChange}
@@ -385,277 +329,232 @@ const FeeCollection = (props: any) => {
                       variant="standard"
                       onBlur={handleBlur}
                       error={touched.collection_date && Boolean(errors.collection_date)}
-                      success={values.collection_date.length && !errors.collection_date}
                       helperText={touched.collection_date && errors.collection_date}
                     />
                   </Grid>
-                </Grid>
-              ) : null}
+                </>
+              )}
 
-              {showadvanceSearch && values.search_by && values.search_by[0] === "C" ? (
-                // Render the first set of components
-                <Grid container spacing={3}>
-                  {" "}
-                  <Grid item xs={12} sm={4} py={1}>
-                    <Autocomplete
-                      disableClearable
-                      value={values.class_name || ""}
-                      onChange={(_event, value) => {
-                        setConcessiondata(
-                          concessiondata.filter(
-                            (item: any) => item.academic_year === values.academic_year
-                            // item.class_name === values.class_name
-                          )
-                        );
-                        handleChange({ target: { name: "class_name", value } });
-                      }}
-                      options={
-                        values.academic_year !== ""
-                          ? classes
-                              .filter((item: any) => item.academic_year === values.academic_year)
-                              .map((item: any) => item.class_name)
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <MDInput
-                          required
-                          name="class_name"
+              {showadvanceSearch && (
+                <Grid container spacing={3} p={2}>
+                  {values.search_by === "Class" && (
+                    <>
+                      <Grid item xs={12} sm={4} py={1}>
+                        <Autocomplete
+                          disableClearable
                           value={values.class_name || ""}
-                          onChange={handleChange}
-                          // value={values.class_name || ""} // Pass an empty string when class_name needs to be cleared
-                          // onChange={(event: any, value: any) => setFieldValue("class_name", value)}
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Class
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
+                          onChange={(_event, value) => {
+                            setConcessiondata(
+                              concessiondata.filter(
+                                (item: any) => item.academic_year === values.academic_year
+                              )
+                            );
+                            handleChange({ target: { name: "class_name", value } });
+                          }}
+                          options={classes
+                            .filter((item: any) => item.academic_year === values.academic_year)
+                            .map((item: any) => item.class_name)}
+                          renderInput={(params) => (
+                            <MDInput
+                              {...params}
+                              required
+                              name="class_name"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Class
+                                </MDTypography>
+                              }
+                              variant="standard"
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4} py={1}>
-                    <Autocomplete
-                      disableClearable
-                      value={values.section_name || ""} // Pass an empty string when section_name needs to be cleared
-                      // onChange={(event, value) => setFieldValue("section_name", value)}
-                      onChange={(_event, value) => {
-                        handleChange({ target: { name: "section_name", value } });
-                        setFieldValue("section_name", value);
-                        setConcessiondata(
-                          concessiondata.filter(
-                            (item: any) => item.class_name === values.class_name
-                            // item.section_name === values.section_name
-                          )
-                        );
-                      }}
-                      options={
-                        values.class_name !== ""
-                          ? classes
-                              .filter(
+                      </Grid>
+                      <Grid item xs={12} sm={4} py={1}>
+                        <Autocomplete
+                          disableClearable
+                          value={values.section_name || ""}
+                          onChange={(_event, value) => {
+                            handleChange({ target: { name: "section_name", value } });
+                            setFieldValue("section_name", value);
+                            setConcessiondata(
+                              concessiondata.filter(
+                                (item: any) => item.class_name === values.class_name
+                              )
+                            );
+                          }}
+                          options={
+                            classes
+                              .find(
                                 (item: any) =>
                                   item.academic_year === values.academic_year &&
                                   item.class_name === values.class_name
-                              )[0]
-                              .section_data.map((item: any) => item.section_name)
-                          : []
-                      }
-                      renderInput={(params) => (
+                              )
+                              ?.section_data.map((item: any) => item.section_name) || []
+                          }
+                          renderInput={(params) => (
+                            <MDInput
+                              {...params}
+                              required
+                              name="section_name"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Section
+                                </MDTypography>
+                              }
+                              variant="standard"
+                            />
+                          )}
+                        />
+                      </Grid>
+                    </>
+                  )}
+
+                  {(values.search_by === "Admission No" || values.search_by === "Fee Code") && (
+                    <>
+                      <Grid item xs={12} sm={4} py={1}>
+                        <Autocomplete
+                          disableClearable
+                          value={values.wing_name === "All" ? "All" : values.wing_name}
+                          onChange={(event, value) => setFieldValue("wing_name", value)}
+                          options={[
+                            "All",
+                            ...wings?.map((acd: { wing_name: any }) => acd?.wing_name),
+                          ]}
+                          renderInput={(params) => (
+                            <MDInput
+                              {...params}
+                              required
+                              name="wing_name"
+                              placeholder="Select Wing"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Wing Name
+                                </MDTypography>
+                              }
+                              variant="standard"
+                              error={touched.wing_name && Boolean(errors.wing_name)}
+                              helperText={touched.wing_name && errors.wing_name}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4} py={1}>
                         <MDInput
                           required
-                          name="section_name"
-                          onChange={handleChange}
-                          value={values.section_name}
+                          sx={{ width: "80%" }}
+                          name={values.search_by === "Fee Code" ? "fee_code" : "admission_number"}
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Section
-                            </MDTypography>
-                          }
-                          {...params}
-                          variant="standard"
-                        />
-                      )}
-                    />
-                  </Grid>
-                </Grid>
-              ) : (showadvanceSearch && values.search_by && values.search_by[0] === "A") ||
-                values.search_by[0] === "F" ? (
-                // Render the second set of components
-                <Grid container spacing={3}>
-                  {" "}
-                  <Grid item xs={12} sm={4} py={1}>
-                    <Autocomplete
-                      disableClearable
-                      sx={{ width: "100%" }}
-                      // value={values.wing_name || "All"}
-                      // onChange={(event, value) => {
-                      //   handleChange({
-                      //     target: { name: "wing_name", value },
-                      //   });
-                      // }}
-                      value={values.wing_name === "All" ? "All" : ""} // Pass an empty string when wing_name needs to be cleared
-                      onChange={(event, value) => setFieldValue("wing_name", value)}
-                      options={["All", ...wings?.map((acd: { wing_name: any }) => acd?.wing_name)]}
-                      renderInput={(params: any) => (
-                        <MDInput
-                          required
-                          InputLabelProps={{ shrink: true }}
-                          name="wing_name"
-                          placeholder="Select Wing "
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Wing Name{" "}
+                              {values.search_by === "Fee Code" ? "Fee Code" : "Admission Number"}
                             </MDTypography>
                           }
                           onChange={handleChange}
-                          value={values.wing_name || "All"}
-                          {...params}
+                          value={
+                            values.search_by === "Fee Code"
+                              ? values.fee_code
+                              : values.admission_number
+                          }
                           variant="standard"
-                          error={touched.wing_name && Boolean(errors.wing_name)}
-                          helperText={touched.wing_name && errors.wing_name}
+                          onBlur={handleBlur}
+                          error={
+                            touched[
+                              values.search_by === "Fee Code" ? "fee_code" : "admission_number"
+                            ] &&
+                            Boolean(
+                              errors[
+                                values.search_by === "Fee Code" ? "fee_code" : "admission_number"
+                              ]
+                            )
+                          }
+                          helperText={
+                            touched[
+                              values.search_by === "Fee Code" ? "fee_code" : "admission_number"
+                            ] &&
+                            errors[
+                              values.search_by === "Fee Code" ? "fee_code" : "admission_number"
+                            ]
+                          }
                         />
-                      )}
-                    />
-                  </Grid>{" "}
-                  {values.search_by && values.search_by[0] === "F" ? (
-                    <Grid item xs={12} sm={4} py={1}>
-                      <MDInput
-                        required
-                        sx={{ width: "80%" }}
-                        name="fee_code"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Fee Code
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.fee_code}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.fee_code && Boolean(errors.fee_code)}
-                        success={values.fee_code.length && !errors.fee_code}
-                        helperText={touched.fee_code && errors.fee_code}
-                      />
-                    </Grid>
-                  ) : (
-                    <Grid item xs={12} sm={4} py={1}>
-                      <MDInput
-                        required
-                        sx={{ width: "80%" }}
-                        name="admission_number"
-                        label={
-                          <MDTypography variant="button" fontWeight="bold" color="secondary">
-                            Admission Number
-                          </MDTypography>
-                        }
-                        onChange={handleChange}
-                        value={values.admission_number}
-                        variant="standard"
-                        onBlur={handleBlur}
-                        error={touched.admission_number && Boolean(errors.admission_number)}
-                        success={values.admission_number.length && !errors.admission_number}
-                        helperText={touched.admission_number && errors.admission_number}
-                      />
-                    </Grid>
+                      </Grid>
+                    </>
+                  )}
+
+                  {values.search_by === "Name" && (
+                    <>
+                      <Grid item xs={12} sm={4} py={1}>
+                        <Autocomplete
+                          disableClearable
+                          value={values.name || ""}
+                          onChange={(event, value) =>
+                            handleChange({ target: { name: "name", value } })
+                          }
+                          options={student.map(
+                            (item: any) =>
+                              `${item.first_name} ${item.middle_name} ${item.last_name}`
+                          )}
+                          renderInput={(params) => (
+                            <MDInput
+                              {...params}
+                              name="name"
+                              placeholder="Select Name"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Name
+                                </MDTypography>
+                              }
+                              variant="standard"
+                              error={touched.name && Boolean(errors.name)}
+                              helperText={touched.name && errors.name}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4} py={1}>
+                        <Autocomplete
+                          disableClearable
+                          value={values.father_name || ""}
+                          onChange={(event, value) => {
+                            handleChange({ target: { name: "father_name", value } });
+                            setConcessiondata(
+                              concessiondata.filter(
+                                (item: any) =>
+                                  `${item.first_name} ${item.middle_name} ${item.last_name}` ===
+                                  values.name
+                              )
+                            );
+                          }}
+                          options={student
+                            .filter(
+                              (item: any) =>
+                                `${item.first_name} ${item.middle_name} ${item.last_name}` ===
+                                values.name
+                            )
+                            .map((fitem: any) => fitem.father_name)}
+                          renderInput={(params) => (
+                            <MDInput
+                              {...params}
+                              required
+                              name="father_name"
+                              placeholder="Select Father's Name"
+                              label={
+                                <MDTypography variant="button" fontWeight="bold" color="secondary">
+                                  Father&apos;s Name
+                                </MDTypography>
+                              }
+                              variant="standard"
+                              error={touched.father_name && Boolean(errors.father_name)}
+                              helperText={touched.father_name && errors.father_name}
+                            />
+                          )}
+                        />
+                      </Grid>
+                    </>
                   )}
                 </Grid>
-              ) : showadvanceSearch && values.search_by && values.search_by[0] === "N" ? (
-                // Render the second set of components
-                <Grid container spacing={3}>
-                  {" "}
-                  <Grid item xs={12} sm={4} py={1}>
-                    <Autocomplete
-                      disableClearable
-                      sx={{ width: "100%" }}
-                      value={values.name || ""}
-                      onChange={(event, value) => {
-                        handleChange({
-                          target: { name: "name", value },
-                        });
-                      }}
-                      options={student.map(
-                        (item: any) => `${item.first_name} ${item.middle_name} ${item.last_name}`
-                      )}
-                      renderInput={(params: any) => (
-                        <MDInput
-                          InputLabelProps={{ shrink: true }}
-                          name="name"
-                          placeholder="2022-23"
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Name{" "}
-                            </MDTypography>
-                          }
-                          onChange={handleChange}
-                          value={values.name}
-                          {...params}
-                          variant="standard"
-                          error={touched.name && Boolean(errors.name)}
-                          helperText={touched.name && errors.name}
-                        />
-                      )}
-                    />
-                  </Grid>{" "}
-                  <Grid item xs={12} sm={4} py={1}>
-                    <Autocomplete
-                      disableClearable
-                      sx={{ width: "100%" }}
-                      value={values.father_name}
-                      onChange={(event, value) => {
-                        handleChange({
-                          target: { name: "father_name", value },
-                        });
-                        setConcessiondata(
-                          concessiondata.filter(
-                            (item: any) =>
-                              `${item.first_name} ${item.middle_name} ${item.last_name}` ==
-                              values.name
-                            // item.section_name === values.section_name
-                          )
-                        );
-                      }}
-                      options={student
-                        .filter(
-                          (item: any) =>
-                            `${item.first_name} ${item.middle_name} ${item.last_name}` ==
-                            values.name
-                        )
-                        .map((fitem: any) => fitem.father_name)}
-                      // options={["ddfd"]}
-                      renderInput={(params: any) => (
-                        <MDInput
-                          required
-                          InputLabelProps={{ shrink: true }}
-                          name="father_name"
-                          placeholder="2022-23"
-                          label={
-                            <MDTypography variant="button" fontWeight="bold" color="secondary">
-                              Father Name{" "}
-                            </MDTypography>
-                          }
-                          onChange={handleChange}
-                          value={values.father_name}
-                          {...params}
-                          variant="standard"
-                          error={touched.father_name && Boolean(errors.father_name)}
-                          helperText={touched.father_name && errors.father_name}
-                        />
-                      )}
-                    />
-                  </Grid>{" "}
-                </Grid>
-              ) : null}
+              )}
             </Grid>
             <Grid item xs={12} sm={12}>
-              {/* {isLoading ? (
-                "  <LoadingIndicator />"
-              ) : concessiondata.length > 0 ? (
-                <DataTable table={dataTableData} importbtn />
-              ) : (
-                "     <NoDataMessage />"
-              )} */}
-              <DataTable table={dataTableData} importbtn />
+              <DataTable table={dataTableData} selectColumnBtn importbtn />
             </Grid>
           </MDBox>
         </form>

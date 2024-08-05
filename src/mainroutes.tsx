@@ -8,17 +8,19 @@ import StudentDetails from "layouts/pages/student_details/student";
 import StudentArchive from "layouts/pages/student_details/student_archive";
 import StudentClassListReport from "layouts/pages/student_details/student_report/student_classlist_report";
 import ExportStudentData from "layouts/pages/student_details/student_report/export_student_data";
+import ExportEmployeeData from "layouts/pages/employee_details/export_employee_data";
+import StudentOverview from "layouts/pages/student_details/student_report/overview_student_data";
 import EmployeeProfile from "layouts/pages/employee_details/employee_profile";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PortraitIcon from "@mui/icons-material/Portrait";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import EmployeeType from "layouts/pages/employee_details/employee_type";
 import EmployeeDetails from "layouts/pages/employee_details/employee";
 import Academic from "layouts/pages/school/school_academic_year";
 import Class from "layouts/pages/school/school_class";
-``;
 import Wings from "layouts/pages/school/school_wings";
 import Department from "layouts/pages/employee_details/department";
-import PortraitIcon from "@mui/icons-material/Portrait";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeIcon from "@mui/icons-material/Badge";
 import EmpGrade from "layouts/pages/employee_details/employee_grade";
 import Caste from "layouts/pages/student_details/caste";
@@ -49,11 +51,11 @@ import SubjectDetails from "layouts/pages/subject_details/subject";
 import SectionSubject from "layouts/pages/subject_details/section_subject";
 import SubjectTeacher from "layouts/pages/subject_details/subject_teacher";
 import StudentSectionChange from "layouts/pages/student_details/student_section_change";
-
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
-import WeekDays from "layouts/pages/employee_details/week_days";
+import EmployeeWeekDays from "layouts/pages/employee_details/employee_week_days";
+import StudentWeekDays from "layouts/pages/student_details/student_week_days";
 import ClassTiming from "layouts/pages/employee_details/class_timing";
 import TimeTable from "layouts/pages/Attendance/time_table";
 import SMSConfigurationCreateSchoolAdmin from "layouts/pages/notifications/sms/school_admin_sms_configuration";
@@ -64,12 +66,17 @@ import IntraPortalStatusReport from "layouts/pages/notifications/reports/intra-p
 import StudentAttendance from "layouts/pages/Attendance/student";
 import FormSetting from "layouts/pages/admission/form_setting";
 import StudentAdmission from "layouts/pages/admission";
+import StudentAdmissionReport from "layouts/pages/student_details/student_report/student_admission_report";
 import StudentAttendanceReport from "layouts/pages/Attendance/reports/student_attendance_report";
 import StudentAttendanceDateWiseReport from "layouts/pages/Attendance/reports/student_date_wise";
 import Consolidiration from "layouts/pages/Attendance/reports/consolidiration";
 import EmployeeAttendance from "layouts/pages/Attendance/employee/employee_attendance";
 import TakeAttandance from "layouts/pages/Attendance/employee/take_attendance";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
+import EmployeeArchive from "layouts/pages/employee_details/employee_archive";
+import EmployeeArchivePDF from "layouts/pages/employee_details/export_archive_data";
+import EmployeeCertificate from "layouts/pages/employee_details/employee_certificate";
+import ManagePrincipal from "layouts/pages/employee_details/manage_principal";
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -88,6 +95,11 @@ const translater = {
   },
 };
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import StudentPhotoUpload from "layouts/pages/student_details/student_bulk_upload";
+import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_report";
+import EmployeeCategory from "layouts/pages/employee_details/employee_category";
+import ManageFeeAdmission from "layouts/pages/admission/manage_fee_admission";
+import AdmissionReport from "layouts/pages/admission/admission_report";
 
 const routes = [
   {
@@ -125,12 +137,6 @@ const routes = [
       </Icon>
     ),
     collapse: [
-      // {
-      //   name: "New School",
-      //   key: "new-school",
-      //   route: "pages/school/new-school",
-      //   component: <School />,
-      // },
       {
         name: translater[languagee].school_information,
         key: "schoolinfo",
@@ -161,15 +167,9 @@ const routes = [
         route: "pages/school/class",
         component: <Class />,
       },
-      // {
-      //   name: "Section",
-      //   key: "section",
-      //   route: "pages/school/section",
-      //   component: <Section />,
-      // },
     ],
   },
-  // Student
+
   {
     type: "collapse",
     name: "Student",
@@ -195,15 +195,27 @@ const routes = [
 
       {
         name: "Student Promotion",
-        key: "studentpromotion",
+        key: "student_promotion",
         route: "student/student_promoton",
         component: <StudentPromotion />,
       },
       {
         name: "Student Section Change",
-        key: "studentsectionchange",
+        key: "student_section_change",
         route: "student/student_section_change",
         component: <StudentSectionChange />,
+      },
+      {
+        name: "Student Week Days",
+        key: "student_week_days",
+        route: "student/student_week_days",
+        component: <StudentWeekDays />,
+      },
+      {
+        name: "Student Photo Upload",
+        key: "student_photo_upload",
+        route: "student/student_photo_upload",
+        component: <StudentPhotoUpload />,
       },
       {
         name: "Student Report",
@@ -211,14 +223,27 @@ const routes = [
         icon: <Icon fontSize="medium">S</Icon>,
         collapse: [
           {
+            name: "Overview of Student Data ",
+            key: "student_overview",
+            route: "student/student_overview",
+            component: <StudentOverview />,
+          },
+          {
+            name: "Student Admission Report",
+            key: "student_admission_report",
+            route: "student/student_admission_report",
+            component: <StudentAdmissionReport />,
+          },
+
+          {
             name: "Student Class List Report",
-            key: "classlist_report",
+            key: "student_classlist_report",
             route: "student/student_classlist_report",
             component: <StudentClassListReport />,
           },
           {
             name: "Export Student Data",
-            key: "export_data",
+            key: "student_export_data",
             route: "student/student_export_report",
             component: <ExportStudentData />,
           },
@@ -421,7 +446,7 @@ const routes = [
     key: "employee",
     icon: (
       <Icon fontSize="medium">
-        <PortraitIcon />
+        <AssignmentIndOutlinedIcon />
       </Icon>
     ),
     collapse: [
@@ -430,6 +455,55 @@ const routes = [
         key: "employee_details",
         route: "employee/employee_details",
         component: <EmployeeDetails />,
+      },
+      {
+        name: "Assign Class Teacher",
+        key: "assignclassteacher",
+        route: "employee/assignclassteacher",
+        component: <AssignClassTeacher />,
+      },
+      {
+        name: "Employee Week Days",
+        key: "employee_week_days",
+        route: "employee/employee_week_days",
+        component: <EmployeeWeekDays />,
+      },
+      {
+        name: "Employee Archive",
+        key: "employee_archive",
+        route: "employee/employee_archive",
+        component: <EmployeeArchive />,
+      },
+      {
+        name: "Manage Principal",
+        key: "manage_principal",
+        route: "employee/manage_principal",
+        component: <ManagePrincipal />,
+      },
+
+      {
+        name: "Experience Certificate",
+        key: "employee_certificate",
+        route: "employee/employee_certificate",
+        component: <EmployeeCertificate />,
+      },
+      {
+        name: "Export Employee Data",
+        key: "employee_export_data",
+        route: "employee/employee_export_data",
+        component: <ExportEmployeeData />,
+      },
+      {
+        name: "Export Archive Employee Data",
+        key: "export_archived_employee",
+        route: "employee/export_archived_employee",
+        component: <EmployeeArchivePDF />,
+      },
+      {
+        name: "Employee Category",
+        key: "employee_category",
+        route: "employee/employee_category",
+        component: <EmployeeCategory />,
       },
 
       {
@@ -457,18 +531,6 @@ const routes = [
         key: "department",
         route: "employee/department",
         component: <Department />,
-      },
-      {
-        name: "Assign Class Teacher",
-        key: "assignclassteacher",
-        route: "employee/assignclassteacher",
-        component: <AssignClassTeacher />,
-      },
-      {
-        name: "Week Days",
-        key: "weekdays",
-        route: "employee/week_days",
-        component: <WeekDays />,
       },
     ],
   },
@@ -626,37 +688,32 @@ const routes = [
 
         collapse: [
           {
-            name: "Fee Register without Payment Mode",
+            name: "Fee Register",
             key: "feeregister",
             route: "pages/fee/feeregister",
             component: <FeeRegister />,
           },
           {
-            name: "Fee Certificate",
-            key: "feecertificate",
-            route: "pages/fee/feecertificate",
-            component: <FeeCertificate />,
+            name: "Fee Collection",
+            key: "fee_collection_report",
+            route: "pages/fee/fee_collection_report",
+            component: <FeeCollectionReport />,
           },
+
           {
-            name: "Student Certificate",
-            key: "studentcertificate",
-            route: "pages/fee/studentcertificate",
-            component: <StudentCertificate />,
-          },
-          {
-            name: "Fee Receipt Report",
+            name: "Fee Receipt ",
             key: "feereceiptreport",
             route: "/fee/reports/feereceiptreport",
             component: <FeeReceiptReport />,
           },
           {
-            name: "Fee Concession Report",
+            name: "Fee Concession ",
             key: "feeconcessionreport",
             route: "/fee/reports/feeconcessionreport",
             component: <FeeConcessionReport />,
           },
           {
-            name: "Fee Defaulter Report",
+            name: "Fee Defaulter ",
             key: "feedefaulterreport",
             route: "/fee/reports/feedefaulterreport",
             component: <FeeDefaulterReport />,
@@ -687,6 +744,18 @@ const routes = [
         key: "admissionpage",
         route: "pages/admission/studentAdmission",
         component: <StudentAdmission />,
+      },
+      {
+        name: "Manage Admission",
+        key: "manage_admission",
+        route: "/pages/admission/manage_admission",
+        component: <ManageFeeAdmission />,
+      },
+      {
+        name: "Admission Report",
+        key: "admission_report",
+        route: "/pages/admission/admission_report",
+        component: <AdmissionReport />,
       },
     ],
   },

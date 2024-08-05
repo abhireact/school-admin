@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
+import Icon from "@mui/material/Icon";
 import SaveIcon from "@mui/icons-material/Save";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { message } from "antd";
@@ -182,7 +183,7 @@ const ShowUpdate = (props: any) => {
         max_no_of_class: employeeInfo.max_no_of_class || 0,
         employee_type: employeeInfo.employee_type || "",
         ltc_applicable: employeeInfo.ltc_applicable || false,
-        employee_grade: employeeInfo.employee_grade || "None",
+        employee_grade: employeeInfo.employee_grade || "",
         status: employeeInfo.status || "",
         aadhar_number: employeeInfo.aadhar_number || "",
 
@@ -230,35 +231,11 @@ const ShowUpdate = (props: any) => {
         mobile_number: employeeInfo.mobile_number || "",
         email: employeeInfo.email || "",
         employee_img: employeeInfo.employee_img || null,
+        pan_number: employeeInfo.pan_number || "",
       },
       enableReinitialize: true,
       validationSchema: validationSchema,
-      onSubmit: (values, action) => {
-        setLoading(true);
-
-        let sendData = {
-          ...values,
-          total_yrs_experience: values.total_yrs_experience.toString(),
-          total_month_experience: values.total_month_experience.toString(),
-        };
-        axios
-          .put(`${process.env.REACT_APP_BASE_URL}/mg_employees`, sendData, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(() => {
-            setLoading(false);
-            fetchData();
-            message.success("Updated Successfully!");
-            action.resetForm();
-          })
-          .catch((error: any) => {
-            setLoading(false);
-            message.error(error.response.data.detail);
-          });
-      },
+      onSubmit: (values, action) => {},
     });
   const [checkAddress, setCheckedAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -351,18 +328,44 @@ const ShowUpdate = (props: any) => {
   const handleDialogbox = () => {
     setDialogbox(false);
   };
+  const downloadPDF = (base64PDF: string, fileName: string): void => {
+    // Remove data URL prefix if present
+    const base64WithoutPrefix = base64PDF.replace(/^data:application\/pdf;base64,/, "");
+
+    // Convert base64 to Blob
+    const byteCharacters = atob(base64WithoutPrefix);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+
+    // Create download link
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName || "document.pdf";
+
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Clean up the URL object
+    URL.revokeObjectURL(link.href);
+  };
   return (
     <>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
-          <Grid item>
+          <Grid item xs={3} sm={3}>
             <Sidenav
               item={[
                 { icon: "person", label: "Employee Info", href: "1" },
                 { icon: "call", label: "Contact Info", href: "2" },
                 { icon: "account_balance", label: "Account Info", href: "3" },
                 { icon: "gite", label: "Address", href: "4" },
-                { icon: "sports_martial_arts", label: "Activities", href: "5" },
+                { icon: "workspace_premium", label: "Certification", href: "5" },
               ]}
               brandName={""}
               routes={[]}
@@ -384,6 +387,7 @@ const ShowUpdate = (props: any) => {
                           EMPLOYEE DETAILS
                         </MDTypography>
                       </Grid>
+
                       <Grid
                         item
                         xs={12}
@@ -413,270 +417,294 @@ const ShowUpdate = (props: any) => {
                       ) : (
                         <></>
                       )}
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           First Name
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Middle Name
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Last Name
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Date of Birth
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.first_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.middle_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.last_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.employee_dob}
                         </MDTypography>
                       </Grid>
 
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Joining Date
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Last Working Day
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Gender
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Job Title
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.joining_date}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.last_working_day}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.gender}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.job_title}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Qualification
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Max Class Per Day
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Total Year Experience
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Total Month Experience
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.qualification}
                         </MDTypography>
                       </Grid>
 
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.max_no_of_class}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.total_yrs_experience}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.total_month_experience}
                         </MDTypography>
                       </Grid>
 
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Aadhar Number
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Mother Name
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Father Name
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Marital Status
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.aadhar_number}
                         </MDTypography>
                       </Grid>
 
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.mother_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.father_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.martial_status}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Blood Group
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Department
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Employee Category
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Employee Profile
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.blood_group}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.employee_department}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.employee_category}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.role_name}
                         </MDTypography>
                       </Grid>
 
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Employee Type
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Employee Grade
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           LTC Applicable
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          Hobbies
+                        </MDTypography>
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.employee_type}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.employee_grade}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.ltc_applicable ? "YES" : "NO"}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold">
+                          {values.hobby}
+                        </MDTypography>
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Referred
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Referred By
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Designation
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
+                        {employeeInfo.adhar_card && (
+                          <MDButton
+                            variant="text"
+                            color="info"
+                            onClick={() =>
+                              downloadPDF(
+                                employeeInfo.adhar_card,
+                                `${username}_${employeeInfo.first_name}_employee_details.pdf`
+                              )
+                            }
+                          >
+                            Download
+                            <Icon>download</Icon>
+                          </MDButton>
+                        )}
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.is_refered ? "YES" : "NO"}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.refered_by}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.designation}
                         </MDTypography>
@@ -716,39 +744,39 @@ const ShowUpdate = (props: any) => {
                           <ModeEditOutlineIcon />
                         </MDAvatar>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Mobile Number
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Alternate Number
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Email
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to make it 4 columns */}
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.mobile_number}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.phone_number}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.email}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to make it 4 columns */}
                     </Grid>
                   </MDBox>
@@ -786,66 +814,91 @@ const ShowUpdate = (props: any) => {
                           <ModeEditOutlineIcon />
                         </MDAvatar>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Bank Name
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Account Number
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Branch Name
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           IFSC Code
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.bank_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.account_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.branch_name}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.ifsc_number}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           ESI Number
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           UNA Number
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>
-                      <Grid item xs={12} sm={3}></Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold" color="secondary">
+                          PAN Number
+                        </MDTypography>
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
+                        {employeeInfo.bank_account_details && (
+                          <MDButton
+                            variant="text"
+                            color="info"
+                            onClick={() =>
+                              downloadPDF(
+                                employeeInfo.bank_account_details,
+                                `${username}_${employeeInfo.first_name}_account_details.pdf`
+                              )
+                            }
+                          >
+                            Donwload
+                            <Icon>download</Icon>
+                          </MDButton>
+                        )}
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.esi_number}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold">
                           {values.una_number}
+                        </MDTypography>
+                      </Grid>
+                      <Grid item xs={3} sm={3}>
+                        <MDTypography variant="button" fontWeight="bold">
+                          {values.pan_number}
                         </MDTypography>
                       </Grid>
                     </Grid>
@@ -894,73 +947,73 @@ const ShowUpdate = (props: any) => {
                           CURRENT ADDRESS
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Address Line 1
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Address Line 2
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Pincode
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           City
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.address_line1}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.address_line2}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.pin_code}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.city}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           State
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Country
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.state}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.country}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
                       <Grid item xs={12} sm={12}>
                         <MDTypography
@@ -972,73 +1025,73 @@ const ShowUpdate = (props: any) => {
                           PERMANENT ADDRESS
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Address Line 1
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Address Line 2
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Pincode
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           City
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.pr_address_line1}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.pr_address_line2}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.pr_pin_code}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.pr_city}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           State
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Country
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.pr_state}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
+                      <Grid item xs={3} sm={3}>
                         <MDTypography variant="body2" fontWeight="bold">
                           {values.pr_country}
                         </MDTypography>
                       </Grid>
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
-                      <Grid item xs={12} sm={3}></Grid>{" "}
+                      <Grid item xs={3} sm={3}></Grid>{" "}
                       {/* Add an empty Grid item to maintain 4-column layout */}
                     </Grid>
                   </MDBox>
@@ -1055,7 +1108,7 @@ const ShowUpdate = (props: any) => {
                           fontWeight="bold"
                           fontSize="18px"
                         >
-                          ACTIVITIES
+                          CERTIFICATION
                         </MDTypography>
                       </Grid>
                       <Grid
@@ -1076,17 +1129,40 @@ const ShowUpdate = (props: any) => {
                           <ModeEditOutlineIcon />
                         </MDAvatar>
                       </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Hobbies
-                        </MDTypography>
+
+                      <Grid item xs={12} sm={6}>
+                        {employeeInfo.extra_curricular_files && (
+                          <MDButton
+                            variant="text"
+                            color="info"
+                            onClick={() =>
+                              downloadPDF(
+                                employeeInfo.extra_curricular_files,
+                                `${username}_${employeeInfo.first_name}_experience_certificate.pdf`
+                              )
+                            }
+                          >
+                            Experience Certificate
+                            <Icon>download</Icon>
+                          </MDButton>
+                        )}
                       </Grid>
-                      <Grid item xs={12} sm={4}></Grid>
-                      <Grid item xs={12} sm={4}></Grid>
-                      <Grid item xs={12} sm={4}>
-                        <MDTypography variant="button" fontWeight="bold">
-                          {values.hobby}
-                        </MDTypography>
+                      <Grid item xs={12} sm={6}>
+                        {employeeInfo.sport_activity_files && (
+                          <MDButton
+                            variant="text"
+                            color="info"
+                            onClick={() =>
+                              downloadPDF(
+                                employeeInfo.sport_activity_files,
+                                `${username}_${employeeInfo.first_name}_other_certificate.pdf`
+                              )
+                            }
+                          >
+                            Other Certificate
+                            <Icon>download</Icon>
+                          </MDButton>
+                        )}
                       </Grid>
                     </Grid>
                   </MDBox>

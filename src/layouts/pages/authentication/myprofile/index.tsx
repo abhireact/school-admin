@@ -18,10 +18,12 @@ const MYProfile = () => {
     first_name: "",
     middle_name: "",
     last_name: "",
+    school_name: "",
+    user_type: "",
   });
   const fetchTasks = async () => {
     await axios
-      .get(`${process.env.REACT_APP_BASE_URL}/profile/`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/profile`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -79,8 +81,8 @@ const MYProfile = () => {
             </Grid>
             <Grid item sm={5}>
               <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}>
-                {data?.first_name.toUpperCase()} {data.middle_name?.toUpperCase()}{" "}
-                {data.last_name?.toUpperCase()}
+                {data?.first_name?.toUpperCase()} {data?.middle_name?.toUpperCase()}{" "}
+                {data?.last_name?.toUpperCase()}
               </MDTypography>
             </Grid>
             <Grid item sm={5}>
@@ -96,11 +98,13 @@ const MYProfile = () => {
               <MDTypography variant="body2">School Name</MDTypography>
             </Grid>
             <Grid item sm={5}>
-              <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}></MDTypography>
+              <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}>
+                {data?.user_type}
+              </MDTypography>
             </Grid>
             <Grid item sm={5}>
               <MDTypography variant="h5" fontWeight="regular" marginBottom={0.5}>
-                {schoolName}
+                {data?.school_name}
               </MDTypography>
             </Grid>
           </Grid>

@@ -1,27 +1,19 @@
 import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
-import Dialog from "@mui/material/Dialog";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import MDBox from "components/MDBox";
-import { Icon, Tooltip } from "@mui/material";
 import { message } from "antd";
 import StudentCard from "../student_card";
-import MyDataTableComponent from "layouts/pages/dashboard/test2";
+import { useReactToPrint } from "react-to-print";
+import PdfGenerator from "layouts/pages/Mindcompdf/PdfGenerator";
+import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
 const token = Cookies.get("token");
 
 const PaidFees = (props: any) => {
   const [data, setData] = useState([]);
-
   console.log(props, "props");
   useEffect(() => {
     GetData(props.mainData);
@@ -58,15 +50,8 @@ const PaidFees = (props: any) => {
       { Header: "RECIEPT NO", accessor: "receipt_number" },
       { Header: "COLLECTION DATE", accessor: "submit_date" },
       { Header: "COLLECTION NAME", accessor: "collection_name" },
-      // { Header: "PARTICULAR NAME", accessor: "receipt_number" },
-      // { Header: "ASSIGNED AMOUNT", accessor: "total" },
       { Header: "PAID AMOUNT", accessor: "paid_amount" },
-
-      // { Header: "FINE", accessor: "total" },
-      // { Header: "CONCESSION", accessor: "total" },
-      // { Header: "DISCOUNT AMOUNT", accessor: "total" },
       { Header: "TOTAL PAID AMOUNT", accessor: "total_amount" },
-      //   { Header: "ACTION", accessor: "a" },
     ],
 
     rows: data.map(
@@ -80,30 +65,40 @@ const PaidFees = (props: any) => {
         },
         index: number
       ) => ({
-        total_amount: <MDTypography variant="p">{row.total_amount}</MDTypography>,
-        submit_date: <MDTypography variant="p">{row.submit_date}</MDTypography>,
-        paid_amount: <MDTypography variant="p">{row.paid_amount}</MDTypography>,
-        receipt_number: <MDTypography variant="p">{row.receipt_number}</MDTypography>,
-        collection_name: <MDTypography variant="p">{row.collection_name}</MDTypography>,
+        total_amount: row?.total_amount,
+        submit_date: row.submit_date,
+        paid_amount: row.paid_amount,
+        receipt_number: row.receipt_number,
+        collection_name: row.collection_name,
       })
     ),
   };
+  // const tableRef = useRef();
+  // // const hiddenText = "This text is hidden on the main page but will be visible in the PDF.";
+  // const handlePrint = useReactToPrint({
+  //   content: () => tableRef.current,
+  // });
+
   return (
     <>
-      {/* <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
-        <MDTypography variant="h6">Paid Fees</MDTypography>
-        <Tooltip title="Paid Fees" placement="bottom" arrow>
-          <MDButton variant="outlined" color="secondary" size="small" circular iconOnly>
-            <Icon>priority_high</Icon>
-          </MDButton>
-        </Tooltip>
-      </MDBox>{" "} */}
       <Grid container px={3} display="flex" justifyContent={"center"}>
         <Grid item xs={12} sm={6} display="flex" justifyContent={"center"}>
           <StudentCard data={props.mainData} />
         </Grid>
       </Grid>
-      <DataTable table={dataTableData} />
+      {/* <MDBox>
+        <MDButton onClick={handlePrint}>Print</MDButton>
+      </MDBox> */}
+      <DataTable
+        table={dataTableData}
+        selectColumnBtn
+        importbtn
+        pdfGeneratorProps={{
+          isPdfMode: true,
+          hiddenText: "",
+          additionalInfo: undefined,
+        }}
+      />
     </>
   );
 };

@@ -1,57 +1,27 @@
 import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
-import DialogContent from "@mui/material/DialogContent";
-import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
-import { useTheme } from "@emotion/react";
 import BuildIcon from "@mui/icons-material/Build";
-import { Card, useMediaQuery } from "@mui/material";
+import { Card } from "@mui/material";
 import Cookies from "js-cookie";
 import ManageSchedule from "./manageschedule";
-import { Dispatch, SetStateAction } from "react";
 import { Popconfirm, message } from "antd";
-import { useSelector } from "react-redux";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 
 const token = Cookies.get("token");
 const LateFine = () => {
-  // To fetch rbac from redux:  Start
-  // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
-  // console.log("rbac user", rbacData);
-  //End
-
-  // Fetch rbac  Date from useEffect: Start
-
-  const [rbacData, setRbacData] = useState([]);
-  const fetchRbac = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mg_rbac_current_user`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        console.log("rbac user", response.data);
-        setRbacData(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchRbac();
-  }, [token]);
   //End
   const [data, setData] = useState([]);
 
@@ -173,7 +143,7 @@ const LateFine = () => {
           <IconButton>
             <Popconfirm
               title="Delete"
-              description="Are you sure to Delete it ?"
+              description="Are you sure you want to delete it? ?"
               placement="topLeft"
               onConfirm={() => confirm(row)} // Pass index to confirm function
               onCancel={cancel}
@@ -203,46 +173,53 @@ const LateFine = () => {
       late_fee_calculation_type: row.late_fee_calculation_type,
     })),
   };
+  const { t } = useTranslation();
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {manageSchedule ? (
-        <ManageSchedule manageData={manageData} handleClose={setManageSchedule} />
-      ) : (
-        <>
-          {showpage ? (
-            <Create handleShowPage={handleShowPage} fetchingData={fetchLateFees} />
-          ) : (
-            <>
-              {updatepage ? (
-                <Update setOpen={setUpdatepage} editData={editData} fetchingData={fetchLateFees} />
-              ) : (
-                <Card>
-                  <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Grid item pt={2} pl={2}>
-                      <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                        Late Fee
-                      </MDTypography>
+      <I18nextProvider i18n={createTrans}>
+        {manageSchedule ? (
+          <ManageSchedule manageData={manageData} handleClose={setManageSchedule} />
+        ) : (
+          <>
+            {showpage ? (
+              <Create handleShowPage={handleShowPage} fetchingData={fetchLateFees} />
+            ) : (
+              <>
+                {updatepage ? (
+                  <Update
+                    setOpen={setUpdatepage}
+                    editData={editData}
+                    fetchingData={fetchLateFees}
+                  />
+                ) : (
+                  <Card>
+                    <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Grid item pt={2} pl={2}>
+                        <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                          {t("late_fee")}
+                        </MDTypography>
+                      </Grid>
+                      <Grid item pt={2} pr={2}>
+                        <MDButton
+                          variant="outlined"
+                          color="info"
+                          type="submit"
+                          onClick={handleShowPage}
+                        >
+                          + {t("new_late_fee")}
+                        </MDButton>
+                      </Grid>
                     </Grid>
-                    <Grid item pt={2} pr={2}>
-                      <MDButton
-                        variant="outlined"
-                        color="info"
-                        type="submit"
-                        onClick={handleShowPage}
-                      >
-                        + New Late Fee
-                      </MDButton>
-                    </Grid>
-                  </Grid>
-                  <DataTable table={dataTableData} />
-                </Card>
-              )}
-            </>
-          )}
-        </>
-      )}
+                    <DataTable table={dataTableData} />
+                  </Card>
+                )}
+              </>
+            )}
+          </>
+        )}
+      </I18nextProvider>
     </DashboardLayout>
   );
 };

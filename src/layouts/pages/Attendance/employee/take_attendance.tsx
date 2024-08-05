@@ -20,7 +20,7 @@ const TakeAttandance = () => {
   const locationdata: string[] = [];
   useEffect(() => {
     axios
-      .get(`http://10.0.20.200:8000/mg_employees`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_employees`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ const TakeAttandance = () => {
     const main_data = data[index];
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/attendance`,
+        `${process.env.REACT_APP_BASE_URL}/attendance`,
         {
           employee_name: main_data.user_id,
           checkin: current_time,
@@ -88,7 +88,7 @@ const TakeAttandance = () => {
     const main_data = data[index];
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/attendance`,
+        `${process.env.REACT_APP_BASE_URL}/attendance`,
         {
           employee_name: main_data.user_id,
           checkin: null,

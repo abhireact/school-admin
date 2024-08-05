@@ -9,6 +9,8 @@ import type { TableColumnsType } from "antd";
 import axios from "axios";
 import { message } from "antd";
 import Cookies from "js-cookie";
+import { I18nextProvider, useTranslation } from "react-i18next";
+import createTrans from "layouts/pages/translater/fee_module";
 
 const token = Cookies.get("token");
 
@@ -31,6 +33,7 @@ export default function ManageConcession(props: any) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [getdata, setGetdata] = useState([]);
   const initialValues = props.data;
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchData();
@@ -39,7 +42,7 @@ export default function ManageConcession(props: any) {
   const fetchData = async () => {
     try {
       const response = await axios.post(
-        `http://10.0.20.200:8000/fee_concession/collection`,
+        `${process.env.REACT_APP_BASE_URL}/fee_concession/collection`,
         props.data,
         {
           headers: {
@@ -111,42 +114,44 @@ export default function ManageConcession(props: any) {
     },
   });
   return (
-    <Card>
-      <MDBox p={3}>
-        <form onSubmit={formik.handleSubmit}>
-          <Grid container>
-            <Grid item xs={12} sm={12}>
-              <MDTypography variant="h4" fontWeight="bold" color="secondary">
-                Manage Scheduled Concession
-              </MDTypography>
+    <I18nextProvider i18n={createTrans}>
+      <Card>
+        <MDBox p={3}>
+          <form onSubmit={formik.handleSubmit}>
+            <Grid container>
+              <Grid item xs={12} sm={12}>
+                <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                  {t("manage_scheduled_concession")}
+                </MDTypography>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container sx={{ display: "flex", justifyContent: "center" }} m={2}>
-            <Table
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
-              columns={columns}
-              dataSource={manageconcession}
-              pagination={false}
-              scroll={{ y: 400, x: true }}
-            />
-          </Grid>
-          <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
-            <Grid item>
-              <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
-                Back
-              </MDButton>
+            <Grid container sx={{ display: "flex", justifyContent: "center" }} m={2}>
+              <Table
+                rowSelection={{
+                  type: "checkbox",
+                  ...rowSelection,
+                }}
+                columns={columns}
+                dataSource={manageconcession}
+                pagination={false}
+                scroll={{ y: 400, x: true }}
+              />
             </Grid>
-            <Grid item ml={2}>
-              <MDButton color="info" variant="contained" type="submit">
-                Save
-              </MDButton>
+            <Grid container sx={{ display: "flex", justifyContent: "flex-end" }} mt={2}>
+              <Grid item>
+                <MDButton color="dark" variant="contained" onClick={() => props.onSuccess()}>
+                  {t("back")}
+                </MDButton>
+              </Grid>
+              <Grid item ml={2}>
+                <MDButton color="info" variant="contained" type="submit">
+                  {t("save")}
+                </MDButton>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </MDBox>
-    </Card>
+          </form>
+        </MDBox>
+      </Card>
+    </I18nextProvider>
   );
 }
