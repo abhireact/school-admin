@@ -5,6 +5,7 @@
   "description": "React + TypeScript version of Material Dashboard 2 PRO by Creative Tim",
   "dependencies": {
     "@asseinfo/react-kanban": "2.2.0",
+    "@craftjs/core": "^0.2.10",
     "@emotion/cache": "11.11.0",
     "@emotion/react": "11.11.0",
     "@emotion/styled": "11.11.0",

@@ -5,15 +5,15 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Update from "./form";
+import { Card, Grid } from "@mui/material";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useTheme } from "@emotion/react";
-import { Card, useMediaQuery } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -74,7 +74,7 @@ const ScholasticParticular = () => {
 
   const handleCloseupdate = () => {
     setOpenupdate(false);
-  }; //End
+  };
   const fetchParticulars = () => {
     axios
       .get("http://10.0.20.200:8000/schol_particular", {
@@ -137,19 +137,17 @@ const ScholasticParticular = () => {
     rows: [
       {
         action: (
-          <MDTypography variant="p">
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "scholastic_particularupdate") ? (
-                <IconButton onClick={() => handleOpenupdate(1)}>
-                  <CreateRoundedIcon />
-                </IconButton>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-          </MDTypography>
+          <>
+            <IconButton onClick={() => handleOpenupdate(1)} size="small">
+              <EditIcon />
+            </IconButton>
+            <IconButton size="small">
+              <DeleteIcon />
+            </IconButton>
+            <IconButton onClick={() => navigate("/Examination/scholastic_component")} size="small">
+              <FormatListNumberedIcon />
+            </IconButton>
+          </>
         ),
         weightage: "20",
         name: "lll",
@@ -166,7 +164,7 @@ const ScholasticParticular = () => {
     <DashboardLayout>
       <DashboardNavbar />
       <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-        <Update setOpenupdate={setOpenupdate} editData={editData} />
+        <Update setOpenupdate={setOpenupdate} editData={editData} onSuccess={handleCloseupdate} />
       </Dialog>
       <Card>
         <Grid container spacing={2} p={2}>
@@ -194,7 +192,13 @@ const ScholasticParticular = () => {
             )}
           </Grid>
           <Grid item xs={12} sm={12}>
-            <DataTable table={dataTableData} />
+            <DataTable
+              table={dataTableData}
+              canSearch
+              isSorted={false}
+              entriesPerPage={false}
+              showTotalEntries={false}
+            />
           </Grid>
         </Grid>
       </Card>

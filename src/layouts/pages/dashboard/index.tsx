@@ -20,9 +20,6 @@ import MDBox from "components/MDBox";
 
 const MyDashboard = () => {
   const data = useSelector((state: any) => state);
-  console.log("may redux data", data);
-  // const token = useSelector((state: any) => state.data.token);
-  // console.log(token,"rbac token");
 
   const dispatch = useDispatch();
 

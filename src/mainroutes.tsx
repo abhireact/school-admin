@@ -34,7 +34,7 @@ import FeeSchedule from "layouts/pages/fee/manage_fee/fee_schedule";
 import FeeCertificate from "layouts/pages/fee/fee_report/fee_certificate";
 import FeeRegister from "layouts/pages/fee/fee_report/fee_register";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
-import StudentCertificate from "layouts/pages/fee/fee_report/student_certificate";
+import StudentCertificate from "layouts/pages/student_details/student_certificate";
 import FeeCategory from "layouts/pages/fee/manage_fee/fee_category";
 import FeeConcession from "layouts/pages/fee/manage_fee/fee_concession";
 import FeeReceiptReport from "layouts/pages/fee/fee_report/fee_receipt";
@@ -54,7 +54,6 @@ import StudentSectionChange from "layouts/pages/student_details/student_section_
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
 import Scholastic from "layouts/pages/exam/scholastic_particular";
-import ScholasticComponent from "layouts/pages/exam/scholastic_component";
 import OtherParticular from "layouts/pages/exam/other_particular";
 import OtherComponent from "layouts/pages/exam/other_component";
 import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
@@ -105,6 +104,8 @@ import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_rep
 import EmployeeCategory from "layouts/pages/employee_details/employee_category";
 import ManageFeeAdmission from "layouts/pages/admission/manage_fee_admission";
 import AdmissionReport from "layouts/pages/admission/admission_report";
+import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
+import TransferCertificate from "layouts/pages/TransferCertificate";
 
 const routes = [
   {
@@ -221,6 +222,26 @@ const routes = [
         key: "student_photo_upload",
         route: "student/student_photo_upload",
         component: <StudentPhotoUpload />,
+      },
+      {
+        type: "collapse",
+        name: "Transfer Certificate",
+        key: "brooklyn-alice",
+        icon: <Icon>chrome_reader_mode</Icon>,
+        collapse: [
+          {
+            name: "Student  Transfer Certificate",
+            key: "tc_create",
+            route: "/pages/tc_create",
+            component: <TransferCertificate />,
+          },
+          {
+            name: "Transfer Certificate Settings",
+            key: "tc_settings",
+            route: "/pages/tc_settings",
+            component: <TransferCertificateTemplate />,
+          },
+        ],
       },
       {
         name: "Student Report",
@@ -346,12 +367,7 @@ const routes = [
         route: "/pages/exam/scholastic_particular",
         component: <Scholastic />,
       },
-      {
-        name: "Scholastic Component",
-        key: "scholastic_component",
-        route: "/pages/exam/scholastic_component",
-        component: <ScholasticComponent />,
-      },
+
       {
         name: "Other Particular",
         key: "other_particular",

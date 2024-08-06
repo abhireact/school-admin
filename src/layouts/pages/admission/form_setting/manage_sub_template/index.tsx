@@ -51,7 +51,7 @@ const ManageSubTemplate = () => {
       width: "2%",
       Cell: ({ cell: { value }, row: { index } }: any) => (
         <EditableCell
-          value={rows[index].status}
+          value={rows[index].status || value}
           onChange={(newValue: any) => handleCellChange(index, "select", newValue)}
           type="checkbox"
         />

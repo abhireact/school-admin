@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import MYProfile from "layouts/pages/authentication/myprofile";
 import MyDashboard from "layouts/pages/dashboard";
-import TransferCertificate from "layouts/pages/TransferCertificate";
+
 import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create";
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
@@ -36,6 +36,13 @@ import TransferCertificateTemplate from "layouts/pages/TransferCertificate/templ
 //Examination Module
 import ExamtypeCreate from "layouts/pages/exam/exam_type/create";
 import ScholasticPerticularCreate from "layouts/pages/exam/scholastic_particular/create";
+import ScholasticComponent from "layouts/pages/exam/scholastic_component";
+
+import Second_CC from "layouts/pages/authentication/Certificate/second_cc";
+import CC_one from "layouts/pages/authentication/Certificate/CC_one";
+import Certificates from "layouts/pages/student_details/student/certificates";
+import Character_Certificate from "layouts/pages/student_details/student/certificates/Character_Certificate";
+import Bonafide_Certificate from "layouts/pages/student_details/student/certificates/Bonafide_Certificate";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -76,7 +83,6 @@ try {
   console.error(error);
 }
 let routes = [
-  // pages not to show in left navba
   {
     type: "collapse",
     name: "Dashboards",
@@ -88,26 +94,6 @@ let routes = [
         key: "analytics",
         route: "/dashboards/analytics",
         component: <MyDashboard />,
-      },
-    ],
-  },
-  {
-    type: "collapse",
-    name: "Transfer Certificate",
-    key: "brooklyn-alice",
-    icon: <Icon>chrome_reader_mode</Icon>,
-    collapse: [
-      {
-        name: "Student  Transfer Certificate",
-        key: "tc_create",
-        route: "/pages/tc_create",
-        component: <TransferCertificate />,
-      },
-      {
-        name: "Transfer Certificate Settings",
-        key: "tc_settings",
-        route: "/pages/tc_settings",
-        component: <TransferCertificateTemplate />,
       },
     ],
   },
@@ -142,6 +128,12 @@ let routes = [
         component: <MYProfile />,
       },
       {
+        name: "Second CC",
+        key: "second_cc",
+        route: "/pages/authentication/second_cc",
+        component: <Second_CC />,
+      },
+      {
         name: "Pdf Report",
         key: "pdfreport",
         route: "pages/fee/pdfreport",
@@ -154,6 +146,24 @@ let routes = [
     key: "create_student",
     route: "student/create_student",
     component: <CreateStudent />,
+  },
+  {
+    name: "Student Certificates",
+    key: "certificates",
+    route: "/pages/student_details/student/certificates",
+    component: <Certificates />,
+  },
+  {
+    name: "Character Certificates",
+    key: "character_certificates",
+    route: "/pages/student_details/student/certificates/Character_Certificate",
+    component: <Character_Certificate />,
+  },
+  {
+    name: "Bonafide Certificates",
+    key: "bonafide_ertificates",
+    route: "/pages/student_details/student/certificates/bonafide_certificates",
+    component: <Bonafide_Certificate />,
   },
 
   {
@@ -290,6 +300,12 @@ let routes = [
     key: "scholastic_perticular_create",
     route: "/Examination/scholastic_perticular_create",
     component: <ScholasticPerticularCreate />,
+  },
+  {
+    name: "Scholastic Component",
+    key: "scholastic_component",
+    route: "/Examination/scholastic_component",
+    component: <ScholasticComponent />,
   },
 ];
 

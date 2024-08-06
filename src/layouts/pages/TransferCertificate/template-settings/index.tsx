@@ -7,6 +7,9 @@ import MDTypography from "components/MDTypography";
 import Switch from "@mui/material/Switch";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import studentLogo from "assets/images/studentLogo.jpeg";
+import Cookies from "js-cookie";
+const token = Cookies.get("token");
+import axios from "axios";
 import { message } from "antd";
 
 interface SettingsState {
@@ -134,31 +137,92 @@ const TransferCertificateSettings: React.FC = () => {
     english_or_hindi: false,
   });
   useEffect(() => {
-    const savedSettings = localStorage.getItem("transferCertificateSettings");
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    }
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/certificate/transfer/settings`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setSettings(response.data);
+      })
+      .catch((error) => {
+        setSettings({
+          school_no: true,
+          book_no: true,
+          admission_number: true,
+          serial_number: true,
+          pen: true,
+          affiliation_no: true,
+          renewed_upto: true,
+          school_status: true,
+          name: true,
+          motherName: true,
+          fatherName: true,
+          dob: true,
+          nationality: true,
+          religion: true,
+          casteCategory: true,
+          isFailed: true,
+          lastClass: true,
+          isQualified: true,
+          duesPaid: true,
+          feeConcession: true,
+          nccCadet: true,
+          admissionDate: true,
+          studentConduct: true,
+          leavingReason: true,
+          certificateDate: true,
+          remarks: true,
+          backgroundSchoolLogo: true,
+          studentImage: true,
+          preparedBy: true,
+          checkedBy: true,
+          principalSign: true,
+          registration_no: true,
+          lastClassResult: true,
+          struckoffName: true,
+          subjectsOffered: true,
+          attendedSchool: true,
+          schoolCategory: true,
+          extraCurricular: true,
+          english_or_hindi: false,
+        });
+        message.error(error.response.data.detail);
+        console.error("Error fetching data:", error);
+      });
   }, []);
 
-  useEffect(() => {
-    // Save settings to localStorage whenever they change
-    localStorage.setItem("transferCertificateSettings", JSON.stringify(settings));
-  }, [settings]);
-
+  // useEffect(() => {
+  //   // Save settings to localStorage whenever they change
+  //   localStorage.setItem("transferCertificateSettings", JSON.stringify(settings));
+  // }, [settings]);
   const handleToggle = (field: string): void => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      [field]: !prevSettings[field],
-    }));
+    setSettings((prevSettings) => {
+      const newSettings = {
+        ...prevSettings,
+        [field]: !prevSettings[field],
+      };
+
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/certificate/transfer/settings`, newSettings, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          // message.success("Updated Successfully!");
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
+
+      return newSettings;
+    });
   };
-
-  const saveSettings = (): void => {
-    // Save in database
-
-    message.success("Transfer Certificate Settings Saved");
-    console.log("Settings saved to localStorage:", settings);
-  };
-
   const renderSettingToggle = (field: string, label: string): JSX.Element => (
     <Grid item xs={12} sm={12} md={12} key={field} style={{ borderBottom: "1px solid #dddd" }}>
       <MDBox display="flex" alignItems="center" justifyContent="space-between">
@@ -310,7 +374,6 @@ const TransferCertificateSettings: React.FC = () => {
               {renderSettingToggle("renewed_upto", "Renewed Upto")}
               {renderSettingToggle("school_status", "Status of School")}
               {renderSettingToggle("registration_no", "Registration Number")}
-
               {renderSettingToggle("name", "Name of the student")}
               {renderSettingToggle("motherName", "Mother's Name")}
               {renderSettingToggle("fatherName", "Father's Name")}
@@ -364,15 +427,19 @@ const TransferCertificateSettings: React.FC = () => {
                   Preview
                 </MDTypography>
                 <MDTypography variant="button" fontWeight="bold" color="body3">
-                  Language : {renderSettingToggle("english_or_hindi", "English/Hindi")}
+                  LANGUAGE : {renderSettingToggle("english_or_hindi", "English/Hindi")}
                 </MDTypography>
               </Grid>
               <Grid item sm={12}>
                 <Grid container>
                   <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-                    <MDTypography variant="h4">
-                      स्थानांतरण प्रमाणपत्र/Transfer Certificate
-                    </MDTypography>
+                    {settings.english_or_hindi ? (
+                      <MDTypography variant="h4">
+                        स्थानांतरण प्रमाणपत्र/Transfer Certificate
+                      </MDTypography>
+                    ) : (
+                      <MDTypography variant="h4">Transfer Certificate</MDTypography>
+                    )}
                   </Grid>
                   <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
                     {settings.studentImage !== false && (
@@ -391,35 +458,47 @@ const TransferCertificateSettings: React.FC = () => {
                     </Grid>
                   ))} */}
                   {formFields.map((field, index) => (
-                    <Grid item xs={6} sm={6} key={index}>
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        {field.label.hi}/{field.label.en}: {getDummyData(field.inputName)}
-                      </MDTypography>
-                    </Grid>
+                    <>
+                      {settings.english_or_hindi ? (
+                        <Grid item xs={6} sm={6} key={index}>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {field.label.hi}/{field.label.en}: {getDummyData(field.inputName)}
+                          </MDTypography>
+                        </Grid>
+                      ) : (
+                        <Grid item xs={4} sm={4} key={index}>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {field.label.en}: {getDummyData(field.inputName)}
+                          </MDTypography>
+                        </Grid>
+                      )}
+                    </>
                   ))}
                   {settings.registration_no !== false && (
                     <Grid item xs={12} sm={12}>
-                      <>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          उम्मीदवार का पंजीकरण संख्या/Registration No. of the Candidate (in case
-                          Class I to II) :
-                        </MDTypography>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          9864367
-                        </MDTypography>
-                      </>
+                      {settings.english_or_hindi ? (
+                        <>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            उम्मीदवार का पंजीकरण संख्या/Registration No. of the Candidate (in case
+                            Class I to II) :
+                          </MDTypography>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            9864367
+                          </MDTypography>
+                        </>
+                      ) : (
+                        <>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            Registration No. of the Candidate (in case Class I to II) :
+                          </MDTypography>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            9864367
+                          </MDTypography>
+                        </>
+                      )}
                     </Grid>
                   )}
-                  {/* <Grid item xs={6} sm={6}>
-                    <MDTypography variant="button" color="body3" fontWeight="bold">
-                      T.C. No. 1
-                    </MDTypography>
-                  </Grid>
-                  <Grid item xs={6} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <MDTypography variant="button" color="body3" fontWeight="bold">
-                      S.R. No. 12345
-                    </MDTypography>
-                  </Grid> */}
+
                   <Grid
                     container
                     sx={{
@@ -462,9 +541,15 @@ const TransferCertificateSettings: React.FC = () => {
                             paddingLeft: 2,
                           }}
                         >
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {item.label.hi}/{item.label.en}
-                          </MDTypography>
+                          {settings.english_or_hindi ? (
+                            <MDTypography variant="button" fontWeight="bold" color="body3">
+                              {item.label.hi}/{item.label.en}
+                            </MDTypography>
+                          ) : (
+                            <MDTypography variant="button" fontWeight="bold" color="body3">
+                              {item.label.en}
+                            </MDTypography>
+                          )}
                         </Grid>
                         <Grid
                           item
@@ -481,9 +566,15 @@ const TransferCertificateSettings: React.FC = () => {
                   </Grid>
                   {settings.preparedBy !== false && (
                     <Grid item xs={4} sm={4}>
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        द्वारा तैयार /Prepared By
-                      </MDTypography>
+                      {settings.english_or_hindi ? (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          द्वारा तैयार /Prepared By
+                        </MDTypography>
+                      ) : (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          Prepared By
+                        </MDTypography>
+                      )}
                       <br />
                       <MDTypography variant="button" fontWeight="bold" color="body3">
                         (Name and Designation )
@@ -492,9 +583,15 @@ const TransferCertificateSettings: React.FC = () => {
                   )}
                   {settings.checkedBy !== false && (
                     <Grid item xs={4} sm={4}>
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        द्वारा जांचा गया /Checked By
-                      </MDTypography>
+                      {settings.english_or_hindi ? (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          द्वारा जांचा गया /Checked By
+                        </MDTypography>
+                      ) : (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          Checked By
+                        </MDTypography>
+                      )}
                       <br />
                       <MDTypography variant="button" fontWeight="bold" color="body3">
                         (Name and Designation )
@@ -503,18 +600,33 @@ const TransferCertificateSettings: React.FC = () => {
                   )}
                   {settings.principalSign !== false && (
                     <Grid item xs={4} sm={4}>
-                      <MDTypography
-                        variant="button"
-                        fontWeight="bold"
-                        color="body3"
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        प्राचार्य के हस्ताक्षर /Signature of Principal
-                      </MDTypography>
+                      {settings.english_or_hindi ? (
+                        <MDTypography
+                          variant="button"
+                          fontWeight="bold"
+                          color="body3"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          प्राचार्य के हस्ताक्षर /Signature of Principal
+                        </MDTypography>
+                      ) : (
+                        <MDTypography
+                          variant="button"
+                          fontWeight="bold"
+                          color="body3"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          Signature of Principal
+                        </MDTypography>
+                      )}
                       <br />
                       <MDTypography variant="button" fontWeight="bold" color="body3">
                         (With Official Seal )
@@ -574,11 +686,6 @@ const TransferCertificateSettings: React.FC = () => {
                 }
               >
                 Reset to Default
-              </MDButton>
-            </Grid>
-            <Grid item>
-              <MDButton color="info" onClick={saveSettings}>
-                Save Settings
               </MDButton>
             </Grid>
           </Grid>
