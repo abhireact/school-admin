@@ -53,6 +53,10 @@ import SubjectTeacher from "layouts/pages/subject_details/subject_teacher";
 import StudentSectionChange from "layouts/pages/student_details/student_section_change";
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
+import Scholastic from "layouts/pages/exam/scholastic_particular";
+import ScholasticComponent from "layouts/pages/exam/scholastic_component";
+import OtherParticular from "layouts/pages/exam/other_particular";
+import OtherComponent from "layouts/pages/exam/other_component";
 import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
 import EmployeeWeekDays from "layouts/pages/employee_details/employee_week_days";
 import StudentWeekDays from "layouts/pages/student_details/student_week_days";
@@ -336,30 +340,30 @@ const routes = [
         route: "pages/exam/examtype",
         component: <Examtype />,
       },
-      // {
-      //   name: "Scholastic Particular",
-      //   key: "scholastic_particular",
-      //   route: "/pages/exam/scholastic_particular",
-      //   component: <Scholastic />,
-      // },
-      // {
-      //   name: "Scholastic Component",
-      //   key: "scholastic_component",
-      //   route: "/pages/exam/scholastic_component",
-      //   component: <ScholasticComponent />,
-      // },
-      // {
-      //   name: "Other Particular",
-      //   key: "other_particular",
-      //   route: "/pages/exam/other_particular",
-      //   component: <OtherParticular />,
-      // },
-      // {
-      //   name: "Other Component",
-      //   key: "other_component",
-      //   route: "/pages/exam/other_component",
-      //   component: <OtherComponent />,
-      // },
+      {
+        name: "Scholastic Particular",
+        key: "scholastic_particular",
+        route: "/pages/exam/scholastic_particular",
+        component: <Scholastic />,
+      },
+      {
+        name: "Scholastic Component",
+        key: "scholastic_component",
+        route: "/pages/exam/scholastic_component",
+        component: <ScholasticComponent />,
+      },
+      {
+        name: "Other Particular",
+        key: "other_particular",
+        route: "/pages/exam/other_particular",
+        component: <OtherParticular />,
+      },
+      {
+        name: "Other Component",
+        key: "other_component",
+        route: "/pages/exam/other_component",
+        component: <OtherComponent />,
+      },
       // {
       //   name: "Exam Schedule",
       //   key: "exam_schedule",

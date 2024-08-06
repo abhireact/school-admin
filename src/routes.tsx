@@ -33,6 +33,9 @@ import ShowAdmission from "layouts/pages/admission/show";
 import EditAdmission from "layouts/pages/admission/update";
 import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
 import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
+//Examination Module
+import ExamtypeCreate from "layouts/pages/exam/exam_type/create";
+import ScholasticPerticularCreate from "layouts/pages/exam/scholastic_particular/create";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -267,6 +270,26 @@ let routes = [
     key: "manage_pay_fee",
     route: "/pages/admission/manage_admission/pay_fee",
     component: <ManagePayFee />,
+  },
+  {
+    name: "Manage Pay Fee",
+    key: "manage_pay_fee",
+    route: "/pages/admission/manage_admission/pay_fee",
+    component: <ManagePayFee />,
+  },
+  //Examination Module
+
+  {
+    name: "Exam Type Create",
+    key: "exam_type_create",
+    route: "/Examination/exam_type_create",
+    component: <ExamtypeCreate />,
+  },
+  {
+    name: "Scholastic Perticular Create",
+    key: "scholastic_perticular_create",
+    route: "/Examination/scholastic_perticular_create",
+    component: <ScholasticPerticularCreate />,
   },
 ];
 

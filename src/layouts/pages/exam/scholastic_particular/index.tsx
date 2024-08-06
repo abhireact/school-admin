@@ -10,18 +10,19 @@ import IconButton from "@mui/material/IconButton";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Create from "./create";
-import Update from "./update";
+import Update from "./form";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 const token = Cookies.get("token");
 const ScholasticParticular = () => {
+  const navigate = useNavigate();
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -57,10 +58,16 @@ const ScholasticParticular = () => {
   const [openupdate, setOpenupdate] = useState(false);
 
   const handleOpenupdate = (index: number) => {
-    setOpenupdate(true);
-    const main_data = data[index];
-    console.log(main_data, "maindata");
-
+    // const main_data = data[index];
+    const main_data = {
+      name: "asss",
+      best_of_count: 20,
+      calculation: "pejsss",
+      academic_year: "2024-2025",
+      description: "asdfg",
+      weightage: 20,
+      index: 1,
+    };
     setOpenupdate(true);
     setEditData(main_data);
   };
@@ -100,33 +107,56 @@ const ScholasticParticular = () => {
       { Header: "Action", accessor: "action" },
     ],
 
-    rows: data.map((row, index) => ({
-      action: (
-        <MDTypography variant="p">
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "scholastic_particularupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
+    // rows: data.map((row, index) => ({
+    //   action: (
+    //     <MDTypography variant="p">
+    //       {rbacData ? (
+    //         rbacData?.find((element: string) => element === "scholastic_particularupdate") ? (
+    //           <IconButton
+    //             onClick={() => {
+    //               handleOpenupdate(index);
+    //             }}
+    //           >
+    //             <CreateRoundedIcon />
+    //           </IconButton>
+    //         ) : (
+    //           ""
+    //         )
+    //       ) : (
+    //         ""
+    //       )}
+    //     </MDTypography>
+    //   ),
+    //   weightage: <MDTypography variant="p">{row.weightage}</MDTypography>,
+    //   name: <MDTypography variant="p">{row.name}</MDTypography>,
+
+    //   academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
+
+    //   best_of_count: <MDTypography variant="p">{row.best_of_count}</MDTypography>,
+    // })),
+    rows: [
+      {
+        action: (
+          <MDTypography variant="p">
+            {rbacData ? (
+              rbacData?.find((element: string) => element === "scholastic_particularupdate") ? (
+                <IconButton onClick={() => handleOpenupdate(1)}>
+                  <CreateRoundedIcon />
+                </IconButton>
+              ) : (
+                ""
+              )
             ) : (
               ""
-            )
-          ) : (
-            ""
-          )}
-        </MDTypography>
-      ),
-      weightage: <MDTypography variant="p">{row.weightage}</MDTypography>,
-      name: <MDTypography variant="p">{row.name}</MDTypography>,
-
-      academic_year: <MDTypography variant="p">{row.academic_year}</MDTypography>,
-
-      best_of_count: <MDTypography variant="p">{row.best_of_count}</MDTypography>,
-    })),
+            )}
+          </MDTypography>
+        ),
+        weightage: "20",
+        name: "lll",
+        academic_year: "002",
+        best_of_count: "0",
+      },
+    ],
   };
   const [showpage, setShowpage] = useState(false);
   const handleShowPage = () => {
@@ -135,17 +165,25 @@ const ScholasticParticular = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showpage ? (
-        <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchParticulars} />
-        </>
-      ) : (
-        <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h4">Scholastic Particulars</MDTypography>
+      <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+        <Update setOpenupdate={setOpenupdate} editData={editData} />
+      </Dialog>
+      <Card>
+        <Grid container spacing={2} p={2}>
+          <Grid item xs={12} sm={6}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Scholastic Particulars
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
             {rbacData ? (
               rbacData?.find((element: string) => element === "scholastic_particularcreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+                <MDButton
+                  variant="outlined"
+                  color="info"
+                  type="submit"
+                  onClick={() => navigate("/Examination/scholastic_perticular_create")}
+                >
                   + New Particular
                 </MDButton>
               ) : (
@@ -154,18 +192,12 @@ const ScholasticParticular = () => {
             ) : (
               ""
             )}
-
-            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update
-                setOpenupdate={setOpenupdate}
-                editData={editData}
-                fetchingData={fetchParticulars}
-              />
-            </Dialog>
           </Grid>
-          <DataTable table={dataTableData} />
-        </>
-      )}
+          <Grid item xs={12} sm={12}>
+            <DataTable table={dataTableData} />
+          </Grid>
+        </Grid>
+      </Card>
     </DashboardLayout>
   );
 };
