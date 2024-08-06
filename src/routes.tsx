@@ -8,7 +8,6 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import MYProfile from "layouts/pages/authentication/myprofile";
 import MyDashboard from "layouts/pages/dashboard";
-
 import CreateFeeCategory from "layouts/pages/fee/manage_fee/fee_category/create";
 import CreateFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/create_fee_perticular_amount";
 import EditFeeParicularAmount from "layouts/pages/fee/manage_fee/fee_category/fee_perticular/edit_fee_perticular_amount";
@@ -27,16 +26,16 @@ import SMSConfiguration from "layouts/pages/cloud_admin/sms_config/sms_configura
 import ManageSubTemplate from "layouts/pages/admission/form_setting/manage_sub_template";
 import Pdf from "layouts/pages/Mindcompdf/Pdf";
 import MYAttandance from "layouts/pages/Attendance/employee/my_attendance";
-
 import CreateStudent from "layouts/pages/student_details/student/create";
 import ShowAdmission from "layouts/pages/admission/show";
 import EditAdmission from "layouts/pages/admission/update";
 import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
-
 import Second_CC from "layouts/pages/authentication/Certificate/second_cc";
 import CC_one from "layouts/pages/authentication/Certificate/CC_one";
 import Certificates from "layouts/pages/student_details/student/certificates";
 import Character_Certificate from "layouts/pages/student_details/student/certificates/Character_Certificate";
+import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
+import TransferCertificate from "layouts/pages/TransferCertificate";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -77,7 +76,7 @@ try {
   console.error(error);
 }
 let routes = [
-  // pages not to show in left navba
+  // pages not to show in left navbar
   {
     type: "collapse",
     name: "Dashboards",
@@ -135,6 +134,18 @@ let routes = [
         component: <Pdf />,
       },
     ],
+  },
+  {
+    name: "Student  Transfer Certificate",
+    key: "tc_create",
+    route: "/pages/student_details/student/tc_create",
+    component: <TransferCertificate />,
+  },
+  {
+    name: "Transfer Certificate Settings",
+    key: "tc_settings",
+    route: "/pages/student_details/student/tc_settings",
+    component: <TransferCertificateTemplate />,
   },
   {
     name: "create student",

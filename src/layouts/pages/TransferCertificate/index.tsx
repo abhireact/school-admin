@@ -11,7 +11,7 @@ import { message } from "antd";
 import Cookies from "js-cookie";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import studentLogo from "assets/images/studentLogo.jpeg";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 function formatDate(date: Date) {
   const months = [
@@ -85,6 +85,9 @@ interface Settings {
 }
 
 const TransferCertificate: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { studentInfo, user_name } = location.state || {};
   const [schoolLogo, setSchoolLogo] = useState("");
 
   useEffect(() => {
@@ -97,6 +100,7 @@ const TransferCertificate: React.FC = () => {
   const [settings, setSettings] = useState<Settings>({
     school_no: true,
     book_no: true,
+    no_of_days: true,
     admission_number: true,
     serial_number: true,
     pen: true,
@@ -190,7 +194,7 @@ const TransferCertificate: React.FC = () => {
           extraCurricular: true,
           english_or_hindi: false,
         });
-        message.error(error.response.data.detail);
+        //message.error(error.response.data.detail);
         console.error("Error fetching data:", error);
       });
   }, []);
@@ -202,34 +206,44 @@ const TransferCertificate: React.FC = () => {
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik<FormValues>(
     {
       initialValues: {
-        admission_number: "1234",
+        school_no: "",
+        book_no: "",
         serial_number: "1234",
-        pen: "",
-        registration_no: "",
-        name: "",
+        pen: studentInfo.pen_number || "",
+        admission_number: studentInfo.admission_number || "",
+        affiliation_no: "",
+        renewed_upto: "",
+        school_status: "",
+        name: studentInfo.last_name
+          ? `${studentInfo.first_name} ${studentInfo.last_name}`
+          : studentInfo.first_name || "",
         motherName: "",
         fatherName: "",
-        nationality: "INDIAN",
+        dob: studentInfo.dob || "",
+        nationality: studentInfo.nationality || "",
         religion: "",
-        casteCategory: "",
-        dob: "",
+        casteCategory: studentInfo.caste_category || "",
         isFailed: "No",
+        subjectsOffered: "",
+        attendedSchool: "",
+        no_of_days: "",
+        extraCurricular: "",
+        schoolCategory: "",
         lastClass: "",
+        lastClassResult: "",
+        struckoffName: "",
         isQualified: "Yes",
         duesPaid: getCurrentDateFormatted(),
         feeConcession: "No",
         nccCadet: "No",
         admissionDate: "",
         studentConduct: "Good",
-        leavingReason: "Parent's wish",
-        remarks: "N/A",
+        leavingReason: "Parent's Decision",
         certificateDate: formattedDate,
-        lastClassResult: "",
-        struckoffName: "",
-        subjectsOffered: "",
-        attendedSchool: "",
-        schoolCategory: "",
-        extraCurricular: "",
+        remarks: "N/A",
+        class_from: "",
+        class_to: "",
+        registration_no: "",
       },
       onSubmit: (values, action) => {
         axios
@@ -286,6 +300,13 @@ const TransferCertificate: React.FC = () => {
         hi: "छात्र द्वारा उपस्थित स्कूल के दिनों की संख्या",
       },
       inputName: "attendedSchool",
+    },
+    {
+      label: {
+        en: "Total No. of school days",
+        hi: "स्कूल के दिनों की कुल संख्या",
+      },
+      inputName: "no_of_days",
     },
     {
       label: {
@@ -373,6 +394,19 @@ const TransferCertificate: React.FC = () => {
       <Card>
         <MDBox p={4}>
           <Grid container style={{ border: "1px solid #ffff" }}>
+            <Grid item sm={12} sx={{ display: "flex", justifyContent: "end" }}>
+              <MDButton color="dark" type="submit" onClick={() => navigate(-1)}>
+                back
+              </MDButton>
+              &nbsp; &nbsp;
+              <MDButton
+                color="info"
+                type="submit"
+                onClick={() => navigate("/pages/student_details/student/tc_settings")}
+              >
+                settings
+              </MDButton>
+            </Grid>
             <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
               <MDTypography variant="h4">Transfer Certificate</MDTypography>
             </Grid>

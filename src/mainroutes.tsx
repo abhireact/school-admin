@@ -101,8 +101,6 @@ import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_rep
 import EmployeeCategory from "layouts/pages/employee_details/employee_category";
 import ManageFeeAdmission from "layouts/pages/admission/manage_fee_admission";
 import AdmissionReport from "layouts/pages/admission/admission_report";
-import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
-import TransferCertificate from "layouts/pages/TransferCertificate";
 
 const routes = [
   {
@@ -220,26 +218,7 @@ const routes = [
         route: "student/student_photo_upload",
         component: <StudentPhotoUpload />,
       },
-      {
-        type: "collapse",
-        name: "Transfer Certificate",
-        key: "brooklyn-alice",
-        icon: <Icon>chrome_reader_mode</Icon>,
-        collapse: [
-          {
-            name: "Student  Transfer Certificate",
-            key: "tc_create",
-            route: "/pages/tc_create",
-            component: <TransferCertificate />,
-          },
-          {
-            name: "Transfer Certificate Settings",
-            key: "tc_settings",
-            route: "/pages/tc_settings",
-            component: <TransferCertificateTemplate />,
-          },
-        ],
-      },
+
       {
         name: "Student Report",
         key: "student_report",

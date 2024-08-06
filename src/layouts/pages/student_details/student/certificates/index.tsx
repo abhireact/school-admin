@@ -42,11 +42,20 @@ const Certificates = () => {
     fetchStudentInfo();
   }, []);
 
-  const handleCharacterCertificate = (item: any) => {
+  const handleCharacterCertificate = () => {
     // const main_data = data[index];
     navigate("/pages/student_details/student/certificates/Character_Certificate", {
       state: {
         studentInfo,
+      },
+    });
+  };
+  const handleTransferCertificate = () => {
+    // const main_data = data[index];
+    navigate("/pages/student_details/student/tc_create", {
+      state: {
+        studentInfo,
+        user_name,
       },
     });
   };
@@ -57,6 +66,11 @@ const Certificates = () => {
       <Card>
         <MDBox p={4}>
           <Grid container>
+            <Grid item sm={12} sx={{ display: "flex", justifyContent: "end" }}>
+              <MDButton color="dark" type="submit" onClick={() => navigate(-1)}>
+                back
+              </MDButton>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <MDTypography variant="h4" fontWeight="bold" color="secondary">
                 Student Certificates
@@ -125,7 +139,7 @@ const Certificates = () => {
               </MDButton>
             </Grid>
             <Grid item sm={4}>
-              <MDButton color="info" variant="outlined">
+              <MDButton color="info" variant="outlined" onClick={handleTransferCertificate}>
                 Generate Transfer Certificate
               </MDButton>
             </Grid>
