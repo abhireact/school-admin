@@ -21,9 +21,11 @@ import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
 import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router";
 
 const token = Cookies.get("token");
 const Examtype = () => {
+  const navigate = useNavigate();
   // To fetch rbac from redux:  Start
   // const rbacData = useSelector((state: any) => state.reduxData?.rbacData);
   // console.log("rbac user", rbacData);
@@ -172,12 +174,7 @@ const Examtype = () => {
           <Grid container spacing={1}>
             <Grid item>
               <Tooltip title="Edit" placement="top">
-                <Icon
-                  fontSize="small"
-                  onClick={() => {
-                    handleOpenupdate(0);
-                  }}
-                >
+                <Icon fontSize="small" onClick={() => navigate("/Examination/exam_type_create")}>
                   edit
                 </Icon>
               </Tooltip>
@@ -219,7 +216,12 @@ const Examtype = () => {
             </MDTypography>
           </Grid>
           <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+            <MDButton
+              variant="outlined"
+              color="info"
+              type="submit"
+              onClick={() => navigate("/Examination/exam_type_create")}
+            >
               + New Exam Type
             </MDButton>
           </Grid>
