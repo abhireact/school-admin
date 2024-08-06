@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 import axios from "axios";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 interface SettingsState {
   [key: string]: boolean;
@@ -59,6 +60,8 @@ const getDummyData = (inputName: string): string => {
       return "67";
     case "serial_number":
       return "89012";
+    case "no_of_days":
+      return "300";
     case "pen":
       return "PEN123456";
     case "admission_number":
@@ -76,7 +79,7 @@ const getDummyData = (inputName: string): string => {
     case "subjectsOffered":
       return "English, Mathematics, Science, Social Studies, Hindi";
     case "attendedSchool":
-      return "220 out of 240 days";
+      return "220 ";
     case "schoolCategory":
       return "Independent";
     case "extraCurricular":
@@ -88,6 +91,7 @@ const getDummyData = (inputName: string): string => {
 
 const TransferCertificateSettings: React.FC = () => {
   const [schoolLogo, setSchoolLogo] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("/schoolLogo.txt")
@@ -131,6 +135,7 @@ const TransferCertificateSettings: React.FC = () => {
     lastClassResult: true,
     struckoffName: true,
     subjectsOffered: true,
+    no_of_days: true,
     attendedSchool: true,
     schoolCategory: true,
     extraCurricular: true,
@@ -185,12 +190,13 @@ const TransferCertificateSettings: React.FC = () => {
           lastClassResult: true,
           struckoffName: true,
           subjectsOffered: true,
+          no_of_days: true,
           attendedSchool: true,
           schoolCategory: true,
           extraCurricular: true,
           english_or_hindi: false,
         });
-        message.error(error.response.data.detail);
+        // message.error(error.response.data.detail);
         console.error("Error fetching data:", error);
       });
   }, []);
@@ -224,9 +230,9 @@ const TransferCertificateSettings: React.FC = () => {
     });
   };
   const renderSettingToggle = (field: string, label: string): JSX.Element => (
-    <Grid item xs={12} sm={12} md={12} key={field} style={{ borderBottom: "1px solid #dddd" }}>
+    <Grid item xs={12} sm={12} key={field} style={{ borderBottom: "1px solid #dddd" }}>
       <MDBox display="flex" alignItems="center" justifyContent="space-between">
-        <MDTypography variant="button" color="body3">
+        <MDTypography variant="button" fontWeight="bold" color="body3">
           {label}
         </MDTypography>
         <Switch checked={settings[field]} onChange={() => handleToggle(field)} color="primary" />
@@ -269,6 +275,13 @@ const TransferCertificateSettings: React.FC = () => {
         hi: "छात्र द्वारा उपस्थित स्कूल के दिनों की संख्या",
       },
       inputName: "attendedSchool",
+    },
+    {
+      label: {
+        en: "Total No. of school days",
+        hi: "स्कूल के दिनों की कुल संख्या",
+      },
+      inputName: "no_of_days",
     },
     {
       label: {
@@ -357,6 +370,68 @@ const TransferCertificateSettings: React.FC = () => {
       <Card>
         <MDBox p={4}>
           <Grid container spacing={3}>
+            <Grid
+              item
+              sm={12}
+              container
+              mt={4}
+              spacing={2}
+              sx={{ display: "flex", justifyContent: "end" }}
+            >
+              <MDButton color="dark" onClick={() => navigate(-1)}>
+                back
+              </MDButton>
+              &nbsp; &nbsp;
+              <MDButton
+                color="info"
+                onClick={() =>
+                  setSettings({
+                    school_no: true,
+                    book_no: true,
+                    admission_number: true,
+                    serial_number: true,
+                    pen: true,
+                    affiliation_no: true,
+                    renewed_upto: true,
+                    school_status: true,
+                    name: true,
+                    motherName: true,
+                    fatherName: true,
+                    dob: true,
+                    nationality: true,
+                    religion: true,
+                    casteCategory: true,
+                    isFailed: true,
+                    lastClass: true,
+                    isQualified: true,
+                    duesPaid: true,
+                    feeConcession: true,
+                    nccCadet: true,
+                    admissionDate: true,
+                    studentConduct: true,
+                    leavingReason: true,
+                    certificateDate: true,
+                    remarks: true,
+                    backgroundSchoolLogo: true,
+                    studentImage: true,
+                    preparedBy: true,
+                    checkedBy: true,
+                    principalSign: true,
+                    registration_no: true,
+                    lastClassResult: true,
+                    struckoffName: true,
+                    subjectsOffered: true,
+                    no_of_days: true,
+                    attendedSchool: true,
+                    schoolCategory: true,
+                    extraCurricular: true,
+                    english_or_hindi: false,
+                  })
+                }
+              >
+                Reset to Default
+              </MDButton>
+            </Grid>
             <Grid item container sm={4} style={{ border: "1px solid #dddd" }}>
               <Grid item sm={12}>
                 <MDTypography variant="h4" mb={4} color="info">
@@ -384,6 +459,7 @@ const TransferCertificateSettings: React.FC = () => {
               {renderSettingToggle("isFailed", "Whether the student is failed")}
               {renderSettingToggle("subjectsOffered", "Subjects offered")}
               {renderSettingToggle("attendedSchool", "No. of school days the student attended")}
+              {renderSettingToggle("no_of_days", "Total No. of school days")}
               {renderSettingToggle(
                 "extraCurricular",
                 "Games played or extra curricular activities"
@@ -427,7 +503,7 @@ const TransferCertificateSettings: React.FC = () => {
                   Preview
                 </MDTypography>
                 <MDTypography variant="button" fontWeight="bold" color="body3">
-                  LANGUAGE : {renderSettingToggle("english_or_hindi", "English/Hindi")}
+                  {renderSettingToggle("english_or_hindi", "English/Hindi")}
                 </MDTypography>
               </Grid>
               <Grid item sm={12}>
@@ -635,58 +711,6 @@ const TransferCertificateSettings: React.FC = () => {
                   )}
                 </Grid>
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid container mt={4} spacing={2}>
-            <Grid item>
-              <MDButton
-                color="dark"
-                onClick={() =>
-                  setSettings({
-                    school_no: true,
-                    book_no: true,
-                    admission_number: true,
-                    serial_number: true,
-                    pen: true,
-                    affiliation_no: true,
-                    renewed_upto: true,
-                    school_status: true,
-                    name: true,
-                    motherName: true,
-                    fatherName: true,
-                    dob: true,
-                    nationality: true,
-                    religion: true,
-                    casteCategory: true,
-                    isFailed: true,
-                    lastClass: true,
-                    isQualified: true,
-                    duesPaid: true,
-                    feeConcession: true,
-                    nccCadet: true,
-                    admissionDate: true,
-                    studentConduct: true,
-                    leavingReason: true,
-                    certificateDate: true,
-                    remarks: true,
-                    backgroundSchoolLogo: true,
-                    studentImage: true,
-                    preparedBy: true,
-                    checkedBy: true,
-                    principalSign: true,
-                    registration_no: true,
-                    lastClassResult: true,
-                    struckoffName: true,
-                    subjectsOffered: true,
-                    attendedSchool: true,
-                    schoolCategory: true,
-                    extraCurricular: true,
-                    english_or_hindi: false,
-                  })
-                }
-              >
-                Reset to Default
-              </MDButton>
             </Grid>
           </Grid>
         </MDBox>
