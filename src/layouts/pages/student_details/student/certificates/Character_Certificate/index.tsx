@@ -8,11 +8,14 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useFormik } from "formik";
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import studentLogo from "assets/images/studentLogo.jpeg";
 import BGImage from "assets/images/bg_image.png";
+import axios from "axios";
+import Cookies from "js-cookie";
 
+const token = Cookies.get("token");
 const initialValues = {
   studentname: "",
   class_name: "",
@@ -23,12 +26,13 @@ interface SettingsState {
 
 const Character_Certificate = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { studentInfo } = location.state || {};
   const [schoolLogo, setSchoolLogo] = useState("");
   const [settings, setSettings] = useState<SettingsState>({
-    backgroundSchoolLogo: true,
-    studentImage: true,
-    adm_no: true,
+    watermark: true,
+    student_image: true,
+    sr_no: true,
   });
   const { values, errors, handleBlur, handleChange, handleSubmit, setFieldValue, touched } =
     useFormik({
@@ -36,41 +40,37 @@ const Character_Certificate = () => {
       onSubmit: (values, action) => {},
     });
 
-  useEffect(() => {
-    fetch("/schoolLogo.txt")
-      .then((response) => response.text())
-      .then((text) => setSchoolLogo(text))
-      .catch((error) => console.error("Error fetching the Base64 image:", error));
-  }, []);
-
-  useEffect(() => {
-    const savedSettings = localStorage.getItem("transferCertificateSettings");
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    }
-  }, []);
-
   const handleToggle = (field: string): void => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      [field]: !prevSettings[field],
-    }));
-  };
+    setSettings((prevSettings) => {
+      const newSettings = {
+        ...prevSettings,
+        [field]: !prevSettings[field],
+      };
 
-  const saveSettings = (): void => {
-    // Save settings to localStorage
-    localStorage.setItem("transferCertificateSettings", JSON.stringify(settings));
-    message.success("Transfer Certificate Settings Saved");
-    console.log("Settings saved to localStorage:", settings);
-  };
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/certificate/character/settings`, newSettings, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          // message.success("Updated Successfully!");
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
 
+      return newSettings;
+    });
+  };
   const renderSettingToggle = (field: string, label: string): JSX.Element => (
-    <Grid item xs={12} sm={6} md={8} key={field}>
+    <Grid item xs={12} sm={12} md={12} key={field} style={{ borderBottom: "1px solid #dddd" }}>
       <MDBox display="flex" alignItems="center" justifyContent="space-between">
         <MDTypography variant="button" color="body3">
           {label}
         </MDTypography>
-        <Switch checked={settings[field]} onChange={() => handleToggle(field)} />
+        <Switch checked={settings[field]} onChange={() => handleToggle(field)} color="primary" />
       </MDBox>
     </Grid>
   );
@@ -80,19 +80,43 @@ const Character_Certificate = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/certificate/character/settings`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setSettings(response.data);
+      })
+      .catch((error) => {
+        setSettings({
+          watermark: true,
+          student_image: true,
+          sr_no: true,
+        });
+        message.error(error.response.data.detail);
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3} px={3}>
         <Grid container spacing={3} mb={2}>
           <Grid item sm={4}>
-            {renderSettingToggle("backgroundSchoolLogo", "Background School Logo")}
+            {renderSettingToggle("watermark", "Background School Logo")}
           </Grid>
           <Grid item sm={4}>
-            {renderSettingToggle("studentImage", "Student Image")}
+            {renderSettingToggle("student_image", "Student Image")}
           </Grid>
           <Grid item sm={4}>
-            {renderSettingToggle("adm_no", "Sr. Number")}
+            {renderSettingToggle("sr_no", "Sr. Number")}
           </Grid>
         </Grid>
 
@@ -102,7 +126,7 @@ const Character_Certificate = () => {
               sx={{
                 //   border: "1px solid #dddddd",
                 backgroundImage:
-                  settings.backgroundSchoolLogo !== false
+                  settings.watermark !== false
                     ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${BGImage})`
                     : "none",
                 backgroundRepeat: "no-repeat",
@@ -118,7 +142,7 @@ const Character_Certificate = () => {
                     Character Certificate
                   </MDTypography>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.studentImage !== false && (
+                    {settings.student_image !== false && (
                       <img
                         src={studentLogo}
                         alt="Student Logo"
@@ -127,7 +151,7 @@ const Character_Certificate = () => {
                     )}
                   </MDBox>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.adm_no !== false && (
+                    {settings.sr_no !== false && (
                       <MDTypography variant="button" color="body3" fontWeight="bold">
                         S.R. No. 12345
                       </MDTypography>
@@ -363,10 +387,7 @@ const Character_Certificate = () => {
             <MDButton
               color="dark"
               variant="contained"
-              // type="submit"
-              // onClick={() => navigate("/pages/admission/Fee")}
-              // onClick={() => navigate("/pages/admission/studentAdmission")}
-              // navigate("/pages/admission/Fee");
+              onClick={() => navigate("/student/student_details")}
             >
               Cancel
             </MDButton>
@@ -386,7 +407,7 @@ const Character_Certificate = () => {
                 sx={{
                   //   border: "1px solid #dddddd",
                   backgroundImage:
-                    settings.backgroundSchoolLogo !== false
+                    settings.watermark !== false
                       ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${BGImage})`
                       : "none",
                   backgroundRepeat: "no-repeat",
@@ -403,7 +424,7 @@ const Character_Certificate = () => {
                     </MDTypography>
                   </MDBox>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.studentImage !== false && (
+                    {settings.student_image !== false && (
                       <img
                         src={studentLogo}
                         alt="Student Logo"
@@ -412,7 +433,7 @@ const Character_Certificate = () => {
                     )}
                   </MDBox>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.adm_no !== false && (
+                    {settings.sr_no !== false && (
                       <MDTypography variant="button" color="body3" fontWeight="bold">
                         S.R. No. 12345
                       </MDTypography>
