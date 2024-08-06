@@ -37,6 +37,7 @@ import Second_CC from "layouts/pages/authentication/Certificate/second_cc";
 import CC_one from "layouts/pages/authentication/Certificate/CC_one";
 import Certificates from "layouts/pages/student_details/student/certificates";
 import Character_Certificate from "layouts/pages/student_details/student/certificates/Character_Certificate";
+import Bonafide_Certificate from "layouts/pages/student_details/student/certificates/Bonafide_Certificate";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -150,9 +151,15 @@ let routes = [
   },
   {
     name: "Character Certificates",
-    key: "character_ertificates",
+    key: "character_certificates",
     route: "/pages/student_details/student/certificates/Character_Certificate",
     component: <Character_Certificate />,
+  },
+  {
+    name: "Bonafide Certificates",
+    key: "bonafide_ertificates",
+    route: "/pages/student_details/student/certificates/bonafide_certificates",
+    component: <Bonafide_Certificate />,
   },
 
   {
