@@ -123,15 +123,6 @@ const Certificates = () => {
                 Student Certificates
               </MDTypography>
             </Grid>
-            <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <MDButton
-                variant="contained"
-                color="dark"
-                onClick={() => navigate("/student/student_details")}
-              >
-                Back
-              </MDButton>
-            </Grid>
           </Grid>
           <MDBox p={3}>
             <Grid container>

@@ -12,7 +12,9 @@ import Cookies from "js-cookie";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import studentLogo from "assets/images/studentLogo.jpeg";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
+import { fetchStudent } from "layouts/pages/redux/dataSlice";
 function formatDate(date: Date) {
   const months = [
     "January",
@@ -85,10 +87,53 @@ interface Settings {
 }
 
 const TransferCertificate: React.FC = () => {
+  let dispatch = useDispatch();
   const location = useLocation();
+
   const navigate = useNavigate();
   const { studentInfo, user_name } = location.state || {};
   const [schoolLogo, setSchoolLogo] = useState("");
+  const [certificateData, setCertificateData] = useState({
+    user_name: user_name,
+    school_no: "",
+    book_no: "",
+    serial_number: "1234",
+    pen: studentInfo.pen_number || "",
+    admission_number: studentInfo.admission_number || "",
+    affiliation_no: "",
+    renewed_upto: "",
+    school_status: "",
+    name: studentInfo.last_name
+      ? `${studentInfo.first_name} ${studentInfo.last_name}`
+      : studentInfo.first_name || "",
+    motherName: "",
+    fatherName: "",
+    dob: studentInfo.dob || "",
+    nationality: studentInfo.nationality || "",
+    religion: "",
+    casteCategory: studentInfo.caste_category || "",
+    isFailed: "No",
+    subjectsOffered: "",
+    attendedSchool: "",
+    no_of_days: "",
+    extraCurricular: "",
+    schoolCategory: "",
+    lastClass: "",
+    lastClassResult: "",
+    struckoffName: "",
+    isQualified: "Yes",
+    duesPaid: getCurrentDateFormatted(),
+    feeConcession: "No",
+    nccCadet: "No",
+    admissionDate: "",
+    studentConduct: "Good",
+    leavingReason: "Parent's Decision",
+    certificateDate: formattedDate,
+    remarks: "N/A",
+    class_from: "",
+    class_to: "",
+    registration_no: "",
+  });
 
   useEffect(() => {
     fetch("/schoolLogo.txt")
@@ -197,6 +242,26 @@ const TransferCertificate: React.FC = () => {
         //message.error(error.response.data.detail);
         console.error("Error fetching data:", error);
       });
+    axios
+      .post(
+        `${process.env.REACT_APP_BASE_URL}/certificate/transfer/retrive`,
+        {
+          user_name: user_name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setCertificateData(response.data);
+        console.log("student info data", response.data);
+      })
+      .catch(() => {
+        console.error("Error on getting student info");
+      });
   }, []);
 
   const handlePrint = useReactToPrint({
@@ -205,57 +270,20 @@ const TransferCertificate: React.FC = () => {
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik<FormValues>(
     {
-      initialValues: {
-        school_no: "",
-        book_no: "",
-        serial_number: "1234",
-        pen: studentInfo.pen_number || "",
-        admission_number: studentInfo.admission_number || "",
-        affiliation_no: "",
-        renewed_upto: "",
-        school_status: "",
-        name: studentInfo.last_name
-          ? `${studentInfo.first_name} ${studentInfo.last_name}`
-          : studentInfo.first_name || "",
-        motherName: "",
-        fatherName: "",
-        dob: studentInfo.dob || "",
-        nationality: studentInfo.nationality || "",
-        religion: "",
-        casteCategory: studentInfo.caste_category || "",
-        isFailed: "No",
-        subjectsOffered: "",
-        attendedSchool: "",
-        no_of_days: "",
-        extraCurricular: "",
-        schoolCategory: "",
-        lastClass: "",
-        lastClassResult: "",
-        struckoffName: "",
-        isQualified: "Yes",
-        duesPaid: getCurrentDateFormatted(),
-        feeConcession: "No",
-        nccCadet: "No",
-        admissionDate: "",
-        studentConduct: "Good",
-        leavingReason: "Parent's Decision",
-        certificateDate: formattedDate,
-        remarks: "N/A",
-        class_from: "",
-        class_to: "",
-        registration_no: "",
-      },
+      initialValues: certificateData,
+      enableReinitialize: true,
       onSubmit: (values, action) => {
         axios
-          .post("http://10.0.20.200:8000/transfer_certificate", values, {
+          .post(`${process.env.REACT_APP_BASE_URL}/certificate/transfer/student`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           })
           .then((response) => {
-            message.success("Fetched Data Successfully!");
-            action.resetForm();
+            handlePrint();
+            message.success("Transfer Certificate is Successfully Generated ");
+            dispatch(fetchStudent() as any);
           })
           .catch(() => {
             message.error("Error on fetching data !");
@@ -565,12 +593,9 @@ const TransferCertificate: React.FC = () => {
 
             <Grid item sm={12} py={2}>
               <MDButton color="info" type="submit" onClick={() => handleSubmit()}>
-                save
+                Generate PDF
               </MDButton>
               &nbsp; &nbsp;
-              <MDButton color="dark" onClick={handlePrint}>
-                Generate pdf
-              </MDButton>
             </Grid>
           </Grid>
           <Grid className="report-hidden-text" ref={tableRef}>
