@@ -179,7 +179,7 @@ const EmployeeCertificate = () => {
       onSubmit: (values, action) => {
         if (issuedData.no_of_time_issued) {
           let sendData = {
-            user_name: values.employee?.split("/")[0],
+            user_name: values.employee?.split("/")[0] || "",
             title: values.title,
             employee_name: values.employee_name,
             guardian_title: values.guardian_title,
@@ -212,7 +212,7 @@ const EmployeeCertificate = () => {
             });
         } else {
           let sendData = {
-            user_name: values.employee?.split("/")[0],
+            user_name: values.employee?.split("/")[0] || "",
             title: values.title,
             employee_name: values.employee_name,
             guardian_title: values.guardian_title,

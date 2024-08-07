@@ -12,9 +12,11 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Create from "./create";
 import Update from "./update";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@mui/material";
+import { Card, useMediaQuery } from "@mui/material";
 import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import { message } from "antd";
@@ -69,21 +71,28 @@ const ScholasticComponent = () => {
     setOpenupdate(false);
   }; //End
   const fetchComponents = () => {
-    axios
-      .get("http://10.0.20.200:8000/schol_components", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setData(response.data);
+    setData([
+      {
+        component_name: "1sttt",
+        weightage: "20",
+        maximum_marks: "20",
+      },
+    ]);
+    // axios
+    //   .get("http://10.0.20.200:8000/schol_components", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setData(response.data);
 
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    //     console.log(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching data:", error);
+    //   });
   };
 
   useEffect(() => {
@@ -117,29 +126,19 @@ const ScholasticComponent = () => {
       { Header: "Component", accessor: "component_name" },
       { Header: "Weightage", accessor: "weightage" },
       { Header: "Maximum marks", accessor: "maximum_marks" },
-
       { Header: "Action", accessor: "action" },
     ],
 
     rows: data.map((row, index) => ({
       action: (
-        <MDTypography variant="p">
-          {rbacData ? (
-            rbacData?.find((element: string) => element === "scholastic_componentupdate") ? (
-              <IconButton
-                onClick={() => {
-                  handleOpenupdate(index);
-                }}
-              >
-                <CreateRoundedIcon />
-              </IconButton>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-        </MDTypography>
+        <>
+          <IconButton onClick={() => handleOpenupdate(index)} size="small">
+            <EditIcon />
+          </IconButton>
+          <IconButton size="small">
+            <DeleteIcon />
+          </IconButton>
+        </>
       ),
       component_name: <MDTypography variant="p">{row.component_name}</MDTypography>,
       weightage: <MDTypography variant="p">{row.weightage}</MDTypography>,
@@ -154,36 +153,26 @@ const ScholasticComponent = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showpage ? (
-        <>
-          <Create handleShowPage={handleShowPage} fetchingData={fetchComponents} />
-        </>
-      ) : (
-        <>
-          <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
-            <MDTypography variant="h4">Scholastic Component</MDTypography>
-            {rbacData ? (
-              rbacData?.find((element: string) => element === "scholastic_componentcreate") ? (
-                <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
-                  + New Component
-                </MDButton>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-            <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
-              <Update
-                setOpenupdate={setOpenupdate}
-                editData={editData}
-                fetchingData={fetchComponents}
-              />
-            </Dialog>
+      <Dialog open={openupdate} onClose={handleCloseupdate} maxWidth="lg">
+        <Update setOpenupdate={setOpenupdate} editData={editData} fetchingData={fetchComponents} />
+      </Dialog>
+      <Card>
+        <Grid container spacing={2} p={2}>
+          <Grid item xs={12} sm={6}>
+            <MDTypography variant="h4" fontWeight="bold" color="secondary">
+              Scholastic Component
+            </MDTypography>
           </Grid>
-          <DataTable table={dataTableData} />
-        </>
-      )}
+          <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <MDButton variant="outlined" color="info" type="submit" onClick={handleShowPage}>
+              + New Component
+            </MDButton>
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <DataTable table={dataTableData} canSearch />
+          </Grid>
+        </Grid>
+      </Card>
     </DashboardLayout>
   );
 };

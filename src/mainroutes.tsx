@@ -53,6 +53,9 @@ import SubjectTeacher from "layouts/pages/subject_details/subject_teacher";
 import StudentSectionChange from "layouts/pages/student_details/student_section_change";
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
+import Scholastic from "layouts/pages/exam/scholastic_particular";
+import OtherParticular from "layouts/pages/exam/other_particular";
+import OtherComponent from "layouts/pages/exam/other_component";
 import AssignClassTeacher from "layouts/pages/employee_details/asign_class_teacher";
 import EmployeeWeekDays from "layouts/pages/employee_details/employee_week_days";
 import StudentWeekDays from "layouts/pages/student_details/student_week_days";
@@ -101,8 +104,6 @@ import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_rep
 import EmployeeCategory from "layouts/pages/employee_details/employee_category";
 import ManageFeeAdmission from "layouts/pages/admission/manage_fee_admission";
 import AdmissionReport from "layouts/pages/admission/admission_report";
-import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
-import TransferCertificate from "layouts/pages/TransferCertificate";
 
 const routes = [
   {
@@ -220,26 +221,7 @@ const routes = [
         route: "student/student_photo_upload",
         component: <StudentPhotoUpload />,
       },
-      {
-        type: "collapse",
-        name: "Transfer Certificate",
-        key: "brooklyn-alice",
-        icon: <Icon>chrome_reader_mode</Icon>,
-        collapse: [
-          {
-            name: "Student  Transfer Certificate",
-            key: "tc_create",
-            route: "/pages/tc_create",
-            component: <TransferCertificate />,
-          },
-          {
-            name: "Transfer Certificate Settings",
-            key: "tc_settings",
-            route: "/pages/tc_settings",
-            component: <TransferCertificateTemplate />,
-          },
-        ],
-      },
+
       {
         name: "Student Report",
         key: "student_report",
@@ -358,30 +340,25 @@ const routes = [
         route: "pages/exam/examtype",
         component: <Examtype />,
       },
-      // {
-      //   name: "Scholastic Particular",
-      //   key: "scholastic_particular",
-      //   route: "/pages/exam/scholastic_particular",
-      //   component: <Scholastic />,
-      // },
-      // {
-      //   name: "Scholastic Component",
-      //   key: "scholastic_component",
-      //   route: "/pages/exam/scholastic_component",
-      //   component: <ScholasticComponent />,
-      // },
-      // {
-      //   name: "Other Particular",
-      //   key: "other_particular",
-      //   route: "/pages/exam/other_particular",
-      //   component: <OtherParticular />,
-      // },
-      // {
-      //   name: "Other Component",
-      //   key: "other_component",
-      //   route: "/pages/exam/other_component",
-      //   component: <OtherComponent />,
-      // },
+      {
+        name: "Scholastic Particular",
+        key: "scholastic_particular",
+        route: "/pages/exam/scholastic_particular",
+        component: <Scholastic />,
+      },
+
+      {
+        name: "Other Particular",
+        key: "other_particular",
+        route: "/pages/exam/other_particular",
+        component: <OtherParticular />,
+      },
+      {
+        name: "Other Component",
+        key: "other_component",
+        route: "/pages/exam/other_component",
+        component: <OtherComponent />,
+      },
       // {
       //   name: "Exam Schedule",
       //   key: "exam_schedule",
