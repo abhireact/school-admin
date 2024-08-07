@@ -12,7 +12,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import studentLogo from "assets/images/studentLogo.jpeg";
 import BGImage from "assets/images/bg_image.png";
+import axios from "axios";
+import Cookies from "js-cookie";
 
+const token = Cookies.get("token");
 const initialValues = {
   studentname: "",
   class_name: "",
@@ -21,16 +24,15 @@ interface SettingsState {
   [key: string]: boolean;
 }
 
-const Bonafide_Certificate = () => {
+const Character_Certificate = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { studentInfo } = location.state || {};
-  const { user_name } = location.state || {};
   const [schoolLogo, setSchoolLogo] = useState("");
   const [settings, setSettings] = useState<SettingsState>({
-    backgroundSchoolLogo: true,
-    studentImage: true,
-    adm_no: true,
+    watermark: true,
+    student_image: true,
+    sr_no: true,
   });
   const { values, errors, handleBlur, handleChange, handleSubmit, setFieldValue, touched } =
     useFormik({
@@ -38,41 +40,37 @@ const Bonafide_Certificate = () => {
       onSubmit: (values, action) => {},
     });
 
-  useEffect(() => {
-    fetch("/schoolLogo.txt")
-      .then((response) => response.text())
-      .then((text) => setSchoolLogo(text))
-      .catch((error) => console.error("Error fetching the Base64 image:", error));
-  }, []);
-
-  useEffect(() => {
-    const savedSettings = localStorage.getItem("transferCertificateSettings");
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    }
-  }, []);
-
   const handleToggle = (field: string): void => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      [field]: !prevSettings[field],
-    }));
-  };
+    setSettings((prevSettings) => {
+      const newSettings = {
+        ...prevSettings,
+        [field]: !prevSettings[field],
+      };
 
-  const saveSettings = (): void => {
-    // Save settings to localStorage
-    localStorage.setItem("transferCertificateSettings", JSON.stringify(settings));
-    message.success("Transfer Certificate Settings Saved");
-    console.log("Settings saved to localStorage:", settings);
-  };
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/certificate/bonified/settings`, newSettings, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          // message.success("Updated Successfully!");
+        })
+        .catch((error: any) => {
+          message.error(error.response.data.detail);
+        });
 
+      return newSettings;
+    });
+  };
   const renderSettingToggle = (field: string, label: string): JSX.Element => (
-    <Grid item xs={12} sm={6} md={8} key={field}>
+    <Grid item xs={12} sm={12} md={12} key={field} style={{ borderBottom: "1px solid #dddd" }}>
       <MDBox display="flex" alignItems="center" justifyContent="space-between">
         <MDTypography variant="button" color="body3">
           {label}
         </MDTypography>
-        <Switch checked={settings[field]} onChange={() => handleToggle(field)} />
+        <Switch checked={settings[field]} onChange={() => handleToggle(field)} color="primary" />
       </MDBox>
     </Grid>
   );
@@ -82,19 +80,43 @@ const Bonafide_Certificate = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/certificate/bonified/settings`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setSettings(response.data);
+      })
+      .catch((error) => {
+        setSettings({
+          watermark: true,
+          student_image: true,
+          sr_no: true,
+        });
+        message.error(error.response.data.detail);
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3} px={3}>
         <Grid container spacing={3} mb={2}>
           <Grid item sm={4}>
-            {renderSettingToggle("backgroundSchoolLogo", "Background School Logo")}
+            {renderSettingToggle("watermark", "Background School Logo")}
           </Grid>
           <Grid item sm={4}>
-            {renderSettingToggle("studentImage", "Student Image")}
+            {renderSettingToggle("student_image", "Student Image")}
           </Grid>
           <Grid item sm={4}>
-            {renderSettingToggle("adm_no", "Sr. Number")}
+            {renderSettingToggle("sr_no", "Sr. Number")}
           </Grid>
         </Grid>
 
@@ -104,7 +126,7 @@ const Bonafide_Certificate = () => {
               sx={{
                 //   border: "1px solid #dddddd",
                 backgroundImage:
-                  settings.backgroundSchoolLogo !== false
+                  settings.watermark !== false
                     ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${BGImage})`
                     : "none",
                 backgroundRepeat: "no-repeat",
@@ -117,10 +139,10 @@ const Bonafide_Certificate = () => {
               <MDBox py={3} px={3}>
                 <MDBox mb={7}>
                   <MDTypography variant="h5" textAlign="center" sx={{ fontStyle: "italic" }}>
-                    Bonafide Certificate
+                    TO WHOMSOEVER IT MAY CONCERN
                   </MDTypography>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.studentImage !== false && (
+                    {settings.student_image !== false && (
                       <img
                         src={studentLogo}
                         alt="Student Logo"
@@ -129,7 +151,7 @@ const Bonafide_Certificate = () => {
                     )}
                   </MDBox>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.adm_no !== false && (
+                    {settings.sr_no !== false && (
                       <MDTypography variant="button" color="body3" fontWeight="bold">
                         S.R. No. 12345
                       </MDTypography>
@@ -218,7 +240,7 @@ const Bonafide_Certificate = () => {
                           placeholder="Seema Singh"
                         />
                       </MDBox>
-                      is/was a bonifide student of class{" "}
+                      is/was a bonifide student of class
                       <MDBox sx={{ width: "auto", marginLeft: 1, flexShrink: 0 }}>
                         <MDInput
                           sx={{ width: "100%" }}
@@ -258,7 +280,7 @@ const Bonafide_Certificate = () => {
                         fontStyle: "italic",
                       }}
                     >
-                      As far as i know{" "}
+                      Her date of birth as per the School Admission Register is
                       <MDBox sx={{ width: "auto", marginLeft: 1, flexShrink: 0 }}>
                         <MDInput
                           sx={{ width: "100%" }}
@@ -270,71 +292,6 @@ const Bonafide_Certificate = () => {
                           placeholder="he/she"
                         />
                       </MDBox>
-                      bears{" "}
-                      <MDBox sx={{ width: "auto", marginLeft: 1, flexShrink: 0 }}>
-                        <MDInput
-                          sx={{ width: "100%" }}
-                          variant="standard"
-                          name="studentname"
-                          value={values.studentname}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          placeholder="good"
-                        />
-                      </MDBox>
-                      moral character and durings{" "}
-                      <MDBox sx={{ width: "auto", marginLeft: 1, flexShrink: 0 }}>
-                        <MDInput
-                          sx={{ width: "100%" }}
-                          variant="standard"
-                          name="studentname"
-                          value={values.studentname}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          placeholder="his/her"
-                        />
-                      </MDBox>
-                      stay has not violated any rules and regulations of this institution.
-                    </MDTypography>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-                  >
-                    <MDTypography
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexWrap: "wrap",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      I wish{" "}
-                      <MDBox sx={{ width: "auto", marginLeft: 1, flexShrink: 0 }}>
-                        <MDInput
-                          sx={{ width: "100%" }}
-                          variant="standard"
-                          name="studentname"
-                          value={values.studentname}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          placeholder="him/her"
-                        />
-                      </MDBox>
-                      all success in{" "}
-                      <MDBox sx={{ width: "auto", marginLeft: 1, flexShrink: 0 }}>
-                        <MDInput
-                          sx={{ width: "100%" }}
-                          variant="standard"
-                          name="studentname"
-                          value={values.studentname}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          placeholder="his/her"
-                        />
-                      </MDBox>{" "}
-                      future.
                     </MDTypography>
                   </Grid>
                 </Grid>
@@ -366,7 +323,6 @@ const Bonafide_Certificate = () => {
               color="dark"
               variant="contained"
               onClick={() => navigate("/student/student_details")}
-              // navigate("/pages/admission/Fee");
             >
               Cancel
             </MDButton>
@@ -386,7 +342,7 @@ const Bonafide_Certificate = () => {
                 sx={{
                   //   border: "1px solid #dddddd",
                   backgroundImage:
-                    settings.backgroundSchoolLogo !== false
+                    settings.watermark !== false
                       ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${BGImage})`
                       : "none",
                   backgroundRepeat: "no-repeat",
@@ -399,11 +355,11 @@ const Bonafide_Certificate = () => {
                 <Grid item xs={12}>
                   <MDBox display="flex" justifyContent="center" alignItems="center" mt={2}>
                     <MDTypography variant="h3" fontWeight="bold" textAlign="center">
-                      Character Certificate
+                      TO WHOMSOEVER IT MAY CONCERN
                     </MDTypography>
                   </MDBox>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.studentImage !== false && (
+                    {settings.student_image !== false && (
                       <img
                         src={studentLogo}
                         alt="Student Logo"
@@ -412,7 +368,7 @@ const Bonafide_Certificate = () => {
                     )}
                   </MDBox>
                   <MDBox display="flex" justifyContent="flex-end">
-                    {settings.adm_no !== false && (
+                    {settings.sr_no !== false && (
                       <MDTypography variant="button" color="body3" fontWeight="bold">
                         S.R. No. 12345
                       </MDTypography>
@@ -433,11 +389,10 @@ const Bonafide_Certificate = () => {
                     This is to certify that {values.studentname} {values.studentname}{" "}
                     {values.studentname} /o/ {values.studentname} and {values.studentname} is/was a
                     bonafide student of class {values.studentname} in the session{" "}
-                    {values.studentname}.<br /> As far as I know {values.studentname} bears{" "}
-                    {values.studentname} moral character and during {values.studentname} stay has
-                    not violated any rules and regulations of this institution. <br />{" "}
+                    {values.studentname}.
                     <MDBox sx={{ textAlign: "center", width: "100%" }}>
-                      I wish {values.studentname} all success in {values.studentname} future.
+                      {values.studentname} date of birth as per the School Admission Register is
+                      {values.studentname}.
                     </MDBox>
                   </MDTypography>
                 </Grid>
@@ -463,4 +418,4 @@ const Bonafide_Certificate = () => {
   );
 };
 
-export default Bonafide_Certificate;
+export default Character_Certificate;
