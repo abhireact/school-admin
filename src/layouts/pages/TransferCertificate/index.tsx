@@ -419,389 +419,395 @@ const TransferCertificate: React.FC = () => {
   ].filter((field) => settings[field.inputName] !== false);
   return (
     <DashboardLayout>
-      <Card>
-        <MDBox p={4}>
-          <Grid container style={{ border: "1px solid #ffff" }}>
-            <Grid item sm={12} sx={{ display: "flex", justifyContent: "end" }}>
-              <MDButton color="dark" type="submit" onClick={() => navigate(-1)}>
-                back
-              </MDButton>
-              &nbsp; &nbsp;
-              <MDButton
-                color="info"
-                type="submit"
-                onClick={() => navigate("/pages/student_details/student/tc_settings")}
-              >
-                settings
-              </MDButton>
-            </Grid>
-            <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-              <MDTypography variant="h4">Transfer Certificate</MDTypography>
-            </Grid>
-            {formFields.map((field, index) => (
-              <Grid item xs={12} sm={4} key={index}>
-                <MDInput
-                  sx={{ width: "80%" }}
-                  name={field.inputName}
-                  label={
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      {field.label.en}
-                    </MDTypography>
-                  }
-                  onChange={handleChange}
-                  value={values[field.inputName] || ""}
-                  variant="standard"
-                  onBlur={handleBlur}
-                  error={touched[field.inputName] && Boolean(errors[field.inputName])}
-                  success={Boolean(values[field.inputName]?.length) && !errors[field.inputName]}
-                  helperText={touched[field.inputName] && errors[field.inputName]}
-                />
-              </Grid>
-            ))}
-            <Grid container mt={2} spacing={2} direction="row" alignItems="center">
-              {settings.studentImage !== false && (
-                <>
-                  <Grid item xs={3} sm={3}>
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      Registration No. of the Candidate
-                    </MDTypography>
-                  </Grid>
-                  <Grid item xs={0.5} sm={0.5}>
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      (
-                    </MDTypography>
-                  </Grid>
-                  <Grid item xs={1.5} sm={1.5}>
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      in case Class
-                    </MDTypography>
-                  </Grid>
-                  <Grid item xs={0.5} sm={0.5}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      name="class_from"
-                      onChange={handleChange}
-                      value={values.class_from || ""}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.class_from && Boolean(errors.class_from)}
-                      // success={Boolean(values.class_from?.length) && !errors.class_from}
-                      helperText={touched.class_from && errors.class_from}
-                    />
-                  </Grid>
-                  <Grid item xs={0.5} sm={0.5}>
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      to
-                    </MDTypography>
-                  </Grid>
-                  <Grid item xs={1.5} sm={0.5}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      name="class_to"
-                      onChange={handleChange}
-                      value={values.class_to || ""}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.class_to && Boolean(errors.class_to)}
-                      // success={Boolean(values.class_to?.length) && !errors.class_to}
-                      helperText={touched.class_to && errors.class_to}
-                    />
-                  </Grid>
-                  <Grid item xs={0.5} sm={0.5}>
-                    <MDTypography variant="button" fontWeight="bold" color="secondary">
-                      )
-                    </MDTypography>
-                  </Grid>
-                  <Grid item xs={2.5} sm={2.5}>
-                    <MDInput
-                      sx={{ width: "100%" }}
-                      name="registration_no"
-                      onChange={handleChange}
-                      value={values.registration_no || ""}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched.registration_no && Boolean(errors.registration_no)}
-                      success={Boolean(values.registration_no?.length) && !errors.registration_no}
-                      helperText={touched.registration_no && errors.registration_no}
-                    />
-                  </Grid>
-                </>
-              )}
-            </Grid>
-
-            <Grid container spacing={2} sx={{ border: "1px solid #dddddd", mt: 2, mb: 1 }}>
-              {certificateFields.map((item, index) => (
-                <React.Fragment key={index}>
-                  <Grid
-                    item
-                    xs={1}
-                    sm={1}
-                    sx={{
-                      borderBottom: "1px solid #dddddd",
-                      borderRight: "1px solid #dddddd",
-                      p: 0.25,
-                      paddingLeft: 2,
-                    }}
-                  >
-                    <MDTypography variant="button" color="body3">
-                      {index + 1}
-                    </MDTypography>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={5.5}
-                    sm={5.5}
-                    sx={{
-                      borderBottom: "1px solid #dddddd",
-                      borderRight: "1px solid #dddddd",
-                      p: 0.25,
-                      pl: 2,
-                    }}
-                  >
-                    <MDTypography variant="button" color="body3">
-                      {item.label.en}
-                    </MDTypography>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={5.5}
-                    sm={5.5}
-                    sx={{ borderBottom: "1px solid #dddddd", p: 0.25, pl: 2 }}
-                  >
-                    <MDInput
-                      fullWidth
-                      name={item.inputName}
-                      type={
-                        item.inputName === "duesPaid"
-                          ? "month"
-                          : item.inputName === "dob" || item.inputName === "admissionDate"
-                          ? "date"
-                          : "text"
-                      }
-                      onChange={handleChange}
-                      value={values[item.inputName] || ""}
-                      variant="standard"
-                      onBlur={handleBlur}
-                      error={touched[item.inputName] && Boolean(errors[item.inputName])}
-                      success={Boolean(values[item.inputName]?.length) && !errors[item.inputName]}
-                      helperText={touched[item.inputName] && errors[item.inputName]}
-                    />
-                  </Grid>
-                </React.Fragment>
-              ))}
-            </Grid>
-
-            <Grid item sm={12} py={2}>
-              <MDButton color="info" type="submit" onClick={() => handleSubmit()}>
-                Generate PDF
-              </MDButton>
-              &nbsp; &nbsp;
-            </Grid>
-          </Grid>
-          <Grid className="report-hidden-text" ref={tableRef}>
-            <MDBox p={2}>
-              <Grid container style={{ border: "1px solid #ffff" }}>
-                <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-                  {settings.english_or_hindi ? (
-                    <MDTypography variant="h4">
-                      स्थानांतरण प्रमाणपत्र/Transfer Certificate
-                    </MDTypography>
-                  ) : (
-                    <MDTypography variant="h4">Transfer Certificate</MDTypography>
-                  )}
-                </Grid>
-
-                <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                  {settings.studentImage !== false && (
-                    <img
-                      src={studentLogo}
-                      alt="Student Logo"
-                      style={{ width: "80px", height: "auto" }}
-                    />
-                  )}
-                </Grid>
-                {formFields.map((field, index) => (
-                  <>
-                    {settings.english_or_hindi ? (
-                      <Grid item xs={6} sm={6} key={index}>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          {field.label.hi}/{field.label.en}: {values[field.inputName] || ""}
-                        </MDTypography>
-                      </Grid>
-                    ) : (
-                      <Grid item xs={4} sm={4} key={index}>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          {field.label.en}: {values[field.inputName] || ""}
-                        </MDTypography>
-                      </Grid>
-                    )}
-                  </>
-                ))}
-                {settings.registration_no !== false && (
-                  <Grid item xs={12} sm={12}>
-                    {settings.english_or_hindi ? (
-                      <>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          उम्मीदवार का पंजीकरण संख्या/Registration No. of the Candidate (in case
-                          {values.class_from} to
-                          {values.class_to}) :
-                        </MDTypography>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          {values.registration_no}
-                        </MDTypography>
-                      </>
-                    ) : (
-                      <>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          Registration No. of the Candidate (in case {values.class_from} to
-                          {values.class_to}) :
-                        </MDTypography>
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          {values.registration_no}
-                        </MDTypography>
-                      </>
-                    )}
-                  </Grid>
-                )}
-                <Grid
-                  container
-                  sx={{
-                    border: "1px solid #dddddd",
-                    backgroundImage:
-                      settings.backgroundSchoolLogo !== false
-                        ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${schoolLogo})`
-                        : "none",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center",
-                    backgroundSize: "contain",
-                    position: "relative",
-                  }}
+      <form onSubmit={handleSubmit}>
+        <Card>
+          <MDBox p={4}>
+            <Grid container style={{ border: "1px solid #ffff" }}>
+              <Grid item sm={12} sx={{ display: "flex", justifyContent: "end" }}>
+                <MDButton color="dark" onClick={() => navigate(-1)}>
+                  back
+                </MDButton>
+                &nbsp; &nbsp;
+                <MDButton
+                  color="info"
+                  onClick={() => navigate("/pages/student_details/student/tc_settings")}
                 >
-                  {certificateFields.map((item, index) => (
-                    <React.Fragment key={index}>
-                      <Grid
-                        item
-                        xs={1}
-                        sm={1}
-                        sx={{
-                          borderBottom: "1px solid #dddddd",
-                          borderRight: "1px solid #dddddd",
-                          p: 0.25,
-                          paddingLeft: 2,
-                        }}
-                      >
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          {index + 1}
-                        </MDTypography>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={5.5}
-                        sm={5.5}
-                        sx={{
-                          borderBottom: "1px solid #dddddd",
-                          borderRight: "1px solid #dddddd",
-                          p: 0.25,
-                          paddingLeft: 2,
-                        }}
-                      >
-                        {settings.english_or_hindi ? (
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {item.label.hi}/{item.label.en}
-                          </MDTypography>
-                        ) : (
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {item.label.en}
-                          </MDTypography>
-                        )}
-                      </Grid>
-                      <Grid
-                        item
-                        xs={5.5}
-                        sm={5.5}
-                        sx={{ borderBottom: "1px solid #dddddd", p: 0.25, paddingLeft: 2 }}
-                      >
-                        <MDTypography variant="button" fontWeight="bold" color="body3">
-                          {values[item.inputName] || ""}
-                        </MDTypography>
-                      </Grid>
-                    </React.Fragment>
-                  ))}
+                  settings
+                </MDButton>
+              </Grid>
+              <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
+                <MDTypography variant="h4">Transfer Certificate</MDTypography>
+              </Grid>
+              {formFields.map((field, index) => (
+                <Grid item xs={12} sm={4} key={index}>
+                  <MDInput
+                    sx={{ width: "80%" }}
+                    name={field.inputName}
+                    label={
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        {field.label.en}
+                      </MDTypography>
+                    }
+                    onChange={handleChange}
+                    value={values[field.inputName] || ""}
+                    variant="standard"
+                    onBlur={handleBlur}
+                    error={touched[field.inputName] && Boolean(errors[field.inputName])}
+                    success={Boolean(values[field.inputName]?.length) && !errors[field.inputName]}
+                    helperText={touched[field.inputName] && errors[field.inputName]}
+                  />
                 </Grid>
-                {settings.preparedBy !== false && (
-                  <Grid item xs={4} sm={4}>
-                    {settings.english_or_hindi ? (
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        द्वारा तैयार /Prepared By
+              ))}
+              <Grid container mt={2} spacing={2} direction="row" alignItems="center">
+                {settings.studentImage !== false && (
+                  <>
+                    <Grid item xs={3} sm={3}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        Registration No. of the Candidate
                       </MDTypography>
-                    ) : (
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        Prepared By
+                    </Grid>
+                    <Grid item xs={0.5} sm={0.5}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        (
                       </MDTypography>
-                    )}
-                    <br />
-                    <MDTypography variant="button" fontWeight="bold" color="body3">
-                      (Name and Designation )
-                    </MDTypography>
-                  </Grid>
-                )}
-                {settings.checkedBy !== false && (
-                  <Grid item xs={4} sm={4}>
-                    {settings.english_or_hindi ? (
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        द्वारा जांचा गया /Checked By
+                    </Grid>
+                    <Grid item xs={1.5} sm={1.5}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        in case Class
                       </MDTypography>
-                    ) : (
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        Checked By
+                    </Grid>
+                    <Grid item xs={0.5} sm={0.5}>
+                      <MDInput
+                        sx={{ width: "100%" }}
+                        name="class_from"
+                        onChange={handleChange}
+                        value={values.class_from || ""}
+                        variant="standard"
+                        onBlur={handleBlur}
+                        error={touched.class_from && Boolean(errors.class_from)}
+                        // success={Boolean(values.class_from?.length) && !errors.class_from}
+                        helperText={touched.class_from && errors.class_from}
+                      />
+                    </Grid>
+                    <Grid item xs={0.5} sm={0.5}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        to
                       </MDTypography>
-                    )}
-                    <br />
-                    <MDTypography variant="button" fontWeight="bold" color="body3">
-                      (Name and Designation )
-                    </MDTypography>
-                  </Grid>
-                )}
-                {settings.principalSign !== false && (
-                  <Grid item xs={4} sm={4}>
-                    {settings.english_or_hindi ? (
-                      <MDTypography
-                        variant="button"
-                        fontWeight="bold"
-                        color="body3"
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        प्राचार्य के हस्ताक्षर /Signature of Principal
+                    </Grid>
+                    <Grid item xs={1.5} sm={0.5}>
+                      <MDInput
+                        sx={{ width: "100%" }}
+                        name="class_to"
+                        onChange={handleChange}
+                        value={values.class_to || ""}
+                        variant="standard"
+                        onBlur={handleBlur}
+                        error={touched.class_to && Boolean(errors.class_to)}
+                        // success={Boolean(values.class_to?.length) && !errors.class_to}
+                        helperText={touched.class_to && errors.class_to}
+                      />
+                    </Grid>
+                    <Grid item xs={0.5} sm={0.5}>
+                      <MDTypography variant="button" fontWeight="bold" color="secondary">
+                        )
                       </MDTypography>
-                    ) : (
-                      <MDTypography
-                        variant="button"
-                        fontWeight="bold"
-                        color="body3"
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        Signature of Principal
-                      </MDTypography>
-                    )}
-                    <br />
-                    <MDTypography variant="button" fontWeight="bold" color="body3">
-                      (With Official Seal )
-                    </MDTypography>
-                  </Grid>
+                    </Grid>
+                    <Grid item xs={2.5} sm={2.5}>
+                      <MDInput
+                        sx={{ width: "100%" }}
+                        name="registration_no"
+                        onChange={handleChange}
+                        value={values.registration_no || ""}
+                        variant="standard"
+                        onBlur={handleBlur}
+                        error={touched.registration_no && Boolean(errors.registration_no)}
+                        success={Boolean(values.registration_no?.length) && !errors.registration_no}
+                        helperText={touched.registration_no && errors.registration_no}
+                      />
+                    </Grid>
+                  </>
                 )}
               </Grid>
-            </MDBox>
-          </Grid>
-        </MDBox>
-      </Card>
+
+              <Grid container spacing={2} sx={{ border: "1px solid #dddddd", mt: 2, mb: 1 }}>
+                {certificateFields.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <Grid
+                      item
+                      xs={1}
+                      sm={1}
+                      sx={{
+                        borderBottom: "1px solid #dddddd",
+                        borderRight: "1px solid #dddddd",
+                        p: 0.25,
+                        paddingLeft: 2,
+                      }}
+                    >
+                      <MDTypography variant="button" color="body3">
+                        {index + 1}
+                      </MDTypography>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={5.5}
+                      sm={5.5}
+                      sx={{
+                        borderBottom: "1px solid #dddddd",
+                        borderRight: "1px solid #dddddd",
+                        p: 0.25,
+                        pl: 2,
+                      }}
+                    >
+                      <MDTypography variant="button" color="body3">
+                        {item.label.en}
+                      </MDTypography>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={5.5}
+                      sm={5.5}
+                      sx={{ borderBottom: "1px solid #dddddd", p: 0.25, pl: 2 }}
+                    >
+                      <MDInput
+                        fullWidth
+                        name={item.inputName}
+                        required={
+                          item.inputName === "dob" ||
+                          item.inputName === "name" ||
+                          item.inputName === "fatherName" ||
+                          item.inputName === "admissionDate"
+                        }
+                        type={
+                          item.inputName === "duesPaid"
+                            ? "month"
+                            : item.inputName === "dob" || item.inputName === "admissionDate"
+                            ? "date"
+                            : "text"
+                        }
+                        onChange={handleChange}
+                        value={values[item.inputName] || ""}
+                        variant="standard"
+                        onBlur={handleBlur}
+                        error={touched[item.inputName] && Boolean(errors[item.inputName])}
+                        success={Boolean(values[item.inputName]?.length) && !errors[item.inputName]}
+                        helperText={touched[item.inputName] && errors[item.inputName]}
+                      />
+                    </Grid>
+                  </React.Fragment>
+                ))}
+              </Grid>
+
+              <Grid item sm={12} py={2}>
+                <MDButton color="info" type="submit">
+                  Generate PDF
+                </MDButton>
+              </Grid>
+            </Grid>
+            <Grid className="report-hidden-text" ref={tableRef}>
+              <MDBox p={2}>
+                <Grid container style={{ border: "1px solid #ffff" }}>
+                  <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
+                    {settings.english_or_hindi ? (
+                      <MDTypography variant="h4">
+                        स्थानांतरण प्रमाणपत्र/Transfer Certificate
+                      </MDTypography>
+                    ) : (
+                      <MDTypography variant="h4">Transfer Certificate</MDTypography>
+                    )}
+                  </Grid>
+
+                  <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    {settings.studentImage !== false && (
+                      <img
+                        src={studentLogo}
+                        alt="Student Logo"
+                        style={{ width: "80px", height: "auto" }}
+                      />
+                    )}
+                  </Grid>
+                  {formFields.map((field, index) => (
+                    <>
+                      {settings.english_or_hindi ? (
+                        <Grid item xs={6} sm={6} key={index}>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {field.label.hi}/{field.label.en}: {values[field.inputName] || ""}
+                          </MDTypography>
+                        </Grid>
+                      ) : (
+                        <Grid item xs={4} sm={4} key={index}>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {field.label.en}: {values[field.inputName] || ""}
+                          </MDTypography>
+                        </Grid>
+                      )}
+                    </>
+                  ))}
+                  {settings.registration_no !== false && (
+                    <Grid item xs={12} sm={12}>
+                      {settings.english_or_hindi ? (
+                        <>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            उम्मीदवार का पंजीकरण संख्या/Registration No. of the Candidate (in case
+                            {values.class_from} to
+                            {values.class_to}) :
+                          </MDTypography>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {values.registration_no}
+                          </MDTypography>
+                        </>
+                      ) : (
+                        <>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            Registration No. of the Candidate (in case {values.class_from} to
+                            {values.class_to}) :
+                          </MDTypography>
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {values.registration_no}
+                          </MDTypography>
+                        </>
+                      )}
+                    </Grid>
+                  )}
+                  <Grid
+                    container
+                    sx={{
+                      border: "1px solid #dddddd",
+                      backgroundImage:
+                        settings.backgroundSchoolLogo !== false
+                          ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${schoolLogo})`
+                          : "none",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",
+                      backgroundSize: "contain",
+                      position: "relative",
+                    }}
+                  >
+                    {certificateFields.map((item, index) => (
+                      <React.Fragment key={index}>
+                        <Grid
+                          item
+                          xs={1}
+                          sm={1}
+                          sx={{
+                            borderBottom: "1px solid #dddddd",
+                            borderRight: "1px solid #dddddd",
+                            p: 0.25,
+                            paddingLeft: 2,
+                          }}
+                        >
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {index + 1}
+                          </MDTypography>
+                        </Grid>
+                        <Grid
+                          item
+                          xs={5.5}
+                          sm={5.5}
+                          sx={{
+                            borderBottom: "1px solid #dddddd",
+                            borderRight: "1px solid #dddddd",
+                            p: 0.25,
+                            paddingLeft: 2,
+                          }}
+                        >
+                          {settings.english_or_hindi ? (
+                            <MDTypography variant="button" fontWeight="bold" color="body3">
+                              {item.label.hi}/{item.label.en}
+                            </MDTypography>
+                          ) : (
+                            <MDTypography variant="button" fontWeight="bold" color="body3">
+                              {item.label.en}
+                            </MDTypography>
+                          )}
+                        </Grid>
+                        <Grid
+                          item
+                          xs={5.5}
+                          sm={5.5}
+                          sx={{ borderBottom: "1px solid #dddddd", p: 0.25, paddingLeft: 2 }}
+                        >
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {values[item.inputName] || ""}
+                          </MDTypography>
+                        </Grid>
+                      </React.Fragment>
+                    ))}
+                  </Grid>
+                  {settings.preparedBy !== false && (
+                    <Grid item xs={4} sm={4}>
+                      {settings.english_or_hindi ? (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          द्वारा तैयार /Prepared By
+                        </MDTypography>
+                      ) : (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          Prepared By
+                        </MDTypography>
+                      )}
+                      <br />
+                      <MDTypography variant="button" fontWeight="bold" color="body3">
+                        (Name and Designation )
+                      </MDTypography>
+                    </Grid>
+                  )}
+                  {settings.checkedBy !== false && (
+                    <Grid item xs={4} sm={4}>
+                      {settings.english_or_hindi ? (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          द्वारा जांचा गया /Checked By
+                        </MDTypography>
+                      ) : (
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          Checked By
+                        </MDTypography>
+                      )}
+                      <br />
+                      <MDTypography variant="button" fontWeight="bold" color="body3">
+                        (Name and Designation )
+                      </MDTypography>
+                    </Grid>
+                  )}
+                  {settings.principalSign !== false && (
+                    <Grid item xs={4} sm={4}>
+                      {settings.english_or_hindi ? (
+                        <MDTypography
+                          variant="button"
+                          fontWeight="bold"
+                          color="body3"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          प्राचार्य के हस्ताक्षर /Signature of Principal
+                        </MDTypography>
+                      ) : (
+                        <MDTypography
+                          variant="button"
+                          fontWeight="bold"
+                          color="body3"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          Signature of Principal
+                        </MDTypography>
+                      )}
+                      <br />
+                      <MDTypography variant="button" fontWeight="bold" color="body3">
+                        (With Official Seal )
+                      </MDTypography>
+                    </Grid>
+                  )}
+                </Grid>
+              </MDBox>
+            </Grid>
+          </MDBox>
+        </Card>
+      </form>
     </DashboardLayout>
   );
 };

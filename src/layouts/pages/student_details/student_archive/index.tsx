@@ -8,6 +8,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import GroupsIcon from "@mui/icons-material/Groups";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
 import { IconButton, Tooltip } from "@mui/material";
@@ -44,6 +45,7 @@ import Create from "./create";
 import { fetchStudent } from "layouts/pages/redux/dataSlice";
 const StudentArchive = () => {
   const [rbacData, setRbacData] = useState([]);
+  const navigate = useNavigate();
 
   const { classes } = useSelector((state: any) => state);
   let dispatch = useDispatch();
@@ -101,6 +103,14 @@ const StudentArchive = () => {
       message.error(error.response.data.detail);
     }
   };
+  const handleCertificate = (index: number) => {
+    const main_data = data[index];
+    navigate("/pages/student_details/student/certificates", {
+      state: {
+        user_name: main_data.user_id,
+      },
+    });
+  };
   const dataTableData = {
     columns: [
       { Header: "Student Name", accessor: "student_name" },
@@ -154,6 +164,15 @@ const StudentArchive = () => {
           >
             <Tooltip title="Edit" placement="top">
               <ModeEditOutlineIcon />
+            </Tooltip>
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              handleCertificate(index);
+            }}
+          >
+            <Tooltip title="Student Certificates" placement="top">
+              <SummarizeIcon />
             </Tooltip>
           </IconButton>
         </>
