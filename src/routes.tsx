@@ -30,11 +30,16 @@ import CreateStudent from "layouts/pages/student_details/student/create";
 import ShowAdmission from "layouts/pages/admission/show";
 import EditAdmission from "layouts/pages/admission/update";
 import ManagePayFee from "layouts/pages/admission/manage_fee_admission/pay_fee";
+import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
+//Examination Module
+import ExamtypeCreate from "layouts/pages/exam/exam_type/create";
+import ScholasticPerticularCreate from "layouts/pages/exam/scholastic_particular/create";
+import ScholasticComponent from "layouts/pages/exam/scholastic_component";
+
 import Second_CC from "layouts/pages/authentication/Certificate/second_cc";
 import CC_one from "layouts/pages/authentication/Certificate/CC_one";
 import Certificates from "layouts/pages/student_details/student/certificates";
 import Character_Certificate from "layouts/pages/student_details/student/certificates/Character_Certificate";
-import TransferCertificateTemplate from "layouts/pages/TransferCertificate/template-settings";
 import TransferCertificate from "layouts/pages/TransferCertificate";
 import Bonafide_Certificate from "layouts/pages/student_details/student/certificates/Bonafide_Certificate";
 let route2 = mainroutes;
@@ -77,7 +82,6 @@ try {
   console.error(error);
 }
 let routes = [
-  // pages not to show in left navbar
   {
     type: "collapse",
     name: "Dashboards",
@@ -287,6 +291,32 @@ let routes = [
     key: "manage_pay_fee",
     route: "/pages/admission/manage_admission/pay_fee",
     component: <ManagePayFee />,
+  },
+  {
+    name: "Manage Pay Fee",
+    key: "manage_pay_fee",
+    route: "/pages/admission/manage_admission/pay_fee",
+    component: <ManagePayFee />,
+  },
+  //Examination Module
+
+  {
+    name: "Exam Type Create",
+    key: "exam_type_create",
+    route: "/Examination/exam_type_create",
+    component: <ExamtypeCreate />,
+  },
+  {
+    name: "Scholastic Perticular Create",
+    key: "scholastic_perticular_create",
+    route: "/Examination/scholastic_perticular_create",
+    component: <ScholasticPerticularCreate />,
+  },
+  {
+    name: "Scholastic Component",
+    key: "scholastic_component",
+    route: "/Examination/scholastic_component",
+    component: <ScholasticComponent />,
   },
 ];
 
