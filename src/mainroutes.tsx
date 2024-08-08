@@ -724,6 +724,12 @@ const routes = [
             route: "/fee/reports/feedefaulterreport",
             component: <FeeDefaulterReport />,
           },
+          {
+            name: "Fee Certificate",
+            key: "fee_certificate",
+            route: "/fee/reports/fee_certificate",
+            component: <FeeCertificate />,
+          },
         ],
       },
     ],
