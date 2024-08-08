@@ -8,13 +8,13 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import { message } from "antd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { I18nextProvider, useTranslation } from "react-i18next";
 import Autocomplete from "@mui/material/Autocomplete";
 import Cookies from "js-cookie";
-import { useSelector } from "react-redux";
-import { FormControlLabel, FormControl, Radio, RadioGroup, Checkbox } from "@mui/material";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
 const Cacademic_year = Cookies.get("academic_year");
 console.log(Cacademic_year, "Cacademic_year");
 const validationSchema = Yup.object().shape({
@@ -25,22 +25,27 @@ const validationSchema = Yup.object().shape({
     .required("Required *"),
 });
 const FeeCertificate = (props: any) => {
+  const { t } = useTranslation();
+  const { classes, account, studentcategory, student, wings_name } = useSelector(
+    (state: any) => state
+  );
   const token = Cookies.get("token");
-
-  const { handleShowPage, setData } = props;
-
+  const { handleShowPage } = props;
+  const [data, setData] = useState(student);
   const [academicdata, setAcademicdata] = useState([]);
   const [classdata, setClassdata] = useState([]);
+  const [feeCategory, setFeecategory] = useState([]);
   const [filteredClass, setFilteredClass] = useState([]);
-
   function filterClassData(data: any, academic_year: any) {
     let filtereddata = data
       .filter((item: any) => item.academic_year === academic_year)
       .map((item: any) => item.class_name);
     setFilteredClass(filtereddata);
   }
+
   const [sectiondata, setsectiondata] = useState([]);
   const [filteredSection, setFilteredSection] = useState([]);
+
   function filterSectionData(data: any, class_name: any) {
     let filtereddata = data
       .filter((item: any) => item.class_name === class_name)
@@ -55,209 +60,150 @@ const FeeCertificate = (props: any) => {
       .map((item: any) => item.subject_name);
     setFilteredSubject(filtereddata);
   }
+
   useEffect(() => {
+    const filteredClassData = classes.filter(
+      (item: any) => item.academic_year === values.academic_year
+    );
     axios
-      .get("http://10.0.20.200:8000/mg_batches", {
+      .get("http://10.0.20.200:8000/fee_category", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setsectiondata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-    axios
-      .get("http://10.0.20.200:8000/mg_accademic_year", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setAcademicdata(response.data);
-
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    axios
-      .get("http://10.0.20.200:8000/mg_class", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setClassdata(response.data);
-
-        console.log(response.data);
+        if (response.status === 200) {
+          setFeecategory(response.data);
+        }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
-    initialValues: {
-      fee_category: "",
-      fee_particular: "",
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit, setFieldValue } =
+    useFormik({
+      initialValues: {
+        fee_category: "",
+        fee_perticular: "",
 
-      class_name: "",
+        class_name: "",
 
-      academic_year: Cacademic_year,
+        academic_year: Cacademic_year,
 
-      section_name: "",
-      financial_year: "",
-      wings_name: "",
-      guardian: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values, action) => {
-      axios
-        .post("http://10.0.20.200:8000/fee_collection", values, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          message.success(" Fetched Data Successfully!");
-          setData(response.data);
-          action.resetForm();
-          handleShowPage();
-        })
-        .catch(() => {
-          message.error("Error on fetching data !");
-        });
-    },
-  });
+        section_name: "",
+        financial_year: "",
+        wings_name: "",
+        wing_name: "",
+        guardian: "",
+      },
+      validationSchema: validationSchema,
+      onSubmit: async (values, action) => {},
+    });
+  const handleFetchStudents = useCallback(() => {
+    const filteredStudents = student
+      ?.filter((item: any) => item.academic_year === values.academic_year)
+      ?.filter((item: any) => !values.wing_name || item.wing_name === values.wing_name)
+      ?.filter((item: any) => !values.class_name || item.class_name === values.class_name)
+      ?.filter((item: any) => !values.section_name || item.section_name === values.section_name);
+
+    if (JSON.stringify(filteredStudents) !== JSON.stringify(data)) {
+      setData(filteredStudents);
+    }
+  }, [student, values, data]);
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <form onSubmit={handleSubmit}>
         <Card>
-          {" "}
-          <MDBox p={4}>
+          <Grid container p={2}>
+            <Grid item xs={12} sm={6}>
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
+                Fee Certificate
+              </MDTypography>
+            </Grid>
+          </Grid>{" "}
+          <MDBox p={2}>
             <Grid container>
-              <Grid item xs={12} sm={4} py={1}>
+              <Grid item xs={12} sm={4}>
                 <Autocomplete
                   sx={{ width: "70%" }}
-                  value={values.fee_category}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "fee_category", value },
-                    });
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "fee_category", value } });
                   }}
-                  options={academicdata.map((acd) => acd.fee_category)}
-                  renderInput={(params: any) => (
+                  options={feeCategory ? feeCategory.map((item) => item.name) : []}
+                  renderInput={(params) => (
                     <MDInput
-                      InputLabelProps={{ shrink: true }}
+                      required
                       name="fee_category"
+                      value={values.fee_category}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Fee Category
+                          Select Category Name
                         </MDTypography>
                       }
                       onChange={handleChange}
-                      value={values.fee_category}
                       {...params}
                       variant="standard"
-                      error={touched.fee_category && Boolean(errors.fee_category)}
-                      helperText={touched.fee_category && errors.fee_category}
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4} py={1}>
+              <Grid item xs={12} sm={4}>
                 <Autocomplete
                   sx={{ width: "70%" }}
-                  value={values.fee_particular}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "fee_particular", value },
-                    });
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "fee_perticular", value } });
                   }}
-                  options={academicdata.map((acd) => acd.fee_particular)}
-                  renderInput={(params: any) => (
+                  options={
+                    values.fee_category !== ""
+                      ? feeCategory
+                          .find((item) => item.name === values.fee_category)
+                          .particular_types.map((item: any) => item.particular_name)
+                      : []
+                  }
+                  renderInput={(params) => (
                     <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="fee_particular"
+                      required
+                      name="fee_perticular"
+                      onChange={handleChange}
+                      value={values.fee_perticular}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Select Fee Particular
                         </MDTypography>
                       }
-                      onChange={handleChange}
-                      value={values.fee_particular}
                       {...params}
                       variant="standard"
-                      error={touched.fee_particular && Boolean(errors.fee_particular)}
-                      helperText={touched.fee_particular && errors.fee_particular}
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4} py={1}>
+              <Grid item xs={12} sm={4}>
                 <Autocomplete
                   sx={{ width: "70%" }}
-                  value={values.financial_year}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "financial_year", value },
-                    });
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "academic_year", value } });
                   }}
-                  options={academicdata.map((acd) => acd.financial_year)}
-                  renderInput={(params: any) => (
+                  options={
+                    classes
+                      ? Array.from(new Set(classes.map((item: any) => item.academic_year)))
+                      : []
+                  }
+                  renderInput={(params) => (
                     <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="financial_year"
+                      name="academic_year"
+                      onChange={handleChange}
+                      value={values.academic_year}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
                           Select Financial Year
                         </MDTypography>
                       }
-                      onChange={handleChange}
-                      value={values.financial_year}
                       {...params}
                       variant="standard"
-                      error={touched.financial_year && Boolean(errors.financial_year)}
-                      helperText={touched.financial_year && errors.financial_year}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} py={1}>
-                <Autocomplete
-                  sx={{ width: "70%" }}
-                  value={values.financial_year}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "financial_year", value },
-                    });
-                  }}
-                  options={academicdata.map((acd) => acd.financial_year)}
-                  renderInput={(params: any) => (
-                    <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="financial_year"
-                      label={
-                        <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Financial Year
-                        </MDTypography>
-                      }
-                      onChange={handleChange}
-                      value={values.financial_year}
-                      {...params}
-                      variant="standard"
-                      error={touched.financial_year && Boolean(errors.financial_year)}
-                      helperText={touched.financial_year && errors.financial_year}
+                      required
                     />
                   )}
                 />
@@ -298,30 +244,31 @@ const FeeCertificate = (props: any) => {
               <Grid item xs={12} sm={4} py={1}>
                 <Autocomplete
                   sx={{ width: "70%" }}
-                  value={values.wings_name}
-                  onChange={(event, value) => {
-                    handleChange({
-                      target: { name: "wings_name", value },
-                    });
-                    filterClassData(classdata, value);
+                  value={values.wing_name}
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "wing_name", value } });
+                    setFieldValue("class_name", "");
+                    setFieldValue("section_name", "");
                   }}
-                  options={academicdata.map((acd) => acd.wings_name)}
-                  renderInput={(params: any) => (
+                  options={
+                    classes ? Array.from(new Set(classes.map((item: any) => item.wing_name))) : []
+                  }
+                  renderInput={(params) => (
                     <MDInput
-                      InputLabelProps={{ shrink: true }}
-                      name="wings_name"
-                      placeholder="2022-23"
+                      name="wing_name"
+                      //onChange={handleChange}
+                      value={values.wing_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Wing
+                          Wing Name
                         </MDTypography>
                       }
-                      onChange={handleChange}
-                      value={values.wings_name}
                       {...params}
                       variant="standard"
-                      error={touched.wings_name && Boolean(errors.wings_name)}
-                      helperText={touched.wings_name && errors.wings_name}
+                      onBlur={handleBlur}
+                      error={touched.wing_name && Boolean(errors.wing_name)}
+                      success={values.wing_name && !errors.wing_name}
+                      helperText={touched.wing_name && errors.wing_name}
                     />
                   )}
                 />
@@ -329,70 +276,94 @@ const FeeCertificate = (props: any) => {
               <Grid item xs={12} sm={4} py={1}>
                 <Autocomplete
                   sx={{ width: "70%" }}
+                  disableClearable
                   value={values.class_name}
-                  onChange={
-                    filteredClass.length >= 1
-                      ? (event, value) => {
-                          handleChange({
-                            target: { name: "class_name", value },
-                          });
-
-                          filterSectionData(sectiondata, value);
-                        }
-                      : undefined
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "class_name", value } });
+                    setFieldValue("section_name", "");
+                  }}
+                  options={
+                    values.academic_year !== ""
+                      ? classes
+                          .filter(
+                            (item: any) =>
+                              item.academic_year === values.academic_year &&
+                              item.wing_name === values.wing_name
+                          )
+                          .map((item: any) => item.class_name)
+                      : []
                   }
-                  options={filteredClass}
-                  renderInput={(params: any) => (
+                  renderInput={(params) => (
                     <MDInput
-                      InputLabelProps={{ shrink: true }}
+                      //required
                       name="class_name"
+                      // onChange={handleChange}
+                      value={values.class_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Class
+                          Class
                         </MDTypography>
                       }
-                      onChange={handleChange}
-                      value={values.class_name}
                       {...params}
                       variant="standard"
+                      onBlur={handleBlur}
                       error={touched.class_name && Boolean(errors.class_name)}
+                      success={values.class_name && !errors.class_name}
                       helperText={touched.class_name && errors.class_name}
                     />
                   )}
                 />
               </Grid>
-
               <Grid item xs={12} sm={4} py={1}>
                 <Autocomplete
                   sx={{ width: "70%" }}
+                  disableClearable
                   value={values.section_name}
-                  onChange={
-                    filteredSection.length >= 1
-                      ? (event, value) => {
-                          handleChange({
-                            target: { name: "section_name", value },
-                          });
-                        }
-                      : undefined
+                  onChange={(_event, value) => {
+                    handleChange({ target: { name: "section_name", value } });
+                  }}
+                  options={
+                    values.class_name !== ""
+                      ? classes
+                          .filter(
+                            (item: any) =>
+                              item.academic_year === values.academic_year &&
+                              item.class_name === values.class_name
+                          )[0]
+                          .section_data.map((item: any) => item.section_name)
+                      : []
                   }
-                  options={filteredSection}
-                  renderInput={(params: any) => (
+                  renderInput={(params) => (
                     <MDInput
-                      InputLabelProps={{ shrink: true }}
+                      //required
                       name="section_name"
+                      //  onChange={handleChange}
+                      value={values.section_name}
                       label={
                         <MDTypography variant="button" fontWeight="bold" color="secondary">
-                          Select Section
+                          Section
                         </MDTypography>
                       }
-                      onChange={handleChange}
-                      value={values.section_name}
                       {...params}
                       variant="standard"
+                      onBlur={handleBlur}
                       error={touched.section_name && Boolean(errors.section_name)}
+                      success={values.section_name && !errors.section_name}
                       helperText={touched.section_name && errors.section_name}
                     />
                   )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} py={1}>
+                <MDInput
+                  sx={{ width: "70%" }}
+                  variant="standard"
+                  label={
+                    <MDTypography variant="button" fontWeight="bold" color="secondary">
+                      Admission Number/Name
+                    </MDTypography>
+                  }
+                  // value={guardianinfo.first_name}
                 />
               </Grid>
               <Grid item xs={12} sm={4} py={1}>
@@ -433,18 +404,7 @@ const FeeCertificate = (props: any) => {
                 sm={12}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                <Grid item mt={4}>
-                  <MDButton
-                    color="dark"
-                    variant="contained"
-                    onClick={() => {
-                      handleShowPage();
-                    }}
-                  >
-                    Back
-                  </MDButton>
-                </Grid>
-                <Grid item mt={4} ml={5}>
+                <Grid item mt={4} ml={2}>
                   <MDButton color="info" variant="contained" type="submit">
                     Submit
                   </MDButton>
