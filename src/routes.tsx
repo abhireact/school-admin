@@ -42,6 +42,8 @@ import Certificates from "layouts/pages/student_details/student/certificates";
 import Character_Certificate from "layouts/pages/student_details/student/certificates/Character_Certificate";
 import TransferCertificate from "layouts/pages/TransferCertificate";
 import Bonafide_Certificate from "layouts/pages/student_details/student/certificates/Bonafide_Certificate";
+import CreateCommittee from "layouts/pages/event/event_committee/create";
+import UpdateCommittee from "layouts/pages/event/event_committee/update";
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -176,7 +178,18 @@ let routes = [
     route: "/pages/student_details/student/certificates/bonafide_certificates",
     component: <Bonafide_Certificate />,
   },
-
+  {
+    name: "Create Committee",
+    key: "create_committee",
+    route: "event/create_committee",
+    component: <CreateCommittee />,
+  },
+  {
+    name: "Update Committee",
+    key: "update_committee",
+    route: "event/update_committee",
+    component: <UpdateCommittee />,
+  },
   {
     name: "Student Attendance",
     key: "student_attendance",

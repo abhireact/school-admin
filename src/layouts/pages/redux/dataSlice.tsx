@@ -30,6 +30,7 @@ const createAsyncThunkWithUrl = (name: string, url: string) => {
 
 const asyncThunks: { [key: string]: AsyncThunk<any, void, {}> } = {
   fetchWings: createAsyncThunkWithUrl("data/fetchWings", "mg_wing"),
+  fetchEmployee: createAsyncThunkWithUrl("data/employee", "mg_employees"),
   fetchRbac: createAsyncThunkWithUrl("data/fetchRbac", "mg_rbac_current_user"),
   fetchStudentCategory: createAsyncThunkWithUrl("data/StudentCategory", "mg_studcategory"),
   fetchAcademicYear: createAsyncThunkWithUrl("data/AcademicYear", "mg_accademic_year"),
@@ -37,6 +38,7 @@ const asyncThunks: { [key: string]: AsyncThunk<any, void, {}> } = {
   fetchAccount: createAsyncThunkWithUrl("data/account", "mg_accounts"),
   fetchStudent: createAsyncThunkWithUrl("data/student", "mg_student"),
   fetchProfile: createAsyncThunkWithUrl("data/profile", "profile"),
+  fetchDepartment: createAsyncThunkWithUrl("data/department", "employee_department"),
 };
 
 const initialState: DataState = {
@@ -99,6 +101,8 @@ export const {
   fetchAccount,
   fetchStudent,
   fetchProfile,
+  fetchEmployee,
+  fetchDepartment,
 } = asyncThunks;
 
 export default dataSlice.reducer;

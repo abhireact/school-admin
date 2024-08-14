@@ -81,6 +81,10 @@ import EmployeeArchivePDF from "layouts/pages/employee_details/export_archive_da
 import StudentLeaveApply from "layouts/pages/Attendance/student/leave_apply";
 import EmployeeCertificate from "layouts/pages/employee_details/employee_certificate";
 import ManagePrincipal from "layouts/pages/employee_details/manage_principal";
+import EventTwoToneIcon from "@mui/icons-material/EventTwoTone";
+import EventTypes from "layouts/pages/event/event_type";
+import EventCommittee from "layouts/pages/event/event_committee";
+import EventCalendar from "layouts/pages/event/event_calendar";
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -277,6 +281,36 @@ const routes = [
         key: "housedetails",
         route: "student/housedetails",
         component: <HouseDetails />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Event",
+    key: "event",
+    icon: (
+      <Icon fontSize="medium">
+        <EventTwoToneIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "Event Types",
+        key: "event_types",
+        route: "event/event_types",
+        component: <EventTypes />,
+      },
+      {
+        name: "Event Committee",
+        key: "event_committee",
+        route: "event/event_committee",
+        component: <EventCommittee />,
+      },
+      {
+        name: "Event Calendar",
+        key: "event_calendar",
+        route: "event/event_calendar",
+        component: <EventCalendar />,
       },
     ],
   },
