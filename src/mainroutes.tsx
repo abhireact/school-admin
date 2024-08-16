@@ -85,6 +85,8 @@ import EventTwoToneIcon from "@mui/icons-material/EventTwoTone";
 import EventTypes from "layouts/pages/event/event_type";
 import EventCommittee from "layouts/pages/event/event_committee";
 import EventCalendar from "layouts/pages/event/event_calendar";
+import Guests from "layouts/pages/event/guests";
+import EventAlbum from "layouts/pages/event/event_album";
 // Define your variables
 const collegee: "College" | "School" = "School"; // Adjust this based on your actual logic
 const languagee: "hi" | "en" = "en"; // Adjust this based on your actual logic
@@ -286,7 +288,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Event",
+    name: "Events",
     key: "event",
     icon: (
       <Icon fontSize="medium">
@@ -311,6 +313,18 @@ const routes = [
         key: "event_calendar",
         route: "event/event_calendar",
         component: <EventCalendar />,
+      },
+      {
+        name: "Guests",
+        key: "guests",
+        route: "event/guests",
+        component: <Guests />,
+      },
+      {
+        name: "Album",
+        key: "album",
+        route: "event/album",
+        component: <EventAlbum />,
       },
     ],
   },
