@@ -80,14 +80,34 @@ const Certificates = () => {
     fetchStudentInfoTable();
   }, []);
 
-  const handleCharacterCertificate = () => {
-    // const main_data = data[index];
-    navigate("/pages/student_details/student/certificates/Character_Certificate", {
-      state: {
-        studentInfo,
-      },
-    });
+  const handleCharacterCertificate = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/certificate/character/retrive`,
+        {
+          user_name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const studentInfo = response.data;
+
+      navigate("/pages/student_details/student/certificates/Character_Certificate", {
+        state: {
+          studentInfo,
+          user_name,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching student information:", error);
+    }
   };
+
   const handleTransferCertificate = () => {
     // const main_data = data[index];
     navigate("/pages/student_details/student/tc_create", {
@@ -98,13 +118,32 @@ const Certificates = () => {
     });
   };
 
-  const handleBonafideCertificate = (item: any) => {
-    // const main_data = data[index];
-    navigate("/pages/student_details/student/certificates/bonafide_certificates", {
-      state: {
-        studentInfo,
-      },
-    });
+  const handleBonafideCertificate = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/certificate/bonified/retrive`,
+        {
+          user_name,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const studentInfo = response.data;
+
+      navigate("/pages/student_details/student/certificates/bonafide_certificates", {
+        state: {
+          studentInfo,
+          user_name,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching student information:", error);
+    }
   };
 
   return (
