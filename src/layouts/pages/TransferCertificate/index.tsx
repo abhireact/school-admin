@@ -603,136 +603,147 @@ const TransferCertificate: React.FC = () => {
                 </MDButton>
               </Grid>
             </Grid>
-            <Grid className="report-hidden-text" ref={tableRef}>
-              <MDBox p={2}>
-                <Grid container style={{ border: "1px solid #ffff" }}>
-                  <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
-                    {settings.english_or_hindi ? (
-                      <MDTypography variant="h4">
-                        स्थानांतरण प्रमाणपत्र/Transfer Certificate
-                      </MDTypography>
-                    ) : (
-                      <MDTypography variant="h4">Transfer Certificate</MDTypography>
-                    )}
-                  </Grid>
+            <Grid ref={tableRef}>
+              <Grid container style={{ border: "1px solid #ffff" }}>
+                <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
+                  {settings.english_or_hindi ? (
+                    <MDTypography variant="h4">
+                      स्थानांतरण प्रमाणपत्र/Transfer Certificate
+                    </MDTypography>
+                  ) : (
+                    <MDTypography variant="h4">Transfer Certificate</MDTypography>
+                  )}
+                </Grid>
 
-                  <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    {settings.studentImage !== false && (
-                      <img
-                        src={studentLogo}
-                        alt="Student Logo"
-                        style={{ width: "80px", height: "auto" }}
-                      />
-                    )}
-                  </Grid>
-                  {formFields.map((field, index) => (
+                <Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  {settings.studentImage !== false && (
                     <>
-                      {settings.english_or_hindi ? (
-                        <Grid item xs={6} sm={6} key={index}>
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {field.label.hi}/{field.label.en}: {values[field.inputName] || ""}
-                          </MDTypography>
-                        </Grid>
+                      {studentInfo.stud_img_data ? (
+                        <img
+                          src={studentInfo.stud_img_data}
+                          alt="Student Logo"
+                          style={{ width: "80px", height: "auto" }}
+                        />
                       ) : (
-                        <Grid item xs={4} sm={4} key={index}>
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {field.label.en}: {values[field.inputName] || ""}
-                          </MDTypography>
-                        </Grid>
+                        <img
+                          src={studentLogo}
+                          alt="Student Logo"
+                          style={{ width: "80px", height: "auto" }}
+                        />
                       )}
                     </>
-                  ))}
-                  {settings.registration_no !== false && (
-                    <Grid item xs={12} sm={12}>
-                      {settings.english_or_hindi ? (
-                        <>
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            उम्मीदवार का पंजीकरण संख्या/Registration No. of the Candidate (in case
-                            {values.class_from} to
-                            {values.class_to}) :
-                          </MDTypography>
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {values.registration_no}
-                          </MDTypography>
-                        </>
-                      ) : (
-                        <>
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            Registration No. of the Candidate (in case {values.class_from} to
-                            {values.class_to}) :
-                          </MDTypography>
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {values.registration_no}
-                          </MDTypography>
-                        </>
-                      )}
-                    </Grid>
                   )}
-                  <Grid
-                    container
-                    sx={{
-                      border: "1px solid #dddddd",
-                      backgroundImage:
-                        settings.backgroundSchoolLogo !== false
-                          ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${schoolLogo})`
-                          : "none",
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "center",
-                      backgroundSize: "contain",
-                      position: "relative",
-                    }}
-                  >
-                    {certificateFields.map((item, index) => (
-                      <React.Fragment key={index}>
-                        <Grid
-                          item
-                          xs={1}
-                          sm={1}
-                          sx={{
-                            borderBottom: "1px solid #dddddd",
-                            borderRight: "1px solid #dddddd",
-                            p: 0.25,
-                            paddingLeft: 2,
-                          }}
-                        >
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {index + 1}
-                          </MDTypography>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={5.5}
-                          sm={5.5}
-                          sx={{
-                            borderBottom: "1px solid #dddddd",
-                            borderRight: "1px solid #dddddd",
-                            p: 0.25,
-                            paddingLeft: 2,
-                          }}
-                        >
-                          {settings.english_or_hindi ? (
-                            <MDTypography variant="button" fontWeight="bold" color="body3">
-                              {item.label.hi}/{item.label.en}
-                            </MDTypography>
-                          ) : (
-                            <MDTypography variant="button" fontWeight="bold" color="body3">
-                              {item.label.en}
-                            </MDTypography>
-                          )}
-                        </Grid>
-                        <Grid
-                          item
-                          xs={5.5}
-                          sm={5.5}
-                          sx={{ borderBottom: "1px solid #dddddd", p: 0.25, paddingLeft: 2 }}
-                        >
-                          <MDTypography variant="button" fontWeight="bold" color="body3">
-                            {values[item.inputName] || ""}
-                          </MDTypography>
-                        </Grid>
-                      </React.Fragment>
-                    ))}
+                </Grid>
+
+                {formFields.map((field, index) => (
+                  <>
+                    {settings.english_or_hindi ? (
+                      <Grid item xs={6} sm={6} key={index}>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          {field.label.hi}/{field.label.en}: {values[field.inputName] || ""}
+                        </MDTypography>
+                      </Grid>
+                    ) : (
+                      <Grid item xs={4} sm={4} key={index}>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          {field.label.en}: {values[field.inputName] || ""}
+                        </MDTypography>
+                      </Grid>
+                    )}
+                  </>
+                ))}
+                {settings.registration_no !== false && (
+                  <Grid item xs={12} sm={12}>
+                    {settings.english_or_hindi ? (
+                      <>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          उम्मीदवार का पंजीकरण संख्या/Registration No. of the Candidate (in case
+                          {values.class_from} to
+                          {values.class_to}) :
+                        </MDTypography>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          {values.registration_no}
+                        </MDTypography>
+                      </>
+                    ) : (
+                      <>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          Registration No. of the Candidate (in case {values.class_from} to
+                          {values.class_to}) :
+                        </MDTypography>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          {values.registration_no}
+                        </MDTypography>
+                      </>
+                    )}
                   </Grid>
+                )}
+                <Grid
+                  container
+                  sx={{
+                    border: "1px solid #dddddd",
+                    backgroundImage:
+                      settings.backgroundSchoolLogo !== false
+                        ? `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url(${schoolLogo})`
+                        : "none",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                    backgroundSize: "contain",
+                    position: "relative",
+                  }}
+                >
+                  {certificateFields.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <Grid
+                        item
+                        xs={1}
+                        sm={1}
+                        sx={{
+                          borderBottom: "1px solid #dddddd",
+                          borderRight: "1px solid #dddddd",
+                          p: 0.25,
+                          paddingLeft: 2,
+                        }}
+                      >
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          {index + 1}
+                        </MDTypography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={5.5}
+                        sm={5.5}
+                        sx={{
+                          borderBottom: "1px solid #dddddd",
+                          borderRight: "1px solid #dddddd",
+                          p: 0.25,
+                          paddingLeft: 2,
+                        }}
+                      >
+                        {settings.english_or_hindi ? (
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {item.label.hi}/{item.label.en}
+                          </MDTypography>
+                        ) : (
+                          <MDTypography variant="button" fontWeight="bold" color="body3">
+                            {item.label.en}
+                          </MDTypography>
+                        )}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={5.5}
+                        sm={5.5}
+                        sx={{ borderBottom: "1px solid #dddddd", p: 0.25, paddingLeft: 2 }}
+                      >
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          {values[item.inputName] || ""}
+                        </MDTypography>
+                      </Grid>
+                    </React.Fragment>
+                  ))}
+                </Grid>
+                <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
                   {settings.preparedBy !== false && (
                     <Grid item xs={4} sm={4}>
                       {settings.english_or_hindi ? (
@@ -744,10 +755,11 @@ const TransferCertificate: React.FC = () => {
                           Prepared By
                         </MDTypography>
                       )}
-                      <br />
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        (Name and Designation )
-                      </MDTypography>
+                      <div>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          (Name and Designation )
+                        </MDTypography>
+                      </div>
                     </Grid>
                   )}
                   {settings.checkedBy !== false && (
@@ -761,10 +773,11 @@ const TransferCertificate: React.FC = () => {
                           Checked By
                         </MDTypography>
                       )}
-                      <br />
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        (Name and Designation )
-                      </MDTypography>
+                      <div>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          (Name and Designation )
+                        </MDTypography>
+                      </div>
                     </Grid>
                   )}
                   {settings.principalSign !== false && (
@@ -796,14 +809,15 @@ const TransferCertificate: React.FC = () => {
                           Signature of Principal
                         </MDTypography>
                       )}
-                      <br />
-                      <MDTypography variant="button" fontWeight="bold" color="body3">
-                        (With Official Seal )
-                      </MDTypography>
+                      <div>
+                        <MDTypography variant="button" fontWeight="bold" color="body3">
+                          (With Official Seal )
+                        </MDTypography>
+                      </div>
                     </Grid>
                   )}
                 </Grid>
-              </MDBox>
+              </Grid>
             </Grid>
           </MDBox>
         </Card>

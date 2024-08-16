@@ -8,6 +8,8 @@ import {
   fetchAccount,
   fetchStudent,
   fetchProfile,
+  fetchDepartment,
+  fetchEmployee,
 } from "../redux/dataSlice";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
@@ -32,6 +34,8 @@ const MyDashboard = () => {
     dispatch(fetchAccount() as any);
     dispatch(fetchStudent() as any);
     dispatch(fetchProfile() as any);
+    dispatch(fetchEmployee() as any);
+    dispatch(fetchDepartment() as any);
   }, [dispatch]);
   const renderedComponent = <Myrbacroutes />;
   // console.log("Rendered component data:", renderedComponent);

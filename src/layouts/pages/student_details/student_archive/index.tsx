@@ -107,7 +107,7 @@ const StudentArchive = () => {
     const main_data = data[index];
     navigate("/pages/student_details/student/certificates", {
       state: {
-        user_name: main_data.user_id,
+        user_name: main_data.user_name,
       },
     });
   };
