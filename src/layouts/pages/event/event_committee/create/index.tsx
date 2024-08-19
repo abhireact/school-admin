@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import FormField from "layouts/pages/account/components/FormField";
 import { useFormik } from "formik";
-import { Grid, Card, Link, Autocomplete, Checkbox } from "@mui/material";
+import { Grid, Card, Autocomplete, IconButton } from "@mui/material";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
-import Icon from "@mui/material/Icon";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { message } from "antd";
@@ -19,13 +17,22 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import AppBar from "@mui/material/AppBar";
+
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { fetchStudent } from "layouts/pages/redux/dataSlice";
 import { useNavigate } from "react-router-dom";
+
 const validationSchema = Yup.object().shape({
   committee_name: Yup.string().required("Required *"),
 });
+
 const cookies_academic_year = Cookies.get("academic_year");
+
 export default function CreateCommittee() {
+  const [studentSelections, setStudentSelections] = useState<any>({});
+  const [employeeSelections, setEmployeeSelections] = useState<any>({});
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
@@ -48,12 +55,12 @@ export default function CreateCommittee() {
       validationSchema: validationSchema,
       enableReinitialize: true,
       onSubmit: async (values, action) => {
-        const studentUserNames = data
-          .filter((info: any) => info.is_selected)
-          .map((info: any) => info.user_id);
-        const employeeUserNames = employeeData
-          .filter((info: any) => info.is_selected)
-          .map((info: any) => info.user_id);
+        const studentUserNames = Object.keys(studentSelections)?.filter(
+          (userId) => studentSelections[userId]
+        );
+        const employeeUserNames = Object.keys(employeeSelections)?.filter(
+          (userId) => employeeSelections[userId]
+        );
         let sendData = {
           committee_name: values.committee_name,
           student_id: studentUserNames,
@@ -69,9 +76,10 @@ export default function CreateCommittee() {
           })
           .then(() => {
             action.resetForm();
-
             setData([]);
             setEmployeeData([]);
+            setSelectedEmployees([]);
+            setSelectedStudents([]);
             dispatch(fetchStudent() as any);
             message.success("Event Committee Created Successfully");
           })
@@ -84,84 +92,89 @@ export default function CreateCommittee() {
 
   useEffect(() => {
     if (values.department) {
-      let filterEmployee = employee.filter((item: any) => item.department == values.department);
-      if (filterEmployee.length < 1) {
+      let filterEmployee = employee?.filter((item: any) => item.department == values.department);
+      if (filterEmployee?.length < 1) {
         message.error("No Employee found for this department");
       }
-      let employeeData = filterEmployee.map((selection: any, i: number) => ({
+      let employeeData = filterEmployee?.map((selection: any) => ({
         ...selection,
-        is_selected: false,
+        is_selected: employeeSelections[selection.user_id] || false,
       }));
       setEmployeeData(employeeData);
     }
-  }, [values.department]);
-  const handleEmployeeCheckBox = (index: number) => {
-    setEmployeeData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) =>
-        i === index ? { ...selection, is_selected: !selection.is_selected } : selection
-      )
-    );
-    console.log(employee, "change employee checkbox");
-  };
-  const handleSelectAllEmployee = () => {
-    setEmployeeData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: true }))
-    );
-    console.log(employeeData, "employee select all");
-  };
-  const handleSelectNoneEmployee = () => {
-    setEmployeeData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: false }))
-    );
-    console.log(employeeData, "employee select none");
-  };
+  }, [values.department, employee, employeeSelections]);
+
   useEffect(() => {
     if (values.academic_year && values.class && values.section) {
-      let filterStudent = student.filter(
+      let filterStudent = student?.filter(
         (item: any) =>
           item.class_name == values.class &&
           item.section_name == values.section &&
           item.academic_year == values.academic_year
       );
-      if (filterStudent.length < 1) {
+      if (filterStudent?.length < 1) {
         message.error("No Student Found for this Academic Year/ Class / Section");
       }
-      let studentData = filterStudent.map((selection: any, i: number) => ({
+      let studentData = filterStudent?.map((selection: any) => ({
         ...selection,
-        is_selected: false,
+        is_selected: studentSelections[selection.user_id] || false,
       }));
       setData(studentData);
     }
-  }, [values.academic_year, values.class, values.section]);
+  }, [values.academic_year, values.class, values.section, student, studentSelections]);
 
-  const handleCheckboxChange = (index: number) => {
-    setData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) =>
-        i === index ? { ...selection, is_selected: !selection.is_selected } : selection
-      )
-    );
-    console.log(data, "change student checkbox");
+  const handleEmployeeCheckBox = (userId: string) => {
+    setEmployeeSelections((prev: any) => {
+      const newSelections = { ...prev, [userId]: !prev[userId] };
+      const selectedEmps = employee.filter((emp: any) => newSelections[emp.user_id]);
+      setSelectedEmployees(selectedEmps);
+      return newSelections;
+    });
+  };
+
+  const handleCheckboxChange = (userId: string) => {
+    setStudentSelections((prev: any) => {
+      const newSelections = { ...prev, [userId]: !prev[userId] };
+      const selectedStuds = student.filter((stud: any) => newSelections[stud.user_id]);
+      setSelectedStudents(selectedStuds);
+      return newSelections;
+    });
+  };
+
+  const handleSelectAllEmployee = () => {
+    const newSelections: any = {};
+    employeeData.forEach((employee: any) => {
+      newSelections[employee.user_id] = true;
+    });
+    setEmployeeSelections(newSelections);
+    setSelectedEmployees(employeeData);
+  };
+
+  const handleSelectNoneEmployee = () => {
+    setEmployeeSelections({});
+    setSelectedEmployees([]);
   };
 
   const handleSelectAll = () => {
-    setData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: true }))
-    );
-    console.log(data, "student select all");
-  };
-  const handleSelectNone = () => {
-    setData((prevSelections: any) =>
-      prevSelections.map((selection: any, i: number) => ({ ...selection, is_selected: false }))
-    );
-    console.log(data, "student select none");
+    const newSelections: any = {};
+    data.forEach((student: any) => {
+      newSelections[student.user_id] = true;
+    });
+    setStudentSelections(newSelections);
+    setSelectedStudents(data);
   };
 
-  //tabs
+  const handleSelectNone = () => {
+    setStudentSelections({});
+    setSelectedStudents([]);
+  };
+
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (_event: any, newValue: any) => {
     setSelectedTab(newValue);
   };
   const navigate = useNavigate();
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -200,11 +213,54 @@ export default function CreateCommittee() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={touched.committee_name && Boolean(errors.committee_name)}
-                  success={values.committee_name.length > 0 && !errors.committee_name}
+                  success={values.committee_name?.length > 0 && !errors.committee_name}
                   helperText={touched.committee_name && errors.committee_name}
                 />
               </Grid>
               <Grid item xs={6} sm={6}></Grid>
+
+              <Grid item xs={12} sm={6}>
+                {selectedEmployees.length > 0 && (
+                  <>
+                    <MDTypography variant="button" fontWeight="medium" color="text">
+                      SELECTED EMPLOYEES
+                    </MDTypography>
+                    <ul style={{ maxHeight: "200px", overflowY: "auto" }}>
+                      {selectedEmployees.map((emp: any) => (
+                        <li key={emp.user_id}>
+                          <MDTypography key={emp.user_id} variant="caption" fontWeight="bold">
+                            {emp.user_id} - {emp.employee_name}
+                          </MDTypography>
+                          <IconButton onClick={() => handleEmployeeCheckBox(emp.user_id)}>
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                {selectedStudents.length > 0 && (
+                  <>
+                    <MDTypography variant="button" fontWeight="medium" color="text">
+                      SELECTED STUDENTS
+                    </MDTypography>
+                    <ul style={{ maxHeight: "200px", overflowY: "auto" }}>
+                      {selectedStudents.map((stud: any) => (
+                        <li key={stud.user_id}>
+                          <MDTypography key={stud.user_id} variant="caption" fontWeight="bold">
+                            {stud.user_id} - {stud.first_name} {stud.middle_name} {stud.last_name}
+                          </MDTypography>
+                          <IconButton onClick={() => handleCheckboxChange(stud.user_id)}>
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </Grid>
 
               <Grid item container xs={12} sm={12} mt={2}>
                 <Grid
@@ -260,7 +316,6 @@ export default function CreateCommittee() {
                         <MDInput
                           InputLabelProps={{ shrink: true }}
                           name="department"
-                          //required
                           label={
                             <MDTypography variant="button" fontWeight="bold" color="secondary">
                               SELECT DEPARTMENT FROM OPTIONS
@@ -278,7 +333,7 @@ export default function CreateCommittee() {
                     />
                   </Grid>
 
-                  {employeeData.length > 0 && (
+                  {employeeData?.length > 0 && (
                     <Grid item xs={12} sm={12}>
                       <div style={{ maxHeight: "400px", overflowY: "auto", position: "relative" }}>
                         <table
@@ -390,8 +445,8 @@ export default function CreateCommittee() {
                                     >
                                       <input
                                         type="checkbox"
-                                        checked={item.is_selected}
-                                        onChange={() => handleEmployeeCheckBox(index)}
+                                        checked={employeeSelections[item.user_id] || false}
+                                        onChange={() => handleEmployeeCheckBox(item.user_id)}
                                       />
                                     </td>
                                   </tr>
@@ -417,8 +472,8 @@ export default function CreateCommittee() {
                       options={
                         values.academic_year !== ""
                           ? classes
-                              .filter((item: any) => item.academic_year === values.academic_year)
-                              .map((item: any) => item.class_name)
+                              ?.filter((item: any) => item.academic_year === values.academic_year)
+                              ?.map((item: any) => item.class_name)
                           : []
                       }
                       renderInput={(params) => (
@@ -436,7 +491,7 @@ export default function CreateCommittee() {
                           variant="standard"
                           onBlur={handleBlur}
                           error={touched.class && Boolean(errors.class)}
-                          success={values.class.length && !errors.class}
+                          success={values.class?.length && !errors.class}
                           helperText={touched.class && errors.class}
                         />
                       )}
@@ -453,12 +508,12 @@ export default function CreateCommittee() {
                       options={
                         values.class !== ""
                           ? classes
-                              .filter(
+                              ?.filter(
                                 (item: any) =>
                                   item.academic_year === values.academic_year &&
                                   item.class_name === values.class
                               )[0]
-                              .section_data.map((item: any) => item.section_name)
+                              .section_data?.map((item: any) => item.section_name)
                           : []
                       }
                       renderInput={(params) => (
@@ -476,13 +531,13 @@ export default function CreateCommittee() {
                           variant="standard"
                           onBlur={handleBlur}
                           error={touched.section && Boolean(errors.section)}
-                          success={values.section.length && !errors.section}
+                          success={values.section?.length && !errors.section}
                           helperText={touched.section && errors.section}
                         />
                       )}
                     />
                   </Grid>
-                  {data.length > 0 && (
+                  {data?.length > 0 && (
                     <Grid item xs={12} sm={12}>
                       <div style={{ maxHeight: "400px", overflowY: "auto", position: "relative" }}>
                         <table
@@ -595,8 +650,8 @@ export default function CreateCommittee() {
                                     >
                                       <input
                                         type="checkbox"
-                                        checked={item.is_selected}
-                                        onChange={() => handleCheckboxChange(index)}
+                                        checked={studentSelections[item.user_id] || false}
+                                        onChange={() => handleCheckboxChange(item.user_id)}
                                       />
                                     </td>
                                   </tr>
