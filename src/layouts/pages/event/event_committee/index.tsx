@@ -134,7 +134,7 @@ const EventCommittee = () => {
     const main_data = data[index];
     navigate("/event/update_committee", {
       state: {
-        ...main_data,
+        editData: main_data,
       },
     });
   };
