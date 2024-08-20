@@ -315,16 +315,16 @@ const routes = [
         component: <EventCalendar />,
       },
       {
+        name: "Event Album",
+        key: "album",
+        route: "event/album",
+        component: <EventAlbum />,
+      },
+      {
         name: "Guests",
         key: "guests",
         route: "event/guests",
         component: <Guests />,
-      },
-      {
-        name: "Album",
-        key: "album",
-        route: "event/album",
-        component: <EventAlbum />,
       },
     ],
   },

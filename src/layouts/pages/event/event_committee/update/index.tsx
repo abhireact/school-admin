@@ -50,7 +50,7 @@ export default function UpdateCommittee() {
         return acc;
       }, {});
       setStudentSelections(initialStudentSelections);
-      setSelectedStudents(student.filter((s: any) => editData.student_id.includes(s.user_id)));
+      setSelectedStudents(student?.filter((s: any) => editData.student_id.includes(s.user_id)));
 
       const initialEmployeeSelections = editData.employee_number.reduce((acc: any, id: any) => {
         acc[id] = true;
@@ -58,7 +58,7 @@ export default function UpdateCommittee() {
       }, {});
       setEmployeeSelections(initialEmployeeSelections);
       setSelectedEmployees(
-        employee.filter((e: any) => editData.employee_number.includes(e.user_id))
+        employee?.filter((e: any) => editData.employee_number.includes(e.user_id))
       );
     }
   }, [editData, student, employee]);
@@ -105,10 +105,12 @@ export default function UpdateCommittee() {
           .then(() => {
             action.resetForm();
 
+            navigate("/event/event_committee");
+
             setData([]);
             setEmployeeData([]);
-            dispatch(fetchStudent() as any);
-            message.success("Event Committee Created Successfully");
+
+            message.success("Event Committee Updated Successfully");
           })
           .catch((error: any) => {
             console.log(error, "error");
@@ -158,7 +160,7 @@ export default function UpdateCommittee() {
     setSelectedEmployees((prevSelected) => {
       const isCurrentlySelected = employeeSelections[userId];
       if (isCurrentlySelected) {
-        return prevSelected.filter((emp) => emp.user_id !== userId);
+        return prevSelected?.filter((emp) => emp.user_id !== userId);
       } else {
         const employeeToAdd = employeeInfo.find((emp: any) => emp.user_id === userId);
         return employeeToAdd ? [...prevSelected, employeeToAdd] : prevSelected;
@@ -175,7 +177,7 @@ export default function UpdateCommittee() {
     setSelectedStudents((prevSelected) => {
       const isCurrentlySelected = studentSelections[userId];
       if (isCurrentlySelected) {
-        return prevSelected.filter((stud) => stud.user_id !== userId);
+        return prevSelected?.filter((stud) => stud.user_id !== userId);
       } else {
         const studentToAdd = studentInfo.find((stud: any) => stud.user_id === userId);
         return studentToAdd ? [...prevSelected, studentToAdd] : prevSelected;
@@ -282,7 +284,7 @@ export default function UpdateCommittee() {
               <Grid item xs={6} sm={6}></Grid>
               {/* After the employee selection section */}
               <Grid item xs={6} sm={6}>
-                {selectedEmployees.length > 0 && (
+                {selectedEmployees?.length > 0 && (
                   <SelectedItemsList
                     title="SELECTED EMPLOYEES"
                     handleDelete={handleEmployeeCheckBox}
@@ -296,7 +298,7 @@ export default function UpdateCommittee() {
 
               {/* After the student selection section */}
               <Grid item xs={6} sm={6}>
-                {selectedStudents.length > 0 && (
+                {selectedStudents?.length > 0 && (
                   <SelectedItemsList
                     title="SELECTED STUDENTS"
                     handleDelete={handleCheckboxChange}

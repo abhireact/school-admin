@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import * as XLSX from "xlsx";
 import { Popconfirm, Table } from "antd";
 import MDBox from "components/MDBox";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
 const token = Cookies.get("token");
 
@@ -52,7 +53,7 @@ const EventCommittee = () => {
 
   const FetchEventCommittee = () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_event_committee`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_committee`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -93,7 +94,7 @@ const EventCommittee = () => {
 
   const dataTableData = {
     columns: [
-      { Header: "EVENT COMMITTEE", accessor: "committee_name" },
+      { Header: "ALBUM NAME", accessor: "committee_name" },
 
       { Header: "Action", accessor: "action" },
     ],
@@ -102,11 +103,15 @@ const EventCommittee = () => {
 
       action: (
         <MDTypography variant="p">
+          <IconButton onClick={() => handleView(index)}>
+            <VisibilityIcon />
+          </IconButton>
           {rbacData.includes("academicupdate") && (
             <IconButton onClick={() => handleUpdate(index)}>
               <CreateRoundedIcon />
             </IconButton>
           )}
+
           {rbacData.includes("academicdelete") && (
             <IconButton disabled>
               <Popconfirm
@@ -133,11 +138,18 @@ const EventCommittee = () => {
     const main_data = data[index];
     navigate("/event/update_album", {
       state: {
-        ...main_data,
+        editData: main_data,
       },
     });
   };
-
+  const handleView = (index: number) => {
+    const main_data = data[index];
+    navigate("/event/view_album", {
+      state: {
+        editData: main_data,
+      },
+    });
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -154,7 +166,7 @@ const EventCommittee = () => {
               color="info"
               onClick={() => navigate("/event/create_album")}
             >
-              + New Event Committee
+              + New Album
             </MDButton>
           </Grid>
         </Grid>

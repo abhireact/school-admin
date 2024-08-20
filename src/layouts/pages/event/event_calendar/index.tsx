@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
+
 import axios from "axios";
 import { EventInput } from "@fullcalendar/core";
 import Calendar from "examples/Calendar";
@@ -218,13 +219,13 @@ export default function EventCalendar() {
         <MDBox mx={2}>
           <Grid container m={2} sx={{ display: "flex", justifyContent: "space-between" }}>
             <Grid item>
-              <MDTypography variant="h4" fontWeight="bold" color="info">
+              <MDTypography variant="h4" fontWeight="bold" color="secondary">
                 Event Calendar
               </MDTypography>
             </Grid>
             <Grid item>
               <MDButton
-                color="dark"
+                color="info"
                 variant="outlined"
                 onClick={() => navigate("/event/event_list")}
               >
