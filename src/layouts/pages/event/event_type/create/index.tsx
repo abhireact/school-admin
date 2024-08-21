@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
@@ -8,7 +8,7 @@ import MDInput from "components/MDInput";
 import { message } from "antd";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, Switch } from "@mui/material";
 
 interface ColorOption {
   name: string;
@@ -48,6 +48,7 @@ const ColorBlock: React.FC<ColorBlockProps> = ({ color, selectedColor, onClick }
 
 const EventTypes: React.FC<EventTypesProps> = ({ setOpen, fetchData }) => {
   const token = Cookies.get("token");
+  const [useCustomColor, setUseCustomColor] = useState(false);
 
   const colorOptions = [
     { name: "Red", value: "#FF0000" },
@@ -158,56 +159,91 @@ const EventTypes: React.FC<EventTypesProps> = ({ setOpen, fetchData }) => {
               helperText={touched.event_name && errors.event_name}
             />
           </Grid>
+
           <Grid item xs={12} sm={5}>
             <MDTypography variant="button" fontWeight="bold" color="secondary">
               Event Color *
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
-            <Autocomplete
-              sx={{ width: "70%" }}
-              disableClearable
-              value={values.event_color}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "event_color", value },
-                });
-              }}
-              options={colorOptions.map((item: any) => item.name)}
-              renderInput={(params: any) => (
+          {useCustomColor ? (
+            <>
+              <Grid item xs={12} sm={7}>
                 <MDInput
+                  sx={{ width: "70%" }}
                   required
-                  //InputLabelProps={{ shrink: true }}
+                  type="color"
                   name="event_color"
-                  placeholder="Select Option"
-                  //label={<MDTypography variant="body2">Scoring Type</MDTypography>}
-                  //onChange={handleChange}
                   value={values.event_color}
-                  {...params}
-                  variant="standard"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  variant="outlined"
                 />
-              )}
-            />
-          </Grid>
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item xs={12} sm={7}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  disableClearable
+                  value={values.event_color}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "event_color", value },
+                    });
+                  }}
+                  options={colorOptions.map((item: any) => item.name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      required
+                      //InputLabelProps={{ shrink: true }}
+                      name="event_color"
+                      placeholder="Select Option"
+                      //label={<MDTypography variant="body2">Scoring Type</MDTypography>}
+                      //onChange={handleChange}
+                      value={values.event_color}
+                      {...params}
+                      variant="standard"
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={12}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(10, 1fr)", // 10 columns
+                    gap: "3px",
+                    maxWidth: "100%",
+                    overflow: "auto",
+                  }}
+                >
+                  {colorOptions.map((color) => (
+                    <ColorBlock
+                      key={color.name}
+                      color={color.value}
+                      selectedColor={values.event_color === color.name ? color.value : null}
+                      onClick={() => handleColorSelect(color.name)}
+                    />
+                  ))}
+                </div>
+              </Grid>
+            </>
+          )}
           <Grid item xs={12} sm={12}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(10, 1fr)", // 10 columns
-                gap: "3px",
-                maxWidth: "100%",
-                overflow: "auto",
-              }}
+            <MDTypography variant="caption" color="warning" fontWeight="bold"></MDTypography>
+            <MDButton
+              variant="outlined"
+              size="small"
+              color="dark"
+              onClick={() => setUseCustomColor(!useCustomColor)}
             >
-              {colorOptions.map((color) => (
-                <ColorBlock
-                  key={color.name}
-                  color={color.value}
-                  selectedColor={values.event_color === color.name ? color.value : null}
-                  onClick={() => handleColorSelect(color.name)}
-                />
-              ))}
-            </div>
+              {useCustomColor ? "Preset" : "Custom Color"}
+            </MDButton>
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
             {touched.event_color && errors.event_color && (
               <MDTypography variant="caption" color="error">
                 {errors.event_color}
@@ -216,12 +252,12 @@ const EventTypes: React.FC<EventTypesProps> = ({ setOpen, fetchData }) => {
           </Grid>
 
           <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Grid item mt={2}>
+            <Grid item>
               <MDButton color="dark" variant="contained" onClick={handleClose}>
                 Back
               </MDButton>
             </Grid>
-            <Grid item mt={2} ml={2}>
+            <Grid item ml={2}>
               <MDButton color="info" variant="contained" type="submit">
                 Save
               </MDButton>

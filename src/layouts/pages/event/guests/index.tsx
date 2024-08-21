@@ -147,7 +147,7 @@ const Guests = () => {
 
           {rbacData ? (
             rbacData?.find((element: string) => element === "employee_typedelete") ? (
-              <IconButton>
+              <IconButton disabled>
                 <Popconfirm
                   title="Delete"
                   description="Are you sure you want to delete it? ?"

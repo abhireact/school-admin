@@ -46,7 +46,9 @@ import CreateCommittee from "layouts/pages/event/event_committee/create";
 import UpdateCommittee from "layouts/pages/event/event_committee/update";
 import CreateAlbum from "layouts/pages/event/event_album/create";
 import UpdateAlbum from "layouts/pages/event/event_album/update";
+import ViewAlbum from "layouts/pages/event/event_album/view";
 import EventList from "layouts/pages/event/event_calendar/event_list";
+
 let route2 = mainroutes;
 console.log(route2, "my mainroutes");
 interface RouteItem {
@@ -204,6 +206,12 @@ let routes = [
     key: "update_album",
     route: "event/update_album",
     component: <UpdateAlbum />,
+  },
+  {
+    name: "View Album",
+    key: "view_album",
+    route: "event/view_album",
+    component: <ViewAlbum />,
   },
   {
     name: "Event List",
