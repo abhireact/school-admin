@@ -53,6 +53,7 @@ import SubjectTeacher from "layouts/pages/subject_details/subject_teacher";
 import StudentSectionChange from "layouts/pages/student_details/student_section_change";
 //EXAMINATION module
 import Examtype from "layouts/pages/exam/exam_type";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 import Scholastic from "layouts/pages/exam/scholastic_particular";
 import OtherParticular from "layouts/pages/exam/other_particular";
 import OtherComponent from "layouts/pages/exam/other_component";
@@ -110,6 +111,9 @@ import FeeCollectionReport from "layouts/pages/fee/fee_report/fee_collection_rep
 import EmployeeCategory from "layouts/pages/employee_details/employee_category";
 import ManageFeeAdmission from "layouts/pages/admission/manage_fee_admission";
 import AdmissionReport from "layouts/pages/admission/admission_report";
+import FAQ_Category from "layouts/pages/Front_Office/FAQ_Category";
+import FAQ_Sub_Category from "layouts/pages/Front_Office/FAQ_Sub_Category";
+import FAQ from "layouts/pages/Front_Office/FAQ";
 
 const routes = [
   {
@@ -816,6 +820,37 @@ const routes = [
         key: "admission_report",
         route: "/pages/admission/admission_report",
         component: <AdmissionReport />,
+      },
+    ],
+  },
+
+  {
+    type: "collapse",
+    name: "Front Office",
+    key: "front_office",
+    icon: (
+      <Icon fontSize="medium">
+        <ApartmentIcon />
+      </Icon>
+    ),
+    collapse: [
+      {
+        name: "FAQ Category",
+        key: "faq_category",
+        route: "pages/front_office/faq_category",
+        component: <FAQ_Category />,
+      },
+      {
+        name: "FAQ Sub Category",
+        key: "faq_sub_category",
+        route: "pages/front_office/faq_sub_category",
+        component: <FAQ_Sub_Category />,
+      },
+      {
+        name: "FAQ",
+        key: "faq",
+        route: "pages/front_office/faq",
+        component: <FAQ />,
       },
     ],
   },
