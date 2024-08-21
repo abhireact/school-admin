@@ -76,11 +76,12 @@ export default function CreateCommittee() {
           })
           .then(() => {
             action.resetForm();
+            navigate("/event/event_committee");
             setData([]);
             setEmployeeData([]);
             setSelectedEmployees([]);
             setSelectedStudents([]);
-            dispatch(fetchStudent() as any);
+
             message.success("Event Committee Created Successfully");
           })
           .catch((error: any) => {
@@ -126,7 +127,7 @@ export default function CreateCommittee() {
   const handleEmployeeCheckBox = (userId: string) => {
     setEmployeeSelections((prev: any) => {
       const newSelections = { ...prev, [userId]: !prev[userId] };
-      const selectedEmps = employee.filter((emp: any) => newSelections[emp.user_id]);
+      const selectedEmps = employee?.filter((emp: any) => newSelections[emp.user_id]);
       setSelectedEmployees(selectedEmps);
       return newSelections;
     });
@@ -135,7 +136,7 @@ export default function CreateCommittee() {
   const handleCheckboxChange = (userId: string) => {
     setStudentSelections((prev: any) => {
       const newSelections = { ...prev, [userId]: !prev[userId] };
-      const selectedStuds = student.filter((stud: any) => newSelections[stud.user_id]);
+      const selectedStuds = student?.filter((stud: any) => newSelections[stud.user_id]);
       setSelectedStudents(selectedStuds);
       return newSelections;
     });
@@ -241,7 +242,7 @@ export default function CreateCommittee() {
                 )}
               </Grid>
               <Grid item xs={12} sm={6}>
-                {selectedStudents.length > 0 && (
+                {selectedStudents?.length > 0 && (
                   <>
                     <MDTypography variant="button" fontWeight="medium" color="text">
                       SELECTED STUDENTS

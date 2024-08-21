@@ -13,6 +13,7 @@ import axios from "axios";
 import Create from "./create";
 import Update from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useTheme } from "@emotion/react";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Card } from "@mui/material";
@@ -53,7 +54,7 @@ const EventCommittee = () => {
 
   const FetchEventCommittee = () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_event_committee`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_committee`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

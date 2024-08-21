@@ -16,6 +16,8 @@ import Cookies from "js-cookie";
 import * as Yup from "yup";
 // import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
+import { useEffect, useState } from "react";
+import { Switch } from "@mui/material";
 
 const colorOptions = [
   { name: "Red", value: "#FF0000" },
@@ -91,6 +93,7 @@ const ColorBlock: React.FC<ColorBlockProps> = ({ color, selectedColor, onClick }
 );
 const Update = (props: any) => {
   const { setOpenupdate, fetchData, editData } = props;
+  const [useCustomColor, setUseCustomColor] = useState(false);
   const token = Cookies.get("token");
   console.log(editData, "edit data ");
   const handleCloseupdate = () => {
@@ -128,6 +131,11 @@ const Update = (props: any) => {
   const handleColorSelect = (colorName: string) => {
     setFieldValue("event_color", colorName);
   };
+  // Check if the event color is a custom color or matches one of the preset colors
+  useEffect(() => {
+    const colorMatch = colorOptions.some((color) => color.value === editData.event_color);
+    setUseCustomColor(!colorMatch);
+  }, [editData.event_color]);
   return (
     <form onSubmit={handleSubmit}>
       <MDBox pt={4} px={4} pb={1}>
@@ -155,64 +163,90 @@ const Update = (props: any) => {
               Event Color *
             </MDTypography>
           </Grid>
-          <Grid item xs={12} sm={7}>
-            <Autocomplete
-              sx={{ width: "70%" }}
-              disableClearable
-              value={values.event_color}
-              onChange={(event, value) => {
-                handleChange({
-                  target: { name: "event_color", value },
-                });
-              }}
-              options={colorOptions.map((item: any) => item.name)}
-              renderInput={(params: any) => (
+          {useCustomColor ? (
+            <>
+              <Grid item xs={12} sm={7}>
                 <MDInput
-                  //InputLabelProps={{ shrink: true }}
+                  sx={{ width: "70%" }}
+                  required
+                  type="color"
                   name="event_color"
-                  placeholder="Select Option"
-                  //label={<MDTypography variant="body2">Scoring Type</MDTypography>}
-                  //onChange={handleChange}
                   value={values.event_color}
-                  {...params}
-                  variant="standard"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  variant="outlined"
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(10, 1fr)", // 10 columns
-                gap: "3px",
-                maxWidth: "100%",
-                overflow: "auto",
-              }}
-            >
-              {colorOptions.map((color) => (
-                <ColorBlock
-                  key={color.name}
-                  color={color.value}
-                  selectedColor={values.event_color === color.name ? color.value : null}
-                  onClick={() => handleColorSelect(color.name)}
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item xs={12} sm={7}>
+                <Autocomplete
+                  sx={{ width: "70%" }}
+                  disableClearable
+                  value={values.event_color}
+                  onChange={(event, value) => {
+                    handleChange({
+                      target: { name: "event_color", value },
+                    });
+                  }}
+                  options={colorOptions.map((item: any) => item.name)}
+                  renderInput={(params: any) => (
+                    <MDInput
+                      required
+                      //InputLabelProps={{ shrink: true }}
+                      name="event_color"
+                      placeholder="Select Option"
+                      //label={<MDTypography variant="body2">Scoring Type</MDTypography>}
+                      //onChange={handleChange}
+                      value={values.event_color}
+                      {...params}
+                      variant="standard"
+                    />
+                  )}
                 />
-              ))}
-            </div>
-            {touched.event_color && errors.event_color && (
-              <MDTypography variant="caption" color="error">
-                {errors.event_color}
-              </MDTypography>
-            )}
-          </Grid>
+              </Grid>
 
+              <Grid item xs={12} sm={12}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(10, 1fr)", // 10 columns
+                    gap: "3px",
+                    maxWidth: "100%",
+                    overflow: "auto",
+                  }}
+                >
+                  {colorOptions.map((color) => (
+                    <ColorBlock
+                      key={color.name}
+                      color={color.value}
+                      selectedColor={values.event_color === color.name ? color.value : null}
+                      onClick={() => handleColorSelect(color.name)}
+                    />
+                  ))}
+                </div>
+              </Grid>
+            </>
+          )}
+          <Grid item xs={12} sm={12}>
+            <MDTypography variant="caption" color="warning" fontWeight="bold"></MDTypography>
+            <MDButton
+              variant="outlined"
+              size="small"
+              color="dark"
+              onClick={() => setUseCustomColor(!useCustomColor)}
+            >
+              {useCustomColor ? "Preset" : "Custom Color"}
+            </MDButton>
+          </Grid>
           <Grid item container xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Grid item mt={2}>
+            <Grid item>
               <MDButton color="dark" variant="contained" onClick={handleCloseupdate}>
                 Back
               </MDButton>
             </Grid>
-            <Grid item mt={2} ml={2}>
+            <Grid item ml={2}>
               <MDButton color="info" variant="contained" type="submit">
                 Save
               </MDButton>
