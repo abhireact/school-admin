@@ -96,7 +96,7 @@ export default function UpdateCommittee() {
         };
 
         axios
-          .put(`${process.env.REACT_APP_BASE_URL}/mg_event_committee`, sendData, {
+          .put(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_committee`, sendData, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,

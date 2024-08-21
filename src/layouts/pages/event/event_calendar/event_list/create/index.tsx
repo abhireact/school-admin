@@ -38,7 +38,7 @@ const EventList: React.FC<EventTypesProps> = ({ setOpen, fetchData }) => {
 
   const fetchEventCommittees = () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/mg_event_committee`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_committee`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

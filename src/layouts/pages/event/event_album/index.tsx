@@ -10,7 +10,6 @@ import { IconButton, Tooltip } from "@mui/material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@emotion/react";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -150,6 +149,7 @@ const EventCommittee = () => {
       },
     });
   };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />

@@ -15,19 +15,6 @@ import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useNavigate } from "react-router-dom";
 
-interface EventData {
-  title: string;
-  // Add other properties of EventData if needed
-}
-
-interface FormValues {
-  academic_year: string;
-  album_name: string;
-  event_name: string;
-  description: string;
-  event_album: string[];
-}
-
 const validationSchema = Yup.object().shape({
   album_name: Yup.string().required("Required *"),
 });
@@ -35,12 +22,12 @@ const cookies_academic_year = Cookies.get("academic_year");
 const token = Cookies.get("token");
 
 export default function CreateAlbum(): JSX.Element {
-  const [eventData, setEventData] = useState<EventData[]>([]);
+  const [eventData, setEventData] = useState([]);
   const [images, setImages] = useState<string[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const fetchEventCalendar = (): void => {
     axios
-      .get<EventData[]>(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_calender`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_calender`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -58,12 +45,36 @@ export default function CreateAlbum(): JSX.Element {
     fetchEventCalendar();
   }, []);
 
-  const initialValues: FormValues = {
-    academic_year: cookies_academic_year,
+  const initialValues: any = {
     album_name: "",
     event_name: "",
-    description: "",
-    event_album: [],
+    event_description: "",
+    event_image: [],
+    accessable_employees: {
+      employee_department_name: [],
+    },
+    accessable_teacher: {
+      employee_department_name: [],
+    },
+    accessable_students: {
+      class_data: [
+        {
+          academic_year: "2023-2024",
+          class_name: "",
+          section_name: "",
+        },
+      ],
+    },
+    accessable_guardians: {
+      class_data: [
+        {
+          academic_year: "",
+          class_name: "",
+          section_name: "",
+        },
+      ],
+    },
+    drive_link: "",
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
@@ -71,9 +82,9 @@ export default function CreateAlbum(): JSX.Element {
       initialValues,
       validationSchema: validationSchema,
       enableReinitialize: true,
-      onSubmit: async (values: FormValues, action) => {
-        // Set the event_album field with the base64 image data
-        values.event_album = images;
+      onSubmit: async (values, action) => {
+        // Set the event_image field with the base64 image data
+        values.event_image = images;
 
         try {
           await axios.post(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_album`, values, {
@@ -205,6 +216,7 @@ export default function CreateAlbum(): JSX.Element {
       imageInputRef.current.click();
     }
   };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -313,13 +325,13 @@ export default function CreateAlbum(): JSX.Element {
                     </MDTypography>
                   }
                   variant="standard"
-                  name="description"
-                  value={values.description}
+                  name="event_description"
+                  value={values.event_description}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.description && Boolean(errors.description)}
-                  success={values.description?.length > 0 && !errors.description}
-                  helperText={touched.description && errors.description}
+                  error={touched.event_description && Boolean(errors.event_description)}
+                  success={values.event_description?.length > 0 && !errors.event_description}
+                  helperText={touched.event_description && errors.event_description}
                 />
               </Grid>
               {images.length > 0 && (

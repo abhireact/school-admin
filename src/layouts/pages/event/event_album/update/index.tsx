@@ -16,6 +16,16 @@ import * as Yup from "yup";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useLocation, useNavigate } from "react-router-dom";
 
+let editData: any = {
+  academic_year: "2024-2025",
+  album_name: "dfas",
+  event_name: "maha laxmi",
+  description: "",
+  event_album: [
+    { image_id: "122", image: "data:image/png;base64,sfsdfsdf" },
+    { image_id: "1242", image: "data:image/png;base64,sfsdfdf" },
+  ],
+};
 interface EventData {
   title: string;
   // Add other properties of EventData if needed
@@ -26,7 +36,7 @@ interface FormValues {
   album_name: string;
   event_name: string;
   description: string;
-  event_album: string[];
+  event_album: { image_id: string; image: string }[];
 }
 
 const validationSchema = Yup.object().shape({
@@ -38,9 +48,9 @@ const token = Cookies.get("token");
 
 export default function UpdateAlbum() {
   const location = useLocation();
-  const { editData } = location.state || {};
+  // const { editData } = location.state || {};
   const [eventData, setEventData] = useState<EventData[]>([]);
-  const [images, setImages] = useState<string[]>(editData.event_album || []);
+  const [images, setImages] = useState(editData.event_album || []);
   const [imagePreviews, setImagePreviews] = useState<string[]>(editData.event_album || []);
 
   const fetchEventCalendar = (): void => {
@@ -77,17 +87,17 @@ export default function UpdateAlbum() {
       validationSchema: validationSchema,
       enableReinitialize: true,
       onSubmit: async (values: FormValues, action) => {
-        // Set the event_album field with the base64 image data
-        values.event_album = images;
-
         try {
+          // Create the payload with the correct event_album structure
+          values.event_album = images;
+
           await axios.put(`${process.env.REACT_APP_BASE_URL}/mg_event/mg_event_committee`, values, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           });
-          message.success("Event Committee Updated Successfully");
+          message.success("Event Album Updated Successfully");
         } catch (error) {
           console.log(error, "error");
           if (axios.isAxiosError(error) && error.response) {
@@ -165,23 +175,26 @@ export default function UpdateAlbum() {
 
       const processedImages = await Promise.all(
         files.map(async (file) => {
+          let base64 = "";
           if (file.size > 3 * 1024 * 1024) {
-            return await compressImage(file);
+            base64 = await compressImage(file);
+          } else {
+            base64 = await new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                if (e.target && e.target.result) {
+                  resolve(e.target.result as string);
+                }
+              };
+              reader.readAsDataURL(file);
+            });
           }
-          return new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              if (e.target && e.target.result) {
-                resolve(e.target.result as string);
-              }
-            };
-            reader.readAsDataURL(file);
-          });
+          return { image_id: "", image: base64 };
         })
       );
 
       setImages([...images, ...processedImages]);
-      setImagePreviews([...imagePreviews, ...processedImages]);
+      setImagePreviews([...imagePreviews, ...processedImages.map((img) => img.image)]);
     }
   };
 
