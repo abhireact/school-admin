@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MDTypography from "components/MDTypography";
 import MDBox from "components/MDBox";
 import { Grid, Card, Tooltip, Icon } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import DataTable from "examples/Tables/DataTable";
 import FormatListBulletedTwoToneIcon from "@mui/icons-material/FormatListBulletedTwoTone";
 import { useState, useEffect } from "react";
@@ -57,8 +58,7 @@ const FAQ = () => {
             <Grid container spacing={1}>
               <Grid item>
                 <Tooltip title="Show" placement="top">
-                  {/* <VisibilityIcon fontSize="small" onClick={() => handleShowAdmission(item)} /> */}
-                  <Icon fontSize="small">VisibilityIcon</Icon>
+                  <VisibilityIcon fontSize="small" />
                 </Tooltip>
               </Grid>
               <Grid item>
